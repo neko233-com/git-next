@@ -13,3 +13,8 @@ All five targets were packaged locally and extracted bytes checked against sourc
 | linux-x64 | `01bb1646ce27ecc883562c03e69f808bf450d047c74f22d237dbb3e071b2ff24` | Compile / architecture / package only |
 | linux-arm64 | `6ebc2067cae3a52d0bc7db7703b75666fc9d22bfe1e9191cfbeec7287088bc11` | Compile / architecture / package only |
 | macos-arm64 | `467953c4fa47a1ba71c99432101a07e724e5142607a1b678dd3ee33208b9f665` | Local + HTTPS; no installation |
+
+
+## Git Terminal acceptance
+
+2026-10-19: the separate terminal entry passed native Windows x64 and macOS ARM64 shell launch, working directories containing spaces, explicit command execution, exit-code propagation, invalid-directory rejection and unchanged system Git checksum. Windows isolated installation/removal preserved the original Git. The Mac check used the temporary build-only directory and performed no installation. Linux and Windows ARM64 terminal runtime acceptance remain outstanding. This is shell-process evidence, not a claim of Bash/POSIX emulation or interactive GUI acceptance.

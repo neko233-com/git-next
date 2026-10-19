@@ -105,4 +105,6 @@ git-next compatibility --json
 <p>Gitoxide supplies Git storage/protocol/index primitives; Russh supplies the built-in SSH transport. Local clones copy missing objects into an isolated temporary repository before publishing the destination, without hard links or source mutation. Fetch reuses existing objects. Worker caps avoid unbounded parallelism. Unsupported operations return errors instead of silently delegating to installed Git.</p>
 <p>Performance must be measured per operation, repository, transport and cache state. <a href="docs/PERFORMANCE.md">Measurement policy</a>. Complete Git compatibility is the release prerequisite for replacing a working installation.</p>
 <p>MIT license. See <a href="LICENSE">LICENSE</a>, <a href="Cargo.toml">dependencies</a> and <a href="AGENTS.md">engineering rules</a>.</p>
+<h2>Repository terminal</h2>
+<p><code>git-terminal --cwd PATH</code> opens a native repository shell with the isolated preview. Windows: PowerShell 7 or Windows PowerShell, Start menu shortcut, optional folder context menu. Unix: native shell. See <a href="docs/INSTALLATION.md#git-terminal">terminal setup</a>. Bash/POSIX emulation and full Git replacement remain separate unfinished compatibility goals.</p>
 </main></html>

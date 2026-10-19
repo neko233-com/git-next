@@ -61,3 +61,7 @@ Gitoxide supplies Git storage/protocol/index primitives; Russh supplies the buil
 Performance must be measured per operation, repository, transport and cache state. [Measurement policy](docs/PERFORMANCE.md). Complete Git compatibility is the release prerequisite for replacing a working installation.
 
 MIT license. See [LICENSE](LICENSE), [dependencies](Cargo.toml) and [engineering rules](AGENTS.md).
+
+## Repository terminal
+
+`git-terminal --cwd PATH` opens a native repository shell with the isolated preview. Windows: PowerShell 7 or Windows PowerShell, Start menu shortcut, optional folder context menu. Unix: native shell. See [terminal setup](docs/INSTALLATION.md#git-terminal). Bash/POSIX emulation and full Git replacement remain separate unfinished compatibility goals.

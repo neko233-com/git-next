@@ -11,3 +11,7 @@
 查看 [兼容矩阵](docs/COMPATIBILITY.md)、[安装卸载](docs/INSTALLATION.md)、[构建验证](docs/BUILDING.md) 和 [性能测量](docs/PERFORMANCE.md)。支持安装脚本自动尝试固定官方提交 SHA 的 GitHub 镜像传输；不会修改现有账号、凭据、Git 配置或仓库。安装需要 Rust 1.96+ 和本机编译工具链。
 
 PowerShell：下载并检查 install.ps1 后执行 `./install.ps1`。Unix：下载并检查 install.sh 后执行 `sh install.sh`。新终端运行 `git-next compatibility --json` 查看真实兼容状态。
+
+## 仓库终端
+
+`git-terminal --cwd 路径` 打开仓库终端。Windows 优先 PowerShell 7，回退 Windows PowerShell，支持开始菜单和可选目录右键入口；Unix 使用本机 Shell。预览客户端独立提供，原 Git 与 Git Bash 保留。它尚不提供完整 Bash/POSIX 模拟，不能把此终端入口等同于完整 Git Bash 替代。

@@ -19,3 +19,10 @@ A locally built, trusted native binary may be selected with -SourceBinary on Pow
 Windows: ./install.ps1 -Uninstall. Unix: sh install.sh --uninstall. The installer verifies the installed-command checksum before deleting it; a subsequently changed executable is preserved. It leaves backups, manifest and repositories for inspection. It does not delete original Git, credentials or user configuration. User PATH may retain ~/.local/bin because other applications can use it.
 
 No Git installation on another machine is implied by building or installing the current workstation preview.
+
+
+## Git Terminal
+
+`git-terminal` opens the current repository in PowerShell 7 (Windows PowerShell fallback), or the native `$SHELL`/`/bin/sh` on Unix. `git-terminal --cwd PATH` opens a specific folder; `--command SCRIPT` runs an explicit shell command and propagates its exit status; `--print-setup` shows the resolved shell and client without launching one. The sibling `git-next` preview is available as a PowerShell alias or `$GIT_NEXT_EXECUTABLE`. The terminal does not prepend the experimental git-named preview to PATH.
+
+Windows installation creates a **Git Terminal** Start menu entry. Use `./install.ps1 -AddContextMenu` for **Open Git Terminal here** on folders and their backgrounds. Existing Git Bash entries, Git configuration, SSH credentials and original Git remain available. Uninstall removes only this installation's checksummed commands and its own shell integration. This is a native-shell terminal entry, not a POSIX/Bash emulator; Bash scripts still require an existing Bash installation.

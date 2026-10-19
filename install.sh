@@ -4,6 +4,7 @@ prefix=${GIT_NEXT_PREFIX:-"${XDG_DATA_HOME:-$HOME/.local/share}/git-next"}
 user_bin=${GIT_NEXT_BIN:-"$HOME/.local/bin"}
 commit=${GIT_NEXT_COMMIT:-}
 source_binary=${GIT_NEXT_SOURCE_BINARY:-}
+source_terminal=${GIT_NEXT_SOURCE_TERMINAL:-}
 case "${1:-}" in
   --replace-git) printf '%s\n' 'Replacement blocked: full Git compatibility has not passed. Install the isolated preview.' >&2; exit 1 ;;
   --uninstall)
@@ -13,6 +14,11 @@ case "${1:-}" in
       if command -v sha256sum >/dev/null; then actual=$(sha256sum "$user_bin/git-next" | cut -d ' ' -f 1); else actual=$(shasum -a 256 "$user_bin/git-next" | cut -d ' ' -f 1); fi
       [ "$actual" = "$expected" ] || { printf '%s\n' 'Command changed since installation; preserved.' >&2; exit 1; }
       rm "$user_bin/git-next"
+    fi
+    if [ -f "$prefix/installed-terminal.sha256" ] && [ -f "$user_bin/git-terminal" ]; then
+      expected_terminal=$(cut -d ' ' -f 1 "$prefix/installed-terminal.sha256")
+      if command -v sha256sum >/dev/null; then actual_terminal=$(sha256sum "$user_bin/git-terminal" | cut -d ' ' -f 1); else actual_terminal=$(shasum -a 256 "$user_bin/git-terminal" | cut -d ' ' -f 1); fi
+      [ "$actual_terminal" != "$expected_terminal" ] || rm "$user_bin/git-terminal"
     fi
     printf '%s\n' 'git-next preview command removed. Repositories, Git configuration and the original Git are preserved.'
     exit 0 ;;
@@ -33,18 +39,25 @@ if [ -z "$source_binary" ]; then
   : > "$prefix/installer-empty-gitconfig"
   success=0
   for source in https://github.com/neko233-com/git-next.git https://ghfast.top/https://github.com/neko233-com/git-next.git https://ghproxy.net/https://github.com/neko233-com/git-next.git; do
-    if GIT_CONFIG_GLOBAL="$prefix/installer-empty-gitconfig" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_COUNT=0 GIT_TERMINAL_PROMPT=0 cargo install --config net.git-fetch-with-cli=false --git "$source" --rev "$commit" --locked --bin git-next --root "$prefix" --force; then success=1; break; fi
+    if GIT_CONFIG_GLOBAL="$prefix/installer-empty-gitconfig" GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_COUNT=0 GIT_TERMINAL_PROMPT=0 cargo install --config net.git-fetch-with-cli=false --git "$source" --rev "$commit" --locked --bin git-next --bin git-terminal --root "$prefix" --force; then success=1; break; fi
   done
   [ "$success" = 1 ] || { printf '%s\n' 'All source transports failed; existing Git was not modified.' >&2; exit 1; }
   source_binary="$prefix/bin/git-next"
 fi
+source_terminal=${source_terminal:-"$(dirname "$source_binary")/git-terminal"}
+[ -f "$source_terminal" ] || { printf '%s\n' 'git-terminal is missing beside the client.' >&2; exit 1; }
+"$source_terminal" --version
 "$source_binary" doctor
 mkdir -p "$user_bin" "$prefix/preview/bin"
 if [ -f "$user_bin/git-next" ]; then cp -p "$user_bin/git-next" "$prefix/git-next.previous.$(date +%s)"; fi
 cp "$source_binary" "$user_bin/git-next.new"
 chmod 755 "$user_bin/git-next.new"
 mv -f "$user_bin/git-next.new" "$user_bin/git-next"
+cp "$source_terminal" "$user_bin/git-terminal.new"
+chmod 755 "$user_bin/git-terminal.new"
+mv -f "$user_bin/git-terminal.new" "$user_bin/git-terminal"
 cp "$source_binary" "$prefix/preview/bin/git"
 chmod 755 "$prefix/preview/bin/git"
 if command -v sha256sum >/dev/null; then sha256sum "$user_bin/git-next" > "$prefix/installed-command.sha256"; else shasum -a 256 "$user_bin/git-next" > "$prefix/installed-command.sha256"; fi
+if command -v sha256sum >/dev/null; then sha256sum "$user_bin/git-terminal" > "$prefix/installed-terminal.sha256"; else shasum -a 256 "$user_bin/git-terminal" > "$prefix/installed-terminal.sha256"; fi
 printf '%s\n' "Installed preview: $user_bin/git-next" 'Add its directory to PATH if needed. The git-named preview is outside PATH; existing Git is unchanged.'
