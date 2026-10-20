@@ -222,6 +222,15 @@ function Assert-GnRegistryCanRestore($Snapshot) {
     }
 }
 
+function Get-GnRegisteredUninstaller([string]$Root,[string]$Command) {
+    $path = $Command.Trim()
+    if ($path.StartsWith('"') -and $path.EndsWith('"')) { $path = $path.Substring(1,$path.Length-2) }
+    if (-not [IO.Path]::IsPathRooted($path) -or [IO.Path]::GetFileName($path) -notmatch '^unins[0-9]+\.exe$') { throw 'The registered Git uninstaller is invalid.' }
+    $path = Assert-GnOwnedPath $Root ([IO.Path]::GetFullPath($path))
+    if ([IO.Path]::GetDirectoryName($path).TrimEnd('\','/') -ine $Root.TrimEnd('\','/') -or -not [IO.File]::Exists($path)) { throw 'The registered Git uninstaller is outside the selected installation or missing.' }
+    return $path
+}
+
 function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $InstallRoot = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')
     $OriginalGitRoot = [IO.Path]::GetFullPath($OriginalGitRoot).TrimEnd('\','/')
@@ -233,16 +242,16 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     foreach ($name in @('migration/git-next-bridge.exe','migration/git-next-bridge-gui.exe')) {
         if (-not $package.files.PSObject.Properties[$name]) { throw 'The MSI lacks its owned migration bridge.' }
     }
-    $uninstaller = Assert-GnOwnedPath $OriginalGitRoot (Join-Path $OriginalGitRoot 'unins000.exe')
-    if (-not [IO.File]::Exists((Join-Path $OriginalGitRoot 'cmd/git.exe')) -or -not [IO.File]::Exists($uninstaller)) { throw 'The selected old installation is not the supported Git for Windows installer layout.' }
+    if (-not [IO.File]::Exists((Join-Path $OriginalGitRoot 'cmd/git.exe'))) { throw 'The selected old installation is not the supported Git for Windows installer layout.' }
     $hive = $null
+    $uninstaller = $null
     foreach ($candidate in @('CurrentUser','LocalMachine')) {
         $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$candidate,[Microsoft.Win32.RegistryView]::Registry64)
         try {
             $key = $base.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1')
             if ($key) {
-                try { $location = $key.GetValue('InstallLocation') } finally { $key.Dispose() }
-                if ($location -and [IO.Path]::GetFullPath($location).TrimEnd('\','/') -ieq $OriginalGitRoot) { $hive = $candidate; break }
+                try { $location = $key.GetValue('InstallLocation'); $uninstallCommand = $key.GetValue('UninstallString') } finally { $key.Dispose() }
+                if ($location -and [IO.Path]::GetFullPath($location).TrimEnd('\','/') -ieq $OriginalGitRoot) { $hive = $candidate; $uninstaller = Get-GnRegisteredUninstaller $OriginalGitRoot $uninstallCommand; break }
             }
         } finally { $base.Dispose() }
     }
@@ -279,7 +288,7 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $pointer = Assert-GnOwnedPath $configDirectory (Join-Path $configDirectory 'migration.json')
     if ([IO.File]::Exists($pointer)) { throw 'A prior migration transaction exists; resume or roll it back first.' }
     if ([IO.File]::Exists($systemConfig)) { throw 'A prior system-config migration exists; resume or roll it back first.' }
-    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=(Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant();release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
+    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=(Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant();release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_relative=[IO.Path]::GetFileName($uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
 }
 
 function Copy-GnMigrationFile([string]$SourceRoot,[string]$TargetRoot,$Record,[string]$AllowedTargetSha256 = '',[switch]$RestoreAccess) {
@@ -487,7 +496,7 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         Write-GnTakeoverJournal $transaction $Plan
         Start-GnRuntimeConfigTransaction $Plan.install_root (Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json) $Plan.runtime_configuration $configurationChanges
         Set-GnOldUpdateTasks $Plan.old_update_tasks $false
-        $uninstaller = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root 'unins000.exe')
+        $uninstaller = Get-GnRegisteredUninstaller $Plan.original_root (Join-Path $Plan.original_root $Plan.uninstaller_relative)
         if ((Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Plan.uninstaller_sha256) { throw 'The old uninstaller changed after planning.' }
         $Plan.status = 'removing-original'; Write-GnTakeoverJournal $transaction $Plan
         $process = Start-Process -FilePath $uninstaller -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART' -WindowStyle Hidden -PassThru

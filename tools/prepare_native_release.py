@@ -127,6 +127,8 @@ def main():
                     if name in seen: raise ValueError('Duplicate accepted archive member')
                     seen.add(name)
                     value = copy.copy(member)
+                    # PAX long-name records otherwise override the canonical archive root.
+                    value.pax_headers = {key: data for key, data in member.pax_headers.items() if key not in ('path', 'linkpath')}
                     value.name = prefix if name == '.' else prefix + '/' + name
                     value.uid = value.gid = 0
                     value.uname = value.gname = ''
