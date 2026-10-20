@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "phase": "performance",
+  "matrix_sha256": "31fe6140b0d449165b8c779e9b35554221eec46ec52ec10f179079c76de556b5",
+  "reference_sha256": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5",
+  "source_tree_sha256": "458af23b856b3e73cd49d41570c0db17c26480e9385f061deed5af1c1aca79fd",
+  "results": [
+    {
+      "case": "performance-1000",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 17.49,
+      "started_seconds_from_batch": 3.316,
+      "finished_seconds_from_batch": 20.806
+    },
+    {
+      "case": "performance-10000",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 76.098,
+      "started_seconds_from_batch": 20.807,
+      "finished_seconds_from_batch": 96.905
+    },
+    {
+      "case": "performance-100000",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 409.009,
+      "started_seconds_from_batch": 96.905,
+      "finished_seconds_from_batch": 505.914
+    },
+    {
+      "case": "performance-network",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 246.876,
+      "started_seconds_from_batch": 505.914,
+      "finished_seconds_from_batch": 752.79
+    },
+    {
+      "case": "frozen-input-readback",
+      "status": "pass"
+    }
+  ],
+  "release_eligible": false,
+  "native_mac_product_executed": false,
+  "personal_account_accessed": false,
+  "elapsed_seconds": 759.517,
+  "wall_clock_target_seconds": 60.0,
+  "wall_clock_target_met": false,
+  "workers": 1,
+  "msi_transactions_serialized": true,
+  "checks_skipped_to_meet_time_target": false,
+  "acceptance": "not-release-approved",
+  "diagnosis": [
+    "Windows candidate omitted core.fscache=true and materially regressed status",
+    "100000 loose fixture reference add exceeded setup timeout; wrapper descendant delayed timeout cleanup"
+  ],
+  "repairs": "Windows package defaults and scoped legacy mappings; packed batch fixtures; separate fixture deadline and owned process-tree timeout cleanup"
+}

@@ -1,0 +1,81 @@
+{
+  "status": "pass",
+  "scope": "Linux x64 Docker container local LF/status/restore/read/worktree/commit/format/Unix-discovery subset; no network/login/Mac or native-host performance acceptance",
+  "binary_sha256": "7f4c40db82e0c4bcfc815c6b5ccf498c1411d71c416b41315684d517a154ce8d",
+  "native_version": "git-next version 0.3.0-dev (experimental)",
+  "reference_version": "git version 2.47.3",
+  "machine": "x86_64",
+  "libc": [
+    "glibc",
+    "2.41"
+  ],
+  "python_version": "3.14.8",
+  "results": [
+    {
+      "test": "eol_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+    },
+    {
+      "test": "status_cache_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+    },
+    {
+      "test": "restore_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+    },
+    {
+      "test": "diff_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+    },
+    {
+      "test": "worktree_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+    },
+    {
+      "test": "acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "commit_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+    },
+    {
+      "test": "repository_format_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+    },
+    {
+      "test": "native_discovery_unix_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+    }
+  ],
+  "image_id": "sha256:fbfeaf61ca4a0a0204947f6778b0d0535b3c3ada819f2056dd89044a5e4ccf3e",
+  "target": "x86_64-unknown-linux-musl",
+  "container_platform": "linux/amd64",
+  "emulated_arm64": false,
+  "source_tree_sha256": "c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e",
+  "source_archive": "accepted-source-c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e.zip",
+  "source_archive_sha256": "a867e5e9a275ec4ce7ec54d692287524b16a0a56655aa700028b8cec6cf29143",
+  "binaries": {
+    "git": "d4334d001877650f0ae2c6016dd2aad051beece7e769a7711363fd3cd3d59d37",
+    "git-next": "7f4c40db82e0c4bcfc815c6b5ccf498c1411d71c416b41315684d517a154ce8d",
+    "git-terminal": "2d6d57a80faf186dd106dfd133fbf563fc38f38d0b45a5d299be294bfb8f2529",
+    "git-lfs": "9cca98ebfbe4f910867670ddddfbbc60e56a9147903566281a1e3b1090ceaceb",
+    "git-next-lfs-filter": "b33896c295676c49f27f2873af7d6134c3cd0f40114721bd7c2cea28ff0260fe"
+  },
+  "complete_git_parity": false,
+  "system_git_replaced": false,
+  "real_account_login_verified": false,
+  "native_macos_accepted": false,
+  "physical_arm64_accepted": false,
+  "release_published": false,
+  "binary_has_no_dynamic_interpreter": true
+}

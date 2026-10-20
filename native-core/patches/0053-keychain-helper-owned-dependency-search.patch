@@ -1,0 +1,11 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -1299,5 +1299,8 @@
+   add_executable(git-credential-osxkeychain ${CMAKE_SOURCE_DIR}/contrib/credential/osxkeychain/git-credential-osxkeychain.c)
+   get_target_property(git_next_credential_libraries common-main LINK_LIBRARIES)
+   target_link_libraries(git-credential-osxkeychain ${git_next_credential_libraries} "-framework Security" "-framework CoreFoundation")
++  foreach(git_next_prefix IN LISTS CMAKE_PREFIX_PATH)
++    target_link_directories(git-credential-osxkeychain PRIVATE "${git_next_prefix}/lib")
++  endforeach()
+   install(TARGETS git-credential-osxkeychain RUNTIME DESTINATION libexec/git-core)
+ endif()

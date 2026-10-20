@@ -2,6 +2,8 @@
 
 No blanket faster-than-Git, low-memory or low-latency claim is established for this experimental version. Correctness and compatibility precede replacement.
 
+A Windows `FindFirstFileExW` large-fetch experiment was rejected before installation. In an eight-pair, instrumented 100000-file diagnostic, directory-walk median was 60.955 ms versus 57.781 ms for the instrumented baseline. Both scanned the same files and verified unchanged stage IDs/HEAD plus independent fsck. These are internal-phase diagnostics, not accepted process latency measurements. The uninstalled candidate was `94d37ceb...`; its new directory backend and dependency patch were removed. Existing accepted binaries and their timings remain unchanged. The diagnostic/source archive is retained locally under `.evidence/rejected-large-fetch-*`. [Microsoft API contract](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfileexw).
+
 Use optimized final binaries. Record client/reference versions, source SHA, CPU/OS, repository object and worktree counts, transport, cache state, network and concurrency. Separate cold clone, warm clone, incremental fetch, already-current pull, status, object lookup and commit. Report median and tail latency across repeated trials, not a single fastest run. Compare identical results with independent fsck and refs/worktree checks.
 
 Track process-tree resident/peak memory and child processes separately from language allocator counters. A file cache or OS page cache is not a client memory leak. Do not manufacture zero RSS from an unsupported measurement API. Capture protocol bytes/object reuse for incremental transfer; wall time alone does not establish less disk/network work.
@@ -9,3 +11,362 @@ Track process-tree resident/peak memory and child processes separately from lang
 No external Git/OpenSSH runtime fallback is permitted in performance runs. Explicit reference Git fixture generation is outside measured client operations. Benchmark only disposable repositories and public or authorized data; sanitize paths/hostnames from published reports.
 
 Current implementation caps checkout/pack workers, shares a two-worker SSH runtime and copies only missing local objects. These are design choices, not evidence of a universal speedup. Missing operations cannot be benchmarked as faster successes.
+
+## Reproduce local latency
+
+```sh
+python tests/benchmark.py target/release/git-next --runs 40 --files 1000 --output benchmark.json
+```
+
+On Windows append `.exe`. The harness creates an isolated HOME/USERPROFILE and a disposable 1000-file SHA-1 repository. It warms each operation three times, randomizes client order with seed 233, checks successful output against reference Git, and runs independent `fsck`. It records source-tree and binary SHA-256, versions, OS/CPU, median and nearest-rank p95, and refuses a binary that changes during measurement. The measured client PATH contains no Git/OpenSSH. `--client-fscache on|off` supports explicitly labeled experiments without changing installed configuration; default measurements retain the native default.
+
+`--directories` selects the data layout (default 16); `--files 100000 --directories 10000 --fixture-layout packed --timeout 180` measures many small directories. Reports retain the configured/actual directory counts. Optional `--baseline-binary` plus `--baseline-checkpoint` measures a retained native client in the same randomized fixture with its verified binary/source identity. Both native clients receive the Git/OpenSSH-free runtime environment and unchanged-byte checks. Each layout remains a separate workload; a dense-directory improvement does not establish wide-tree performance.
+
+Benchmark and validation-failure JSON files are written as UTF-8/LF on every platform. Repeated Windows generation must preserve that shared text representation.
+
+## Reproduce loopback HTTPS latency
+
+```sh
+python tests/network_benchmark.py target/release/git-next --runs 40 --files 1000 --output network-benchmark.json
+```
+
+Use `.exe` on Windows. This harness measures full clone, incremental fetch and fast-forward-only pull against a temporary local smart-HTTPS server. A private fixture CA, IP hostname validation and a generated static authorization header stay inside disposable profiles; no real provider login, user trust-store or global configuration changes occur. The reference server uses Git's HTTP backend only as fixture infrastructure. Native client PATH contains no Git/OpenSSH. On Windows the reference process explicitly selects OpenSSL so the short-lived private CA can be validated without a nonexistent fixture revocation service; native TLS uses rustls. Certificate verification remains enabled. The existing Python server responds with HTTP/1.0; this does not establish HTTP/2/v2-protocol, WAN, provider, SSH, packet-byte or object-reuse performance.
+
+Each trial independently verifies HEAD/tracking refs, all worktree bytes, staged IDs, fsck and unchanged source object bytes. Fetch must preserve HEAD/index/worktree and retain the previous reachable objects. Fixture copies, clean-index priming, verification and cleanup are outside timing; process creation, TLS/HTTP/backend work, transfer and client writes are included. Three warm-ups precede randomized paired samples with seed 233. Reports use UTF-8/LF and pin the native binary/source, benchmark/helper hashes, versions and request counts. `--validation-only --runs 1 --files 16` runs a conformance smoke and emits no latency statistics. Such a smoke can overlap builds; accepted latency runs must wait for build/test/install activity to finish.
+
+## Rejected serial HEAD/index experiment · 2026-10-20
+
+The uninstalled `5a1fbe43...` candidate passed 23 optimized fixtures, including corrected protected-path validation, but its serial streaming proof delayed the existing parallel scan. In the [same-fixture 40-round comparison](benchmarks/windows-x64-0.3.0-dev-100000-status-head-dense-20261020.json), 100000 files across 16 directories measure clean status at 98.239/103.171 ms median/p95 versus the installed `d9a17139...` baseline at 91.827/101.450 and Git at 78.021/85.348. This shortcut was removed from the default implementation. Tracked/untracked ordering, configuration validation and regression fixtures are retained with the full comparison. Neither the earlier missed-validation prototype nor this slower candidate was installed.
+
+Wide-directory timing failed output validation: reference Git briefly reported existing files as deleted. A separate reference-only 10000-file/1000-directory diagnostic, with no native client executed, reproduced two nonempty status results in 60 default runs. The staged-object digest stayed unchanged and sampled files still existed. Explicit reference-only experiments disabling fscache or preload each had zero occurrences in 60 runs; this implicates that path but does not prove a root cause or a universal fix. The original Git/global configuration is unchanged. [Failure and reference-only diagnostic](benchmarks/windows-x64-reference-wide-validation-20261020.json). These failed runs have no valid wide-tree latency report and are not used as speed evidence.
+
+The [installed native d9 checkpoint](benchmarks/windows-x64-installed-wide-stability-0.3.0-dev-d9-20261020.json) independently passes 60 clean status calls in each object format on 10000 files/1000 directories. Every worktree byte, staged ID, HEAD and fsck is checked; optional-lock-disabled calls leave the index unchanged. This establishes scoped stability, not wide-tree latency or complete Git parity.
+
+## Windows ignored-status checkpoint · 2026-10-20
+
+Installed `c425734c0640...`, 40 paired warm samples, retained ecf1 baseline, isolated profiles and system config enabled. Native PATH contains no Git/OpenSSH. No own build/test/install overlaps measurement; output, stage IDs/HEAD and fsck checks pass. These are plain status/read measurements, not dirty ignored-mode or production/Unity performance proof.
+
+[1000 data files](benchmarks/windows-x64-0.3.0-dev-status-ignored-1000-20261020.json):
+
+| Operation | Current median / p95 ms | Prior ecf1 median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| version | 7.063 / 8.442 | 7.184 / 7.761 | 19.115 / 19.965 |
+| rev_parse | 10.936 / 12.078 | 10.862 / 11.955 | 20.370 / 21.988 |
+| status_clean | 16.334 / 17.243 | 16.503 / 17.928 | 25.846 / 27.611 |
+| cat_file | 11.185 / 12.280 | 11.180 / 12.644 | 21.016 / 23.743 |
+| diff_clean | 15.386 / 17.106 | 15.305 / 17.358 | 22.278 / 24.883 |
+| show_metadata | 11.535 / 13.581 | 11.778 / 13.889 | 23.179 / 26.501 |
+| log_metadata | 12.119 / 13.591 | 12.201 / 13.316 | 23.358 / 25.318 |
+
+[100000 data files](benchmarks/windows-x64-0.3.0-dev-status-ignored-100000-20261020.json):
+
+| Operation | Current median / p95 ms | Prior ecf1 median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| version | 7.208 / 8.246 | 7.093 / 8.319 | 19.255 / 22.817 |
+| rev_parse | 11.844 / 16.567 | 11.699 / 12.960 | 21.514 / 25.362 |
+| status_clean | 94.205 / 100.813 | 92.986 / 104.870 | 77.456 / 84.167 |
+| cat_file | 12.550 / 13.596 | 12.385 / 13.486 | 23.650 / 25.136 |
+| diff_clean | 59.844 / 63.304 | 60.127 / 64.315 | 59.554 / 64.556 |
+| show_metadata | 12.143 / 13.306 | 12.257 / 13.939 | 46.995 / 48.854 |
+| log_metadata | 12.165 / 13.553 | 12.173 / 13.404 | 22.817 / 25.495 |
+
+## Windows status-v2 checkpoint · 2026-10-20
+
+Installed `ecf1b66b6dd1...` has two 40-round paired reports, with retained a4ba in each randomized fixture. System configuration is enabled, profiles isolated, native PATH contains no Git/OpenSSH, and output/fsck checks pass. No own build/test/install overlaps timing; caches remain warm. These reports measure the existing plain status/read commands, not dirty-v2/submodule/history scaling.
+
+[1000 data files](benchmarks/windows-x64-0.3.0-dev-status-v2-1000-20261020.json):
+
+| Operation | Current median / p95 ms | Previous a4ba median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| version | 6.854 / 7.947 | 6.980 / 7.625 | 18.250 / 19.560 |
+| rev_parse | 10.820 / 12.657 | 10.783 / 12.682 | 20.312 / 23.744 |
+| status_clean | 16.332 / 18.289 | 16.285 / 17.864 | 26.007 / 28.137 |
+| cat_file | 11.006 / 12.414 | 11.037 / 12.660 | 21.083 / 23.620 |
+| diff_clean | 15.084 / 16.609 | 14.924 / 16.159 | 21.886 / 24.299 |
+| show_metadata | 11.107 / 12.489 | 10.965 / 12.181 | 22.401 / 23.617 |
+| log_metadata | 12.211 / 13.384 | 11.966 / 13.153 | 22.956 / 24.746 |
+
+[100000 data files](benchmarks/windows-x64-0.3.0-dev-status-v2-100000-20261020.json):
+
+| Operation | Current median / p95 ms | Previous a4ba median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| version | 6.771 / 7.640 | 6.564 / 7.723 | 18.458 / 20.522 |
+| rev_parse | 11.731 / 13.031 | 11.835 / 12.836 | 21.754 / 22.980 |
+| status_clean | 87.212 / 89.747 | 87.383 / 91.492 | 71.041 / 74.962 |
+| cat_file | 11.513 / 12.788 | 11.734 / 12.673 | 21.789 / 23.815 |
+| diff_clean | 57.819 / 60.004 | 56.813 / 59.607 | 55.671 / 60.087 |
+| show_metadata | 11.895 / 13.003 | 11.611 / 12.569 | 45.975 / 47.892 |
+| log_metadata | 11.038 / 12.304 | 11.442 / 12.128 | 21.550 / 23.698 |
+
+Earlier network and large-layout reports below keep their original bytes/scope. Broad speedup, memory, cold-cache, Mac and physical ARM acceptance remain open.
+
+## Windows installed staging-correction checkpoint · 2026-10-20
+
+Installed `a4ba7c7b...` has a [40-round 1000-file paired read/startup report](benchmarks/windows-x64-0.3.0-dev-staging-final-system-20261020.json), with retained b414 in the same randomized fixture. System configuration is enabled, profiles are isolated, native PATH contains no Git/OpenSSH and output/fsck checks pass. Builds, tests and installation finish before timing. OS caches stay warm.
+
+| Operation | Current median / p95 ms | Previous b414 median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| version | 7.437 / 9.156 | 7.213 / 8.732 | 19.702 / 21.944 |
+| rev_parse | 11.805 / 12.913 | 11.625 / 13.128 | 21.137 / 23.217 |
+| status_clean | 17.348 / 18.599 | 17.202 / 17.931 | 27.172 / 28.687 |
+| cat_file | 12.235 / 13.709 | 12.298 / 14.049 | 23.114 / 26.368 |
+| diff_clean | 16.597 / 17.905 | 16.715 / 18.559 | 24.198 / 26.747 |
+| show_metadata | 12.172 / 13.321 | 12.193 / 13.003 | 23.788 / 26.056 |
+| log_metadata | 11.805 / 12.822 | 12.074 / 12.867 | 22.540 / 24.311 |
+
+The earlier 100000-file and loopback HTTPS results below retain b414 bytes and their original scope. They do not establish these corrective bytes' large-repository or network latency. Broad performance, memory, cold-cache, dirty/conflicted, Mac and physical ARM acceptance remain open.
+
+## Windows loopback HTTPS checkpoint · 2026-10-20
+
+The retained/installed-at-measurement `b41410ed...` client has [40-round paired measurements](benchmarks/windows-x64-0.3.0-dev-network-https-status-format-20261020.json) and an [identity checkpoint](benchmarks/windows-x64-network-local-checkpoint-0.3.0-dev-status-format-20261020.json). The fixture has 1000 data files with repeated LF text lines, one attribute file and 270259 initial worktree bytes; its next commit edits ten data files. Three warm-ups precede randomized pairs with seed 233. System configuration is disabled and profiles are isolated; Windows reference TLS explicitly uses OpenSSL, native TLS uses rustls, and both validate the private fixture CA/IP. Static fixture authorization avoids provider/vault interaction. The local Python server responds with HTTP/1.0. Build/test/install activity finished before measurement.
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| full clone | 286.028 / 313.837 | 600.055 / 650.665 |
+| incremental fetch | 175.167 / 187.368 | 279.447 / 310.341 |
+| pull --ff-only | 247.101 / 261.362 | 358.906 / 383.719 |
+
+Each trial verifies HEAD/tracking refs, every worktree byte, staged IDs, fsck and unchanged source object bytes. Fetch additionally preserves HEAD/index/worktree and retains old reachable objects. Copying, priming, verification and cleanup are outside timing; client startup, TLS/HTTP/backend work, transfer and writes are included. These small warm loopback results are faster than the paired reference; they do not establish WAN, large/binary repositories, cold-cache, SSH, HTTP/2/v2, protocol-byte reuse, memory or real-account performance. The later directory-output defect in these bytes is recorded separately; clean read/network measurements are not relabeled as the corrective build.
+
+## Windows native status-format checkpoint · 2026-10-20
+
+The installed `b41410ed...` bytes have [1000-file loose](benchmarks/windows-x64-0.3.0-dev-status-format-system-20261020.json) and [100000-file packed](benchmarks/windows-x64-0.3.0-dev-100000-status-format-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the accepted `e5a1e9f8...` native client in the same fixture. Enabled system configuration, isolated profiles and native PATH without Git/OpenSSH are retained. Successful output and fsck pass; build/test/install activity finished before measurement. OS caches stay warm.
+
+| Data files | Operation | Current median / p95 ms | Previous e5a median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- | --- |
+| 1000 | version | 7.926 / 9.009 | 7.752 / 8.923 | 20.714 / 22.755 |
+| 1000 | rev-parse HEAD | 12.138 / 13.412 | 12.045 / 13.304 | 22.211 / 23.854 |
+| 1000 | status --porcelain (clean) | 17.426 / 18.762 | 17.474 / 19.116 | 27.875 / 30.190 |
+| 1000 | cat-file (blob) | 11.677 / 12.783 | 11.248 / 12.799 | 22.347 / 24.081 |
+| 1000 | diff (clean) | 16.780 / 18.331 | 16.482 / 17.940 | 24.403 / 25.797 |
+| 1000 | show metadata | 12.173 / 13.488 | 11.723 / 12.697 | 23.679 / 26.973 |
+| 1000 | log metadata | 12.840 / 13.993 | 12.490 / 13.581 | 23.941 / 26.069 |
+| 100000 | status --porcelain (clean) | 92.109 / 95.833 | 92.877 / 101.530 | 76.995 / 83.450 |
+| 100000 | diff (clean) | 61.447 / 65.924 | 60.757 / 63.594 | 60.540 / 64.770 |
+
+Distinct layouts/settings are separate workloads. These correctness/output changes do not establish universal improvement; large clean status remains an unfinished performance requirement. Full protocol, cold-cache, memory, dirty/conflicted, Mac and physical ARM performance remain open. Invalid reference-wide timing reports remain excluded from speed claims.
+
+## Windows status consistency checkpoint · 2026-10-20
+
+The installed `e5a1e9f8...` bytes have [1000-file loose](benchmarks/windows-x64-0.3.0-dev-status-consistency-system-20261020.json) and [100000-file packed](benchmarks/windows-x64-0.3.0-dev-100000-status-consistency-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the retained `d9a17139...` client in the same fixture. System configuration is enabled, profiles are isolated and native PATH contains no Git/OpenSSH. Successful outputs and fsck pass. Builds/tests/installation finished before timing; OS caches stay warm.
+
+| Data files | Operation | Current median / p95 ms | Previous d9 median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- | --- |
+| 1000 | version | 6.582 / 7.872 | 6.675 / 7.455 | 17.582 / 19.387 |
+| 1000 | rev-parse HEAD | 10.773 / 11.767 | 10.921 / 11.826 | 19.931 / 21.319 |
+| 1000 | status --porcelain (clean) | 15.651 / 17.982 | 15.709 / 17.223 | 24.881 / 27.252 |
+| 1000 | cat-file (blob) | 10.675 / 11.745 | 10.650 / 12.082 | 20.851 / 23.597 |
+| 1000 | diff (clean) | 14.486 / 16.508 | 14.562 / 15.706 | 20.988 / 23.475 |
+| 1000 | show metadata | 11.080 / 12.630 | 11.150 / 12.447 | 22.037 / 23.867 |
+| 1000 | log metadata | 10.720 / 12.031 | 11.084 / 11.784 | 20.615 / 24.294 |
+| 100000 | status --porcelain (clean) | 88.570 / 94.355 | 88.779 / 95.999 | 70.960 / 76.161 |
+| 100000 | diff (clean) | 58.121 / 60.929 | 58.206 / 61.869 | 56.308 / 60.362 |
+
+These two layouts have distinct settings/object layouts and do not form a controlled scaling curve. Large clean status remains slower than Git. The correctness fixes are retained without claiming universal performance improvement. Wide-tree timing remains invalid because of the separately recorded reference-output failures; native wide-tree stability is accepted independently. Cold-cache, memory, dirty/conflicted workload, network, Mac and physical ARM performance remain open.
+
+## Windows directory-only metadata checkpoint · 2026-10-20 · 0.3.0-dev
+
+The current [installed bytes](ACCEPTANCE.md) use the required `FILE_FULL_DIR_INFO` subset instead of unused file-ID/short-name/MFT information. Five cache units and an independent Windows metadata API check pass, including a real junction; that API fixture explicitly records unavailable ordinary-symlink privilege. Optimized product conformance and installed LF/filter/credential checks also pass. [Microsoft's query contract](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_full_dir_info) explains the directory-only information source; measured results below determine actual performance.
+
+All three workloads have 40 randomized samples per client/operation after three warm-ups, enabled conventional system configuration, isolated profiles and no Git/OpenSSH on the client PATH. Successful output matches reference Git and independent fsck passes. Builds, tests and installation do not overlap measurement. OS caches stay warm; no cold-cache, memory, network or broad-platform claim follows.
+
+The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-full-directory-system-20261020.json):
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 7.441 / 8.909 | 19.959 / 21.494 |
+| rev-parse HEAD | 11.209 / 12.473 | 20.524 / 22.954 |
+| status --porcelain (clean) | 17.771 / 19.547 | 28.549 / 30.209 |
+| cat-file (tracked blob) | 12.180 / 13.430 | 23.371 / 25.586 |
+| diff (clean) | 16.881 / 18.066 | 24.917 / 29.376 |
+| show --no-patch --format=fuller | 11.645 / 13.197 | 22.986 / 28.067 |
+| log -n 20 (one fixture commit) | 11.730 / 12.876 | 22.176 / 24.800 |
+
+| Data files / layout | Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| 10000 / loose | status --porcelain (clean) | 24.463 / 31.165 | 32.484 / 40.059 |
+| 10000 / loose | diff (clean) | 18.508 / 20.994 | 27.981 / 31.424 |
+| 100000 / packed | status --porcelain (clean) | 90.626 / 94.233 | 76.979 / 82.548 |
+| 100000 / packed | diff (clean) | 60.456 / 63.182 | 57.660 / 64.905 |
+
+[10000-file report](benchmarks/windows-x64-0.3.0-dev-10000-full-directory-20261020.json), [100000-file report](benchmarks/windows-x64-0.3.0-dev-100000-packed-full-directory-20261020.json). The packed fixture has local input/LF settings and a distinct object layout. All seven median results are faster than the paired reference in the 1000/10000-file runs. At 100000 files, clean status remains near the prior shared-cache result, while diff moves from 84.942 to 60.456 ms median across the retained separate snapshots. Each report retains its own paired Git baseline and bytes. Status and diff medians remain slower than reference Git; the broad performance goal is incomplete.
+
+## Windows shared-cache/lazy-diff checkpoint · 2026-10-20 · 0.3.0-dev
+
+The newer directory-only metadata checkpoint is recorded above. This shared-cache snapshot retains its earlier bytes and timing results.
+
+These previously installed bytes are pinned by [acceptance](ACCEPTANCE.md). Each paired workload has 40 samples per client/operation after three warm-ups, randomized order seed 233, enabled conventional system configuration and isolated profiles. The client PATH excludes Git/OpenSSH. Successful outputs match reference Git and independent fsck passes. Build/test/install activity does not overlap measurement. Cache snapshots live for one scan; no persistent daemon or repository layout migration is involved.
+
+The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-shared-cache-system-20261020.json):
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 7.097 / 7.857 | 18.333 / 19.719 |
+| rev-parse HEAD | 11.410 / 12.356 | 20.583 / 21.939 |
+| status --porcelain (clean) | 21.090 / 22.641 | 25.991 / 28.278 |
+| cat-file (tracked blob) | 10.691 / 11.968 | 20.623 / 22.519 |
+| diff (clean) | 19.917 / 21.349 | 21.651 / 23.647 |
+| show --no-patch --format=fuller | 11.303 / 11.928 | 22.158 / 25.208 |
+| log -n 20 (one fixture commit) | 10.550 / 11.374 | 20.720 / 22.389 |
+
+| Data files / layout | Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| 10000 / loose | status --porcelain (clean) | 24.261 / 26.466 | 31.575 / 33.421 |
+| 10000 / loose | diff (clean) | 19.685 / 20.950 | 26.726 / 28.511 |
+| 100000 / packed | status --porcelain (clean) | 91.116 / 93.629 | 71.142 / 75.057 |
+| 100000 / packed | diff (clean) | 84.942 / 88.588 | 55.608 / 58.563 |
+
+[10000-file report](benchmarks/windows-x64-0.3.0-dev-10000-shared-cache-20261020.json), [100000-file report](benchmarks/windows-x64-0.3.0-dev-100000-packed-shared-cache-20261020.json). The packed fixture uses local input/LF settings; it is not the same object layout/settings as the loose fixtures. All seven operations are faster at median in the 1000/10000-file paired runs. At 100000 files, status/diff remain slower than Git despite improving from the retained 206.106/180.535 ms pre-optimization medians to 91.116/84.942 ms. These before/after runs occurred separately; each retains its own paired reference and exact bytes. The lazy-map-only experiment remains [recorded](benchmarks/windows-x64-0.3.0-dev-100000-packed-lazy-candidate-20261020.json).
+
+Disabling core.fscache was rejected: the retained [explicit off experiment](benchmarks/windows-x64-0.3.0-dev-100000-packed-fscache-off-20261020.json) measures 2208.278/5236.688 ms clean status/diff medians. It did not alter installed configuration. The selected default keeps the cache enabled and shares per-scan listings. Large blobs, dirty/conflicted repositories, cold cache, memory, network, physical ARM64 and macOS performance remain separate requirements.
+
+## Larger Windows worktrees: retained pre-optimization baseline · 2026-10-20
+
+These reports pin the accepted/installed `264214cf...` bytes and their original source hash. Forty measured samples per client/operation, three warm-ups, seed 233, enabled system configuration and isolated profiles; all successful outputs match reference Git and independent fsck passes. No Git/OpenSSH is present on the measured client PATH.
+
+| Data files / layout | Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- | --- |
+| 10000 / loose | status --porcelain | 25.004 / 26.385 | 31.247 / 34.899 |
+| 10000 / loose | diff (clean) | 32.818 / 35.130 | 25.255 / 28.048 |
+| 100000 / packed | status --porcelain | 206.106 / 230.855 | 77.922 / 88.311 |
+| 100000 / packed | diff (clean) | 180.535 / 195.507 | 57.700 / 62.514 |
+
+The [10000-file loose sample](benchmarks/windows-x64-0.3.0-dev-10000-files-20261020.json) retains the earlier fixture's isolated/system EOL settings. The [100000-file packed sample](benchmarks/windows-x64-0.3.0-dev-100000-packed-baseline-20261020.json) uses fixture-only fast-import to create a pack and LF checkout with local autocrlf=input/eol=lf. Each is an independent paired comparison; different object layouts/settings must not be treated as one controlled scaling curve. The larger clean status/diff results are slower than Git and remain an unfinished performance requirement.
+
+The earlier [100000-file loose attempt](benchmarks/windows-x64-0.3.0-dev-100000-loose-setup-failure-20261020.json) timed out in reference Git add after 180 seconds, before measurements. It has no valid latency result. Packed preparation avoids that loose-object setup path and is distinct from client runtime behavior. [Git fast-import input](https://git-scm.com/docs/git-fast-import) is used only by the fixture, never as a native fallback.
+
+Use `--fixture-layout packed --files 100000 --timeout 180` for the packed workload. The timeout also covers fixture preparation; progress is printed outside command timing. Use `--source-checkpoint` when measuring a retained historical binary so current source is not assigned to old bytes. The new installed shared-cache/lazy-diff checkpoint above records matching optimized acceptance and paired measurements. Large blobs, dirty/conflicted repositories, cold cache, memory, network and platform-wide performance remain separate scopes.
+
+## Windows x64 pending-merge snapshot · 2026-10-20 · 0.3.0-dev
+
+The [previous pending-merge optimized bytes](benchmarks/windows-x64-0.3.0-dev-merge-pending-system-20261020.json) have 40 samples per client/operation after three warm-ups, randomized order seed 233, 1000 tracked files and one commit. Conventional system configuration is enabled, the profile is isolated and the client PATH excludes Git/OpenSSH. All Windows/Linux build, installation and acceptance activity finished before measurement.
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 7.041 / 7.854 | 18.161 / 19.999 |
+| rev-parse HEAD | 11.043 / 12.030 | 20.454 / 22.184 |
+| status --porcelain (clean) | 21.634 / 22.525 | 26.229 / 28.522 |
+| cat-file (tracked blob) | 10.625 / 11.863 | 20.563 / 23.183 |
+| diff (clean) | 20.328 / 21.811 | 22.083 / 24.222 |
+| show --no-patch --format=fuller | 10.582 / 11.768 | 21.165 / 22.873 |
+| log -n 20 (one fixture commit) | 11.495 / 13.044 | 21.762 / 23.589 |
+
+The previous binary's clean merge measurement below retains its original hash; it is not relabeled as this build. Linux container runtime conformance does not establish host performance. No universal speed, cold-cache, memory, network, large-repository, ARM64 or macOS claim is made.
+
+## Windows x64 native-merge snapshot · 2026-10-20 · 0.3.0-dev
+
+The historical native-merge optimized bytes have a [40-round startup/read comparison](benchmarks/windows-x64-0.3.0-dev-merge-system-20261020.json). Same 1000-file/one-commit workload, three warm-ups, seed 233, enabled system configuration, isolated profile and no Git/OpenSSH on the client PATH. Build, installation and acceptance finished before measurement.
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 6.883 / 8.103 | 17.863 / 20.483 |
+| rev-parse HEAD | 11.113 / 12.045 | 20.564 / 21.883 |
+| status --porcelain (clean) | 20.708 / 22.129 | 25.173 / 26.559 |
+| cat-file (tracked blob) | 10.755 / 11.546 | 20.805 / 22.850 |
+| diff (clean) | 19.548 / 20.863 | 21.330 / 23.006 |
+| show --no-patch --format=fuller | 10.552 / 11.588 | 20.728 / 22.335 |
+| log -n 20 (one fixture commit) | 11.297 / 12.242 | 21.554 / 23.972 |
+| merge --no-edit topic | 110.294 / 118.245 | 105.835 / 109.239 |
+
+The merge row is a separate [clean two-parent workload](benchmarks/windows-x64-0.3.0-dev-merge-operation-20261020.json): 1000 text data files plus one attribute file, three initial commits, nonoverlapping same-file changes and one incoming separate-file change. Each operation starts from a fresh fixture copy with a primed clean index. Copying, priming and verification are outside measurement; process creation and captured output are included. Forty measured pairs follow three warm-up pairs in randomized order. Raw commit/parents/tree, index stages, all worktree file hashes, ORIG_HEAD, HEAD reflog, clean status and independent fsck match after each pair. Windows read-only object fixture cleanup is outside timing.
+
+Reproduce with `python tests/merge_benchmark.py target/release/git-next.exe --runs 40 --files 1000 --output merge-benchmark.json`. These results do not establish conflict, recovery, large-repository, cold-cache, memory, network or native macOS/Linux performance. Full takeover and the broad high-performance goal remain open.
+
+The seven read/startup operations are faster in this run. Clean merge is slightly slower than reference Git at median and p95; the journal/backup safety path has not been justified as a faster merge implementation.
+
+## Windows x64 native-discovery snapshot · 2026-10-20 · 0.3.0-dev
+
+The installed optimized bytes are pinned by the [enabled-system report](benchmarks/windows-x64-0.3.0-dev-discovery-system-20261020.json). Forty samples per client/operation, three warm-ups, randomized order, 1000 files and one commit; successful output matches reference Git. The profile is isolated and client PATH contains no Git/OpenSSH. Conventional system configuration stays enabled. Build/install/acceptance activity finished before the final benchmark sequence.
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 6.844 / 7.977 | 18.330 / 19.937 |
+| rev-parse HEAD | 11.292 / 12.290 | 21.007 / 23.673 |
+| status --porcelain (clean) | 20.575 / 21.863 | 25.571 / 28.327 |
+| cat-file (tracked blob) | 10.694 / 12.170 | 20.950 / 22.354 |
+| diff (clean) | 19.597 / 20.984 | 21.440 / 23.097 |
+| show --no-patch --format=fuller | 10.708 / 11.652 | 21.339 / 22.552 |
+| log -n 20 (one fixture commit) | 10.825 / 12.001 | 21.868 / 24.139 |
+
+These seven operations are faster in this workload. A fresh [previous-binary baseline](benchmarks/windows-x64-0.3.0-dev-discovery-baseline-20261020.json) records clean status at 58.771/60.687 ms and clean diff at 58.054/62.714 ms with system configuration enabled. Removing Git subprocess configuration/auxiliary discovery reduces this startup cost; the enabled-system tripwire independently verifies no fallback. The baseline's source-tree hash is taken from its earlier accepted checkpoint after matching the binary hash, rather than assigning current source to old bytes.
+
+The separate [system-disabled run](benchmarks/windows-x64-0.3.0-dev-discovery-nosystem-20261020.json) records native clean status at 20.472/22.260 ms and clean diff at 19.607/21.097 ms. Earlier slow snapshots below retain their original accepted bytes and measurements. Configuration modes and fixtures can change performance; no cross-platform, large-repository, cold-cache, memory, network throughput or universal ultra-low-latency conclusion follows.
+
+Use `--system-config-enabled` for the additional mode. `--source-checkpoint <accepted-benchmark.json>` identifies historical binaries only after verifying the recorded binary hash. Reports pin the harness hash as well as build inputs. No real user credentials are used or reported.
+
+## Windows x64 LF/restoration snapshot · 2026-10-20 · 0.3.0-dev
+
+Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned installed binary and results](benchmarks/windows-x64-0.3.0-dev-lf-20261020.json).
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 7.161 / 8.410 | 18.141 / 20.413 |
+| rev-parse HEAD | 10.891 / 12.437 | 20.476 / 22.425 |
+| status --porcelain (clean) | 40.408 / 44.413 | 36.940 / 39.395 |
+| cat-file (tracked blob) | 10.787 / 11.700 | 20.889 / 22.538 |
+| diff (clean) | 39.747 / 42.607 | 28.292 / 30.860 |
+| show --no-patch --format=fuller | 10.936 / 12.438 | 22.359 / 27.358 |
+| log -n 20 (one fixture commit) | 10.715 / 11.819 | 21.002 / 23.224 |
+
+Version/ref/object/metadata reads are faster in this run. Clean status and diff remain slower. The history measurement contains one commit; no long-history throughput, all-operations or ultra-low-latency completion claim is established. Earlier snapshots ran at different times; compare each client pair within its own run. Canonical status retains the unchanged-file stat fast path and hashes after a mismatch so conversion-equivalent saves do not become false content changes.
+
+## Windows x64 read-command snapshot · 2026-10-19 · 0.3.0-dev
+
+Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned optimized binary and results](benchmarks/windows-x64-0.3.0-dev-read.json).
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 6.812 / 7.801 | 18.864 / 21.596 |
+| rev-parse HEAD | 10.469 / 11.226 | 19.704 / 21.286 |
+| status --porcelain (clean) | 40.775 / 44.109 | 37.490 / 39.105 |
+| cat-file (tracked blob) | 10.389 / 10.908 | 20.508 / 21.700 |
+| diff (clean) | 38.879 / 42.002 | 28.219 / 29.526 |
+| show --no-patch --format=fuller | 10.558 / 11.660 | 21.611 / 23.357 |
+| log -n 20 (one fixture commit) | 10.801 / 11.652 | 21.514 / 22.905 |
+
+Version/ref/object/commit metadata reads are faster in this run. Clean status and diff remain slower. Log measures one commit; it provides no evidence about long-history traversal throughput. These results do not satisfy the universal high-performance goal. Reproduce with `python tests/benchmark.py target/release/git-next --read-commands --runs 40 --files 1000`.
+
+## Windows x64 local snapshot · 2026-10-19 · 0.3.0-dev
+
+Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1. [Exact optimized bytes and measurements](benchmarks/windows-x64-0.3.0-dev-status.json).
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 6.201 / 7.081 | 17.218 / 18.609 |
+| rev-parse HEAD | 9.915 / 11.099 | 19.698 / 21.727 |
+| status --porcelain (clean) | 39.973 / 41.997 | 36.767 / 39.298 |
+| cat-file (tracked blob) | 9.964 / 10.888 | 20.482 / 22.878 |
+
+The measured version/ref/object reads are faster in this run. Clean status remains slower than Git; this is not completion of the ultra-low-latency goal.
+
+### Native-created index workload
+
+A separate [40-round comparison](benchmarks/windows-x64-status-cache-0.3.0-dev.json) uses equivalent 1000-file repositories created/staged/committed by the native client. It compares the previous optimized binary with the stat-cache refresh binary, pinning both executable hashes. Warm status median falls from 95.104 ms to 41.487 ms (about 56%); p95 falls from 99.516 ms to 45.621 ms. Reference Git is 38.118 / 43.911 ms. This result applies to the native zero-stat index workload, not every repository.
+
+The first status also publishes verified metadata, costing 119.841 ms in one unreplicated observation versus 96.716 ms before refresh. Subsequent scans reuse the refreshed stat cache. The first observation is not a repeated cold-start benchmark. Optional lock ownership predates scanning; read-only, v4, split/sparse and unfamiliar-extension indexes are not rewritten automatically.
+
+Reproduce with `python tests/status_benchmark.py CURRENT --baseline PREVIOUS --runs 40 --files 1000`. Preserve both optimized executable sets; debug binaries are not valid performance baselines. Other commands, transport throughput, large-object memory and large production repositories remain unmeasured.
+
+## Windows x64 local snapshot · 2026-10-19 · 0.2.0
+
+Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1, standard installed command. [Machine-readable result](benchmarks/windows-x64-0.2.0.json).
+
+| Operation | git-next median / p95 ms | Git median / p95 ms |
+| --- | --- | --- |
+| version | 7.713 / 9.375 | 21.134 / 24.614 |
+| rev-parse HEAD | 11.232 / 12.482 | 21.865 / 25.042 |
+| status --porcelain (clean) | 46.131 / 51.507 | 41.812 / 48.588 |
+| cat-file (tracked blob) | 11.790 / 13.062 | 23.760 / 25.590 |
+
+Startup and the measured object/ref reads were faster in this run. Clean status was approximately 10% slower; ultra-low latency for all Git operations is not achieved. The adaptive status worker limit (one per 2000 entries, capped at eight) avoids excess worker creation, but does not establish an overall status speedup. Cold starts, large production repositories, network push, memory usage and other platforms were not measured here. Full-target checkout staging still adds I/O and temporary disk capacity; it is not a performance win claim.
+
+The complete native batch uses the same Schannel backend for both Windows HTTPS clients. Local and network reports also record Windows primary-process peak working-set median/p95 and sample count, queried after the latency interval. Child and transport processes are excluded from this memory metric. Correctness lanes run concurrently; paired timings remain isolated from builds, emulation and regression workers.
+
+
+Windows native packages enable Git's per-process core.fscache by default, matching the reference installation's directory/stat cache. Explicit user/repository configuration retains priority. The first consolidated candidate omitted this default and showed a material status regression; its measured results are diagnostic, not release acceptance. The corrected package is remeasured in the consolidated paired batch. Primary-process memory excludes child processes, so the reference cmd wrapper's memory alone is not a total-memory comparison.
+
+The consolidated native batch uses the packed fixture layout for all three sizes: fast-import creates one pack and checkout materializes the same tracked LF files for both clients. Fixture commands have a separate setup deadline; measured commands retain their own deadline. A timed-out measured process and its owned descendants are terminated before fixture cleanup. The initial loose 100,000-file setup failed in the reference Git add operation and is retained as a harness failure, not a native latency result.
+
+## Accepted native measurement scope
+
+The user clarified that ultra-low latency is a GitSSS server requirement; git-next needs practical high performance without extreme tuning. The final native batch improves startup and status at 1k/10k/100k files. One measured boundary remains: 100k-file show metadata is 70.424ms versus 57.774ms for the reference (p95 78.754ms versus 63.701ms), so that operation does not match the reference. Network is comparable. These results do not establish universal speedups or lower total process-tree memory. See the [consolidated report](benchmarks/native-performance-consolidated-20261020.json).

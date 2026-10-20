@@ -1,0 +1,327 @@
+{
+  "status": "pass",
+  "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+  "platforms": {
+    "windows_x64": {
+      "binary_sha256": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+      "installed": true
+    },
+    "linux_x64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "x86_64-unknown-linux-musl",
+      "build_jobs": 1,
+      "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+      "binaries": {
+        "git": "9fb57f1dc6ea2f49c8dc56b5693b7a14b34717445c42d970d78f790958e22ba2",
+        "git-next": "f35cfe0806c12c27f2fd7975f5bd290489a7e411d467bdccfc93377e660712e5",
+        "git-terminal": "2d6d57a80faf186dd106dfd133fbf563fc38f38d0b45a5d299be294bfb8f2529",
+        "git-lfs": "f94e0b27e191dfd934f5e0dcca8b957db48bebc25f0b71d0d0a12b819795cdd0",
+        "git-next-lfs-filter": "87a89a3bafbe853ce105323e9b2d0a854c3bd6ff117d03a09ef44081c62e180f"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false,
+      "runtime": {
+        "status": "pass",
+        "scope": "Linux x64 Docker container local LF/status/restore/read/worktree/commit/format/Unix-discovery subset; no network/login/Mac or native-host performance acceptance",
+        "binary_sha256": "f35cfe0806c12c27f2fd7975f5bd290489a7e411d467bdccfc93377e660712e5",
+        "native_version": "git-next version 0.3.0-dev (experimental)",
+        "reference_version": "git version 2.47.3",
+        "machine": "x86_64",
+        "libc": [
+          "glibc",
+          "2.41"
+        ],
+        "python_version": "3.14.8",
+        "runner_sha256": "f564abb64dc4b541ae9e0776771c5e448626aed51cd8ea143e74e0fd420f2d4f",
+        "results": [
+          {
+            "test": "eol_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+          },
+          {
+            "test": "status_cache_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+          },
+          {
+            "test": "status_head_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "808253bcffc90e51af33a7eaf18db1cdc138ea1ce37c82d64afc1311a56ea782"
+          },
+          {
+            "test": "status_head_paths_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "fed42056048acadaef93107b6fda9c331ee026aa671795e7b05ae73565047e76"
+          },
+          {
+            "test": "status_format_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "cb0a8edb63f90263abcdc20baaa0c00dca1fff66d9fc98d8ab5bfb905dbecb85"
+          },
+          {
+            "test": "status_v2_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 360,
+            "harness_sha256": "78bf0a5e5fb633dd0966814169282df9e53e2c766d6124e121076af5f25e70c4",
+            "checks_count": 326,
+            "acceptance_scope": "porcelain-v2 records, branch headers and ordinary submodule-status subset; no full Git parity claim"
+          },
+          {
+            "test": "status_ignored_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "1b50e51821cadeb587709b29923bc8a2717f5aa76b34ef4daf22648a82ba281e",
+            "checks_count": 188,
+            "acceptance_scope": "Ignored status and ordinary pathspec subset; no full Git replacement claim"
+          },
+          {
+            "test": "status_directory_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "d204b9bc998764dc543b9aaea34213efdf1d19bb26d8031df5b6056fba821477"
+          },
+          {
+            "test": "add_directory_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "062a7bee465e71bb7c45985801a6337b7c2d38a80c4c1fc23a220181d24f2fab",
+            "checks_count": 32,
+            "acceptance_scope": "ordinary staging parity; parent-link renormalization is an explicit no-write refusal; full Git parity remains false",
+            "skipped": [],
+            "intentional_refusals": [
+              "sha1: parent-link renormalization refuses before repository writes; not reference behavior",
+              "sha256: parent-link renormalization refuses before repository writes; not reference behavior"
+            ]
+          },
+          {
+            "test": "restore_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+          },
+          {
+            "test": "diff_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+          },
+          {
+            "test": "worktree_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+          },
+          {
+            "test": "acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+          },
+          {
+            "test": "commit_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+          },
+          {
+            "test": "repository_format_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+          },
+          {
+            "test": "native_discovery_unix_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+          }
+        ],
+        "image_id": "sha256:fbfeaf61ca4a0a0204947f6778b0d0535b3c3ada819f2056dd89044a5e4ccf3e",
+        "target": "x86_64-unknown-linux-musl",
+        "container_platform": "linux/amd64",
+        "emulated_arm64": false,
+        "aggregate_timeout_seconds": 600
+      },
+      "local_fixture_suites": 16,
+      "physical_arm64_accepted": false,
+      "native_host_performance_accepted": false
+    },
+    "linux_arm64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "aarch64-unknown-linux-gnu.2.28",
+      "build_jobs": 1,
+      "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+      "binaries": {
+        "git": "98a7ffaed4c28469cc4f5451b0417c43b9661f65b33f4d14c65d387525cb2c43",
+        "git-next": "1375859cea44d18009c9634aacd3be868882233d840c8e412ed00ecdd8ce569a",
+        "git-terminal": "13d45a19e4e32a4ee62881fd6245d1927aea9f5832e77bacad3c32fff07bc6d3",
+        "git-lfs": "7b02dd28cb0cefdd0881ad43436d26ea8ea4005a1a8710dc2b41533339ef0911",
+        "git-next-lfs-filter": "cf932a818be2ec0c6317ef430c35a7bf875eaf3b0155967dcc8405027e286c31"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false,
+      "runtime": {
+        "status": "pass",
+        "scope": "Emulated Linux ARM64 Docker local LF/status/restore/read/worktree/commit/format/Unix-discovery subset; no physical ARM64 or performance acceptance",
+        "binary_sha256": "1375859cea44d18009c9634aacd3be868882233d840c8e412ed00ecdd8ce569a",
+        "native_version": "git-next version 0.3.0-dev (experimental)",
+        "reference_version": "git version 2.47.3",
+        "machine": "aarch64",
+        "libc": [
+          "glibc",
+          "2.41"
+        ],
+        "python_version": "3.14.8",
+        "runner_sha256": "f564abb64dc4b541ae9e0776771c5e448626aed51cd8ea143e74e0fd420f2d4f",
+        "results": [
+          {
+            "test": "eol_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+          },
+          {
+            "test": "status_cache_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+          },
+          {
+            "test": "status_head_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "808253bcffc90e51af33a7eaf18db1cdc138ea1ce37c82d64afc1311a56ea782"
+          },
+          {
+            "test": "status_head_paths_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "fed42056048acadaef93107b6fda9c331ee026aa671795e7b05ae73565047e76"
+          },
+          {
+            "test": "status_format_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "cb0a8edb63f90263abcdc20baaa0c00dca1fff66d9fc98d8ab5bfb905dbecb85"
+          },
+          {
+            "test": "status_v2_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 360,
+            "harness_sha256": "78bf0a5e5fb633dd0966814169282df9e53e2c766d6124e121076af5f25e70c4",
+            "checks_count": 326,
+            "acceptance_scope": "porcelain-v2 records, branch headers and ordinary submodule-status subset; no full Git parity claim"
+          },
+          {
+            "test": "status_ignored_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "1b50e51821cadeb587709b29923bc8a2717f5aa76b34ef4daf22648a82ba281e",
+            "checks_count": 188,
+            "acceptance_scope": "Ignored status and ordinary pathspec subset; no full Git replacement claim"
+          },
+          {
+            "test": "status_directory_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "d204b9bc998764dc543b9aaea34213efdf1d19bb26d8031df5b6056fba821477"
+          },
+          {
+            "test": "add_directory_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "062a7bee465e71bb7c45985801a6337b7c2d38a80c4c1fc23a220181d24f2fab",
+            "checks_count": 32,
+            "acceptance_scope": "ordinary staging parity; parent-link renormalization is an explicit no-write refusal; full Git parity remains false",
+            "skipped": [],
+            "intentional_refusals": [
+              "sha1: parent-link renormalization refuses before repository writes; not reference behavior",
+              "sha256: parent-link renormalization refuses before repository writes; not reference behavior"
+            ]
+          },
+          {
+            "test": "restore_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+          },
+          {
+            "test": "diff_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+          },
+          {
+            "test": "worktree_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+          },
+          {
+            "test": "acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+          },
+          {
+            "test": "commit_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+          },
+          {
+            "test": "repository_format_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+          },
+          {
+            "test": "native_discovery_unix_acceptance.py",
+            "exit_code": 0,
+            "aggregate_timeout_seconds": 180,
+            "harness_sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+          }
+        ],
+        "image_id": "sha256:fe56484a6f1e0d50fa74d299733369e3abe8ec5c26f1f1f8b5b0f4250fa37c1f",
+        "target": "aarch64-unknown-linux-gnu",
+        "container_platform": "linux/arm64",
+        "emulated_arm64": true,
+        "aggregate_timeout_seconds": 600
+      },
+      "local_fixture_suites": 16,
+      "physical_arm64_accepted": false,
+      "native_host_performance_accepted": false
+    },
+    "windows_arm64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "aarch64-pc-windows-gnullvm",
+      "build_jobs": 1,
+      "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+      "binaries": {
+        "git.exe": "62b87e6f7f0be563ee31a5246a35ddb6dec0ea52bd3f3d71a26e2bd6dc9563e3",
+        "git-next.exe": "89bba01b2ce0806c9f6df65baa6671511edd1b177c7375c9392ad6fd56a80440",
+        "git-terminal.exe": "6583d029e4bfcc0fc3678e6eedac06064246fb084a1d5343dbd45ca0c7c8891e",
+        "git-lfs.exe": "b1efabbf965ae74eac37057323fe765e9471314fa156183c9881cbcacfb13084",
+        "git-next-lfs-filter.exe": "2df3281f28fac35d884a2212f63189df1cc467e778ef27ce551522799ad05827"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false,
+      "same_source_as_current_installed_windows": true,
+      "scope_note": "Compilation and PE machine verification only; runtime remains unverified"
+    }
+  },
+  "macos_runtime_accepted": false,
+  "complete_git_parity": false,
+  "acceptance_harness_archive": "status-ignored-acceptance-harnesses.zip",
+  "acceptance_harness_archive_sha256": "479c2b1d2f8914e62963816f3ad594ce8d3fa69af881d6e9cb30f3d22cd9cc97",
+  "acceptance_harness_is_authoritative_for_runtime_scripts": true
+}

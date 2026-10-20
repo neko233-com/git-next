@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "upstream": "git-for-windows/git",
+  "tag": "v2.54.0.windows.1",
+  "metadata_source": "https://github.com/git-for-windows/git/releases/expanded_assets/v2.54.0.windows.1",
+  "purpose": "Pinned third-party runtime assets; upstream Git core executables must not enter the git-next package",
+  "platforms": {
+    "windows-x64": {
+      "archive_url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.tar.bz2",
+      "archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd"
+    },
+    "windows-arm64": {
+      "archive_url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-arm64.tar.bz2",
+      "archive_sha256": "ce10b24c74ac9c724ab81e2ee30d06e7ee693977a552b8da4e434e909a641847"
+    }
+  },
+  "integration_status": "assets-pinned-not-runtime-accepted",
+  "distribution_requires": [
+    "replace all upstream Git core entrypoints with git-next built outputs",
+    "record every retained component license and required corresponding source",
+    "native owned helper paths without installed-Git/OpenSSH fallback",
+    "consolidated no-original-Git runtime and preserved-login acceptance"
+  ]
+}

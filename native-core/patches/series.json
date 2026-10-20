@@ -1,0 +1,380 @@
+[
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0001-clar-generated-dependency.patch",
+    "before_sha256": "efa6366467924c199b381a974d0f7b0f7f9bbd383fd39bfdabc4bc5820defba9",
+    "after_sha256": "309428a83ef219b795013f374178b9a968f0e02c2108618b84a2ffdb28141f60",
+    "patch_sha256": "4fea1db44a50a0ae6679843c865b4f399bf3d1fb9f977cfd1852b3adae8d7466"
+  },
+  {
+    "path": "common-init.c",
+    "patch": "0002-common-init-c.patch",
+    "before_sha256": "be5f7f3249a59e1a70fb6a0995c3db9ee4cc9509c4140a374e85e7989af44d20",
+    "after_sha256": "a76e13f7f1700a98d9142189c7eca3a5588cb47f318696d4bb39b80d149ebf84",
+    "patch_sha256": "8e23576ef7e7217465250292e18391cfd0527d06b2458db5a588da45562d5915"
+  },
+  {
+    "path": "git.c",
+    "patch": "0003-git-c.patch",
+    "before_sha256": "3ea1e877d3731590b0792db08fafc2e9588d2668542c9312cc84334b9c27f032",
+    "after_sha256": "3794634dea9f3357f6180f4a240d8ab03e4fffa8a621fcc810e2574c9689ae7e",
+    "patch_sha256": "694f5d91c68e9a7dec3268f2841502189aded8362b73e37e14f60fcd69ec2861"
+  },
+  {
+    "path": "gettext.h",
+    "patch": "0004-gettext-h.patch",
+    "before_sha256": "1774601492315f0c599917d68141c264ef1d9e2c10eac956414d648a20ad53b7",
+    "after_sha256": "90b3f5ed487a9d4f3322f948b4620414f24e22b874b6f5cbc138d072ffd06fcc",
+    "patch_sha256": "714a45bc8a665391f9fc05e76de9c4764f717c1dfa245b966efded459c5bce7f"
+  },
+  {
+    "path": "gettext.c",
+    "patch": "0005-gettext-c.patch",
+    "before_sha256": "88e54aa076b80f9a669792d3ec96927b7c01b623118377cbf8afe76c701a97f1",
+    "after_sha256": "bf146195329c643274daad7de75afdc312a828f733f7331949edefd10132c5f4",
+    "patch_sha256": "8f1ca63c8e54930cfa6ed8032ef4d933008b64fd4e97beccf21b631a77cb0dbe"
+  },
+  {
+    "path": "git-compat-util.h",
+    "patch": "0006-git-compat-util-h.patch",
+    "before_sha256": "690943d3e7134fd3ed5e73258be021132e3edb36e5f9d4d28dc2843dbf6289f9",
+    "after_sha256": "21c1861a12cc30b8b322411ec02661b067fe4f60ca5a52d39a655dd57526ed82",
+    "patch_sha256": "898abe3c519d3b2d594de379329960edd944f2893c602df2b9a249cc42f3cf29"
+  },
+  {
+    "path": "environment.c",
+    "patch": "0007-environment-c.patch",
+    "before_sha256": "e68313a4e43dddf050c33a49f1f938be403324218f4be01060dc8a872578d2ad",
+    "after_sha256": "917528a108344e05c930d2383ce785d9173729409f0ff4ae91a83d0cffbcec47",
+    "patch_sha256": "4a165ef9e67d90c0e76c22a8dfc84c1a2c9ceb8be5ef0d3444412d9bd9e2eecb"
+  },
+  {
+    "path": "convert.c",
+    "patch": "0008-convert-c.patch",
+    "before_sha256": "0b450b1db6e19d000cdcc4ab431906b540535791523fa9d40dd9284fd1c5771e",
+    "after_sha256": "b028b06f9c50b9cb33da87080f89e84e9c163d5776e3570995f10b541e9c5947",
+    "patch_sha256": "c2fd62ea8ff6088ba4a1c65e01e4f80a81d93b0503feee34af8f2c3ad2106d12"
+  },
+  {
+    "path": "read-cache.c",
+    "patch": "0009-read-cache-c.patch",
+    "before_sha256": "7599ec1cd6e2defb5f231b4de1a69a35235fd088fd258c533ff90f9df076e29f",
+    "after_sha256": "bfe141d4f2b5beeeccd453e0eb2ad8951e08ca01b61252527f2eb85f961feeb0",
+    "patch_sha256": "8fe7af8f5ed8c683931f3d53892261ce044d19ec3403f3d0d84230b80b008f0d"
+  },
+  {
+    "path": "refs.c",
+    "patch": "0010-refs-c.patch",
+    "before_sha256": "4d65ca40db9ac3f0961f1cc608bd31235b867daf0c71b595cd8138937cad8035",
+    "after_sha256": "646dce7f1b8bbc00896c1a359b1b30d917fc64ab4d4105adb2560f99b85a975e",
+    "patch_sha256": "0ffb6759defb6c612aeb1ac2747fd3f9fa49bf1709c49fa5aa326cf5adee30fd"
+  },
+  {
+    "path": "help.c",
+    "patch": "0011-help-c.patch",
+    "before_sha256": "474df3b816dcbdfef1b7bbfa488599c69b10eaafaee03e22a74681693f5b854b",
+    "after_sha256": "8197a09668a0e6f90a663176f3241d27090c03dd011b24cf7909a889a13f3917",
+    "patch_sha256": "2f5508a3abcb3e3768c7f40f1ce1b19324648b1ec139a61789b09bb27ba3cfa1"
+  },
+  {
+    "path": "git.rc.in",
+    "patch": "0012-git-rc-in.patch",
+    "before_sha256": "d6892f6781e269e32a2d0d8045c77e024884516f32be607d7d9d9dd322ed7f6b",
+    "after_sha256": "66a97b6abb14b49c42ea22b9c91fb77b4091c0ea72eadb19712c3ab57e9ff861",
+    "patch_sha256": "9d08e1e9fe8f6fb8ab2da132ef1ec4a5545c0e61de83f2b960e8e94f2ce237d9"
+  },
+  {
+    "path": "Makefile",
+    "patch": "0013-Makefile.patch",
+    "before_sha256": "882389b5b6c73f19d5661526c0daee241e270146e3bf67cc715d8a4edd016f47",
+    "after_sha256": "d8603aa77572e556cbd3ff4cc09c43efbc92d80bda1e9c55a800e1f79aedce1a",
+    "patch_sha256": "c5471f84e95d0fc43be195c9e201c6aac84af82eb8fef206531ac99751391854"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0014-contrib-buildsystems-CMakeLists-txt.patch",
+    "before_sha256": "309428a83ef219b795013f374178b9a968f0e02c2108618b84a2ffdb28141f60",
+    "after_sha256": "ea964fd223ca3da8076f266737e5fa01d8ce9ef75d493f96769ddec19a46e1cd",
+    "patch_sha256": "c12020ff806bc3c652561404516318a1525c4be76196dd2984292eb346974859"
+  },
+  {
+    "path": "exec-cmd.c",
+    "patch": "0015-owned-core-dispatch.patch",
+    "before_sha256": "3c6d08239b7e7527c0154a95787817f240bd5b0775dbaaf4b305ddd362b36962",
+    "after_sha256": "8a4d500bd5d7ea0ed3cd4c6bfa7a4cda59355d803e21ed74fe6523c9f822ea8e",
+    "patch_sha256": "2efc75c8304448018b6079d13ad6dee1d439a277aec23973ed296a5c693d218e"
+  },
+  {
+    "path": "Makefile",
+    "patch": "0016-lf-Makefile.patch",
+    "before_sha256": "d8603aa77572e556cbd3ff4cc09c43efbc92d80bda1e9c55a800e1f79aedce1a",
+    "after_sha256": "1faf758c09acd8cae850090f68ade389df551e9ac668e0b17cb1f711bb526962",
+    "patch_sha256": "15556157e628b90872c6f2b583e5dfaf9c83403e7a0cda5277c0b16170de9514"
+  },
+  {
+    "path": "setup.c",
+    "patch": "0017-lf-setup-c.patch",
+    "before_sha256": "53179583a105f9dc716c91171642c86157fc10ccd36c7a36e5efbcdfca0a675e",
+    "after_sha256": "e164ad07d6327ddc3986ed1be11f517c90c2d6f0c2421039d64ef0df60166f56",
+    "patch_sha256": "c94fed0dbf5019307e19a4b5e36f8156e718ba091073b3fec57b3760efe52994"
+  },
+  {
+    "path": "git.c",
+    "patch": "0018-register-native-extensions.patch",
+    "before_sha256": "3794634dea9f3357f6180f4a240d8ab03e4fffa8a621fcc810e2574c9689ae7e",
+    "after_sha256": "95a6fb7121c21e281fd52f6c00676cbbb932f0684a9e41a1e210a971d5bc7c5f",
+    "patch_sha256": "ed82f0d5b2cf261b3702afa3230e19165eb827349d6186474f05c218bf594682"
+  },
+  {
+    "path": "read-cache.c",
+    "patch": "0019-canonical-conversion-declaration.patch",
+    "before_sha256": "bfe141d4f2b5beeeccd453e0eb2ad8951e08ca01b61252527f2eb85f961feeb0",
+    "after_sha256": "b8a2583881e21108510ed32590a7f39bdddb52ea9e0a3234100a535b96cfd237",
+    "patch_sha256": "75939355b09ec5453da17ad539dae684281555c89327a6634b6bd13eea02ae8f"
+  },
+  {
+    "path": "exec-cmd.c",
+    "patch": "0020-owned-runtime-exec-cmd-c.patch",
+    "before_sha256": "8a4d500bd5d7ea0ed3cd4c6bfa7a4cda59355d803e21ed74fe6523c9f822ea8e",
+    "after_sha256": "92707d4004299529bf9b3605e32b833a58d6abd6ba41425d889de73aa5d039e0",
+    "patch_sha256": "5e2ea6f841c7aba6ba8769d5daab9ef1a6c5818c49bd3a1e3c84ca9763572057"
+  },
+  {
+    "path": "run-command.c",
+    "patch": "0021-owned-runtime-run-command-c.patch",
+    "before_sha256": "67e408a8437fcfc416e50ecba0eb2274b5cbd27736775da0b0fd4e9238f9ba3e",
+    "after_sha256": "c0d6736e49c699ee1a8323466d4935744b0cbe402582f19873ed1cb11772fe7a",
+    "patch_sha256": "08021075c7d8b5162fd418012081143ff54659077b05c03368a7bbf7263d3eb4"
+  },
+  {
+    "path": "connect.c",
+    "patch": "0022-owned-runtime-connect-c.patch",
+    "before_sha256": "d849e000c3f85103cabdcf534bb3b18e13c95ead5df5515371e867e3be67c5f7",
+    "after_sha256": "a2829c0cb5700eef679b2dd5ebd89b41de5c2665f090d932ab918164ee690831",
+    "patch_sha256": "29ad0c33c18466157e1b6935ba5a89dba1e395662ab07a3c7f1629851efce7ff"
+  },
+  {
+    "path": "Makefile",
+    "patch": "0023-owned-runtime-Makefile.patch",
+    "before_sha256": "1faf758c09acd8cae850090f68ade389df551e9ac668e0b17cb1f711bb526962",
+    "after_sha256": "a9c3ad38029ebefaa85c2a02834ebcccf8a13ce2ef3ccee8c874cf6dd18dea45",
+    "patch_sha256": "7199757386582e9d63753845a73bd1754cbdefda667253d5ba3182b5a761513f"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0024-owned-runtime-contrib-buildsystems-CMakeLists-txt.patch",
+    "before_sha256": "ea964fd223ca3da8076f266737e5fa01d8ce9ef75d493f96769ddec19a46e1cd",
+    "after_sha256": "814f1b2a963bafed7ba6dac5e0dfbab2ed1f2872587e9e684951200dab0e99eb",
+    "patch_sha256": "0a2ec93838c2f8314b0432006df9c357a83b9fba1ff54645e7dbf2c366072405"
+  },
+  {
+    "path": "setup.c",
+    "patch": "0025-keep-init-worktree-empty.patch",
+    "before_sha256": "e164ad07d6327ddc3986ed1be11f517c90c2d6f0c2421039d64ef0df60166f56",
+    "after_sha256": "43d6de2b9cc465c19ea5ebcecbe2a12c8b57c3825002753c337a26c5be4a53b8",
+    "patch_sha256": "a4d1a36cb88b1dfadf82d47b0aaa2042af479187bd458a58f4229d23e6ca362b"
+  },
+  {
+    "path": "git-compat-util.h",
+    "patch": "0026-runtime-layout-git-compat-util-h.patch",
+    "before_sha256": "21c1861a12cc30b8b322411ec02661b067fe4f60ca5a52d39a655dd57526ed82",
+    "after_sha256": "1488d1ad4ba658c74198acf9a463ea832d82db99426957f526561febaaeb79db",
+    "patch_sha256": "8cafc240e9be7efdd5fc0219b399b66154ccef757703d1e4b35bfd539c8db8d5"
+  },
+  {
+    "path": "exec-cmd.c",
+    "patch": "0027-runtime-layout-exec-cmd-c.patch",
+    "before_sha256": "92707d4004299529bf9b3605e32b833a58d6abd6ba41425d889de73aa5d039e0",
+    "after_sha256": "1b4aac06c7b264d79e60d475004d667303cd948e4f75c73889b305cebeb803a0",
+    "patch_sha256": "4511dbeb446488d1c497b52834fc19ffc7960b0e78b159b170c4fd9262d74f94"
+  },
+  {
+    "path": "Makefile",
+    "patch": "0028-tls-provider-Makefile.patch",
+    "before_sha256": "a9c3ad38029ebefaa85c2a02834ebcccf8a13ce2ef3ccee8c874cf6dd18dea45",
+    "after_sha256": "f58685f49f799ed7a4bd0eaf893f55475b993c716d7eafcd5fd48d165bc8af47",
+    "patch_sha256": "a117273aa04f571ecf4e8d9bcc10868c2326b56d3d2b8f1ebb75d53e66bee658"
+  },
+  {
+    "path": "http.h",
+    "patch": "0029-tls-provider-http-h.patch",
+    "before_sha256": "59d17858a522424b7cfb3fa0faf8250e76aea0c357b4eff3f188d402b65c113a",
+    "after_sha256": "f2e6b84cd0da9bc7de04992f50c12cb1a01f942b414d7eb26a2f8814af4bbf15",
+    "patch_sha256": "85957303c8d6d66d072b5ed6caa3294ad2a99bc1375beefae13460ba6530ac41"
+  },
+  {
+    "path": "http.c",
+    "patch": "0030-tls-provider-http-c.patch",
+    "before_sha256": "b317807f6b34069b3c822437489c67aca7be304a7590a74a47ad5125db250cbb",
+    "after_sha256": "8887d506cb4e09b2e097ef8897eba91d90eee03cbc4cf8d22a1adeb0e2c45c39",
+    "patch_sha256": "b98ad85f03beefdbdb800a3063da38779d60e101976d76ac4f1177ccb6dabc86"
+  },
+  {
+    "path": "config.c",
+    "patch": "0031-migration-system-config.patch",
+    "before_sha256": "7173bddb25a02317f5a32541707c66fd79bf81ff1b640ddfe7429457ef508b6d",
+    "after_sha256": "802a21442aef6923752541d43a33657026df624787aa933216b376e154d58268",
+    "patch_sha256": "685dfba2152d099263e5be216f43f4d03bb4170487bd0086db73765b4bc638f3"
+  },
+  {
+    "path": "git.c",
+    "patch": "0032-native-update-command.patch",
+    "before_sha256": "95a6fb7121c21e281fd52f6c00676cbbb932f0684a9e41a1e210a971d5bc7c5f",
+    "after_sha256": "431e06e27a9d394f3c5c757f21cc9fcddfcdc394105a2443c66ab0fb8c510dbc",
+    "patch_sha256": "a18362f03194e9ce0c6d7b0dcc18cc5f212ed4520c02ff6c8ee190dc1f3b0075"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0033-native-version-dependencies.patch",
+    "before_sha256": "814f1b2a963bafed7ba6dac5e0dfbab2ed1f2872587e9e684951200dab0e99eb",
+    "after_sha256": "a98123a85ba90399eb656b128654763d8be4de456c5c033fb90d5cd704e9e40d",
+    "patch_sha256": "4c77c58907f233081be52a5214a642c42cedd67690779b60810d17e041b5b122"
+  },
+  {
+    "path": "connect.c",
+    "patch": "0034-posix-owned-ssh.patch",
+    "before_sha256": "a2829c0cb5700eef679b2dd5ebd89b41de5c2665f090d932ab918164ee690831",
+    "after_sha256": "a91f8818ad2300d32c35ecec6ffad94c23e93ac02d554706c09703286091dd3c",
+    "patch_sha256": "8fa9c5c16f7976c779390580769e67d82257080b85516231176626bfeb13e750"
+  },
+  {
+    "path": "run-command.c",
+    "patch": "0035-posix-owned-shell.patch",
+    "before_sha256": "c0d6736e49c699ee1a8323466d4935744b0cbe402582f19873ed1cb11772fe7a",
+    "after_sha256": "8f1209b093974a2d2ff7a9e2aa61664d02055945dc3df1306160d66a67196c27",
+    "patch_sha256": "10b6b18ce1ba6751bfbc0a3dff51b41e49ae220c107b2d7dc924944e1516a78b"
+  },
+  {
+    "path": "exec-cmd.c",
+    "patch": "0036-posix-owned-helper-path.patch",
+    "before_sha256": "1b4aac06c7b264d79e60d475004d667303cd948e4f75c73889b305cebeb803a0",
+    "after_sha256": "2a0e705a4c334d8eb6b589a1e3fc06c2d5337b479b8094c3bafdf4380558c942",
+    "patch_sha256": "197ece879f552a4835336473faa553f3f844c587d28876455e8e9a123064ddda"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0037-posix-perl-runtime-header.patch",
+    "before_sha256": "a98123a85ba90399eb656b128654763d8be4de456c5c033fb90d5cd704e9e40d",
+    "after_sha256": "a1b7dbcd3ef0968f41e479ddb16493f89ca1763c273d059c9ae359e7bea9ce72",
+    "patch_sha256": "1fef27b810085c0a698c4c5e0b21259bb8deaeb8bd660484e9614195a618dd0d"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0038-posix-perl-copy-complete-header.patch",
+    "before_sha256": "a1b7dbcd3ef0968f41e479ddb16493f89ca1763c273d059c9ae359e7bea9ce72",
+    "after_sha256": "41d28d2748302410a833a0a94e3a7383f120632b1f21d9a3d89138a4b60ea727",
+    "patch_sha256": "eda57dc7854cb24f714173cb4be371204f5008ffb631307b03a08fae0ac40ae7"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0039-posix-install-generated-perl-names.patch",
+    "before_sha256": "41d28d2748302410a833a0a94e3a7383f120632b1f21d9a3d89138a4b60ea727",
+    "after_sha256": "1f12c5ddfe09ddf5c699e9c7e9df899eedf47a2b8240b95f0bb67d0a6ecebd78",
+    "patch_sha256": "071ba5c60c6ef58615bb5599d86f3255aea04c46c44373fa6f861cf6d146f49b"
+  },
+  {
+    "path": "git.c",
+    "patch": "0040-native-shell-gettext-builtin.patch",
+    "before_sha256": "431e06e27a9d394f3c5c757f21cc9fcddfcdc394105a2443c66ab0fb8c510dbc",
+    "after_sha256": "95e62c0cd7f226eec0145cf5994776fcf16665d749d85eb25d1f200a3dbfddb5",
+    "patch_sha256": "f7e990933768f21567629c96229e205fee0cfd904a72976d63b2c20f76cd35fc"
+  },
+  {
+    "path": "git-sh-i18n.sh",
+    "patch": "0041-native-shell-language-selection.patch",
+    "before_sha256": "7e737b61612d686583fd28e5344e4c33eaf4dc621599c12de28c09459b0a4a63",
+    "after_sha256": "d461e9845f04909cd5b6469c7560a9867afcaddd7a4673e2e7b09dad49fd10b1",
+    "patch_sha256": "6113d20db1b7cdf8cfdc7c1c4ad759063c095f87b8e32ed66d94f81b17f7d26b"
+  },
+  {
+    "path": "perl/Git/I18N.pm",
+    "patch": "0042-native-perl-language-selection.patch",
+    "before_sha256": "a1079f9a8594b364dd8d97243b620fbf17d61ed9679de4b5d8b817a7d3361ac9",
+    "after_sha256": "8b799221f21debf57ee11b51ce90b827304d31d8d92b51b5b1360ba02ebd1eb4",
+    "patch_sha256": "97124b2014853f9e97f9a3413842498927b8cd1261c52bbb35515a4037b9ef05"
+  },
+  {
+    "path": "git-sh-i18n.sh",
+    "patch": "0043-preserve-native-shell-translation-arguments.patch",
+    "before_sha256": "d461e9845f04909cd5b6469c7560a9867afcaddd7a4673e2e7b09dad49fd10b1",
+    "after_sha256": "e068084190679687562bdb92234434e1046a09950cfe990c210e91eafabd62c9",
+    "patch_sha256": "e1c1ebae8a3c3abf3886847570a8c5ca7d30973a11b40bc45f8453b4ee93d990"
+  },
+  {
+    "path": "run-command.c",
+    "patch": "0044-owned-posix-script-interpreters.patch",
+    "before_sha256": "8f1209b093974a2d2ff7a9e2aa61664d02055945dc3df1306160d66a67196c27",
+    "after_sha256": "b8e1501d7754281ad7a6dec68ca74901125f23a8968cd899d27814ead020471a",
+    "patch_sha256": "737c03ba350f24f276f72939fbf4e6bac671c1c09584577a2388ffb1ac036527"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0045-owned-llvm-and-macos-credential-build.patch",
+    "before_sha256": "1f12c5ddfe09ddf5c699e9c7e9df899eedf47a2b8240b95f0bb67d0a6ecebd78",
+    "after_sha256": "84903c5c91c049726ba867b732ab783e79a3d34ecad43645ca9755ecd0f9010e",
+    "patch_sha256": "e96a460b0b1cbfb3575a7a1472fb46518e83e153d3fee564f9445aa1df295643"
+  },
+  {
+    "path": "credential.h",
+    "patch": "0046-preserve-explicit-credential-helper-selection.patch",
+    "before_sha256": "38c98c96bb1de2bcbeee3dc2eda6564cc0abe3b13b3364cd6b7ed806b684dcff",
+    "after_sha256": "6b44ceabc13367b391a64f9668446d182e8a01e12d061d89e45b9a4a9a2abe26",
+    "patch_sha256": "caab049fba4a57886a8013b1c080b4db153204952c0bd8387a675a817f78a3be"
+  },
+  {
+    "path": "credential.c",
+    "patch": "0047-native-desktop-credential-defaults.patch",
+    "before_sha256": "79fc87f888fe9dd2e26c6d38b0be0962c31e181f870706091c649c8bc19c3328",
+    "after_sha256": "6ca6ec3223b5eda2a275a625af46ddcee2dd578c5ccf1a86c51f313a15ec9240",
+    "patch_sha256": "05591c049cf9482d4b3420d84cc67696e73839d8cf3e74b2766176b1825a7485"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0048-isolate-msvc-headers-and-optional-test-properties.patch",
+    "before_sha256": "84903c5c91c049726ba867b732ab783e79a3d34ecad43645ca9755ecd0f9010e",
+    "after_sha256": "b814fe10221f7a795c5f3142b8f35f5959e4d91f01730cbb442b0978f0cb3e89",
+    "patch_sha256": "6a377d5b66bd444728db8ead8419594b408a5a2a9bc522084824ceba930efe8b"
+  },
+  {
+    "path": "credential.c",
+    "patch": "0049-require-active-desktop-credential-session.patch",
+    "before_sha256": "6ca6ec3223b5eda2a275a625af46ddcee2dd578c5ccf1a86c51f313a15ec9240",
+    "after_sha256": "78ecf19a334cdd0700c78a6f7290f62451c360368becc67677624b0a37c6851e",
+    "patch_sha256": "42ca4c70c341e6b4bec35bbd1b15aa9a4840cfb41a09f10551584309dc68b6dc"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0050-darwin-stat-fields-and-llvm-entrypoint.patch",
+    "before_sha256": "b814fe10221f7a795c5f3142b8f35f5959e4d91f01730cbb442b0978f0cb3e89",
+    "after_sha256": "c79e14bbe602aa0ae2b73a393eb00721fde7171df7dc0e6f28bd293a6b0201a9",
+    "patch_sha256": "dc0c84133a23477a584fd2a280640e595361c04f3d3eb3b66f4283f7f7472557"
+  },
+  {
+    "path": "compat/nedmalloc/malloc.c.h",
+    "patch": "0051-use-clang-native-interlocked-intrinsic.patch",
+    "before_sha256": "0b991fa10d02a70db97d896820a6009a2f4da0710ddee80d81d1820a77cdd9dc",
+    "after_sha256": "e745feb27f0dec3293dba899c4ab2a5951a3ff3abb58f0b7ff90ea4e9c28ce80",
+    "patch_sha256": "10c760c6ed127afd341a4d53087f64a4931dbf5126168ed806c2a6e37f085c4d"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0052-complete-native-darwin-libraries-and-mingw-startup.patch",
+    "before_sha256": "c79e14bbe602aa0ae2b73a393eb00721fde7171df7dc0e6f28bd293a6b0201a9",
+    "after_sha256": "24faa21c21e19c1858ee5c2b553f92ebc39f42629c0d6b401d63c81689bf94ea",
+    "patch_sha256": "78864ecd02f21f77efd8005b79760c1692e29056c02c1408cefda52f90f043e2"
+  },
+  {
+    "path": "contrib/buildsystems/CMakeLists.txt",
+    "patch": "0053-keychain-helper-owned-dependency-search.patch",
+    "before_sha256": "24faa21c21e19c1858ee5c2b553f92ebc39f42629c0d6b401d63c81689bf94ea",
+    "after_sha256": "9b79745806629c24fdbb79b2213e8cdf8f5df2df658d77fefacffab9e655d607",
+    "patch_sha256": "d0ca19c312042839dee523f587feb4ebcd3bb3072414e5e3c82d35fd65504ce1"
+  },
+  {
+    "path": "git.rc.in",
+    "patch": "0054-product-version-windows-resource.patch",
+    "before_sha256": "66a97b6abb14b49c42ea22b9c91fb77b4091c0ea72eadb19712c3ab57e9ff861",
+    "after_sha256": "3e27c6b4891a8bf29a00a74feb7ae0db992e65ec30827bf261355f978df9a4ab",
+    "patch_sha256": "9480db9eaffcc1c137bd8254bbec63d9a6699db899f07607f279d20523054d2a"
+  }
+]

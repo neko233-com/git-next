@@ -1,0 +1,20 @@
+--- a/gettext.h
++++ b/gettext.h
+@@ -28,7 +28,16 @@
+ 
+ #define FORMAT_PRESERVING(n) __attribute__((format_arg(n)))
+ 
+-#ifndef NO_GETTEXT
++#ifdef GIT_NEXT_NATIVE
++#include "git-next.h"
++#undef gettext
++#undef ngettext
++#define gettext(s) git_next_gettext(s)
++#define ngettext(s, p, n) git_next_ngettext(s, p, n)
++#define git_gettext_enabled (1)
++#define git_setup_gettext git_next_setup_gettext
++#define gettext_width git_next_gettext_width
++#elif !defined(NO_GETTEXT)
+ extern int git_gettext_enabled;
+ void git_setup_gettext(void);
+ int gettext_width(const char *s);

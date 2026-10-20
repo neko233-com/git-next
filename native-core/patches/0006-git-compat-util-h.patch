@@ -1,0 +1,12 @@
+--- a/git-compat-util.h
++++ b/git-compat-util.h
+@@ -1126,6 +1126,9 @@
+  * replace system names.
+  */
+ #include "banned.h"
++#ifdef GIT_NEXT_NATIVE
++#include "git-next-printf.h"
++#endif
+ 
+ /*
+  * container_of - Get the address of an object containing a field.

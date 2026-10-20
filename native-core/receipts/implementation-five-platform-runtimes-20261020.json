@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "status": "independent-runtime-implementation-complete-not-runtime-accepted",
+  "product_version": "0.3.0",
+  "source_tree_sha256": "ff1591e8b19ac77da921376a7aac6d72d49c141ef394063619a6159e4728f401",
+  "core": {
+    "windows-x64": {
+      "binaries": {
+        "git.exe": {
+          "sha256": "6296f7d544ca4f3c481625cb77229ce483486d9097979225cae9b1664f452741",
+          "bytes": 5246976
+        },
+        "git-remote-http.exe": {
+          "sha256": "1fb4662d8f812013650884cdaa1f4065d585d76d39456072e6ff673ac7353aef",
+          "bytes": 3144192
+        },
+        "git-http-fetch.exe": {
+          "sha256": "4ae5309e082fb45a331a9a56efbcb5fea3f47c391a581e133056cccb8690f83f",
+          "bytes": 3127296
+        },
+        "git-http-push.exe": {
+          "sha256": "896e904a542c4e71f54aff21e59e0319a61a72f1765a7ced538dadcf3a6cf9a1",
+          "bytes": 3929088
+        },
+        "git-http-backend.exe": {
+          "sha256": "c2a21dbf4e897767334d72dbc295b77f3e2f75f7b29ce2967ac79f711451beb3",
+          "bytes": 2173952
+        },
+        "git-daemon.exe": {
+          "sha256": "ac196798178ffc560ddf5fb4cac1fdbd712db91cc887957c3e7aee0b42189a7d",
+          "bytes": 2177024
+        },
+        "git-shell.exe": {
+          "sha256": "35e49be7df3ba8cf678ea795dc18cb9b50d2c17d93694083941d5399f94865f0",
+          "bytes": 2160128
+        },
+        "scalar.exe": {
+          "sha256": "97f07202f46aab7e893c4230c1c39e9ea02c4250fdd33c4128f98d7bdddc1f71",
+          "bytes": 2206720
+        },
+        "git-imap-send.exe": {
+          "sha256": "63718d2b35613e95ca10fe621840fa9a30ca8bfa949cce5943dc2a98bf80fd1d",
+          "bytes": 3121152
+        },
+        "git-sh-i18n--envsubst.exe": {
+          "sha256": "620b9496aa4aabf18de40adc2e6c15b5691eddb0eb5a617b64f3b42812514243",
+          "bytes": 2156032
+        }
+      },
+      "product_executed": false
+    },
+    "windows-arm64": {
+      "binaries": {
+        "git.exe": {
+          "sha256": "29ff1c1e37d9cf3b5b1aa1fe2a8ddc11ff6bb24b8c1942948107a4addf24572a",
+          "bytes": 5861888
+        },
+        "git-remote-http.exe": {
+          "sha256": "fd7067156d12319d48008e3749ce7e4907c10207bba2fe86e7bdb19ceadb737f",
+          "bytes": 5160960
+        },
+        "git-http-fetch.exe": {
+          "sha256": "b06c310ad381c662b67fb816f9f7159ee1d7820830f8b57d4049a4a7993bfc85",
+          "bytes": 5145088
+        },
+        "git-http-push.exe": {
+          "sha256": "dd0de01d4d9143b13a8a17ddfb370cf771886b136c102e4c93663e6cf8cbcacd",
+          "bytes": 5310976
+        },
+        "git-http-backend.exe": {
+          "sha256": "272525e9133fc2a676f8bb4c41968316a7a2a6ae72889ac87c3ef7a147c7d5a9",
+          "bytes": 4124672
+        },
+        "git-daemon.exe": {
+          "sha256": "efcc734df783b3b3719f4201e3f59d1b464ad8042e1288bbef0bb3340bf2d34b",
+          "bytes": 4128768
+        },
+        "git-shell.exe": {
+          "sha256": "b891feb4700fc6c0470010a6a9fdde94533354890bad2974416b7d7fbae9fd40",
+          "bytes": 4112384
+        },
+        "scalar.exe": {
+          "sha256": "ef0df7e8092a35aad2aaf81bf35dad58d7b25c1330ba97832c93a030556dcae2",
+          "bytes": 4159488
+        },
+        "git-imap-send.exe": {
+          "sha256": "1a0065ff6151c86a975471f15796686f19bdbd1ccfb309a464d74c5b2ad73dbb",
+          "bytes": 5154304
+        },
+        "git-sh-i18n--envsubst.exe": {
+          "sha256": "c302dd459a330191736a43a79b646ef1e9c179d208cb2e4ef817e2770175eca1",
+          "bytes": 4111360
+        }
+      },
+      "product_executed": false
+    },
+    "linux-x64": {
+      "binaries": {
+        "git": {
+          "sha256": "b2fd006f5f1f35cc52ca921022949cd52d287d369bb33e48bbb6480f8b739bdf",
+          "bytes": 6507248
+        },
+        "git-remote-http": {
+          "sha256": "cadb844fb06b179aa4b49222d71e83e50fc4fd2bf7fea2ffad22fd8358255774",
+          "bytes": 5982096
+        },
+        "git-http-fetch": {
+          "sha256": "af1a935452a7f5dd48d77df6301f613d53b86fa876b380a031dcabf53e129a46",
+          "bytes": 5969296
+        },
+        "git-http-push": {
+          "sha256": "0e7fb5f49678e07a36777456bb07973f1a34cd5e98abc777fad7f6ee6ceba1ba",
+          "bytes": 6181448
+        },
+        "git-http-backend": {
+          "sha256": "2204d657d7029419a77bc89150c80aadafc08b7f1c0e2590398537b9fd98daf5",
+          "bytes": 4677336
+        },
+        "git-daemon": {
+          "sha256": "b3f3dbe7395e993f38bbeacdb3a4d323ab87fa4b8a8816a759f27bcd3e831399",
+          "bytes": 4681880
+        },
+        "git-shell": {
+          "sha256": "48d3e7a53ffdafe82547593bd9c49303a12f8e10e1b6cb7f94347f9a08229c02",
+          "bytes": 4663504
+        },
+        "scalar": {
+          "sha256": "33f324bd762d7dd792b6d4ff150d14f6b1142375077f99dd21331f1cf43c2506",
+          "bytes": 4711552
+        },
+        "git-imap-send": {
+          "sha256": "0c07f34b9c09fae2a368c571bbf427b3ec37e0aacefea231e3a052c19e1e064b",
+          "bytes": 5978200
+        },
+        "git-sh-i18n--envsubst": {
+          "sha256": "9a429eab1bf9e56fe8fb3138809442389618d69dff37e5b157fe689c54e151ad",
+          "bytes": 4663536
+        },
+        "git-credential-libsecret": {
+          "sha256": "656a271be823394a50d53285d082b066525a3fffa58a915ebb2a7bccc55b2a21",
+          "bytes": 22456
+        }
+      },
+      "product_executed": false
+    },
+    "linux-arm64": {
+      "binaries": {
+        "git": {
+          "sha256": "d042a5bef5ab548aa8693ee5b8e212a7c925253ed348a04f247a49180e1027cc",
+          "bytes": 6232336
+        },
+        "git-remote-http": {
+          "sha256": "6dedf8e61d9024e1027f75ff4a67857732cbb955ccce7dee1ca06b0d3a6ff8c7",
+          "bytes": 5855776
+        },
+        "git-http-fetch": {
+          "sha256": "6abc19ce73b264baa9117142dfa0e2dc6f1b6ed4137c852bdd2d9adf2b7007f7",
+          "bytes": 5855160
+        },
+        "git-http-push": {
+          "sha256": "da3d2d37d8cc0196f5e3c0566575cdbd55ce456bd8ad7582a9fc2429e4c6f7a6",
+          "bytes": 6002136
+        },
+        "git-http-backend": {
+          "sha256": "87333ec66cc97f497ae7ea2816ffeaf7e04d325b858853a36a374f1eddb40390",
+          "bytes": 4527808
+        },
+        "git-daemon": {
+          "sha256": "d42c71f7fd999536faf209ffa9271e12b41e6d08465906443fbdb05c0060578c",
+          "bytes": 4528360
+        },
+        "git-shell": {
+          "sha256": "c82721dc478978cd8d9c63bf9b72e813a94c1d421d78243f122cdf8554be4f33",
+          "bytes": 4526160
+        },
+        "scalar": {
+          "sha256": "cef3de739bbb7d6f33bb01261fed986142199c0f3766c424f2697af182d2d631",
+          "bytes": 4599320
+        },
+        "git-imap-send": {
+          "sha256": "2725c36a4c98f22e16e8c64d7951d6af8ae3d1193994ad1b598e7bc582c6ea73",
+          "bytes": 5789872
+        },
+        "git-sh-i18n--envsubst": {
+          "sha256": "8f1dcc20e2a471391c098e37fbc9e6eaf1766aeafd08890633db30bbfa671974",
+          "bytes": 4526152
+        },
+        "git-credential-libsecret": {
+          "sha256": "2a8c082eee35308c8db0f934350a5cd1f918b3837a496e05e2f5c5ebd8f742d2",
+          "bytes": 72912
+        }
+      },
+      "product_executed": false
+    },
+    "macos-arm64": {
+      "binaries": {
+        "git": {
+          "sha256": "c383684dc2d5dc5f9fb78f53a630b9165603013cbea5e73d938b92942fbf0256",
+          "bytes": 5275200
+        },
+        "git-remote-http": {
+          "sha256": "6a417e81efbafe686495ffbaa4bf8117603343a3a1067ae4281e573b2ade121d",
+          "bytes": 4833520
+        },
+        "git-http-fetch": {
+          "sha256": "9fef38392961265ae136b08f5eb0959583897b7e0752cf6ffc40e5f4dc59242a",
+          "bytes": 4816688
+        },
+        "git-http-push": {
+          "sha256": "eb83c2d07faf4cac518ab7e531e5420ce436c041d43cae94a223545c07999a6a",
+          "bytes": 4995984
+        },
+        "git-http-backend": {
+          "sha256": "c8107df9d441b9d4ba05c30836b2718df7c08b113c14698774f70bde86ff818a",
+          "bytes": 3757136
+        },
+        "git-daemon": {
+          "sha256": "758aa6c3b981d05340433bc5c5df0269dda48b58dcde10595125fbab6e7d5ecf",
+          "bytes": 3757304
+        },
+        "git-shell": {
+          "sha256": "6eede3279814b9acb487ef35a64bd9cd9b846171d348759e99f25fc6e45be3a6",
+          "bytes": 3739768
+        },
+        "scalar": {
+          "sha256": "b1b652d673a1599159f5da340e60a19e4c328d2d3fdc6752e85479f564aa45ef",
+          "bytes": 3775256
+        },
+        "git-imap-send": {
+          "sha256": "075f054eb027e9084a988bcf25845490c133ed69e760d23b53f2c597794be498",
+          "bytes": 4833168
+        },
+        "git-sh-i18n--envsubst": {
+          "sha256": "96fa2339b427d1d49b7d5d54c2fbf7a2bbe500f2343d9d1c80d00d267f4b0533",
+          "bytes": 3739704
+        },
+        "git-credential-osxkeychain": {
+          "sha256": "af01eb6325dac749f316ed3e3ec839e585a45cea3d82a49771235df41688fc19",
+          "bytes": 3743448
+        }
+      },
+      "product_executed": false
+    }
+  },
+  "posix_runtime": {
+    "linux-x64": {
+      "files": 2905,
+      "native_images": 416,
+      "platform_requirements": [
+        "glibc 2.36 or newer",
+        "normal POSIX kernel/loader and system services",
+        "existing SSH/GnuPG agents and system configuration keep their OS paths"
+      ]
+    },
+    "linux-arm64": {
+      "files": 2912,
+      "native_images": 416,
+      "platform_requirements": [
+        "glibc 2.36 or newer",
+        "normal POSIX kernel/loader and system services",
+        "existing SSH/GnuPG agents and system configuration keep their OS paths"
+      ]
+    },
+    "macos-arm64": {
+      "files": 9824,
+      "native_images": 480,
+      "platform_requirements": [
+        "macOS 15.5 or newer on Apple Silicon",
+        "Apple system frameworks, POSIX utilities and OS-managed SSH/Keychain services",
+        "existing SSH/GnuPG profiles and agents retain their OS paths"
+      ]
+    }
+  },
+  "windows_runtime": {
+    "windows-x64": {
+      "files": 9495
+    },
+    "windows-arm64": {
+      "files": 7825
+    }
+  },
+  "source_hashes": {
+    "tools/collect_macos_runtime.py": "7362cdfe2fa727d115457bfb9baa2daed5419724f6a79de5a55a88c2a6b62c89",
+    "tools/collect_linux_runtime.py": "a9994632c09380f7838aed3e5a8e30eeb46a9d4c94b64d3817b5ac0a06637cc5",
+    "tools/assemble_native_posix.py": "5e6492ebcef1cbcbf6f5e820506186f6b36bbd582ba7b1311d705ff16567c029",
+    "tools/assemble_native_windows.py": "87aaef5bf2babd3aed22cb79f8f1f6fdc98ed3ab93d9328335c2910d293b3b9e",
+    "tools/build_native_core.py": "4d6a1c5b2a03bec0d79b5e0e062dd84460ece4c6ba406e2267edb5d473e1c327",
+    "tools/build_native_posix.py": "e1041884974ebbe92ac888296a1549cf3e3450c58fb1a8386eb3f7729f4d0b2f",
+    "packaging/product.json": "f03719e7be75a6fc033d221c8c4acb84eb4e054741fe85a08563f9f8ba6f0241",
+    "packaging/posix/updater/configuration.go": "696acee8611906a3232a8427325b24f5e117799978a1cdb16e0525b5d518bcdd"
+  },
+  "native_mac_product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "remaining": [
+    "D07 current complete packages, corresponding sources/notices and consolidated input mapping",
+    "D08 correctness, authentication, installation and failure regression",
+    "D09 paired performance batch",
+    "D10 one release and workstation installation/takeover"
+  ]
+}

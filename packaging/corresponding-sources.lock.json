@@ -1,0 +1,4150 @@
+{
+  "schema_version": 1,
+  "product": "git-next",
+  "scope": "native-five-platform-runtime-corresponding-sources",
+  "source_archives_extracted": false,
+  "sources": [
+    {
+      "id": "msys/apr-1.7.6-1.src.tar.zst",
+      "file": "apr-1.7.6-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/apr-1.7.6-1.src.tar.zst",
+      "sha256": "40c3eb2c547364f013984964d5ca1a2b007fdb2ddd0ecb4760a5cea262623755",
+      "bytes": 901150,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/apr-util-1.6.3-2.src.tar.zst",
+      "file": "apr-util-1.6.3-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/apr-util-1.6.3-2.src.tar.zst",
+      "sha256": "5543370d55a0beb2bdedd849f0c3030b8c99debd57ff74ce1c0e9cb2bb789cc5",
+      "bytes": 434106,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/bash-5.3.009-1.src.tar.zst",
+      "file": "bash-5.3.009-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/bash-5.3.009-1.src.tar.zst",
+      "sha256": "c6d1dfb4382d571fb3b0aafe9ed8b548e5350afc33178b6ae6573a2b4db7d3b2",
+      "bytes": 11337730,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/bzip2-1.0.8-4.src.tar.zst",
+      "file": "bzip2-1.0.8-4.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/bzip2-1.0.8-4.src.tar.zst",
+      "sha256": "a7e9ea6335ef2902508de0bbbb70e2e9909b6b7b6d05fc207f8fdf0cf44ad053",
+      "bytes": 842603,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/ca-certificates-20250419-1.src.tar.zst",
+      "file": "ca-certificates-20250419-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/ca-certificates-20250419-1.src.tar.zst",
+      "sha256": "0e96cbfe9d0ec342c92d0e6ae6e6227c8ada298583eab0958cb3321614e15de9",
+      "bytes": 288303,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/coreutils-8.32-5.src.tar.zst",
+      "file": "coreutils-8.32-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/coreutils-8.32-5.src.tar.zst",
+      "sha256": "2b8689413bc50367a9995adf50ea84cd3caaff0ec68a8f32d8328842c3f83835",
+      "bytes": 5561991,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/curl-8.19.0-1.src.tar.zst",
+      "file": "curl-8.19.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/curl-8.19.0-1.src.tar.zst",
+      "sha256": "81abddf1682bd3ecaea0a9f22453966e6f67fd2539ee69a33ba8e6fab04cebdf",
+      "bytes": 2790788,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "curl-8.19.0",
+      "file": "curl-8.19.0.source",
+      "url": "https://github.com/curl/curl/releases/download/curl-8_19_0/curl-8.19.0.tar.bz2",
+      "sha256": "eba3230c1b659211a7afa0fbf475978cbf99c412e4d72d9aa92d020c460742d4",
+      "bytes": 3211108,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "native-core-dependency/curl",
+      "file": "curl-8.23.0.tar.xz",
+      "url": "https://curl.se/download/curl-8.23.0.tar.xz",
+      "sha256": "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5",
+      "bytes": 2990916,
+      "kind": "native-core-dependency-source",
+      "group": "core-and-producer-recipes",
+      "license": "curl"
+    },
+    {
+      "id": "cygwin-3.6.7",
+      "file": "cygwin-3.6.7.source",
+      "url": "https://codeload.github.com/cygwin/cygwin/tar.gz/refs/tags/cygwin-3.6.7",
+      "sha256": "95e926d399481d6d6afbae33f4dd415dd86dddaec5c4d506c93406af4cac7db9",
+      "bytes": 12352933,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/cyrus-sasl-2.1.28-5.src.tar.zst",
+      "file": "cyrus-sasl-2.1.28-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/cyrus-sasl-2.1.28-5.src.tar.zst",
+      "sha256": "5b94ab5e9c21e41b37635db88f131aeb760e4ca0bdf7bf0400335304cd8af718",
+      "bytes": 3708611,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/dash-0.5.13.2-1.src.tar.zst",
+      "file": "dash-0.5.13.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/dash-0.5.13.2-1.src.tar.zst",
+      "sha256": "eadccdc2b93643298b47ab5f6f6d337132f9bf53e88305e1152dc205aa0f8d6b",
+      "bytes": 262251,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/db-6.2.32-5.src.tar.zst",
+      "file": "db-6.2.32-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/db-6.2.32-5.src.tar.zst",
+      "sha256": "9679608d2a867afd197ffeb6e48d1652ac3bddba5be504b3ddec750af5d5735e",
+      "bytes": 44421935,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "debian/acl@2.3.1-3/acl_2.3.1-3.debian.tar.xz",
+      "file": "debian-acl_2.3.1-3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/a/acl/acl_2.3.1-3.debian.tar.xz",
+      "sha256": "2eb052bba784a4b873e951b1f91af2abef62e4bf4b83c93f9821eea26f66c8e2",
+      "bytes": 30968,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/acl@2.3.1-3/acl_2.3.1-3.dsc",
+      "file": "debian-acl_2.3.1-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/a/acl/acl_2.3.1-3.dsc",
+      "sha256": "7820eee88cce7244e0b8eb25cc4f51bdf10aff7a6c1a497f3d18c36bdce712cc",
+      "bytes": 2508,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/acl@2.3.1-3/acl_2.3.1.orig.tar.xz",
+      "file": "debian-acl_2.3.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/a/acl/acl_2.3.1.orig.tar.xz",
+      "sha256": "c0234042e17f11306c23c038b08e5e070edb7be44bef6697fb8734dcff1c66b1",
+      "bytes": 355676,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/acl@2.3.1-3/acl_2.3.1.orig.tar.xz.asc",
+      "file": "debian-acl_2.3.1.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/a/acl/acl_2.3.1.orig.tar.xz.asc",
+      "sha256": "54fb8fcd6ae6901f2257e18d503e5e18ad956babf8d80d2ea29f280fc7264662",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/adduser@3.134/adduser_3.134.dsc",
+      "file": "debian-adduser_3.134.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/a/adduser/adduser_3.134.dsc",
+      "sha256": "608ed02073381a8af28f29c3a2e390ddff7caee6b013a533fffc16b660fa80a4",
+      "bytes": 1671,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/adduser@3.134/adduser_3.134.tar.xz",
+      "file": "debian-adduser_3.134.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/a/adduser/adduser_3.134.tar.xz",
+      "sha256": "ddfc63b55664381d326d98e7afcf5859a8f60d6d78d5d6941e491479a008b172",
+      "bytes": 272044,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/attr@1:2.5.1-4/attr_2.5.1-4.debian.tar.xz",
+      "file": "debian-attr_2.5.1-4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/a/attr/attr_2.5.1-4.debian.tar.xz",
+      "sha256": "aea02a3c980a82804a5a333bf02e9e2737a8c5808671625595511290863d6791",
+      "bytes": 32152,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/attr@1:2.5.1-4/attr_2.5.1-4.dsc",
+      "file": "debian-attr_2.5.1-4.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/a/attr/attr_2.5.1-4.dsc",
+      "sha256": "0e1486bff1649602cb5cbb6224dbb641436dc8cd28d5c336ad85d650e07d23dd",
+      "bytes": 2477,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/attr@1:2.5.1-4/attr_2.5.1.orig.tar.xz",
+      "file": "debian-attr_2.5.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/a/attr/attr_2.5.1.orig.tar.xz",
+      "sha256": "db448a626f9313a1a970d636767316a8da32aede70518b8050fa0de7947adc32",
+      "bytes": 318188,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/attr@1:2.5.1-4/attr_2.5.1.orig.tar.xz.asc",
+      "file": "debian-attr_2.5.1.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/a/attr/attr_2.5.1.orig.tar.xz.asc",
+      "sha256": "67bc632e754efbadba846d0b40138b3fc3e306c3b909a9ba868c6dba1e2689d0",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bash@5.2.15-2/bash_5.2.15-2.debian.tar.xz",
+      "file": "debian-bash_5.2.15-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/b/bash/bash_5.2.15-2.debian.tar.xz",
+      "sha256": "998f8ea5b754a734ae7d8306e149c43d713ddfcf49623a036004b729237dbcca",
+      "bytes": 97380,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bash@5.2.15-2/bash_5.2.15-2.dsc",
+      "file": "debian-bash_5.2.15-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/b/bash/bash_5.2.15-2.dsc",
+      "sha256": "f51753e946af43eb58549c81e03b35a47af9fe6c6364179ccd4ef862b7c3b2d3",
+      "bytes": 2317,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bash@5.2.15-2/bash_5.2.15.orig.tar.gz",
+      "file": "debian-bash_5.2.15.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/b/bash/bash_5.2.15.orig.tar.gz",
+      "sha256": "7a315bc0e9d90713159e4390ec1096a41e4f33cd8cc3d1a749a8e5ad56600f51",
+      "bytes": 9997221,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/brotli@1.0.9-2/brotli_1.0.9-2.debian.tar.xz",
+      "file": "debian-brotli_1.0.9-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/b/brotli/brotli_1.0.9-2.debian.tar.xz",
+      "sha256": "ab81b1db852c8d01e0fa5b0b650bb486f32a232b35336828423af50af6fecca0",
+      "bytes": 5552,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/brotli@1.0.9-2/brotli_1.0.9-2.dsc",
+      "file": "debian-brotli_1.0.9-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/b/brotli/brotli_1.0.9-2.dsc",
+      "sha256": "8c4c86748ec9770e08b60233d658593650444b04a452dc5b607ed5b5537b683e",
+      "bytes": 2261,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/brotli@1.0.9-2/brotli_1.0.9.orig.tar.gz",
+      "file": "debian-brotli_1.0.9.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/b/brotli/brotli_1.0.9.orig.tar.gz",
+      "sha256": "f9e8d81d0405ba66d181529af42a3354f838c939095ff99930da6aa9cdf6fe46",
+      "bytes": 486984,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bzip2@1.0.8-5/bzip2_1.0.8-5.debian.tar.bz2",
+      "file": "debian-bzip2_1.0.8-5.debian.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/b/bzip2/bzip2_1.0.8-5.debian.tar.bz2",
+      "sha256": "d68c6eba11d70e14319e24ef1451880a03023b2b75364646adb117086db36039",
+      "bytes": 26787,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bzip2@1.0.8-5/bzip2_1.0.8-5.dsc",
+      "file": "debian-bzip2_1.0.8-5.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/b/bzip2/bzip2_1.0.8-5.dsc",
+      "sha256": "ed9c40f4de3f9e064535e15eac1c61a0f606763db98f4579dbc04067b94a8944",
+      "bytes": 2206,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/bzip2@1.0.8-5/bzip2_1.0.8.orig.tar.gz",
+      "file": "debian-bzip2_1.0.8.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/b/bzip2/bzip2_1.0.8.orig.tar.gz",
+      "sha256": "ab5a03176ee106d3f0fa90e381da478ddae405918153cca248e682cd0c4a2269",
+      "bytes": 810029,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/coreutils@9.1-1/coreutils_9.1-1.debian.tar.xz",
+      "file": "debian-coreutils_9.1-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.1-1.debian.tar.xz",
+      "sha256": "45d4ae88d933a7d713ef038943e818a2488e759b6196a409788744cbc6df1832",
+      "bytes": 30624,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/coreutils@9.1-1/coreutils_9.1-1.dsc",
+      "file": "debian-coreutils_9.1-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.1-1.dsc",
+      "sha256": "2f2fca0a07a1a3f38e3ebeb4cbd97e97e675e77bed84f3e9d0b7e5da4cde75fc",
+      "bytes": 1848,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/coreutils@9.1-1/coreutils_9.1.orig.tar.xz",
+      "file": "debian-coreutils_9.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/c/coreutils/coreutils_9.1.orig.tar.xz",
+      "sha256": "61a1f410d78ba7e7f37a5a4f50e6d1320aca33375484a3255eddf17a38580423",
+      "bytes": 5712104,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/cyrus-sasl2@2.1.28+dfsg-10/cyrus-sasl2_2.1.28+dfsg-10.debian.tar.xz",
+      "file": "debian-cyrus-sasl2_2.1.28+dfsg-10.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/c/cyrus-sasl2/cyrus-sasl2_2.1.28+dfsg-10.debian.tar.xz",
+      "sha256": "8c94a1c1982a1603d13ef055b0d2511054db4a43cbb1224702f31e5d985136b1",
+      "bytes": 97056,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/cyrus-sasl2@2.1.28+dfsg-10/cyrus-sasl2_2.1.28+dfsg-10.dsc",
+      "file": "debian-cyrus-sasl2_2.1.28+dfsg-10.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/c/cyrus-sasl2/cyrus-sasl2_2.1.28+dfsg-10.dsc",
+      "sha256": "cb9c913a6f4716456c93ed205dfef84915a37cf2c994160564e8336e86831d7a",
+      "bytes": 3324,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/cyrus-sasl2@2.1.28+dfsg-10/cyrus-sasl2_2.1.28+dfsg.orig.tar.xz",
+      "file": "debian-cyrus-sasl2_2.1.28+dfsg.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/c/cyrus-sasl2/cyrus-sasl2_2.1.28+dfsg.orig.tar.xz",
+      "sha256": "a15886d7da5958bd27f35b7c871dd872f6dc5b9917c9b6b15e3de014c7dab3d9",
+      "bytes": 797472,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/db5.3@5.3.28+dfsg2-1/db5.3_5.3.28+dfsg2-1.debian.tar.xz",
+      "file": "debian-db5.3_5.3.28+dfsg2-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/d/db5.3/db5.3_5.3.28+dfsg2-1.debian.tar.xz",
+      "sha256": "52cb792fe53138c79a0328ffd1d771e3112791f546fd00e0dcd4b0e3efc5d916",
+      "bytes": 34660,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/db5.3@5.3.28+dfsg2-1/db5.3_5.3.28+dfsg2-1.dsc",
+      "file": "debian-db5.3_5.3.28+dfsg2-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/d/db5.3/db5.3_5.3.28+dfsg2-1.dsc",
+      "sha256": "fe84d3cd7cde381f1c5a18f223377cf84ea7627ced8063ef33ef8fd93f6e09f4",
+      "bytes": 2887,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/db5.3@5.3.28+dfsg2-1/db5.3_5.3.28+dfsg2.orig.tar.xz",
+      "file": "debian-db5.3_5.3.28+dfsg2.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/d/db5.3/db5.3_5.3.28+dfsg2.orig.tar.xz",
+      "sha256": "ad41b507415dec8316e828b2230242af2251d2c86eefa3c7aa9ef47c5239ef33",
+      "bytes": 21287688,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/debconf@1.5.82/debconf_1.5.82.dsc",
+      "file": "debian-debconf_1.5.82.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/d/debconf/debconf_1.5.82.dsc",
+      "sha256": "ed6e8cc6e073344a25ab932602b3b814f25cfa1a7bfd69e464f9bad65f250dea",
+      "bytes": 2035,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/debconf@1.5.82/debconf_1.5.82.tar.xz",
+      "file": "debian-debconf_1.5.82.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/d/debconf/debconf_1.5.82.tar.xz",
+      "sha256": "2d0550c4e2fb98d12055b245907978b28ee2d2b07b62e46be7523384d2ce985e",
+      "bytes": 571540,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/diffutils@1:3.8-4/diffutils_3.8-4.debian.tar.xz",
+      "file": "debian-diffutils_3.8-4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.8-4.debian.tar.xz",
+      "sha256": "36abe3a3174c32c3646ca6bad212169a322409086c4a98f967bb9ad58f11c8d4",
+      "bytes": 14428,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/diffutils@1:3.8-4/diffutils_3.8-4.dsc",
+      "file": "debian-diffutils_3.8-4.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.8-4.dsc",
+      "sha256": "783af1a151c2a0f42a8a427693cc4bb16037c0d17282d28672d906f2eab424b8",
+      "bytes": 1705,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/diffutils@1:3.8-4/diffutils_3.8.orig.tar.xz",
+      "file": "debian-diffutils_3.8.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.8.orig.tar.xz",
+      "sha256": "a6bdd7d1b31266d11c4f4de6c1b748d4607ab0231af5188fc2533d0ae2438fec",
+      "bytes": 1585120,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/diffutils@1:3.8-4/diffutils_3.8.orig.tar.xz.asc",
+      "file": "debian-diffutils_3.8.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/d/diffutils/diffutils_3.8.orig.tar.xz.asc",
+      "sha256": "500f423d0ffa8d28966d916ed5fc6b79fb160a20ed5cb74eeb1c94a30c340311",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/e2fsprogs@1.47.0-2/e2fsprogs_1.47.0-2.debian.tar.xz",
+      "file": "debian-e2fsprogs_1.47.0-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/e/e2fsprogs/e2fsprogs_1.47.0-2.debian.tar.xz",
+      "sha256": "3a756e08d300666039e34577293d11d70c7a1da7850fad478580a81af6348277",
+      "bytes": 87328,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/e2fsprogs@1.47.0-2/e2fsprogs_1.47.0-2.dsc",
+      "file": "debian-e2fsprogs_1.47.0-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/e/e2fsprogs/e2fsprogs_1.47.0-2.dsc",
+      "sha256": "35b4de254e021f721362b767994598e249fea02e38ac446197cd9c22be1130fd",
+      "bytes": 2846,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/e2fsprogs@1.47.0-2/e2fsprogs_1.47.0.orig.tar.gz",
+      "file": "debian-e2fsprogs_1.47.0.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/e/e2fsprogs/e2fsprogs_1.47.0.orig.tar.gz",
+      "sha256": "6667afde56eef0c6af26684974400e4d2288ea49e9441bf5e6229195d51a3578",
+      "bytes": 9637717,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/e2fsprogs@1.47.0-2/e2fsprogs_1.47.0.orig.tar.gz.asc",
+      "file": "debian-e2fsprogs_1.47.0.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/e/e2fsprogs/e2fsprogs_1.47.0.orig.tar.gz.asc",
+      "sha256": "704928204a52ddaa0ac8ef549c1bfba3c38e66c361d3853c8a4c38e6082b90f1",
+      "bytes": 488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/expat@2.5.0-1+deb12u4/expat_2.5.0-1+deb12u4.debian.tar.xz",
+      "file": "debian-expat_2.5.0-1+deb12u4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/e/expat/expat_2.5.0-1+deb12u4.debian.tar.xz",
+      "sha256": "f522d550e0a3ff992c293f2c49d44a1248985863d64005f91e086afc5d295908",
+      "bytes": 64488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/expat@2.5.0-1+deb12u4/expat_2.5.0-1+deb12u4.dsc",
+      "file": "debian-expat_2.5.0-1+deb12u4.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/e/expat/expat_2.5.0-1+deb12u4.dsc",
+      "sha256": "e1537fb367ee0036f87b3bc2e8f44de9fb042b7c141643aaaa187bca0f25b0e4",
+      "bytes": 1427,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/expat@2.5.0-1+deb12u4/expat_2.5.0.orig.tar.gz",
+      "file": "debian-expat_2.5.0.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/e/expat/expat_2.5.0.orig.tar.gz",
+      "sha256": "ab00ee05c7067fd10a35c5d2a4922ebba746ddd50ff83b79c828da17bbdf1757",
+      "bytes": 8320988,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/file@1:5.44-3/file_5.44-3.debian.tar.xz",
+      "file": "debian-file_5.44-3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/f/file/file_5.44-3.debian.tar.xz",
+      "sha256": "536a0fafaa6ee7db39d902cf821bb4359a6d7bab26ab5b3ceb49900c52b772f6",
+      "bytes": 38944,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/file@1:5.44-3/file_5.44-3.dsc",
+      "file": "debian-file_5.44-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/f/file/file_5.44-3.dsc",
+      "sha256": "842e0ef356949218966d1521a95652b00aed18c152174ffc7e000cc3d79501e4",
+      "bytes": 2240,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/file@1:5.44-3/file_5.44.orig.tar.gz",
+      "file": "debian-file_5.44.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/f/file/file_5.44.orig.tar.gz",
+      "sha256": "3751c7fba8dbc831cb8d7cc8aff21035459b8ce5155ef8b0880a27d028475f3b",
+      "bytes": 1186437,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/file@1:5.44-3/file_5.44.orig.tar.gz.asc",
+      "file": "debian-file_5.44.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/f/file/file_5.44.orig.tar.gz.asc",
+      "sha256": "133e04cb49bc113d45c1bdcb1ffdfaa3528e018ee0276f25dce590ebc476c563",
+      "bytes": 201,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/findutils@4.9.0-4/findutils_4.9.0-4.debian.tar.xz",
+      "file": "debian-findutils_4.9.0-4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.9.0-4.debian.tar.xz",
+      "sha256": "ae73dc487b02fb00b2135e43f93733d5561fc8ca7f0997075f21247f6742ec54",
+      "bytes": 33192,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/findutils@4.9.0-4/findutils_4.9.0-4.dsc",
+      "file": "debian-findutils_4.9.0-4.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.9.0-4.dsc",
+      "sha256": "3bb39a6a5f96101f9bb28fed234db186fcec198e064478fef3c0fdf2434f0681",
+      "bytes": 2304,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/findutils@4.9.0-4/findutils_4.9.0.orig.tar.xz",
+      "file": "debian-findutils_4.9.0.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.9.0.orig.tar.xz",
+      "sha256": "a2bfb8c09d436770edc59f50fa483e785b161a3b7b9d547573cb08065fd462fe",
+      "bytes": 2046252,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/findutils@4.9.0-4/findutils_4.9.0.orig.tar.xz.asc",
+      "file": "debian-findutils_4.9.0.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/f/findutils/findutils_4.9.0.orig.tar.xz.asc",
+      "sha256": "924c3719d066eda1b3e47175f8b83e90e9a23f0a639ebe7445621917b283c385",
+      "bytes": 488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/fontconfig@2.14.1-4/fontconfig_2.14.1-4.debian.tar.xz",
+      "file": "debian-fontconfig_2.14.1-4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig_2.14.1-4.debian.tar.xz",
+      "sha256": "9c2421c04c8d26a006166ad39e0be10de5f2e8149f508b6dbd87f1403275f4a5",
+      "bytes": 55972,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/fontconfig@2.14.1-4/fontconfig_2.14.1-4.dsc",
+      "file": "debian-fontconfig_2.14.1-4.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig_2.14.1-4.dsc",
+      "sha256": "8bb59d9c96ff8ef77df06dc65273fa398bf248f7e2448a8314989ec01ce74a58",
+      "bytes": 2693,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/fontconfig@2.14.1-4/fontconfig_2.14.1.orig.tar.xz",
+      "file": "debian-fontconfig_2.14.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/f/fontconfig/fontconfig_2.14.1.orig.tar.xz",
+      "sha256": "298e883f6e11d2c5e6d53c8a8394de58d563902cfab934e6be12fb5a5f361ef0",
+      "bytes": 1447044,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg-5+deb12u4.debian.tar.xz",
+      "file": "debian-freetype_2.12.1+dfsg-5+deb12u4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg-5+deb12u4.debian.tar.xz",
+      "sha256": "c625a97a78e4c74acd32e5b63b3973c9ea8a5c3d7b7f8f7c02def4421589c61b",
+      "bytes": 44844,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg-5+deb12u4.dsc",
+      "file": "debian-freetype_2.12.1+dfsg-5+deb12u4.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg-5+deb12u4.dsc",
+      "sha256": "eead829b4bc79107e8e79c4da006110dffe264f9d48b3ba02f76cf7e84b64389",
+      "bytes": 3918,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg.orig-ft2demos.tar.xz",
+      "file": "debian-freetype_2.12.1+dfsg.orig-ft2demos.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg.orig-ft2demos.tar.xz",
+      "sha256": "ce729d97f166a919a6a3037c949af01d5d6e1783614024d72683153f0bc5ef05",
+      "bytes": 263656,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg.orig-ft2demos.tar.xz.asc",
+      "file": "debian-freetype_2.12.1+dfsg.orig-ft2demos.tar.xz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg.orig-ft2demos.tar.xz.asc",
+      "sha256": "0303e45fe1dc659f14353c276ac0ea1025b30e19ac8138c52d5df79b55726f14",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg.orig-ft2docs.tar.xz",
+      "file": "debian-freetype_2.12.1+dfsg.orig-ft2docs.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg.orig-ft2docs.tar.xz",
+      "sha256": "6664a32e4eedaa89f45422c1150e32da46fd301c972cbfd19d2dcc6dd96f07d1",
+      "bytes": 2038632,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg.orig-ft2docs.tar.xz.asc",
+      "file": "debian-freetype_2.12.1+dfsg.orig-ft2docs.tar.xz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg.orig-ft2docs.tar.xz.asc",
+      "sha256": "e686683830c782c30cdd83278c8d5ed7ab930ae7d548682565b706322f44007f",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/freetype@2.12.1+dfsg-5+deb12u4/freetype_2.12.1+dfsg.orig.tar.xz",
+      "file": "debian-freetype_2.12.1+dfsg.orig.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/f/freetype/freetype_2.12.1+dfsg.orig.tar.xz",
+      "sha256": "7dedb6b9adf331559daea614a83b8de42a753e685ec8e1c4bdb4529eb880b0d1",
+      "bytes": 2188492,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gcc-12@12.2.0-14+deb12u1/gcc-12_12.2.0-14+deb12u1.debian.tar.xz",
+      "file": "debian-gcc-12_12.2.0-14+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/g/gcc-12/gcc-12_12.2.0-14+deb12u1.debian.tar.xz",
+      "sha256": "59f7f7763a0c355e3f27ff9e7ac80d06382b29939361a87e7b139226bfe7402e",
+      "bytes": 1675204,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gcc-12@12.2.0-14+deb12u1/gcc-12_12.2.0-14+deb12u1.dsc",
+      "file": "debian-gcc-12_12.2.0-14+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/g/gcc-12/gcc-12_12.2.0-14+deb12u1.dsc",
+      "sha256": "3aed0b189189c744dc9f4b74798a51d3e512ea85e492568db788a927c88e20ba",
+      "bytes": 27330,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gcc-12@12.2.0-14+deb12u1/gcc-12_12.2.0.orig.tar.gz",
+      "file": "debian-gcc-12_12.2.0.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/g/gcc-12/gcc-12_12.2.0.orig.tar.gz",
+      "sha256": "b8298be16aeeb96a889c6afed0a8e2241b47452e89cc81fe65ea849d5c740fcb",
+      "bytes": 87090343,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gdbm@1.23-3/gdbm_1.23-3.debian.tar.xz",
+      "file": "debian-gdbm_1.23-3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gdbm/gdbm_1.23-3.debian.tar.xz",
+      "sha256": "a0ff17befcbd7c4b361cfe0d821a7a71334102a9c423537bd57f60f18f6802ea",
+      "bytes": 18552,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gdbm@1.23-3/gdbm_1.23-3.dsc",
+      "file": "debian-gdbm_1.23-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gdbm/gdbm_1.23-3.dsc",
+      "sha256": "3e4a52655a1b65c51d33e032913edda3423dcae8cc282c16a455a0afd2d2738d",
+      "bytes": 2583,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gdbm@1.23-3/gdbm_1.23.orig.tar.gz",
+      "file": "debian-gdbm_1.23.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gdbm/gdbm_1.23.orig.tar.gz",
+      "sha256": "74b1081d21fff13ae4bd7c16e5d6e504a4c26f7cde1dca0d963a484174bbcacd",
+      "bytes": 1115854,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gdbm@1.23-3/gdbm_1.23.orig.tar.gz.asc",
+      "file": "debian-gdbm_1.23.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gdbm/gdbm_1.23.orig.tar.gz.asc",
+      "sha256": "64ebb68cc68e8915d62cb20ea40323c00b56051f844589ee0a52169fff34cecb",
+      "bytes": 181,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/glib2.0@2.74.6-2+deb12u9/glib2.0_2.74.6-2+deb12u9.debian.tar.xz",
+      "file": "debian-glib2.0_2.74.6-2+deb12u9.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/glib2.0_2.74.6-2+deb12u9.debian.tar.xz",
+      "sha256": "ccfe76a05463099331f31fc2fde1677ce3c5e0d054112890541b511c0b3321ff",
+      "bytes": 158056,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/glib2.0@2.74.6-2+deb12u9/glib2.0_2.74.6-2+deb12u9.dsc",
+      "file": "debian-glib2.0_2.74.6-2+deb12u9.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/glib2.0_2.74.6-2+deb12u9.dsc",
+      "sha256": "bd8e8cd8d251c2365a02258bf4d6c44721289ac44c3a2477c140ce253bdb4b41",
+      "bytes": 3669,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/glib2.0@2.74.6-2+deb12u9/glib2.0_2.74.6.orig-unicode-data.tar.xz",
+      "file": "debian-glib2.0_2.74.6.orig-unicode-data.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/glib2.0_2.74.6.orig-unicode-data.tar.xz",
+      "sha256": "dabcaff9298aa111a94e580561d2f29371f3e61b356c925ec5e0792df2b11ff2",
+      "bytes": 267596,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/glib2.0@2.74.6-2+deb12u9/glib2.0_2.74.6.orig.tar.xz",
+      "file": "debian-glib2.0_2.74.6.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/glib2.0/glib2.0_2.74.6.orig.tar.xz",
+      "sha256": "069cf7e51cd261eb163aaf06c8d1754c6835f31252180aff5814e5afc7757fbc",
+      "bytes": 5217312,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gmp@2:6.2.1+dfsg1-1.1/gmp_6.2.1+dfsg1-1.1.debian.tar.xz",
+      "file": "debian-gmp_6.2.1+dfsg1-1.1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gmp/gmp_6.2.1+dfsg1-1.1.debian.tar.xz",
+      "sha256": "4e3e324d72fe688e409c716d33b35aa8657f6016cc1aabd5d9c7ec137412e5ef",
+      "bytes": 19444,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gmp@2:6.2.1+dfsg1-1.1/gmp_6.2.1+dfsg1-1.1.dsc",
+      "file": "debian-gmp_6.2.1+dfsg1-1.1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gmp/gmp_6.2.1+dfsg1-1.1.dsc",
+      "sha256": "2831ed4f83bc3304c2403474b335652ab2dc507cd517de44414d9142171748f0",
+      "bytes": 2238,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gmp@2:6.2.1+dfsg1-1.1/gmp_6.2.1+dfsg1.orig.tar.xz",
+      "file": "debian-gmp_6.2.1+dfsg1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gmp/gmp_6.2.1+dfsg1.orig.tar.xz",
+      "sha256": "471b9e463e04362a0124f215afc5f0a4b99caedeeb62634c61bbc12988efa64c",
+      "bytes": 1787428,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gnupg2@2.2.40-1.1+deb12u2/gnupg2_2.2.40-1.1+deb12u2.debian.tar.xz",
+      "file": "debian-gnupg2_2.2.40-1.1+deb12u2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gnupg2/gnupg2_2.2.40-1.1+deb12u2.debian.tar.xz",
+      "sha256": "398ad74f63d81edd9365df97129d05061829599bf50e72824576e1dda23fbe62",
+      "bytes": 67520,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gnupg2@2.2.40-1.1+deb12u2/gnupg2_2.2.40-1.1+deb12u2.dsc",
+      "file": "debian-gnupg2_2.2.40-1.1+deb12u2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gnupg2/gnupg2_2.2.40-1.1+deb12u2.dsc",
+      "sha256": "2424239219b00265dd99c5a2c5f9d50f9cafc15f0945946bb16ac1a50ec38310",
+      "bytes": 3364,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gnupg2@2.2.40-1.1+deb12u2/gnupg2_2.2.40.orig.tar.bz2",
+      "file": "debian-gnupg2_2.2.40.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/g/gnupg2/gnupg2_2.2.40.orig.tar.bz2",
+      "sha256": "1164b29a75e8ab93ea15033300149e1872a7ef6bdda3d7c78229a735f8204c28",
+      "bytes": 7301631,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gnupg2@2.2.40-1.1+deb12u2/gnupg2_2.2.40.orig.tar.bz2.asc",
+      "file": "debian-gnupg2_2.2.40.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gnupg2/gnupg2_2.2.40.orig.tar.bz2.asc",
+      "sha256": "3907dc165299cd53c0b4aec862323c3bce6037c411600ec87dc5eed7a55eba4a",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/grep@3.8-5/grep_3.8-5.debian.tar.xz",
+      "file": "debian-grep_3.8-5.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/grep/grep_3.8-5.debian.tar.xz",
+      "sha256": "c49bb8ab9ed98fd1aa76f8af838ac9abd664e65042c0e40f99983c60ba03fba1",
+      "bytes": 21048,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/grep@3.8-5/grep_3.8-5.dsc",
+      "file": "debian-grep_3.8-5.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/grep/grep_3.8-5.dsc",
+      "sha256": "12b8d98e0112683e0439e61d5b3b7cdeafdfc579641c35aa25199bc0431061d0",
+      "bytes": 1608,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/grep@3.8-5/grep_3.8.orig.tar.xz",
+      "file": "debian-grep_3.8.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/grep/grep_3.8.orig.tar.xz",
+      "sha256": "498d7cc1b4fb081904d87343febb73475cf771e424fb7e6141aff66013abc382",
+      "bytes": 1709536,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/grep@3.8-5/grep_3.8.orig.tar.xz.asc",
+      "file": "debian-grep_3.8.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/g/grep/grep_3.8.orig.tar.xz.asc",
+      "sha256": "347aec924499df3fa41a0d782f3cd3e4a51a15de98b44eaab04084cd34060cd0",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gzip@1.12-1/gzip_1.12-1.debian.tar.xz",
+      "file": "debian-gzip_1.12-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.12-1.debian.tar.xz",
+      "sha256": "fcf2317e8eeddd66766ec5f3853025b109bd13815ec86ed6563e1af68d17193a",
+      "bytes": 18736,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gzip@1.12-1/gzip_1.12-1.dsc",
+      "file": "debian-gzip_1.12-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.12-1.dsc",
+      "sha256": "49a287787a0b4fc816eb576c011c472d1f630ec1778dfa120bd7fce4a844c253",
+      "bytes": 2009,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gzip@1.12-1/gzip_1.12.orig.tar.xz",
+      "file": "debian-gzip_1.12.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.12.orig.tar.xz",
+      "sha256": "ce5e03e519f637e1f814011ace35c4f87b33c0bbabeec35baf5fbd3479e91956",
+      "bytes": 825548,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/gzip@1.12-1/gzip_1.12.orig.tar.xz.asc",
+      "file": "debian-gzip_1.12.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/g/gzip/gzip_1.12.orig.tar.xz.asc",
+      "sha256": "3ed9ab54452576e0be0d477c772c9f47baa36415133fef7dd1fcf7b15480ba32",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/icu@72.1-3+deb12u1/icu_72.1-3+deb12u1.debian.tar.xz",
+      "file": "debian-icu_72.1-3+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/i/icu/icu_72.1-3+deb12u1.debian.tar.xz",
+      "sha256": "bd6b27fc0a18f6044a47cd96c7d687720b95e4f592718bf8e34c6391b7753a1d",
+      "bytes": 63620,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/icu@72.1-3+deb12u1/icu_72.1-3+deb12u1.dsc",
+      "file": "debian-icu_72.1-3+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/i/icu/icu_72.1-3+deb12u1.dsc",
+      "sha256": "8fd50a21664422b2dd5df4e20175dce3396c89a3a85363db26dd4529bba62a92",
+      "bytes": 2284,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/icu@72.1-3+deb12u1/icu_72.1.orig.tar.gz",
+      "file": "debian-icu_72.1.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/i/icu/icu_72.1.orig.tar.gz",
+      "sha256": "a2d2d38217092a7ed56635e34467f92f976b370e20182ad325edea6681a71d68",
+      "bytes": 26303933,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/icu@72.1-3+deb12u1/icu_72.1.orig.tar.gz.asc",
+      "file": "debian-icu_72.1.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/i/icu/icu_72.1.orig.tar.gz.asc",
+      "sha256": "87b6ff610d587292cec0444fa8cbbfb12994cb89bade40578f5ba6470de245c7",
+      "bytes": 659,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/keyutils@1.6.3-2/keyutils_1.6.3-2.debian.tar.xz",
+      "file": "debian-keyutils_1.6.3-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/k/keyutils/keyutils_1.6.3-2.debian.tar.xz",
+      "sha256": "9b9b40729465d4895860838e82e13d2ee4ffc44a97c9acd1d47a51bd33ade899",
+      "bytes": 13196,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/keyutils@1.6.3-2/keyutils_1.6.3-2.dsc",
+      "file": "debian-keyutils_1.6.3-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/k/keyutils/keyutils_1.6.3-2.dsc",
+      "sha256": "77e6f0e5018f0f6cfb5a3689d7f185a014b2437d0a097609ffda32bfd3a64f28",
+      "bytes": 2079,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/keyutils@1.6.3-2/keyutils_1.6.3.orig.tar.gz",
+      "file": "debian-keyutils_1.6.3.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/k/keyutils/keyutils_1.6.3.orig.tar.gz",
+      "sha256": "a61d5706136ae4c05bd48f86186bcfdbd88dd8bd5107e3e195c924cfc1b39bb4",
+      "bytes": 137022,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/krb5@1.20.1-2+deb12u5/krb5_1.20.1-2+deb12u5.debian.tar.xz",
+      "file": "debian-krb5_1.20.1-2+deb12u5.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/k/krb5/krb5_1.20.1-2+deb12u5.debian.tar.xz",
+      "sha256": "195842a66252dfee21b3402b5048f8dea11ea92056742aedf71b356e26f4513f",
+      "bytes": 112068,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/krb5@1.20.1-2+deb12u5/krb5_1.20.1-2+deb12u5.dsc",
+      "file": "debian-krb5_1.20.1-2+deb12u5.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/k/krb5/krb5_1.20.1-2+deb12u5.dsc",
+      "sha256": "643c1e56f5d2022f7685f5d5490a4fc348adc68a4bb42adbc1780e4a5b1bb05e",
+      "bytes": 3982,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/krb5@1.20.1-2+deb12u5/krb5_1.20.1.orig.tar.gz",
+      "file": "debian-krb5_1.20.1.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/k/krb5/krb5_1.20.1.orig.tar.gz",
+      "sha256": "704aed49b19eb5a7178b34b2873620ec299db08752d6a8574f95d41879ab8851",
+      "bytes": 8661660,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/krb5@1.20.1-2+deb12u5/krb5_1.20.1.orig.tar.gz.asc",
+      "file": "debian-krb5_1.20.1.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/k/krb5/krb5_1.20.1.orig.tar.gz.asc",
+      "sha256": "2afeec5dbc586cc40b7975645e02b4c41c4d719dd02213e828c72d8239d55666",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/less@590-2.1~deb12u2/less_590-2.1~deb12u2.debian.tar.xz",
+      "file": "debian-less_590-2.1~deb12u2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/less/less_590-2.1~deb12u2.debian.tar.xz",
+      "sha256": "4a54c48a25cabb5408af6d7bc174cad96614e540b47d2b8962b3e13819fd9b30",
+      "bytes": 23852,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/less@590-2.1~deb12u2/less_590-2.1~deb12u2.dsc",
+      "file": "debian-less_590-2.1~deb12u2.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/less/less_590-2.1~deb12u2.dsc",
+      "sha256": "1a4219f8ec9342851805089d9ee5ec7c0150287d5722ecc914c50790673ad9a6",
+      "bytes": 2228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/less@590-2.1~deb12u2/less_590.orig.tar.gz",
+      "file": "debian-less_590.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/less/less_590.orig.tar.gz",
+      "sha256": "6aadf54be8bf57d0e2999a3c5d67b1de63808bb90deb8f77b028eafae3a08e10",
+      "bytes": 352574,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/less@590-2.1~deb12u2/less_590.orig.tar.gz.asc",
+      "file": "debian-less_590.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/l/less/less_590.orig.tar.gz.asc",
+      "sha256": "1bd54dbadb45eeaeaf58cee2b7b4a701c634c11866082bc494752838af37c3db",
+      "bytes": 163,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libassuan@2.5.5-5/libassuan_2.5.5-5.debian.tar.xz",
+      "file": "debian-libassuan_2.5.5-5.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libassuan/libassuan_2.5.5-5.debian.tar.xz",
+      "sha256": "9d46fe972ba45692e28a2618e457a7f9141afc122281a862bcb4aa16716c97d7",
+      "bytes": 14256,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libassuan@2.5.5-5/libassuan_2.5.5-5.dsc",
+      "file": "debian-libassuan_2.5.5-5.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libassuan/libassuan_2.5.5-5.dsc",
+      "sha256": "60be1d43dd5a7c4bce7a97f58513915990c8c615ea02c68b8cd5cf1e33b84a0c",
+      "bytes": 1997,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libassuan@2.5.5-5/libassuan_2.5.5.orig.tar.bz2",
+      "file": "debian-libassuan_2.5.5.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libassuan/libassuan_2.5.5.orig.tar.bz2",
+      "sha256": "8e8c2fcc982f9ca67dcbb1d95e2dc746b1739a4668bc20b3a3c5be632edb34e4",
+      "bytes": 572263,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libassuan@2.5.5-5/libassuan_2.5.5.orig.tar.bz2.asc",
+      "file": "debian-libassuan_2.5.5.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian/pool/main/liba/libassuan/libassuan_2.5.5.orig.tar.bz2.asc",
+      "sha256": "8bb0d1d818ac91fa27a8ebed2975dac12eac9a6e075dfba225cc488ac9b4133f",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libbsd@0.11.7-2/libbsd_0.11.7-2.debian.tar.xz",
+      "file": "debian-libbsd_0.11.7-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libb/libbsd/libbsd_0.11.7-2.debian.tar.xz",
+      "sha256": "e588e52a99415226767362637071764ebfaf454450bda64d53652e7a451d3e67",
+      "bytes": 18116,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libbsd@0.11.7-2/libbsd_0.11.7-2.dsc",
+      "file": "debian-libbsd_0.11.7-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libb/libbsd/libbsd_0.11.7-2.dsc",
+      "sha256": "21c62d65fa3b914d765b733fb0e03d331db830df45f1a5225f95902567f05146",
+      "bytes": 2330,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libbsd@0.11.7-2/libbsd_0.11.7.orig.tar.xz",
+      "file": "debian-libbsd_0.11.7.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libb/libbsd/libbsd_0.11.7.orig.tar.xz",
+      "sha256": "9baa186059ebbf25c06308e9f991fda31f7183c0f24931826d83aa6abd8a0261",
+      "bytes": 418508,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libbsd@0.11.7-2/libbsd_0.11.7.orig.tar.xz.asc",
+      "file": "debian-libbsd_0.11.7.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libb/libbsd/libbsd_0.11.7.orig.tar.xz.asc",
+      "sha256": "b470d3fa5ad6948de7a85891e652970828f26eb7057028d57b94fa8644af934a",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libedit@3.1-20221030-2/libedit_3.1-20221030-2.debian.tar.xz",
+      "file": "debian-libedit_3.1-20221030-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libe/libedit/libedit_3.1-20221030-2.debian.tar.xz",
+      "sha256": "ab1ec0e03ae5122831a02d9a0be2afa4b91d739cd459ee1e168c917bae66b622",
+      "bytes": 16488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libedit@3.1-20221030-2/libedit_3.1-20221030-2.dsc",
+      "file": "debian-libedit_3.1-20221030-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libe/libedit/libedit_3.1-20221030-2.dsc",
+      "sha256": "6e701f5e0bcd81f80fe3686d84861e9d9247e247ed08fb96ffc3746102aedd21",
+      "bytes": 2281,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libedit@3.1-20221030-2/libedit_3.1-20221030.orig.tar.gz",
+      "file": "debian-libedit_3.1-20221030.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libe/libedit/libedit_3.1-20221030.orig.tar.gz",
+      "sha256": "f0925a5adf4b1bf116ee19766b7daa766917aec198747943b1c4edf67a4be2bb",
+      "bytes": 533261,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libffi@3.4.4-1/libffi_3.4.4-1.debian.tar.xz",
+      "file": "debian-libffi_3.4.4-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libf/libffi/libffi_3.4.4-1.debian.tar.xz",
+      "sha256": "161b210bfd2ada0b15b0d2a2a98ffc779cd4a68661a7fdf46f61732493db0895",
+      "bytes": 10380,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libffi@3.4.4-1/libffi_3.4.4-1.dsc",
+      "file": "debian-libffi_3.4.4-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libf/libffi/libffi_3.4.4-1.dsc",
+      "sha256": "21c9ef156b6766535cb014e0765142c8104ffbcd73f003ecfa80cfb314baa4f0",
+      "bytes": 1951,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libffi@3.4.4-1/libffi_3.4.4.orig.tar.gz",
+      "file": "debian-libffi_3.4.4.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libf/libffi/libffi_3.4.4.orig.tar.gz",
+      "sha256": "d66c56ad259a82cf2a9dfc408b32bf5da52371500b84745f7fb8b645712df676",
+      "bytes": 1362394,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgcrypt20@1.10.1-3+deb12u1/libgcrypt20_1.10.1-3+deb12u1.debian.tar.xz",
+      "file": "debian-libgcrypt20_1.10.1-3+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libg/libgcrypt20/libgcrypt20_1.10.1-3+deb12u1.debian.tar.xz",
+      "sha256": "a827828973467fe4469729c51124a2b8a8682911369840f66842816190bd7e6c",
+      "bytes": 41076,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgcrypt20@1.10.1-3+deb12u1/libgcrypt20_1.10.1-3+deb12u1.dsc",
+      "file": "debian-libgcrypt20_1.10.1-3+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libg/libgcrypt20/libgcrypt20_1.10.1-3+deb12u1.dsc",
+      "sha256": "1bd12e7e03f5c60177a65ba4b838466033eaeca191111c570d444104d0d6e6d3",
+      "bytes": 2975,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgcrypt20@1.10.1-3+deb12u1/libgcrypt20_1.10.1.orig.tar.bz2",
+      "file": "debian-libgcrypt20_1.10.1.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libg/libgcrypt20/libgcrypt20_1.10.1.orig.tar.bz2",
+      "sha256": "ef14ae546b0084cd84259f61a55e07a38c3b53afc0f546bffcef2f01baffe9de",
+      "bytes": 3778457,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgcrypt20@1.10.1-3+deb12u1/libgcrypt20_1.10.1.orig.tar.bz2.asc",
+      "file": "debian-libgcrypt20_1.10.1.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libg/libgcrypt20/libgcrypt20_1.10.1.orig.tar.bz2.asc",
+      "sha256": "9da6ae5e8b1c253607be7e951b568932740c143ee519f6b3392ece8211e84e33",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgpg-error@1.46-1/libgpg-error_1.46-1.debian.tar.xz",
+      "file": "debian-libgpg-error_1.46-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libg/libgpg-error/libgpg-error_1.46-1.debian.tar.xz",
+      "sha256": "2f80416e16dead749fb6a31a0a3703ae9e562bd32fc4d72184636a1501cd86ef",
+      "bytes": 18532,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgpg-error@1.46-1/libgpg-error_1.46-1.dsc",
+      "file": "debian-libgpg-error_1.46-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libg/libgpg-error/libgpg-error_1.46-1.dsc",
+      "sha256": "f1fe4ca2f252f797c2819b0eae1e284e2f0b2c7ac8ec16209054ae45878aaafe",
+      "bytes": 2273,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgpg-error@1.46-1/libgpg-error_1.46.orig.tar.bz2",
+      "file": "debian-libgpg-error_1.46.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/libg/libgpg-error/libgpg-error_1.46.orig.tar.bz2",
+      "sha256": "b7e11a64246bbe5ef37748de43b245abd72cfcd53c9ae5e7fc5ca59f1c81268d",
+      "bytes": 1014291,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libgpg-error@1.46-1/libgpg-error_1.46.orig.tar.bz2.asc",
+      "file": "debian-libgpg-error_1.46.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libg/libgpg-error/libgpg-error_1.46.orig.tar.bz2.asc",
+      "sha256": "e0eb40e705068858ee43b6462b204aacf5a554fe4a17cfe63ea99e9612f72e9d",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libksba@1.6.3-2/libksba_1.6.3-2.debian.tar.xz",
+      "file": "debian-libksba_1.6.3-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libksba/libksba_1.6.3-2.debian.tar.xz",
+      "sha256": "1b11861864d707e95009895185f4febee681c35852a918ffe3683a7a2af23486",
+      "bytes": 14636,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libksba@1.6.3-2/libksba_1.6.3-2.dsc",
+      "file": "debian-libksba_1.6.3-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libksba/libksba_1.6.3-2.dsc",
+      "sha256": "cc3b1c34eafe187a16f6150607b9729beba2934192fff0b800ac1554746f6faf",
+      "bytes": 2482,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libksba@1.6.3-2/libksba_1.6.3.orig.tar.bz2",
+      "file": "debian-libksba_1.6.3.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libksba/libksba_1.6.3.orig.tar.bz2",
+      "sha256": "3f72c68db30971ebbf14367527719423f0a4d5f8103fc9f4a1c01a9fa440de5c",
+      "bytes": 668287,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libksba@1.6.3-2/libksba_1.6.3.orig.tar.bz2.asc",
+      "file": "debian-libksba_1.6.3.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libk/libksba/libksba_1.6.3.orig.tar.bz2.asc",
+      "sha256": "d7c92cf335fe17864ae4a9c575b18a5c5749583d1268663b6d8a53008e40f7d2",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libmd@1.0.4-2/libmd_1.0.4-2.debian.tar.xz",
+      "file": "debian-libmd_1.0.4-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libm/libmd/libmd_1.0.4-2.debian.tar.xz",
+      "sha256": "a27a2221b1a81e192455e2e93da2e313b21e489f6ac2bcf84b0b813dc3fe261b",
+      "bytes": 10204,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libmd@1.0.4-2/libmd_1.0.4-2.dsc",
+      "file": "debian-libmd_1.0.4-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libm/libmd/libmd_1.0.4-2.dsc",
+      "sha256": "5e060cb277f31e67b91033e05ece00832ca8056decba873b1698a5680414a177",
+      "bytes": 2264,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libmd@1.0.4-2/libmd_1.0.4.orig.tar.xz",
+      "file": "debian-libmd_1.0.4.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libm/libmd/libmd_1.0.4.orig.tar.xz",
+      "sha256": "f51c921042e34beddeded4b75557656559cf5b1f2448033b4c1eec11c07e530f",
+      "bytes": 264472,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libmd@1.0.4-2/libmd_1.0.4.orig.tar.xz.asc",
+      "file": "debian-libmd_1.0.4.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libm/libmd/libmd_1.0.4.orig.tar.xz.asc",
+      "sha256": "32deebe1cfab127ee69a3e8c8caf439e459b7cdcdd7535fe021cb485adc14057",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libnsl@1.3.0-2/libnsl_1.3.0-2.debian.tar.xz",
+      "file": "debian-libnsl_1.3.0-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libn/libnsl/libnsl_1.3.0-2.debian.tar.xz",
+      "sha256": "7f8dccc706931b9e206448ffb475487a4a0abaded27cf611d418f4a34415dca7",
+      "bytes": 4692,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libnsl@1.3.0-2/libnsl_1.3.0-2.dsc",
+      "file": "debian-libnsl_1.3.0-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libn/libnsl/libnsl_1.3.0-2.dsc",
+      "sha256": "1da570eed6693c774cce51f3c33f989d1aa4bf1dcb8660818d8a834a1a3728ef",
+      "bytes": 1955,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libnsl@1.3.0-2/libnsl_1.3.0.orig.tar.xz",
+      "file": "debian-libnsl_1.3.0.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libn/libnsl/libnsl_1.3.0.orig.tar.xz",
+      "sha256": "eac3062957fa302c62eff4aed718a07bacbf9ceb0a058289f12a19bfdda3c8e2",
+      "bytes": 321488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libpng1.6@1.6.39-2+deb12u6/libpng1.6_1.6.39-2+deb12u6.debian.tar.xz",
+      "file": "debian-libpng1.6_1.6.39-2+deb12u6.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libp/libpng1.6/libpng1.6_1.6.39-2+deb12u6.debian.tar.xz",
+      "sha256": "bfb66eb5c000c6ce8dc4d6a146c2a81627143b8869f1e9ac9c1e5a286af3dc36",
+      "bytes": 51244,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libpng1.6@1.6.39-2+deb12u6/libpng1.6_1.6.39-2+deb12u6.dsc",
+      "file": "debian-libpng1.6_1.6.39-2+deb12u6.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libp/libpng1.6/libpng1.6_1.6.39-2+deb12u6.dsc",
+      "sha256": "efd9099f7f74c7bcd4f1540a97be3ce1cb9bc4ff97dfc2062ea66117b17ce686",
+      "bytes": 2302,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libpng1.6@1.6.39-2+deb12u6/libpng1.6_1.6.39.orig.tar.gz",
+      "file": "debian-libpng1.6_1.6.39.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libp/libpng1.6/libpng1.6_1.6.39.orig.tar.gz",
+      "sha256": "a00e9d2f2f664186e4202db9299397f851aea71b36a35e74910b8820e380d441",
+      "bytes": 1519415,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsecret@0.20.5-3/libsecret_0.20.5-3.debian.tar.xz",
+      "file": "debian-libsecret_0.20.5-3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsecret/libsecret_0.20.5-3.debian.tar.xz",
+      "sha256": "30e92b1d2092e1d5589420659cece8d64ec3db4dfb27c5d1003b8aa1ed009f9d",
+      "bytes": 10972,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsecret@0.20.5-3/libsecret_0.20.5-3.dsc",
+      "file": "debian-libsecret_0.20.5-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsecret/libsecret_0.20.5-3.dsc",
+      "sha256": "b847c12801d0ec7751f277c89e9c30c549903adc51285d042bae8eac767ddf82",
+      "bytes": 2891,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsecret@0.20.5-3/libsecret_0.20.5.orig.tar.xz",
+      "file": "debian-libsecret_0.20.5.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsecret/libsecret_0.20.5.orig.tar.xz",
+      "sha256": "56cfc341137da870cf9e24e297d5c0b3c3e403493581609311a88d2149d7d0c3",
+      "bytes": 187220,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libselinux@3.4-1/libselinux_3.4-1.debian.tar.xz",
+      "file": "debian-libselinux_3.4-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux_3.4-1.debian.tar.xz",
+      "sha256": "046ace4ad0092104bdfb0c6e5187131910216c89b8b81a4bce3c2067615c9196",
+      "bytes": 29416,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libselinux@3.4-1/libselinux_3.4-1.dsc",
+      "file": "debian-libselinux_3.4-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux_3.4-1.dsc",
+      "sha256": "4035af53388d343f9b5c46ca2867ba32823cf4a2d218ddd590b34ae59c899157",
+      "bytes": 2534,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libselinux@3.4-1/libselinux_3.4.orig.tar.gz",
+      "file": "debian-libselinux_3.4.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux_3.4.orig.tar.gz",
+      "sha256": "77c294a927e6795c2e98f74b5c3adde9c8839690e9255b767c5fca6acff9b779",
+      "bytes": 210061,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libselinux@3.4-1/libselinux_3.4.orig.tar.gz.asc",
+      "file": "debian-libselinux_3.4.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libselinux/libselinux_3.4.orig.tar.gz.asc",
+      "sha256": "5c370bdef7b756697445e6838ba1b2d934f668b244461e36e245f589ec994a24",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsigsegv@2.14-1/libsigsegv_2.14-1.debian.tar.xz",
+      "file": "debian-libsigsegv_2.14-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsigsegv/libsigsegv_2.14-1.debian.tar.xz",
+      "sha256": "1a06fc4c19ee5fc36d5c8329627301f300b8d76d49da4920169fe01b29c97550",
+      "bytes": 9368,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsigsegv@2.14-1/libsigsegv_2.14-1.dsc",
+      "file": "debian-libsigsegv_2.14-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsigsegv/libsigsegv_2.14-1.dsc",
+      "sha256": "b1a374e54891e47d04c4a6c29784a7dcee632213bb918afad8b1e9ca5cf40a7e",
+      "bytes": 2338,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsigsegv@2.14-1/libsigsegv_2.14.orig.tar.gz",
+      "file": "debian-libsigsegv_2.14.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsigsegv/libsigsegv_2.14.orig.tar.gz",
+      "sha256": "cdac3941803364cf81a908499beb79c200ead60b6b5b40cad124fd1e06caa295",
+      "bytes": 464658,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libsigsegv@2.14-1/libsigsegv_2.14.orig.tar.gz.asc",
+      "file": "debian-libsigsegv_2.14.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libs/libsigsegv/libsigsegv_2.14.orig.tar.gz.asc",
+      "sha256": "d5046f2f3ccec42e6cd10252d5fd15c7bb1fb6422167f75509e6d6d895516fe8",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtasn1-6@4.19.0-2+deb12u1/libtasn1-6_4.19.0-2+deb12u1.debian.tar.xz",
+      "file": "debian-libtasn1-6_4.19.0-2+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libt/libtasn1-6/libtasn1-6_4.19.0-2+deb12u1.debian.tar.xz",
+      "sha256": "878db2aeeb04e43a70750480a4f17498b7ed46fb5fe433acb6721b3e6d38088c",
+      "bytes": 24876,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtasn1-6@4.19.0-2+deb12u1/libtasn1-6_4.19.0-2+deb12u1.dsc",
+      "file": "debian-libtasn1-6_4.19.0-2+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libt/libtasn1-6/libtasn1-6_4.19.0-2+deb12u1.dsc",
+      "sha256": "54eabe8526f590a52771d99ce8c592d3edd549e98d84ea6649db473d528cc6ec",
+      "bytes": 2694,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtasn1-6@4.19.0-2+deb12u1/libtasn1-6_4.19.0.orig.tar.gz",
+      "file": "debian-libtasn1-6_4.19.0.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libt/libtasn1-6/libtasn1-6_4.19.0.orig.tar.gz",
+      "sha256": "1613f0ac1cf484d6ec0ce3b8c06d56263cc7242f1c23b30d82d23de345a63f7a",
+      "bytes": 1786576,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtasn1-6@4.19.0-2+deb12u1/libtasn1-6_4.19.0.orig.tar.gz.asc",
+      "file": "debian-libtasn1-6_4.19.0.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libt/libtasn1-6/libtasn1-6_4.19.0.orig.tar.gz.asc",
+      "sha256": "8410c0c004f3509c218a98b276b3308b9c46f48068e8b1a6d9ebfd61ea9f357a",
+      "bytes": 228,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtirpc@1.3.3+ds-1/libtirpc_1.3.3+ds-1.debian.tar.xz",
+      "file": "debian-libtirpc_1.3.3+ds-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtirpc/libtirpc_1.3.3+ds-1.debian.tar.xz",
+      "sha256": "fd1865c49e905951a641082981c1dab7f018caea1a5e23af1791728a3320800e",
+      "bytes": 11232,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtirpc@1.3.3+ds-1/libtirpc_1.3.3+ds-1.dsc",
+      "file": "debian-libtirpc_1.3.3+ds-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtirpc/libtirpc_1.3.3+ds-1.dsc",
+      "sha256": "c05c5d76027d4162d5a29d73eef90076559bde0fa5133b2e0045d82155e1b2af",
+      "bytes": 2129,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libtirpc@1.3.3+ds-1/libtirpc_1.3.3+ds.orig.tar.gz",
+      "file": "debian-libtirpc_1.3.3+ds.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libt/libtirpc/libtirpc_1.3.3+ds.orig.tar.gz",
+      "sha256": "facd98473c3a16fe6564c6458ef96ebb84d144345d1171f034fa019424bba027",
+      "bytes": 699030,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libunistring@1.0-2/libunistring_1.0-2.debian.tar.xz",
+      "file": "debian-libunistring_1.0-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring_1.0-2.debian.tar.xz",
+      "sha256": "e550d94935cd06eafb0defd7b5d7c914c7bb80a8e818a49efcf7675206572450",
+      "bytes": 14520,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libunistring@1.0-2/libunistring_1.0-2.dsc",
+      "file": "debian-libunistring_1.0-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring_1.0-2.dsc",
+      "sha256": "9b9a9d9d4cd1c2118df8cf5ca0dfb787d89afcd99400d7cd01b4c4e9b0bc1ae5",
+      "bytes": 2181,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libunistring@1.0-2/libunistring_1.0.orig.tar.xz",
+      "file": "debian-libunistring_1.0.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring_1.0.orig.tar.xz",
+      "sha256": "5bab55b49f75d77ed26b257997e919b693f29fd4a1bc22e0e6e024c246c72741",
+      "bytes": 2367800,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libunistring@1.0-2/libunistring_1.0.orig.tar.xz.asc",
+      "file": "debian-libunistring_1.0.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libunistring/libunistring_1.0.orig.tar.xz.asc",
+      "sha256": "c1c2ae60eb971593da92e65384a5f1b181717e7b9654854f139f350c6cbe235d",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libusb-1.0@2:1.0.26-1/libusb-1.0_1.0.26-1.debian.tar.xz",
+      "file": "debian-libusb-1.0_1.0.26-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0_1.0.26-1.debian.tar.xz",
+      "sha256": "fdf5de721b46c9f411f833f531176f93de9e2b15101d55a4bff36ea6af0e0226",
+      "bytes": 11524,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libusb-1.0@2:1.0.26-1/libusb-1.0_1.0.26-1.dsc",
+      "file": "debian-libusb-1.0_1.0.26-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0_1.0.26-1.dsc",
+      "sha256": "3d75673e367fab1d0ca1ef29276ff4ea31dd7678c9573c10975e8d80bdbd0b14",
+      "bytes": 2144,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libusb-1.0@2:1.0.26-1/libusb-1.0_1.0.26.orig.tar.bz2",
+      "file": "debian-libusb-1.0_1.0.26.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/libu/libusb-1.0/libusb-1.0_1.0.26.orig.tar.bz2",
+      "sha256": "12ce7a61fc9854d1d2a1ffe095f7b5fac19ddba095c259e6067a46500381b5a5",
+      "bytes": 620534,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libx11@2:1.8.4-2+deb12u2/libx11_1.8.4-2+deb12u2.diff.gz",
+      "file": "debian-libx11_1.8.4-2+deb12u2.diff.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libx/libx11/libx11_1.8.4-2+deb12u2.diff.gz",
+      "sha256": "3b3b43eabf8a58dda4442031652cc2294b50fe46129d6943937bf320d8a62243",
+      "bytes": 115499,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libx11@2:1.8.4-2+deb12u2/libx11_1.8.4-2+deb12u2.dsc",
+      "file": "debian-libx11_1.8.4-2+deb12u2.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libx/libx11/libx11_1.8.4-2+deb12u2.dsc",
+      "sha256": "d7374ec568d895f9e5919ebdbd94301e2acb9e8b307a39ac8708082aa1757fa3",
+      "bytes": 2544,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libx11@2:1.8.4-2+deb12u2/libx11_1.8.4.orig.tar.gz",
+      "file": "debian-libx11_1.8.4.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libx/libx11/libx11_1.8.4.orig.tar.gz",
+      "sha256": "efd3a3a43c1f177edc2c205bedb0719b6648203595e54c0b83a32576aeaca7cd",
+      "bytes": 3168573,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libx11@2:1.8.4-2+deb12u2/libx11_1.8.4.orig.tar.gz.asc",
+      "file": "debian-libx11_1.8.4.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/libx/libx11/libx11_1.8.4.orig.tar.gz.asc",
+      "sha256": "9d9a6bcdd81a40ed377b2981a4d40a0db1315d095e9ccc35a0ba78e692df8591",
+      "bytes": 801,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxau@1:1.0.9-1/libxau_1.0.9-1.diff.gz",
+      "file": "debian-libxau_1.0.9-1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau_1.0.9-1.diff.gz",
+      "sha256": "7b34899563f172e8f11d061de41b58fe1c32f8683d985e57686677ccb7299a9a",
+      "bytes": 10193,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxau@1:1.0.9-1/libxau_1.0.9-1.dsc",
+      "file": "debian-libxau_1.0.9-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau_1.0.9-1.dsc",
+      "sha256": "e6e059652cda7e5a49b6c9a70667639f32d629c20320487d16c642a06c1ebf85",
+      "bytes": 2183,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxau@1:1.0.9-1/libxau_1.0.9.orig.tar.gz",
+      "file": "debian-libxau_1.0.9.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau_1.0.9.orig.tar.gz",
+      "sha256": "1f123d8304b082ad63a9e89376400a3b1d4c29e67e3ea07b3f659cccca690eea",
+      "bytes": 394068,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxau@1:1.0.9-1/libxau_1.0.9.orig.tar.gz.asc",
+      "file": "debian-libxau_1.0.9.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxau/libxau_1.0.9.orig.tar.gz.asc",
+      "sha256": "af6104aaf3c5ede529e381237dd60f49640ec96593a84502fa493b86582b2f04",
+      "bytes": 801,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcb@1.15-1/libxcb_1.15-1.diff.gz",
+      "file": "debian-libxcb_1.15-1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb_1.15-1.diff.gz",
+      "sha256": "639c719ed06ffc397b200a209abd1a049e21e9e19431fb14c9ca870de01a6eac",
+      "bytes": 26267,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcb@1.15-1/libxcb_1.15-1.dsc",
+      "file": "debian-libxcb_1.15-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb_1.15-1.dsc",
+      "sha256": "f689569f33e70ca4c95c91b094d0659eb49a958d9ac43186640338f9290e298b",
+      "bytes": 5344,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcb@1.15-1/libxcb_1.15.orig.tar.gz",
+      "file": "debian-libxcb_1.15.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcb/libxcb_1.15.orig.tar.gz",
+      "sha256": "1cb65df8543a69ec0555ac696123ee386321dfac1964a3da39976c9a05ad724d",
+      "bytes": 650774,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcrypt@1:4.4.33-2/libxcrypt_4.4.33-2.debian.tar.xz",
+      "file": "debian-libxcrypt_4.4.33-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcrypt/libxcrypt_4.4.33-2.debian.tar.xz",
+      "sha256": "23194c9b0642533fb27fe8c33391d3fa838a55e17e5a88a419ed31548b0721c9",
+      "bytes": 8196,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcrypt@1:4.4.33-2/libxcrypt_4.4.33-2.dsc",
+      "file": "debian-libxcrypt_4.4.33-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcrypt/libxcrypt_4.4.33-2.dsc",
+      "sha256": "910ae411c9462f07667e46540af3dbb30f46413ddd90f1f176781666042dbb38",
+      "bytes": 1591,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxcrypt@1:4.4.33-2/libxcrypt_4.4.33.orig.tar.xz",
+      "file": "debian-libxcrypt_4.4.33.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxcrypt/libxcrypt_4.4.33.orig.tar.xz",
+      "sha256": "5e2da5cb5f263e9ac4c4b3f49c75e3b8523889210f45c60bb7e97b229c75a10b",
+      "bytes": 393372,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxdmcp@1:1.1.2-3/libxdmcp_1.1.2-3.diff.gz",
+      "file": "debian-libxdmcp_1.1.2-3.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp_1.1.2-3.diff.gz",
+      "sha256": "5844df115c17e5ba40ac116f80373304d821c607e763ef6f40562421f5cc0cf3",
+      "bytes": 18017,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxdmcp@1:1.1.2-3/libxdmcp_1.1.2-3.dsc",
+      "file": "debian-libxdmcp_1.1.2-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp_1.1.2-3.dsc",
+      "sha256": "f9697dca6a275aeee9a3eee9fb2d55e0f77485481e8b84efc6950fc9b1988460",
+      "bytes": 2145,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxdmcp@1:1.1.2-3/libxdmcp_1.1.2.orig.tar.gz",
+      "file": "debian-libxdmcp_1.1.2.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxdmcp/libxdmcp_1.1.2.orig.tar.gz",
+      "sha256": "6f7c7e491a23035a26284d247779174dedc67e34e93cc3548b648ffdb6fc57c0",
+      "bytes": 404115,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxext@2:1.3.4-1/libxext_1.3.4-1.diff.gz",
+      "file": "debian-libxext_1.3.4-1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxext/libxext_1.3.4-1.diff.gz",
+      "sha256": "b975870d6a7b791ffbe2d57efdf6e20c250c5e76d12e45b04c8655f593bb8337",
+      "bytes": 12509,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxext@2:1.3.4-1/libxext_1.3.4-1.dsc",
+      "file": "debian-libxext_1.3.4-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxext/libxext_1.3.4-1.dsc",
+      "sha256": "25024f57d955739c6b858822bf93ec3c71400b56fc0d666826f440e3661fd7c0",
+      "bytes": 2118,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxext@2:1.3.4-1/libxext_1.3.4.orig.tar.gz",
+      "file": "debian-libxext_1.3.4.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxext/libxext_1.3.4.orig.tar.gz",
+      "sha256": "8ef0789f282826661ff40a8eef22430378516ac580167da35cc948be9041aac1",
+      "bytes": 494434,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxrender@1:0.9.10-1.1/libxrender_0.9.10-1.1.diff.gz",
+      "file": "debian-libxrender_0.9.10-1.1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender_0.9.10-1.1.diff.gz",
+      "sha256": "caf8c84085b3b0d073f738fa12d32d4eca2d8b669cb3c7f1b1cd2ce64b7b10b7",
+      "bytes": 15201,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxrender@1:0.9.10-1.1/libxrender_0.9.10-1.1.dsc",
+      "file": "debian-libxrender_0.9.10-1.1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender_0.9.10-1.1.dsc",
+      "sha256": "348ab15d05f1d802da485e4c6abdb9d5419691fb7c8ce44ca5b17b2b7f889ce8",
+      "bytes": 2072,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxrender@1:0.9.10-1.1/libxrender_0.9.10.orig.tar.gz",
+      "file": "debian-libxrender_0.9.10.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxrender/libxrender_0.9.10.orig.tar.gz",
+      "sha256": "770527cce42500790433df84ec3521e8bf095dfe5079454a92236494ab296adf",
+      "bytes": 373717,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxss@1:1.2.3-1/libxss_1.2.3-1.diff.gz",
+      "file": "debian-libxss_1.2.3-1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxss/libxss_1.2.3-1.diff.gz",
+      "sha256": "9d381b48f1377f27c506113e1f9b7d6ee286b856421f7f2b27017f01dccfef04",
+      "bytes": 7145,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxss@1:1.2.3-1/libxss_1.2.3-1.dsc",
+      "file": "debian-libxss_1.2.3-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxss/libxss_1.2.3-1.dsc",
+      "sha256": "783dbcd49a0934d994693af676ee98734dad070ab2434a6afe831c2de0ecca1d",
+      "bytes": 2203,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxss@1:1.2.3-1/libxss_1.2.3.orig.tar.gz",
+      "file": "debian-libxss_1.2.3.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxss/libxss_1.2.3.orig.tar.gz",
+      "sha256": "4f74e7e412144591d8e0616db27f433cfc9f45aae6669c6c4bb03e6bf9be809a",
+      "bytes": 385215,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/libxss@1:1.2.3-1/libxss_1.2.3.orig.tar.gz.asc",
+      "file": "debian-libxss_1.2.3.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/libx/libxss/libxss_1.2.3.orig.tar.gz.asc",
+      "sha256": "4e900524d56c8e7263365267efa91bb3671110c9eb28ccab58f70e2188f0b91b",
+      "bytes": 705,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/mpfr4@4.2.0-1/mpfr4_4.2.0-1.debian.tar.xz",
+      "file": "debian-mpfr4_4.2.0-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/m/mpfr4/mpfr4_4.2.0-1.debian.tar.xz",
+      "sha256": "05faf305be60659d8db47e1925fa4062be8fb89e5fcd70fb0e5444554b1625a8",
+      "bytes": 12488,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/mpfr4@4.2.0-1/mpfr4_4.2.0-1.dsc",
+      "file": "debian-mpfr4_4.2.0-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/m/mpfr4/mpfr4_4.2.0-1.dsc",
+      "sha256": "bfd38815d4d79f9ea3f14d94f61a075a0914ecbe4ef9666b7f6597340a60c250",
+      "bytes": 1959,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/mpfr4@4.2.0-1/mpfr4_4.2.0.orig.tar.xz",
+      "file": "debian-mpfr4_4.2.0.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/m/mpfr4/mpfr4_4.2.0.orig.tar.xz",
+      "sha256": "06a378df13501248c1b2db5aa977a2c8126ae849a9d9b7be2546fb4a9c26d993",
+      "bytes": 1477532,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/ncurses@6.4-4/ncurses_6.4-4.debian.tar.xz",
+      "file": "debian-ncurses_6.4-4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/n/ncurses/ncurses_6.4-4.debian.tar.xz",
+      "sha256": "97218f48c32e375121d33ebc8a0f53afadb776ddace9003f032970749a33677d",
+      "bytes": 56556,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/ncurses@6.4-4/ncurses_6.4-4.dsc",
+      "file": "debian-ncurses_6.4-4.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/n/ncurses/ncurses_6.4-4.dsc",
+      "sha256": "a35710b02a3de6ab8f9da7fa2e3726a609cc26c936ad85b2094ef91aa996fc94",
+      "bytes": 4110,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/ncurses@6.4-4/ncurses_6.4.orig.tar.gz",
+      "file": "debian-ncurses_6.4.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/n/ncurses/ncurses_6.4.orig.tar.gz",
+      "sha256": "6931283d9ac87c5073f30b6290c4c75f21632bb4fc3603ac8100812bed248159",
+      "bytes": 3612591,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/ncurses@6.4-4/ncurses_6.4.orig.tar.gz.asc",
+      "file": "debian-ncurses_6.4.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/n/ncurses/ncurses_6.4.orig.tar.gz.asc",
+      "sha256": "f9096c5311eab61908c142e77e58f503f9228e13d351365b3c331ca5ad5a67db",
+      "bytes": 729,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/nettle@3.8.1-2/nettle_3.8.1-2.debian.tar.xz",
+      "file": "debian-nettle_3.8.1-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/n/nettle/nettle_3.8.1-2.debian.tar.xz",
+      "sha256": "8f1eae9c6afffe545de294140f33d53352261478268dafee5ef72d840e1b3d7b",
+      "bytes": 23396,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/nettle@3.8.1-2/nettle_3.8.1-2.dsc",
+      "file": "debian-nettle_3.8.1-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/n/nettle/nettle_3.8.1-2.dsc",
+      "sha256": "a437e204da67612efb656cab354835f358b44c077c5c0a46d6e8c30b5c0bddff",
+      "bytes": 2274,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/nettle@3.8.1-2/nettle_3.8.1.orig.tar.gz",
+      "file": "debian-nettle_3.8.1.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/n/nettle/nettle_3.8.1.orig.tar.gz",
+      "sha256": "364f3e2b77cd7dcde83fd7c45219c834e54b0c75e428b6f894a23d12dd41cbfe",
+      "bytes": 2406251,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/nettle@3.8.1-2/nettle_3.8.1.orig.tar.gz.asc",
+      "file": "debian-nettle_3.8.1.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/n/nettle/nettle_3.8.1.orig.tar.gz.asc",
+      "sha256": "71fe31c44728fdc144cbf12f30ca5d483992c17fd23afabe58f89d4201f66ddb",
+      "bytes": 573,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/npth@1.6-3/npth_1.6-3.debian.tar.xz",
+      "file": "debian-npth_1.6-3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/n/npth/npth_1.6-3.debian.tar.xz",
+      "sha256": "efa188104de503add9c49c17bec7bec0df814f7d1db9fdc2017574a0af98155c",
+      "bytes": 10712,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/npth@1.6-3/npth_1.6-3.dsc",
+      "file": "debian-npth_1.6-3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/n/npth/npth_1.6-3.dsc",
+      "sha256": "002c2a7936d1499ebb5d72dbb9c7ca3e00ed5fe3b0aa48f20b7279fc90aa9e90",
+      "bytes": 1931,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/npth@1.6-3/npth_1.6.orig.tar.bz2",
+      "file": "debian-npth_1.6.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/n/npth/npth_1.6.orig.tar.bz2",
+      "sha256": "1393abd9adcf0762d34798dc34fdcf4d0d22a8410721e76f1e3afcd1daa4e2d1",
+      "bytes": 300486,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openldap@2.5.13+dfsg-5/openldap_2.5.13+dfsg-5.debian.tar.xz",
+      "file": "debian-openldap_2.5.13+dfsg-5.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/o/openldap/openldap_2.5.13+dfsg-5.debian.tar.xz",
+      "sha256": "161e22c1c79e2f7c6013cfc2bbf0265d6bbb78d91a0fcfa9ca866837f2c31d88",
+      "bytes": 164516,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openldap@2.5.13+dfsg-5/openldap_2.5.13+dfsg-5.dsc",
+      "file": "debian-openldap_2.5.13+dfsg-5.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/o/openldap/openldap_2.5.13+dfsg-5.dsc",
+      "sha256": "3192f78a46825039c6c9de6808ae98ab3d1c8846f43d2109ed654fd9c33fe472",
+      "bytes": 3233,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openldap@2.5.13+dfsg-5/openldap_2.5.13+dfsg.orig.tar.xz",
+      "file": "debian-openldap_2.5.13+dfsg.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/o/openldap/openldap_2.5.13+dfsg.orig.tar.xz",
+      "sha256": "1d95c400a3eae6730246614ef16883de3dbd1b14b01a1ebe3a9aa1ccad2c13ec",
+      "bytes": 3727704,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssh@1:9.2p1-2+deb12u10/openssh_9.2p1-2+deb12u10.debian.tar.xz",
+      "file": "debian-openssh_9.2p1-2+deb12u10.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/o/openssh/openssh_9.2p1-2+deb12u10.debian.tar.xz",
+      "sha256": "65cbc8353a4197d0e543dd5330ca9798663256ea54b91a9c7c49116e7ea342ea",
+      "bytes": 204884,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssh@1:9.2p1-2+deb12u10/openssh_9.2p1-2+deb12u10.dsc",
+      "file": "debian-openssh_9.2p1-2+deb12u10.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/o/openssh/openssh_9.2p1-2+deb12u10.dsc",
+      "sha256": "af8cfb3ce783604abd28183a52aa0bde8c6bc603cc35758035db48d1dac5f2e2",
+      "bytes": 3455,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssh@1:9.2p1-2+deb12u10/openssh_9.2p1.orig.tar.gz",
+      "file": "debian-openssh_9.2p1.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/o/openssh/openssh_9.2p1.orig.tar.gz",
+      "sha256": "3f66dbf1655fb45f50e1c56da62ab01218c228807b21338d634ebcdf9d71cf46",
+      "bytes": 1852380,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssh@1:9.2p1-2+deb12u10/openssh_9.2p1.orig.tar.gz.asc",
+      "file": "debian-openssh_9.2p1.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/o/openssh/openssh_9.2p1.orig.tar.gz.asc",
+      "sha256": "7acc8e9502040972aeecb785fa3b6bb00c069cc01fbd7c214f8f7867033a6dbb",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssl@3.0.22-1~deb12u1/openssl_3.0.22-1~deb12u1.debian.tar.xz",
+      "file": "debian-openssl_3.0.22-1~deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.22-1~deb12u1.debian.tar.xz",
+      "sha256": "08ee68527218d6d9a0fa4741ec8ffef47646cdcad0ed0822b84bf11677c66108",
+      "bytes": 56848,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssl@3.0.22-1~deb12u1/openssl_3.0.22-1~deb12u1.dsc",
+      "file": "debian-openssl_3.0.22-1~deb12u1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.22-1~deb12u1.dsc",
+      "sha256": "9eb196075ff65fed9512c743d5ccf918b77c3c637f6d518e4be550cf9065c655",
+      "bytes": 2742,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssl@3.0.22-1~deb12u1/openssl_3.0.22.orig.tar.gz",
+      "file": "debian-openssl_3.0.22.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.22.orig.tar.gz",
+      "sha256": "67ebca7e50d17383028045486653492195b83db95f8558709701bb47b5c1ef81",
+      "bytes": 15330396,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/openssl@3.0.22-1~deb12u1/openssl_3.0.22.orig.tar.gz.asc",
+      "file": "debian-openssl_3.0.22.orig.tar.gz.asc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.22.orig.tar.gz.asc",
+      "sha256": "b0cc4a379a7731c3a74c349f6756d85253d83099fd63352cf12407bce4395d19",
+      "bytes": 931,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/p11-kit@0.24.1-2/p11-kit_0.24.1-2.debian.tar.xz",
+      "file": "debian-p11-kit_0.24.1-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/p/p11-kit/p11-kit_0.24.1-2.debian.tar.xz",
+      "sha256": "9a14085b12cfd90e76008c2809e6557224243e1daeae4fbd7fad97e4396f730f",
+      "bytes": 23332,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/p11-kit@0.24.1-2/p11-kit_0.24.1-2.dsc",
+      "file": "debian-p11-kit_0.24.1-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/p/p11-kit/p11-kit_0.24.1-2.dsc",
+      "sha256": "b88a483cb9afd5556ea4ac64d5df4543123a53bf0e50d1c01454887220259a89",
+      "bytes": 2501,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/p11-kit@0.24.1-2/p11-kit_0.24.1.orig.tar.xz",
+      "file": "debian-p11-kit_0.24.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/p/p11-kit/p11-kit_0.24.1.orig.tar.xz",
+      "sha256": "d8be783efd5cd4ae534cee4132338e3f40f182c3205d23b200094ec85faaaef8",
+      "bytes": 838304,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/p11-kit@0.24.1-2/p11-kit_0.24.1.orig.tar.xz.asc",
+      "file": "debian-p11-kit_0.24.1.orig.tar.xz.asc",
+      "url": "https://deb.debian.org/debian/pool/main/p/p11-kit/p11-kit_0.24.1.orig.tar.xz.asc",
+      "sha256": "48041a234bac05f70519b0d4727e78a129ea80a51baf92c7d419f80b7cbdf0ab",
+      "bytes": 833,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/patch@2.7.6-7/patch_2.7.6-7.debian.tar.xz",
+      "file": "debian-patch_2.7.6-7.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/p/patch/patch_2.7.6-7.debian.tar.xz",
+      "sha256": "7725f30b042d8cf63516e480036e93ca2ff0ce5ad3754db4a4e69d33e96a2624",
+      "bytes": 15084,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/patch@2.7.6-7/patch_2.7.6-7.dsc",
+      "file": "debian-patch_2.7.6-7.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/p/patch/patch_2.7.6-7.dsc",
+      "sha256": "d954fd576d935ac54b7d44d4976eb52d0da84a57f7bad90c6e5bd5e33595030a",
+      "bytes": 1706,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/patch@2.7.6-7/patch_2.7.6.orig.tar.xz",
+      "file": "debian-patch_2.7.6.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/p/patch/patch_2.7.6.orig.tar.xz",
+      "sha256": "ac610bda97abe0d9f6b7c963255a11dcb196c25e337c61f94e4778d632f1d8fd",
+      "bytes": 783756,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pcre2@10.42-1+deb12u2/pcre2_10.42-1+deb12u2.diff.gz",
+      "file": "debian-pcre2_10.42-1+deb12u2.diff.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/pcre2/pcre2_10.42-1+deb12u2.diff.gz",
+      "sha256": "b28d4aeaa3198fcf2f41dffddec3d673c8ef53286ced930599f009522da11372",
+      "bytes": 16865,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pcre2@10.42-1+deb12u2/pcre2_10.42-1+deb12u2.dsc",
+      "file": "debian-pcre2_10.42-1+deb12u2.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/pcre2/pcre2_10.42-1+deb12u2.dsc",
+      "sha256": "63be58a94a6d2c7f03324cc0fe1ffb32d1f366d82d0fabef581ba3cc8a8ba5a6",
+      "bytes": 2371,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pcre2@10.42-1+deb12u2/pcre2_10.42.orig.tar.gz",
+      "file": "debian-pcre2_10.42.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/pcre2/pcre2_10.42.orig.tar.gz",
+      "sha256": "c33b418e3b936ee3153de2c61cc638e7e4fe3156022a5c77d0711bcbb9d64f1f",
+      "bytes": 2397194,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/perl@5.36.0-7+deb12u4/perl_5.36.0-7+deb12u4.debian.tar.xz",
+      "file": "debian-perl_5.36.0-7+deb12u4.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/perl/perl_5.36.0-7+deb12u4.debian.tar.xz",
+      "sha256": "f49d224fa9a6a356e1140f95fb5c864864b5423c9aece94cc68b4d348a3694b6",
+      "bytes": 190620,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/perl@5.36.0-7+deb12u4/perl_5.36.0-7+deb12u4.dsc",
+      "file": "debian-perl_5.36.0-7+deb12u4.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/perl/perl_5.36.0-7+deb12u4.dsc",
+      "sha256": "6f71e571ae69894ad2115013bbc3207e77dc796581e30a62be0297e7d90ee7b9",
+      "bytes": 2922,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/perl@5.36.0-7+deb12u4/perl_5.36.0.orig-regen-configure.tar.xz",
+      "file": "debian-perl_5.36.0.orig-regen-configure.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/perl/perl_5.36.0.orig-regen-configure.tar.xz",
+      "sha256": "10ac353bc5a933403afe60ed1817e7a456f99bdbcaf80c1cdb0eb3a08ea56d4e",
+      "bytes": 417784,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/perl@5.36.0-7+deb12u4/perl_5.36.0.orig.tar.xz",
+      "file": "debian-perl_5.36.0.orig.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/perl/perl_5.36.0.orig.tar.xz",
+      "sha256": "0f386dccbee8e26286404b2cca144e1005be65477979beb9b1ba272d4819bcf0",
+      "bytes": 13051500,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pinentry@1.2.1-1/pinentry_1.2.1-1.debian.tar.xz",
+      "file": "debian-pinentry_1.2.1-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/p/pinentry/pinentry_1.2.1-1.debian.tar.xz",
+      "sha256": "ae1bd8af99fe91bd3877b6fd3d606facbfb1be02d0227da7cc81f54f7fe2f708",
+      "bytes": 18568,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pinentry@1.2.1-1/pinentry_1.2.1-1.dsc",
+      "file": "debian-pinentry_1.2.1-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/p/pinentry/pinentry_1.2.1-1.dsc",
+      "sha256": "cb45060817fa5563d76591d99f0a7596aa069101710545852ec34a70a387597e",
+      "bytes": 2242,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pinentry@1.2.1-1/pinentry_1.2.1.orig.tar.bz2",
+      "file": "debian-pinentry_1.2.1.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian/pool/main/p/pinentry/pinentry_1.2.1.orig.tar.bz2",
+      "sha256": "457a185e5a85238fb945a955dc6352ab962dc8b48720b62fc9fa48c7540a4067",
+      "bytes": 547698,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/pinentry@1.2.1-1/pinentry_1.2.1.orig.tar.bz2.asc",
+      "file": "debian-pinentry_1.2.1.orig.tar.bz2.asc",
+      "url": "https://deb.debian.org/debian/pool/main/p/pinentry/pinentry_1.2.1.orig.tar.bz2.asc",
+      "sha256": "9f7d9c7509e4ff4161a043893d76183bd975230fcad671b643c90f78e500ba95",
+      "bytes": 390,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/python3-defaults@3.11.2-1/python3-defaults_3.11.2-1.dsc",
+      "file": "debian-python3-defaults_3.11.2-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/p/python3-defaults/python3-defaults_3.11.2-1.dsc",
+      "sha256": "75cac54d11a4f7bc2c88eeeabddd74dc27b072c3bd515e71c8be2641b062e980",
+      "bytes": 2961,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/python3-defaults@3.11.2-1/python3-defaults_3.11.2-1.tar.gz",
+      "file": "debian-python3-defaults_3.11.2-1.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/p/python3-defaults/python3-defaults_3.11.2-1.tar.gz",
+      "sha256": "21ba2c8fcf78161b73f98f9d1c3432be10d9f45e7783501f08cace5ad4115808",
+      "bytes": 145949,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/python3.11@3.11.2-6+deb12u9/python3.11_3.11.2-6+deb12u9.debian.tar.xz",
+      "file": "debian-python3.11_3.11.2-6+deb12u9.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/python3.11/python3.11_3.11.2-6+deb12u9.debian.tar.xz",
+      "sha256": "c40df926f2856785028b4a40478e90382b84e2c7b2d22e3b8e49e79377586627",
+      "bytes": 314060,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/python3.11@3.11.2-6+deb12u9/python3.11_3.11.2-6+deb12u9.dsc",
+      "file": "debian-python3.11_3.11.2-6+deb12u9.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/python3.11/python3.11_3.11.2-6+deb12u9.dsc",
+      "sha256": "49c0d6e1f0d3aeef542de2e908da11bcbcb9343654fb70b51fe4f80865c9dc92",
+      "bytes": 3171,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/python3.11@3.11.2-6+deb12u9/python3.11_3.11.2.orig.tar.gz",
+      "file": "debian-python3.11_3.11.2.orig.tar.gz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/p/python3.11/python3.11_3.11.2.orig.tar.gz",
+      "sha256": "2411c74bda5bbcfcddaf4531f66d1adc73f247f529aee981b029513aefdbf849",
+      "bytes": 26437858,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/readline@8.2-1.3/readline_8.2-1.3.debian.tar.xz",
+      "file": "debian-readline_8.2-1.3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/r/readline/readline_8.2-1.3.debian.tar.xz",
+      "sha256": "8cd3c02d6c07b4cf57da607de168a9e347ee05c31857f0f6236fe3df4fc207d9",
+      "bytes": 30016,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/readline@8.2-1.3/readline_8.2-1.3.dsc",
+      "file": "debian-readline_8.2-1.3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/r/readline/readline_8.2-1.3.dsc",
+      "sha256": "05497ea99bef3f14b8d502cbe3f84fe7bbc0bce1c4f139ca32f0fd60dcac977e",
+      "bytes": 2553,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/readline@8.2-1.3/readline_8.2.orig.tar.gz",
+      "file": "debian-readline_8.2.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/r/readline/readline_8.2.orig.tar.gz",
+      "sha256": "3feb7171f16a84ee82ca18a36d7b9be109a52c04f492a053331d7d1095007c35",
+      "bytes": 3043952,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sed@4.9-1+deb12u1/sed_4.9-1+deb12u1.debian.tar.xz",
+      "file": "debian-sed_4.9-1+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/sed/sed_4.9-1+deb12u1.debian.tar.xz",
+      "sha256": "4346634a4c0b3977bf6a6b6d27f187fb203f547dda8267bb8a42d1323487f6f0",
+      "bytes": 63548,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sed@4.9-1+deb12u1/sed_4.9-1+deb12u1.dsc",
+      "file": "debian-sed_4.9-1+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/s/sed/sed_4.9-1+deb12u1.dsc",
+      "sha256": "6bf366b84fd2025e355689e524132b3c38a2b4ef136de2e6129595be1e3bdd4f",
+      "bytes": 2038,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sed@4.9-1+deb12u1/sed_4.9.orig.tar.xz",
+      "file": "debian-sed_4.9.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/sed/sed_4.9.orig.tar.xz",
+      "sha256": "6e226b732e1cd739464ad6862bd1a1aba42d7982922da7a53519631d24975181",
+      "bytes": 1397092,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sqlite3@3.40.1-2+deb12u2/sqlite3_3.40.1-2+deb12u2.debian.tar.xz",
+      "file": "debian-sqlite3_3.40.1-2+deb12u2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/sqlite3/sqlite3_3.40.1-2+deb12u2.debian.tar.xz",
+      "sha256": "0843bc12e4364076477935ce313a6d0796fd899a989ff18ebb6545540e10e4ca",
+      "bytes": 34260,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sqlite3@3.40.1-2+deb12u2/sqlite3_3.40.1-2+deb12u2.dsc",
+      "file": "debian-sqlite3_3.40.1-2+deb12u2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/s/sqlite3/sqlite3_3.40.1-2+deb12u2.dsc",
+      "sha256": "ee3459ae9d00939741c7708fc1b8ce1bde12d8c3fb1dfa005bbbc8651d884e23",
+      "bytes": 2519,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sqlite3@3.40.1-2+deb12u2/sqlite3_3.40.1.orig-www.tar.xz",
+      "file": "debian-sqlite3_3.40.1.orig-www.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/sqlite3/sqlite3_3.40.1.orig-www.tar.xz",
+      "sha256": "a5e95a18d1b59729278860559ded78751b9163ffb5bb906c5cd24c015f71d5fd",
+      "bytes": 5865720,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/sqlite3@3.40.1-2+deb12u2/sqlite3_3.40.1.orig.tar.xz",
+      "file": "debian-sqlite3_3.40.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/sqlite3/sqlite3_3.40.1.orig.tar.xz",
+      "sha256": "aaa776260ab4dc976db34aa7891819484c8676b5b2783123ebc6301e2ca5d655",
+      "bytes": 8019048,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/systemd@252.39-1~deb12u2/systemd_252.39-1~deb12u2.debian.tar.xz",
+      "file": "debian-systemd_252.39-1~deb12u2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/s/systemd/systemd_252.39-1~deb12u2.debian.tar.xz",
+      "sha256": "27c548c678593cbe82e1701fc480bfe56e99b8f8750cbc09e720b6aa4fcbffaf",
+      "bytes": 177476,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/systemd@252.39-1~deb12u2/systemd_252.39-1~deb12u2.dsc",
+      "file": "debian-systemd_252.39-1~deb12u2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/s/systemd/systemd_252.39-1~deb12u2.dsc",
+      "sha256": "f2f952ae61fd40f1ef3ee48c8721e23eaaec5396ef5f1b0c2e138d78fade9c6e",
+      "bytes": 6574,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/systemd@252.39-1~deb12u2/systemd_252.39.orig.tar.gz",
+      "file": "debian-systemd_252.39.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/s/systemd/systemd_252.39.orig.tar.gz",
+      "sha256": "08a54a6c4d4cf969fc025eaa8922a55d6bc458100c242510b56c96e7d72af1c5",
+      "bytes": 12399886,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tar@1.34+dfsg-1.2+deb12u1/tar_1.34+dfsg-1.2+deb12u1.debian.tar.xz",
+      "file": "debian-tar_1.34+dfsg-1.2+deb12u1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tar/tar_1.34+dfsg-1.2+deb12u1.debian.tar.xz",
+      "sha256": "e7cdc112e6810a0827b6081f6a4115eb630679a5f3d7cceffbc236d6b8d46d69",
+      "bytes": 21464,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tar@1.34+dfsg-1.2+deb12u1/tar_1.34+dfsg-1.2+deb12u1.dsc",
+      "file": "debian-tar_1.34+dfsg-1.2+deb12u1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/t/tar/tar_1.34+dfsg-1.2+deb12u1.dsc",
+      "sha256": "c092b25be17ab3b138aabb756497b038516a3f7d23604ccd4bf76ebbabff7a27",
+      "bytes": 2185,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tar@1.34+dfsg-1.2+deb12u1/tar_1.34+dfsg.orig.tar.xz",
+      "file": "debian-tar_1.34+dfsg.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tar/tar_1.34+dfsg.orig.tar.xz",
+      "sha256": "7d57029540cb928394defb3b377b3531237c947e795b51aa8acac0c5ba0e4844",
+      "bytes": 1981736,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tcl8.6@8.6.13+dfsg-2/tcl8.6_8.6.13+dfsg-2.debian.tar.xz",
+      "file": "debian-tcl8.6_8.6.13+dfsg-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tcl8.6/tcl8.6_8.6.13+dfsg-2.debian.tar.xz",
+      "sha256": "899c8d800988caa1f5a8b070d3697f29c3d098754416cc2816b94dfa93aef009",
+      "bytes": 14336,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tcl8.6@8.6.13+dfsg-2/tcl8.6_8.6.13+dfsg-2.dsc",
+      "file": "debian-tcl8.6_8.6.13+dfsg-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/t/tcl8.6/tcl8.6_8.6.13+dfsg-2.dsc",
+      "sha256": "7965fd63c4cb970d0f675f574f6730114c806139e433cb3589a428658fc4d0cd",
+      "bytes": 2120,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tcl8.6@8.6.13+dfsg-2/tcl8.6_8.6.13+dfsg.orig.tar.gz",
+      "file": "debian-tcl8.6_8.6.13+dfsg.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tcl8.6/tcl8.6_8.6.13+dfsg.orig.tar.gz",
+      "sha256": "83bce7277e3825df0179567e0d8a431ebb1a126df53ea4a94af89dd4dd0f26d5",
+      "bytes": 6302749,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tcltk-defaults@8.6.13/tcltk-defaults_8.6.13.dsc",
+      "file": "debian-tcltk-defaults_8.6.13.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/t/tcltk-defaults/tcltk-defaults_8.6.13.dsc",
+      "sha256": "21a12e32bdc5335a2e952ef8431b92ac01295b37e1b0e372bdaf33be3ff31773",
+      "bytes": 2011,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tcltk-defaults@8.6.13/tcltk-defaults_8.6.13.tar.xz",
+      "file": "debian-tcltk-defaults_8.6.13.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tcltk-defaults/tcltk-defaults_8.6.13.tar.xz",
+      "sha256": "ad407334848953a79bc4333e9e852ccb30f6ccb8a6bdf80260b415cef5dd7cc4",
+      "bytes": 14112,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tk8.6@8.6.13-2/tk8.6_8.6.13-2.debian.tar.xz",
+      "file": "debian-tk8.6_8.6.13-2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tk8.6/tk8.6_8.6.13-2.debian.tar.xz",
+      "sha256": "1e57bc189cfa3e73e140aa1853b91e6c9a4da99eccd931de24e0c2cd525f8319",
+      "bytes": 10740,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tk8.6@8.6.13-2/tk8.6_8.6.13-2.dsc",
+      "file": "debian-tk8.6_8.6.13-2.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/t/tk8.6/tk8.6_8.6.13-2.dsc",
+      "sha256": "12783fea0125ef3e67a1a07b2b24f7e27329214394ca5b543bd38716a91d7a1e",
+      "bytes": 2155,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/tk8.6@8.6.13-2/tk8.6_8.6.13.orig.tar.gz",
+      "file": "debian-tk8.6_8.6.13.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/t/tk8.6/tk8.6_8.6.13.orig.tar.gz",
+      "sha256": "2e65fa069a23365440a3c56c556b8673b5e32a283800d8d9b257e3f584ce0675",
+      "bytes": 4546848,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/util-linux@2.38.1-5+deb12u3/util-linux_2.38.1-5+deb12u3.debian.tar.xz",
+      "file": "debian-util-linux_2.38.1-5+deb12u3.debian.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.38.1-5+deb12u3.debian.tar.xz",
+      "sha256": "d46b85313f536fc4831a69ba3fa2c8160450b5b26c7c5dfafce4f078fe4f205c",
+      "bytes": 121964,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/util-linux@2.38.1-5+deb12u3/util-linux_2.38.1-5+deb12u3.dsc",
+      "file": "debian-util-linux_2.38.1-5+deb12u3.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.38.1-5+deb12u3.dsc",
+      "sha256": "0fe5fcd2b83d0465e32ca5cb9d8319e9b6fbf14c9a69abfd7ea905e45fa90b67",
+      "bytes": 4579,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/util-linux@2.38.1-5+deb12u3/util-linux_2.38.1.orig.tar.xz",
+      "file": "debian-util-linux_2.38.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian/pool/main/u/util-linux/util-linux_2.38.1.orig.tar.xz",
+      "sha256": "60492a19b44e6cf9a3ddff68325b333b8b52b6c59ce3ebd6a0ecaa4c5117e84f",
+      "bytes": 7495904,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xft@2.3.6-1/xft_2.3.6-1.diff.gz",
+      "file": "debian-xft_2.3.6-1.diff.gz",
+      "url": "https://deb.debian.org/debian/pool/main/x/xft/xft_2.3.6-1.diff.gz",
+      "sha256": "9d4c64fc52626134a3f753df88fceaba0cb460bd9b56544f0e42178deca77019",
+      "bytes": 17995,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xft@2.3.6-1/xft_2.3.6-1.dsc",
+      "file": "debian-xft_2.3.6-1.dsc",
+      "url": "https://deb.debian.org/debian/pool/main/x/xft/xft_2.3.6-1.dsc",
+      "sha256": "252220495bd12fac30d8f1b1994916beaed9c5149138dcc62e230fee17339530",
+      "bytes": 2006,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xft@2.3.6-1/xft_2.3.6.orig.tar.gz",
+      "file": "debian-xft_2.3.6.orig.tar.gz",
+      "url": "https://deb.debian.org/debian/pool/main/x/xft/xft_2.3.6.orig.tar.gz",
+      "sha256": "b7e59f69e0bbabe9438088775f7e5a7c16a572e58b11f9722519385d38192df5",
+      "bytes": 447498,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xz-utils@5.4.1-1+deb12u2/xz-utils_5.4.1-1+deb12u2.debian.tar.xz",
+      "file": "debian-xz-utils_5.4.1-1+deb12u2.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/x/xz-utils/xz-utils_5.4.1-1+deb12u2.debian.tar.xz",
+      "sha256": "7e0b1d1448520ea4f88ec05136a88f07564cc4a1abd6dfcf53c1f822a3e4f64f",
+      "bytes": 95356,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xz-utils@5.4.1-1+deb12u2/xz-utils_5.4.1-1+deb12u2.dsc",
+      "file": "debian-xz-utils_5.4.1-1+deb12u2.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/x/xz-utils/xz-utils_5.4.1-1+deb12u2.dsc",
+      "sha256": "bffc9917562b5787661379621bb1f7510bf7271b03d8ce4181cebc84b90d3c35",
+      "bytes": 2442,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/xz-utils@5.4.1-1+deb12u2/xz-utils_5.4.1.orig.tar.xz",
+      "file": "debian-xz-utils_5.4.1.orig.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/x/xz-utils/xz-utils_5.4.1.orig.tar.xz",
+      "sha256": "5d9827aa1875b21c288f78864bb26d2650b436ea8d2cad364e4921eb6266a5a5",
+      "bytes": 1485272,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/zlib@1:1.2.13.dfsg-1/zlib_1.2.13.dfsg-1.debian.tar.xz",
+      "file": "debian-zlib_1.2.13.dfsg-1.debian.tar.xz",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/z/zlib/zlib_1.2.13.dfsg-1.debian.tar.xz",
+      "sha256": "f66cf3d4f2d7defcd4d1fd1fb0a11ee39f1e01b42ec7d059c9dc5c1695133c44",
+      "bytes": 15700,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/zlib@1:1.2.13.dfsg-1/zlib_1.2.13.dfsg-1.dsc",
+      "file": "debian-zlib_1.2.13.dfsg-1.dsc",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/z/zlib/zlib_1.2.13.dfsg-1.dsc",
+      "sha256": "3fa1e6b2fc525062aa88207dda52fed8e045373c809d362fe8a2bfbf7cf515a8",
+      "bytes": 2399,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "debian/zlib@1:1.2.13.dfsg-1/zlib_1.2.13.dfsg.orig.tar.bz2",
+      "file": "debian-zlib_1.2.13.dfsg.orig.tar.bz2",
+      "url": "https://deb.debian.org/debian-security/pool/updates/main/z/zlib/zlib_1.2.13.dfsg.orig.tar.bz2",
+      "sha256": "71feb7947e3c00ef125f83b79a4e529bde31171e5babe48b391f06758d1ab0a1",
+      "bytes": 1239825,
+      "kind": "debian-corresponding-source",
+      "group": "debian"
+    },
+    {
+      "id": "msys/diffutils-3.12-1.src.tar.zst",
+      "file": "diffutils-3.12-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/diffutils-3.12-1.src.tar.zst",
+      "sha256": "474c4a3528a2afbb8d9608c65ad1bdbbd81ff42c143a438d7d56272a61b1bfac",
+      "bytes": 1941123,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/docx2txt-1.4-2.src.tar.zst",
+      "file": "docx2txt-1.4-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/docx2txt-1.4-2.src.tar.zst",
+      "sha256": "46a6b4472a6b8ff1845dc96785b3f78e0465874f45033e392a87e680c9ea517f",
+      "bytes": 32186,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/dos2unix-7.5.5-1.src.tar.zst",
+      "file": "dos2unix-7.5.5-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/dos2unix-7.5.5-1.src.tar.zst",
+      "sha256": "504abb3a0218c899491c15b78ee75cea27a5036bb01d2ba155ceb5292664381c",
+      "bytes": 993895,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/expat-2.7.5-1.src.tar.zst",
+      "file": "expat-2.7.5-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/expat-2.7.5-1.src.tar.zst",
+      "sha256": "4b6c0fc7ab03d7be9cf60332f2cad1135826bfea5b555b1cb25b36276a2c0b50",
+      "bytes": 510359,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "native-core-dependency/expat",
+      "file": "expat-2.8.3.tar.xz",
+      "url": "https://github.com/libexpat/libexpat/releases/download/R_2_8_3/expat-2.8.3.tar.xz",
+      "sha256": "f6256df90c906773d344da084402b7d3e4f22ed41b1a59c989098a83d3ea0c85",
+      "bytes": 517264,
+      "kind": "native-core-dependency-source",
+      "group": "core-and-producer-recipes",
+      "license": "MIT"
+    },
+    {
+      "id": "msys/file-5.47-1.src.tar.zst",
+      "file": "file-5.47-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/file-5.47-1.src.tar.zst",
+      "sha256": "f86b4ae93add60531468f182c1619dc8c39dfd3a36302d2862e645aa3ef0a8b6",
+      "bytes": 2678855,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/filesystem-2026.03.06-1.src.tar.zst",
+      "file": "filesystem-2026.03.06-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/filesystem-2026.03.06-1.src.tar.zst",
+      "sha256": "aa2444fdd7eb8456ed46b9ab014229638dabaf01f828f05bc22fe415d4cf0a2c",
+      "bytes": 93093,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/findutils-4.10.0-2.src.tar.zst",
+      "file": "findutils-4.10.0-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/findutils-4.10.0-2.src.tar.zst",
+      "sha256": "e19640714a3c1f43c250aaebc6a2e94aec43a67a031c31ff675edbc166d333d3",
+      "bytes": 2242859,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/gawk-5.4.0-1.src.tar.zst",
+      "file": "gawk-5.4.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gawk-5.4.0-1.src.tar.zst",
+      "sha256": "77537012eab6b7074413221cff57ebea3d632785ead2f259dfefb1c027ef86c7",
+      "bytes": 6624619,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/gcc-15.2.0-1.src.tar.zst",
+      "file": "gcc-15.2.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gcc-15.2.0-1.src.tar.zst",
+      "sha256": "711af8f46db0d55c092c2444c13f5e07fed02833944a4852b6b5023ed2eb1604",
+      "bytes": 101097111,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "gcm-2.7.3",
+      "file": "gcm-2.7.3.source",
+      "url": "https://codeload.github.com/git-ecosystem/git-credential-manager/tar.gz/refs/tags/v2.7.3",
+      "sha256": "a9c1d7a89c620bea0df65623f25c62e66122d22557583ab390ed612d544884e9",
+      "bytes": 2286011,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/gdbm-1.26-1.src.tar.zst",
+      "file": "gdbm-1.26-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gdbm-1.26-1.src.tar.zst",
+      "sha256": "955ecefcd32bee0ec40e3aa768b8ed068a2a1f2310f9777dcc77c02fdfa54271",
+      "bytes": 1229478,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/gettext-0.22.5-1.src.tar.zst",
+      "file": "gettext-0.22.5-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gettext-0.22.5-1.src.tar.zst",
+      "sha256": "e07a0b3e6716aae86dc0edd2dcdc8864731d56051345592b53659a3840ccfbd8",
+      "bytes": 21732949,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "gfw-build-extra-fe8c5259cb883b6b12a87d9f05e6f1dfa962eb56",
+      "file": "gfw-build-extra-fe8c5259cb883b6b12a87d9f05e6f1dfa962eb56.source",
+      "url": "https://codeload.github.com/git-for-windows/build-extra/tar.gz/fe8c5259cb883b6b12a87d9f05e6f1dfa962eb56",
+      "sha256": "7f5d788d6623d4c2c38749fdbf2160643d714052d0fe8a7fb90a5ba2b608b9db",
+      "bytes": 14893951,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/mingw-curl",
+      "file": "gfw-mingw-curl-bd3629aa7e76.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MINGW-packages/tar.gz/bd3629aa7e76414592e0d7ab57ff716559efa277",
+      "sha256": "d672ef3d4b9b7bf6115db1a7f6a8c9e8a1b083d6bde7fc3689dd9180894c1e8b",
+      "bytes": 6659231,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/mingw-gnutls",
+      "file": "gfw-mingw-gnutls-794c4c0a6b38.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MINGW-packages/tar.gz/794c4c0a6b387dd87ca30f272fbb5841c30e7212",
+      "sha256": "17ae61c1e26b266d239c4464b255cfb475bae13a3ea212fdcea8eebe9a9dce93",
+      "bytes": 6653100,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/mingw-openssl",
+      "file": "gfw-mingw-openssl-53f70129afd7.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MINGW-packages/tar.gz/53f70129afd78606d71568f7e423647951698ee4",
+      "sha256": "e7ac3416c916981a419ec80a25a1a84c4e872760842b2722d36184154d2b9207",
+      "bytes": 6662056,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/mingw-xpdf",
+      "file": "gfw-mingw-xpdf-7948a171c0fb.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MINGW-packages/tar.gz/7948a171c0fb3c279fa58dbdbba1482f8974d43c",
+      "sha256": "915d7477f8890c4c31fea6871a3e45b53d3bd62234df6f17b396fe38c564998d",
+      "bytes": 6897991,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/msys-gnutls",
+      "file": "gfw-msys-gnutls-e8f5a93e9e3e.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MSYS2-packages/tar.gz/e8f5a93e9e3e4adc0b5ef0db95800a34f8ffe77a",
+      "sha256": "62f414d02dbd4829f14b0c1de7cbbfc7d211e2597e36acb3d3cfc2b3090bb0cf",
+      "bytes": 5560021,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/msys-openssl",
+      "file": "gfw-msys-openssl-64eae5a9f6f0.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MSYS2-packages/tar.gz/64eae5a9f6f02b3fec541ad0dd9c459f3c2b8b13",
+      "sha256": "36b73b79a655b4245ca98117a5f9b2f483af2887fa80244ebb307f91e390b2f3",
+      "bytes": 5574698,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "gfw-recipe/msys-runtime",
+      "file": "gfw-msys-runtime-bdd321dbba08.tar.gz",
+      "url": "https://codeload.github.com/git-for-windows/MSYS2-packages/tar.gz/bdd321dbba086326e277717d4d29c984f608c70c",
+      "sha256": "9809e736d2bb3c04231079f81a685f8f89b0b4481dcaf4a444dcb5a8745bd381",
+      "bytes": 5574624,
+      "kind": "producer-build-recipe",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "native-core-upstream",
+      "file": "git-for-windows-v2.54.0.windows.1.zip",
+      "url": "https://codeload.github.com/git-for-windows/git/zip/refs/tags/v2.54.0.windows.1",
+      "sha256": "b0b2a39490ebbf7c0ad1a98170328a4f8c939df21c551fb947f011c4196fa493",
+      "bytes": 14500151,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes",
+      "license": "GPL-2.0-only"
+    },
+    {
+      "id": "git-lfs-3.7.1",
+      "file": "git-lfs-3.7.1.source",
+      "url": "https://codeload.github.com/git-lfs/git-lfs/tar.gz/refs/tags/v3.7.1",
+      "sha256": "0e83566a9e2477e03627e7fd6bf81f01fadbf93dcaf6abd2686fca90f6bac7dd",
+      "bytes": 713950,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/gmp-6.3.0-2.src.tar.zst",
+      "file": "gmp-6.3.0-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gmp-6.3.0-2.src.tar.zst",
+      "sha256": "02356ca25ce362edb883ce7c060050de2cec5f2b1227a1c56ef7c0a0f99ff667",
+      "bytes": 2096699,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/gnupg-2.4.9-1.src.tar.zst",
+      "file": "gnupg-2.4.9-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gnupg-2.4.9-1.src.tar.zst",
+      "sha256": "93a74766e56dbe2b542bd4898feb9b215d51297b51335743a1e37df254c367eb",
+      "bytes": 8105817,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "gnutls-3.8.4",
+      "file": "gnutls-3.8.4.source",
+      "url": "https://gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.4.tar.xz",
+      "sha256": "2bea4e154794f3f00180fa2a5c51fe8b005ac7a31cd58bd44cdfa7f36ebc3a9b",
+      "bytes": 6487520,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/grep-1~3.0-7.src.tar.zst",
+      "file": "grep-1~3.0-7.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/grep-1~3.0-7.src.tar.zst",
+      "sha256": "acba43b9b2c3eb393f9a75d02a1eca34fa23d959541150a7ac4ffbafce3cae4e",
+      "bytes": 1378706,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/gzip-1.14-1.src.tar.zst",
+      "file": "gzip-1.14-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/gzip-1.14-1.src.tar.zst",
+      "sha256": "c9840b33e803a33ee94b56236f78cae2d36574667360d865fc79777beb969bd5",
+      "bytes": 887950,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/heimdal-7.8.0-5.src.tar.zst",
+      "file": "heimdal-7.8.0-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/heimdal-7.8.0-5.src.tar.zst",
+      "sha256": "8c11d29e88431abffac4e79f1a14f4a72cb71adfc532faafd35831efaabe7f19",
+      "bytes": 9898162,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "homebrew/bash",
+      "file": "homebrew-bash-0d5cd86965f8.source",
+      "url": "https://ftpmirror.gnu.org/gnu/bash/bash-5.3.tar.gz",
+      "sha256": "0d5cd86965f869a26cf64f4b71be7b96f90a3ba8b3d74e27e8e9d9d5550f31ba",
+      "bytes": 11355854,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/brotli",
+      "file": "homebrew-brotli-e720a6ca2942.source",
+      "url": "https://github.com/google/brotli/archive/refs/tags/v1.1.0.tar.gz",
+      "sha256": "e720a6ca29428b803f4ad165371771f5398faba397edf6778837a18599ea13ff",
+      "bytes": 511969,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/gettext",
+      "file": "homebrew-gettext-85d99b79c981.source",
+      "url": "https://ftpmirror.gnu.org/gnu/gettext/gettext-1.0.tar.gz",
+      "sha256": "85d99b79c981a404874c02e0342176cf75c7698e2b51fe41031cf6526d974f1a",
+      "bytes": 32694085,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/gmp",
+      "file": "homebrew-gmp-a3c2b80201b8.source",
+      "url": "https://ftp.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz",
+      "sha256": "a3c2b80201b89e68616f4ad30bc66aee4927c3ce50e33929ca819d5c43538898",
+      "bytes": 2094196,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/gnupg",
+      "file": "homebrew-gnupg-e3af2c8caa46.source",
+      "url": "https://gnupg.org/ftp/gcrypt/gnupg/gnupg-2.5.21.tar.bz2",
+      "sha256": "e3af2c8caa46a66a9329fa7c6880af260451914d819595beabc2c26597b31352",
+      "bytes": 8351785,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/gnutls",
+      "file": "homebrew-gnutls-ffed8ec1bf09.source",
+      "url": "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.13.tar.xz",
+      "sha256": "ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e",
+      "bytes": 7275324,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libassuan",
+      "file": "homebrew-libassuan-d2931cdad266.source",
+      "url": "https://gnupg.org/ftp/gcrypt/libassuan/libassuan-3.0.2.tar.bz2",
+      "sha256": "d2931cdad266e633510f9970e1a2f346055e351bb19f9b78912475b8074c36f6",
+      "bytes": 593917,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libgcrypt",
+      "file": "homebrew-libgcrypt-7ce33c249222.source",
+      "url": "https://gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.12.2.tar.bz2",
+      "sha256": "7ce33c2492221a0436f96a8500215e9f3e3dcb5fd26a757cd415e7a843babd5e",
+      "bytes": 4441855,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libgpg-error",
+      "file": "homebrew-libgpg-error-7a85413f2bc3.source",
+      "url": "https://gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.61.tar.bz2",
+      "sha256": "7a85413f2bc354f4f8aa832b718af122e48965e9e0eb9012ee659c13c6385c93",
+      "bytes": 1124751,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libidn2",
+      "file": "homebrew-libidn2-f557911bf617.source",
+      "url": "https://ftp.gnu.org/gnu/libidn/libidn2-2.3.8.tar.gz",
+      "sha256": "f557911bf6171621e1f72ff35f5b1825bb35b52ed45325dcdee931e5d3c0787a",
+      "bytes": 2234804,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libksba",
+      "file": "homebrew-libksba-296b9db90957.source",
+      "url": "https://gnupg.org/ftp/gcrypt/libksba/libksba-1.8.0.tar.bz2",
+      "sha256": "296b9db9095749f2aa104202d7ab7fd09ad10710e00780a709c9754b1a1d9292",
+      "bytes": 721895,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libpsl",
+      "file": "homebrew-libpsl-f39b9631b3d3.source",
+      "url": "https://github.com/rockdaboot/libpsl/releases/download/0.23.0/libpsl-0.23.0.tar.gz",
+      "sha256": "f39b9631b3d369a21259ea4654f8875c0ec6995ce9551c0eb5d423e4c011f911",
+      "bytes": 7822832,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libtasn1",
+      "file": "homebrew-libtasn1-1d8a444a223c.source",
+      "url": "https://ftpmirror.gnu.org/gnu/libtasn1/libtasn1-4.21.0.tar.gz",
+      "sha256": "1d8a444a223cc5464240777346e125de51d8e6abf0b8bac742ac84609167dc87",
+      "bytes": 1816537,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libunistring",
+      "file": "homebrew-libunistring-e82664b17006.source",
+      "url": "https://ftpmirror.gnu.org/gnu/libunistring/libunistring-1.4.2.tar.gz",
+      "sha256": "e82664b170064e62331962126b259d452d53b227bb4a93ab20040d846fec01d8",
+      "bytes": 5046603,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/libusb",
+      "file": "homebrew-libusb-fea36f34f915.source",
+      "url": "https://github.com/libusb/libusb/releases/download/v1.0.30/libusb-1.0.30.tar.bz2",
+      "sha256": "fea36f34f9156400209595e300840767ab1a385ede1dc7ee893015aea9c6dbaf",
+      "bytes": 656112,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/mpdecimal",
+      "file": "homebrew-mpdecimal-96d33abb4bb0.source",
+      "url": "https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-4.0.1.tar.gz",
+      "sha256": "96d33abb4bb0070c7be0fed4246cd38416188325f820468214471938545b1ac8",
+      "bytes": 316268,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/ncurses",
+      "file": "homebrew-ncurses-355b4cbbed88.source",
+      "url": "https://ftpmirror.gnu.org/gnu/ncurses/ncurses-6.6.tar.gz",
+      "sha256": "355b4cbbed880b0381a04c46617b7656e362585d52e9cf84a67e2009b749ff11",
+      "bytes": 3791150,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/nettle",
+      "file": "homebrew-nettle-3addbc00da01.source",
+      "url": "https://ftpmirror.gnu.org/gnu/nettle/nettle-4.0.tar.gz",
+      "sha256": "3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094",
+      "bytes": 2630735,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/npth",
+      "file": "homebrew-npth-8bd24b4f23a3.source",
+      "url": "https://gnupg.org/ftp/gcrypt/npth/npth-1.8.tar.bz2",
+      "sha256": "8bd24b4f23a3065d6e5b26e98aba9ce783ea4fd781069c1b35d149694e90ca3e",
+      "bytes": 317739,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/openssl@3",
+      "file": "homebrew-openssl@3-243a86649cf6.source",
+      "url": "https://github.com/openssl/openssl/releases/download/openssl-3.6.3/openssl-3.6.3.tar.gz",
+      "sha256": "243a86649cf6f23eeb6a2ff2456e09e5d77dd9018a54d3d96b0c6bdd6ba6c7f1",
+      "bytes": 54953005,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/p11-kit",
+      "file": "homebrew-p11-kit-89c3ffb10e07.source",
+      "url": "https://github.com/p11-glue/p11-kit/releases/download/0.26.4/p11-kit-0.26.4.tar.xz",
+      "sha256": "89c3ffb10e076ee036e14732bf6547a1e1c4fb48699a5dee7ceb5ce4f7c0c462",
+      "bytes": 1081912,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/pinentry",
+      "file": "homebrew-pinentry-c2970f16d6af.source",
+      "url": "https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-1.3.3.tar.bz2",
+      "sha256": "c2970f16d6afb66ecddfca767d743936c86239bff936eed7fd7597a678414b63",
+      "bytes": 620687,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/python@3.14",
+      "file": "homebrew-python@3.14-74d0d71d0600.source",
+      "url": "https://www.python.org/ftp/python/3.14.6/Python-3.14.6.tgz",
+      "sha256": "74d0d71d0600e477651a077101d6e62d1e2e69b8e992ba18c993dd643b7ba222",
+      "bytes": 31234628,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/readline",
+      "file": "homebrew-readline-fe5383204467.source",
+      "url": "https://ftpmirror.gnu.org/gnu/readline/readline-8.3.tar.gz",
+      "sha256": "fe5383204467828cd495ee8d1d3c037a7eba1389c22bc6a041f627976f9061cc",
+      "bytes": 3419642,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/sqlite",
+      "file": "homebrew-sqlite-c917d7db1664.source",
+      "url": "https://www.sqlite.org/2026/sqlite-autoconf-3530300.tar.gz",
+      "sha256": "c917d7db16648ec95f714974ace5e5dcf46b7dc70e26600a0a102a3141125db0",
+      "bytes": 3282443,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/tcl-tk@8",
+      "file": "homebrew-tcl-tk@8-14f9af32b176.source",
+      "url": "https://downloads.sourceforge.net/project/tcl/Tcl/8.6.18/tcl8.6.18-src.tar.gz",
+      "sha256": "14f9af32b1767ff718477a8f974ad03c34341097e6b43f4ce54644ee974e268e",
+      "bytes": 11816279,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/xz",
+      "file": "homebrew-xz-3d3a1b973af2.source",
+      "url": "https://github.com/tukaani-project/xz/releases/download/v5.8.3/xz-5.8.3.tar.gz",
+      "sha256": "3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546b974a0",
+      "bytes": 2771455,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "homebrew/zstd",
+      "file": "homebrew-zstd-37d7284556b2.source",
+      "url": "https://github.com/facebook/zstd/archive/refs/tags/v1.5.7.tar.gz",
+      "sha256": "37d7284556b20954e56e1ca85b80226768902e2edabd3b649e9e72c0c9012ee3",
+      "bytes": 2451884,
+      "kind": "homebrew-formula-source",
+      "group": "homebrew"
+    },
+    {
+      "id": "msys/less-692-1.src.tar.zst",
+      "file": "less-692-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/less-692-1.src.tar.zst",
+      "sha256": "5ab1ebf04dd54851b680bb4e1aa7fee72960627db80d18e63a08bc6ef3629f8f",
+      "bytes": 1132591,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libassuan-3.0.2-1.src.tar.zst",
+      "file": "libassuan-3.0.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libassuan-3.0.2-1.src.tar.zst",
+      "sha256": "723778dd8d9205919c374cbbf694e5cc7e3c568a13d594e4032533f801e33933",
+      "bytes": 1192778,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libcbor-0.11.0-1.src.tar.zst",
+      "file": "libcbor-0.11.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libcbor-0.11.0-1.src.tar.zst",
+      "sha256": "1144913c5258eeaad1c553091eacf59b910161c42da305b275ff8182e98ad46e",
+      "bytes": 294334,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libedit-20240808_3.1-1.src.tar.zst",
+      "file": "libedit-20240808_3.1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libedit-20240808_3.1-1.src.tar.zst",
+      "sha256": "a76c0a19cbd69ef01c6c304d4776f96fc5b31dcbca7b446e6d99272affbffb97",
+      "bytes": 540843,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libffi-3.5.2-1.src.tar.zst",
+      "file": "libffi-3.5.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libffi-3.5.2-1.src.tar.zst",
+      "sha256": "70ea87a77edbdc02e4ceb3ae40ca6a688c89098d776a3d78f417d22a9938a5fa",
+      "bytes": 1424518,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libfido2-1.15.0-1.src.tar.zst",
+      "file": "libfido2-1.15.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libfido2-1.15.0-1.src.tar.zst",
+      "sha256": "5d7ef2a3209aaa078fa78c103caea4e7e98f44d0fadefe389ed43199c170b554",
+      "bytes": 672169,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libgcrypt-1.12.2-1.src.tar.zst",
+      "file": "libgcrypt-1.12.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libgcrypt-1.12.2-1.src.tar.zst",
+      "sha256": "33bb839f2134efe13f0c8aa43256fb6a3ddb340c6089f197b6089a4cbe2358e9",
+      "bytes": 4443198,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libgpg-error-1.59-1.src.tar.zst",
+      "file": "libgpg-error-1.59-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libgpg-error-1.59-1.src.tar.zst",
+      "sha256": "d52551c1a6fc7357ba0797e768f033d2cf03680a1cf6bf07a5bdda5b6b19daa3",
+      "bytes": 1125634,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libiconv-1.19-1.src.tar.zst",
+      "file": "libiconv-1.19-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libiconv-1.19-1.src.tar.zst",
+      "sha256": "5a8bcd3242e2be94fffd9f03fadcda8d9fd64047430050c5cbd214cd3bf7f0a7",
+      "bytes": 5133707,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libidn2-2.3.8-1.src.tar.zst",
+      "file": "libidn2-2.3.8-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libidn2-2.3.8-1.src.tar.zst",
+      "sha256": "c77c550e8cc2f595ed10b4a3996085cc6e6a3f5f650916a14701bd48d5d9fd7d",
+      "bytes": 2147323,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libksba-1.6.8-1.src.tar.zst",
+      "file": "libksba-1.6.8-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libksba-1.6.8-1.src.tar.zst",
+      "sha256": "abb267bc51f86a1c3f789409f881bfe3d2aabfb9e836d787882e8bc3253459fc",
+      "bytes": 718830,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libpsl-0.21.5-2.src.tar.zst",
+      "file": "libpsl-0.21.5-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libpsl-0.21.5-2.src.tar.zst",
+      "sha256": "d874c779d65dc19b6dfadbcf3aab7039e74870e2d5ecca6b61d3fc5e56c3b115",
+      "bytes": 6830005,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libssh2-1.11.1-1.src.tar.zst",
+      "file": "libssh2-1.11.1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libssh2-1.11.1-1.src.tar.zst",
+      "sha256": "264ad84471969ca2868b8a7f74ea8095a933c6112d49325cb127ce59f0b90af4",
+      "bytes": 1095467,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libtasn1-4.21.0-1.src.tar.zst",
+      "file": "libtasn1-4.21.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libtasn1-4.21.0-1.src.tar.zst",
+      "sha256": "3b3f93112cd0b7c626483b1aa95a2b63f36a682f47f13f5c416547602c4602e8",
+      "bytes": 1732145,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libunistring-1.4.1-1.src.tar.zst",
+      "file": "libunistring-1.4.1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libunistring-1.4.1-1.src.tar.zst",
+      "sha256": "72b5d64d73ed712a7ff9734b9f8618ac2db3194cc8da14cc878d0c93343562cd",
+      "bytes": 2771954,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/libxcrypt-4.5.2-1.src.tar.zst",
+      "file": "libxcrypt-4.5.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/libxcrypt-4.5.2-1.src.tar.zst",
+      "sha256": "dc3e44cea067417ff61c25c981d7d58bb0f343b824ba10fd2a0a3b8badc55746",
+      "bytes": 672527,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/lz4-1.10.0-1.src.tar.zst",
+      "file": "lz4-1.10.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/lz4-1.10.0-1.src.tar.zst",
+      "sha256": "35b3406bdff46797a042bd35fd82ee9dce69040b357661dc1fb5db05f99eb421",
+      "bytes": 387770,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-antiword-0.37-3.src.tar.zst",
+      "file": "mingw-w64-antiword-0.37-3.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-antiword-0.37-3.src.tar.zst",
+      "sha256": "f8a3df6bd30c947c441c12fcda67b677577816cb8484be1f9637c1421a7821dd",
+      "bytes": 319512,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-brotli-1.2.0-1.src.tar.zst",
+      "file": "mingw-w64-brotli-1.2.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-brotli-1.2.0-1.src.tar.zst",
+      "sha256": "2f0f93875aac21990d20f1eaf0ad8b970eb6f186c663c77ae47aaaf9e5711fcf",
+      "bytes": 644113,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-bzip2-1.0.8-3.src.tar.zst",
+      "file": "mingw-w64-bzip2-1.0.8-3.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-bzip2-1.0.8-3.src.tar.zst",
+      "sha256": "b818b3d164cd409b1fd883e3ecc056c5bc4d6cad408e871f2781bc11faf5a413",
+      "bytes": 818786,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-c-ares-1.34.6-1.src.tar.zst",
+      "file": "mingw-w64-c-ares-1.34.6-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-c-ares-1.34.6-1.src.tar.zst",
+      "sha256": "3f0b7e7a0f3e85ac46362d0e0c0ec48e198555b9b326886ad4dd23387e4e07ca",
+      "bytes": 1018703,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-ca-certificates-20250419-1.src.tar.zst",
+      "file": "mingw-w64-ca-certificates-20250419-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-ca-certificates-20250419-1.src.tar.zst",
+      "sha256": "71a8bc9648d58361845b985fb5073ff7a35ff536661c9072453a692d04d9c9f5",
+      "bytes": 288665,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-connect-1.105-5.src.tar.zst",
+      "file": "mingw-w64-connect-1.105-5.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-connect-1.105-5.src.tar.zst",
+      "sha256": "514ad83b8648d1563a97d8297c0ee737df6ee81adcce827a3ad44c2c39afcf1b",
+      "bytes": 47835,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-expat-2.7.5-2.src.tar.zst",
+      "file": "mingw-w64-expat-2.7.5-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-expat-2.7.5-2.src.tar.zst",
+      "sha256": "7ba850582f1d2542cb8e1fce0d0d60596de8a764c6b8d52210f56441593381eb",
+      "bytes": 510534,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-gcc-15.2.0-14.src.tar.zst",
+      "file": "mingw-w64-gcc-15.2.0-14.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-gcc-15.2.0-14.src.tar.zst",
+      "sha256": "ab1b1b38eaaea46f6c917ac53ca2d04fb326c9f8dd970bc674ad9fab0f453a84",
+      "bytes": 101091533,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-gettext-1.0-1.src.tar.zst",
+      "file": "mingw-w64-gettext-1.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-gettext-1.0-1.src.tar.zst",
+      "sha256": "cca0d0c8f60353faccc5ad40405240014e4a7ccc8b1c6ca9f4626aef3097d26e",
+      "bytes": 10267655,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-gmp-6.3.0-2.src.tar.zst",
+      "file": "mingw-w64-gmp-6.3.0-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-gmp-6.3.0-2.src.tar.zst",
+      "sha256": "f288f944fd9609db220bcf6a8dd0703a5674eeb906ef35eb8485bb8192135994",
+      "bytes": 2097066,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libc++-22.1.3-1.src.tar.zst",
+      "file": "mingw-w64-libc++-22.1.3-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libc%2B%2B-22.1.3-1.src.tar.zst",
+      "sha256": "ca4cc8b5006dae06f25c7cfd501a43aa39be7037df8cf5b5619478ca67e175eb",
+      "bytes": 167052472,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libffi-3.5.2-1.src.tar.zst",
+      "file": "mingw-w64-libffi-3.5.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libffi-3.5.2-1.src.tar.zst",
+      "sha256": "bfe3f7d5bf9b09ab22e42ccd527d1a5a94277547b04524177a1c46e1cd930172",
+      "bytes": 1423649,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libiconv-1.19-1.src.tar.zst",
+      "file": "mingw-w64-libiconv-1.19-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libiconv-1.19-1.src.tar.zst",
+      "sha256": "74428280c17094da5b702c29b2e1a0abae59556ea5dfdd65705cc8ccc1e000fb",
+      "bytes": 5131029,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libidn2-2.3.8-4.src.tar.zst",
+      "file": "mingw-w64-libidn2-2.3.8-4.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libidn2-2.3.8-4.src.tar.zst",
+      "sha256": "cd83e8514fbeb6a4499299b88691b9b9ecc3114cca1e2be4f6c54aab6ae9ddd0",
+      "bytes": 2147337,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libpsl-0.21.5-3.src.tar.zst",
+      "file": "mingw-w64-libpsl-0.21.5-3.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libpsl-0.21.5-3.src.tar.zst",
+      "sha256": "102b4ab4c60322162e808c5c81f545438c346c659e8fb63e0851066f07a0e76b",
+      "bytes": 6829368,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libssh2-1.11.1-2.src.tar.zst",
+      "file": "mingw-w64-libssh2-1.11.1-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libssh2-1.11.1-2.src.tar.zst",
+      "sha256": "bb78f8354441190221ece18a96c09f631fe02648f5dd7d1e247ae8d00a9fea5f",
+      "bytes": 1094498,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libsystre-1.0.2-2.src.tar.zst",
+      "file": "mingw-w64-libsystre-1.0.2-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libsystre-1.0.2-2.src.tar.zst",
+      "sha256": "5cc1e1e671f9f9a4d305a8e393a54eeadeeaaa38e87f3a83a193435787ef8791",
+      "bytes": 3201,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libtasn1-4.21.0-1.src.tar.zst",
+      "file": "mingw-w64-libtasn1-4.21.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libtasn1-4.21.0-1.src.tar.zst",
+      "sha256": "c626129c5131eef0a45c736274f0844747605a105161cc0f7d39f6e1c70ed0ff",
+      "bytes": 1732161,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libtre-0.9.0-2.src.tar.zst",
+      "file": "mingw-w64-libtre-0.9.0-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libtre-0.9.0-2.src.tar.zst",
+      "sha256": "57ee4f3b992e4ebe9b43fc8b5a0a66000ee40defc1089b727799330778344301",
+      "bytes": 840641,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libunistring-1.3-1.src.tar.zst",
+      "file": "mingw-w64-libunistring-1.3-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libunistring-1.3-1.src.tar.zst",
+      "sha256": "b5f564e63acd3d5a3c56a040d81aa47d8fa9d4e11dc60aa64fc28d038717afff",
+      "bytes": 4719176,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-libzip-1.11.4-1.src.tar.zst",
+      "file": "mingw-w64-libzip-1.11.4-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-libzip-1.11.4-1.src.tar.zst",
+      "sha256": "e4954ab9cffe14befd55fa31eacd2171f5e5df7eba976f02a5f953490c7e6051",
+      "bytes": 795458,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-nettle-3.10.2-1.src.tar.zst",
+      "file": "mingw-w64-nettle-3.10.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-nettle-3.10.2-1.src.tar.zst",
+      "sha256": "ac55da91cbd839213c09fc6f5ddbce410569d084a9a929c3aef3afdb5db2f5a6",
+      "bytes": 2644814,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-nghttp2-1.68.1-1.src.tar.zst",
+      "file": "mingw-w64-nghttp2-1.68.1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-nghttp2-1.68.1-1.src.tar.zst",
+      "sha256": "0257b492676d42968f039b61fa2f146ed5ef3f202bd191d413b938c520e3af90",
+      "bytes": 1678649,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-odt2txt-0.5-4.src.tar.zst",
+      "file": "mingw-w64-odt2txt-0.5-4.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-odt2txt-0.5-4.src.tar.zst",
+      "sha256": "5c366e7eab4829db087b6e45d270338edb8d9140fc2cb5bd781e3771cb27e158",
+      "bytes": 26202,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-p11-kit-0.26.2-1.src.tar.zst",
+      "file": "mingw-w64-p11-kit-0.26.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-p11-kit-0.26.2-1.src.tar.zst",
+      "sha256": "e4d117e5f558e70d9eb5e830406b96c9bbf0de03ce193bfad47fda4b19fb3086",
+      "bytes": 1081529,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-pcre2-10.47-1.src.tar.zst",
+      "file": "mingw-w64-pcre2-10.47-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-pcre2-10.47-1.src.tar.zst",
+      "sha256": "d1af57f4346ec9542f1d191c94c470340f6268bfa732718f6db1b89d75fd6502",
+      "bytes": 2144801,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-tcl-8.6.17-1.src.tar.zst",
+      "file": "mingw-w64-tcl-8.6.17-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-tcl-8.6.17-1.src.tar.zst",
+      "sha256": "556b36d69910779291e07797794d697fa61497de0ad5585f70fe9fbca99b28ae",
+      "bytes": 11655911,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-tk-8.6.17-2.src.tar.zst",
+      "file": "mingw-w64-tk-8.6.17-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-tk-8.6.17-2.src.tar.zst",
+      "sha256": "eca78697f68293f4924d0eef539c1f78903188bcbf95e5fdb41e661d908b0e0b",
+      "bytes": 4559462,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-tzdata-2026a-1.src.tar.zst",
+      "file": "mingw-w64-tzdata-2026a-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-tzdata-2026a-1.src.tar.zst",
+      "sha256": "797cbd82cab8475f9545d4c449a45ecfb4baf3a7e97fa0696c02e5c05337f71d",
+      "bytes": 677001,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-wineditline-2.208-1.src.tar.zst",
+      "file": "mingw-w64-wineditline-2.208-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-wineditline-2.208-1.src.tar.zst",
+      "sha256": "6ca247e876f0206538ce6c9baea59c78a7377f4369f6f734f6a78343b5580773",
+      "bytes": 27113,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-winpthreads-14.0.0.r14.g4761eabdd-1.src.tar.zst",
+      "file": "mingw-w64-winpthreads-14.0.0.r14.g4761eabdd-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-winpthreads-14.0.0.r14.g4761eabdd-1.src.tar.zst",
+      "sha256": "9a71ee4b17a23905ec9990ce0474b49e51a5b4a584ad3bdfbda2172786b0fed3",
+      "bytes": 51594046,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-xz-5.8.3-1.src.tar.zst",
+      "file": "mingw-w64-xz-5.8.3-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-xz-5.8.3-1.src.tar.zst",
+      "sha256": "a6096b17f7144d3ec4a35f70ebdc0819df0f6ed331f53b04d2a4452d5b66ed55",
+      "bytes": 1550386,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-zlib-1.3.2-2.src.tar.zst",
+      "file": "mingw-w64-zlib-1.3.2-2.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-zlib-1.3.2-2.src.tar.zst",
+      "sha256": "eef69dea52357e01b272d6fd6dc4d7c0773f71260cb7bcde6047c8c383518db3",
+      "bytes": 1326375,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "mingw/mingw-w64-zstd-1.5.7-1.src.tar.zst",
+      "file": "mingw-w64-zstd-1.5.7-1.src.tar.zst",
+      "url": "https://repo.msys2.org/mingw/sources/mingw-w64-zstd-1.5.7-1.src.tar.zst",
+      "sha256": "0e369f559046468bb605c8f4c8d93c7a4e7e88e8dc412226ebbad92ac1d5bd28",
+      "bytes": 2401857,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/mintty-1~3.8.2-1.src.tar.zst",
+      "file": "mintty-1~3.8.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/mintty-1~3.8.2-1.src.tar.zst",
+      "sha256": "fb8c940a7a1c19c84f2272d975e5e672e99246affa2d9e823a2a7bf97a6433f6",
+      "bytes": 3841068,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/mpfr-4.2.2-1.src.tar.zst",
+      "file": "mpfr-4.2.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/mpfr-4.2.2-1.src.tar.zst",
+      "sha256": "e0c56e3af3819471e74dd37e32660e4eb8f58761c4d214dabd2d62f57c548869",
+      "bytes": 1507563,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/nano-9.0-1.src.tar.zst",
+      "file": "nano-9.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/nano-9.0-1.src.tar.zst",
+      "sha256": "8538716a0b8c381853acabea59b7b62d0a73ac5d6b533df52fc3a3b4d82dcff2",
+      "bytes": 1745517,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/ncurses-6.6-1.src.tar.zst",
+      "file": "ncurses-6.6-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/ncurses-6.6-1.src.tar.zst",
+      "sha256": "0bd0d82ab11ea4d219dedfa5de282b9d252ffdaa78624daa5412605894326e6c",
+      "bytes": 3785671,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/nettle-3.10.2-1.src.tar.zst",
+      "file": "nettle-3.10.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/nettle-3.10.2-1.src.tar.zst",
+      "sha256": "8a76d26462c689b4d5223199e5ded562eb88ff261619f291318f1bcdf30110fe",
+      "bytes": 2645409,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/nghttp2-1.68.1-1.src.tar.zst",
+      "file": "nghttp2-1.68.1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/nghttp2-1.68.1-1.src.tar.zst",
+      "sha256": "977fc7c5091700640a685a0d2dfc8e62a248361cd97c2de881623e5b355eb964",
+      "bytes": 1677675,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "native-core-dependency/nghttp2",
+      "file": "nghttp2-1.68.1.tar.xz",
+      "url": "https://github.com/nghttp2/nghttp2/releases/download/v1.68.1/nghttp2-1.68.1.tar.xz",
+      "sha256": "6abd7ab0a7f1580d5914457cb3c85eb80455657ee5119206edbd7f848c14f0b2",
+      "bytes": 1675948,
+      "kind": "native-core-dependency-source",
+      "group": "core-and-producer-recipes",
+      "license": "MIT"
+    },
+    {
+      "id": "msys/npth-1.8-1.src.tar.zst",
+      "file": "npth-1.8-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/npth-1.8-1.src.tar.zst",
+      "sha256": "632b95011ea51c7a883388e97171618b43d5056f653c1c26c5eeae23a07a398a",
+      "bytes": 319723,
+      "kind": "msys-corresponding-source",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/openssh-10.3p1-1.src.tar.zst",
+      "file": "openssh-10.3p1-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/openssh-10.3p1-1.src.tar.zst",
+      "sha256": "e636081093c45a4bbfd788be54360f2d46ae3474a8c74959f9b614adbad454d4",
+      "bytes": 2006601,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "openssl-3.5.6",
+      "file": "openssl-3.5.6.source",
+      "url": "https://github.com/openssl/openssl/releases/download/openssl-3.5.6/openssl-3.5.6.tar.gz",
+      "sha256": "deae7c80cba99c4b4f940ecadb3c3338b13cb77418409238e57d7f31f2a3b736",
+      "bytes": 53121812,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/p11-kit-0.26.2-1.src.tar.zst",
+      "file": "p11-kit-0.26.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/p11-kit-0.26.2-1.src.tar.zst",
+      "sha256": "107b4786d0e331fccd8433725a3df5151b14dcc3a11318a8ad15c8988504c53d",
+      "bytes": 1071752,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/patch-2.7.6-3.src.tar.zst",
+      "file": "patch-2.7.6-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/patch-2.7.6-3.src.tar.zst",
+      "sha256": "df9a99ee825845b761911f2d1f29024468cb7a7811d1717fe8fa8d08348314e1",
+      "bytes": 787891,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/pcre-8.45-5.src.tar.zst",
+      "file": "pcre-8.45-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/pcre-8.45-5.src.tar.zst",
+      "sha256": "f7104aa31f29655689b404ead9923332e2fa6aadfe97c060d0dfc02f4661d6b5",
+      "bytes": 1577595,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/pcre2-10.47-1.src.tar.zst",
+      "file": "pcre2-10.47-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/pcre2-10.47-1.src.tar.zst",
+      "sha256": "87c1e99a6cf70b8cde13938142a1dc32599b6b6af04e947edb670727da49d4f5",
+      "bytes": 2145033,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "native-core-dependency/pcre2",
+      "file": "pcre2-10.48.tar.bz2",
+      "url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.48/pcre2-10.48.tar.bz2",
+      "sha256": "b6c68fdf6f3ac31388b50aa89ff0fc49c00c987c16e7b5146491d12003f2c8ed",
+      "bytes": 2213024,
+      "kind": "native-core-dependency-source",
+      "group": "core-and-producer-recipes",
+      "license": "BSD-3-Clause"
+    },
+    {
+      "id": "msys/perl-5.42.2-1.src.tar.zst",
+      "file": "perl-5.42.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-5.42.2-1.src.tar.zst",
+      "sha256": "c522d97ffa26b34050d0c5907619433e0eeccfd9d892de27b9bf1235d77e90aa",
+      "bytes": 14498899,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Authen-SASL-2.2000-1.src.tar.zst",
+      "file": "perl-Authen-SASL-2.2000-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Authen-SASL-2.2000-1.src.tar.zst",
+      "sha256": "a1e32dd33a550f8f2612c12ef1f95cab9fda7c4f4f11113dc943e0cfacb512bb",
+      "bytes": 42587,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Clone-0.50-2.src.tar.zst",
+      "file": "perl-Clone-0.50-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Clone-0.50-2.src.tar.zst",
+      "sha256": "fa46f0c1e53b27563a3763d1a694569fd171a69887a25ff3c52c34e0a507c156",
+      "bytes": 166554,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Convert-BinHex-1.125-2.src.tar.zst",
+      "file": "perl-Convert-BinHex-1.125-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Convert-BinHex-1.125-2.src.tar.zst",
+      "sha256": "062d9a2aadc340a930723d01a18aa7ba11a852dfb0318fc4ff90550128ddeef7",
+      "bytes": 73787,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Encode-Locale-1.05-2.src.tar.zst",
+      "file": "perl-Encode-Locale-1.05-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Encode-Locale-1.05-2.src.tar.zst",
+      "sha256": "1837eff76400148ffbbc9b1d2ba269f40a0da938f786e3a656c010748a84fdaa",
+      "bytes": 9413,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Error-0.17030-1.src.tar.zst",
+      "file": "perl-Error-0.17030-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Error-0.17030-1.src.tar.zst",
+      "sha256": "941b9ad8c0adc87c3f363084750cdca40674ddef15617471ecfd9531977b995c",
+      "bytes": 34477,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-File-Listing-6.16-1.src.tar.zst",
+      "file": "perl-File-Listing-6.16-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-File-Listing-6.16-1.src.tar.zst",
+      "sha256": "3719167b50b44a0bf8ee248eb3ec0b3b177359862da3badd40ae984d2298a672",
+      "bytes": 60937,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTML-Parser-3.83-3.src.tar.zst",
+      "file": "perl-HTML-Parser-3.83-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTML-Parser-3.83-3.src.tar.zst",
+      "sha256": "c125b9dd7ab80824e31f68fe838ac6563ee7e0ab684e349dca4aa927b6ad6779",
+      "bytes": 151788,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTML-Tagset-3.24-1.src.tar.zst",
+      "file": "perl-HTML-Tagset-3.24-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTML-Tagset-3.24-1.src.tar.zst",
+      "sha256": "15ffd988342b865687c1c0c2986a7fbb9aadc5db4d32736d55c0135e5dcb09fd",
+      "bytes": 9065,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTTP-Cookies-6.11-1.src.tar.zst",
+      "file": "perl-HTTP-Cookies-6.11-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTTP-Cookies-6.11-1.src.tar.zst",
+      "sha256": "5f5d4d7b6664599e5daadd62b55df9710fd50ee890dcbb403f973024099d8aa4",
+      "bytes": 47251,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTTP-Daemon-6.16-1.src.tar.zst",
+      "file": "perl-HTTP-Daemon-6.16-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTTP-Daemon-6.16-1.src.tar.zst",
+      "sha256": "88874de87f982dbfaf4dc02998d2d76b50a54271ecca26b7701ac1a7af06f0c6",
+      "bytes": 46839,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTTP-Date-6.06-1.src.tar.zst",
+      "file": "perl-HTTP-Date-6.06-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTTP-Date-6.06-1.src.tar.zst",
+      "sha256": "980a29f0c66a4f5beaab2168792fc91c6b4afd5312dacc3a734c6dccf996b6a6",
+      "bytes": 32728,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTTP-Message-7.01-1.src.tar.zst",
+      "file": "perl-HTTP-Message-7.01-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTTP-Message-7.01-1.src.tar.zst",
+      "sha256": "e14afbb20a694ab0758820947e41b14797b77fde05408943e79a3cb7e642a138",
+      "bytes": 97032,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-HTTP-Negotiate-6.01-3.src.tar.zst",
+      "file": "perl-HTTP-Negotiate-6.01-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-HTTP-Negotiate-6.01-3.src.tar.zst",
+      "sha256": "c62d63d04f0f1782d1e6235a99769e8ea0e81e15fe2a65520ccb3b045fead227",
+      "bytes": 9673,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-IO-HTML-1.004-2.src.tar.zst",
+      "file": "perl-IO-HTML-1.004-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-IO-HTML-1.004-2.src.tar.zst",
+      "sha256": "3316a6be0ad3eca58852671e3bd78367745f4d8f8cdc2fcbcb9249602a917a1f",
+      "bytes": 21875,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-IO-Socket-SSL-2.098-1.src.tar.zst",
+      "file": "perl-IO-Socket-SSL-2.098-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-IO-Socket-SSL-2.098-1.src.tar.zst",
+      "sha256": "4d4788f73cff9844ace48013de5ddc7c122e940497df5d9daf56f69b4218741a",
+      "bytes": 281376,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-IO-Stringy-2.113-3.src.tar.zst",
+      "file": "perl-IO-Stringy-2.113-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-IO-Stringy-2.113-3.src.tar.zst",
+      "sha256": "a2838bc53ba1f93c7e6c5d7edc04c1f97d232d9ead8942ee163d4f1164131501",
+      "bytes": 48874,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-JSON-4.11-1.src.tar.zst",
+      "file": "perl-JSON-4.11-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-JSON-4.11-1.src.tar.zst",
+      "sha256": "069101e05f19750e443a5f4d7b6ed21d6d09b9492817331fd6681006967cf7de",
+      "bytes": 93437,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-LWP-MediaTypes-6.04-2.src.tar.zst",
+      "file": "perl-LWP-MediaTypes-6.04-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-LWP-MediaTypes-6.04-2.src.tar.zst",
+      "sha256": "df1c30ee737b16e36a344243b733377b056f2394bfa4b6b5f5310acf26a0a8ff",
+      "bytes": 40931,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-MIME-tools-5.517-1.src.tar.zst",
+      "file": "perl-MIME-tools-5.517-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-MIME-tools-5.517-1.src.tar.zst",
+      "sha256": "29f761c0a250223fb2261eae5336f72f3d0c32d6e85bfd5bd63a6c7e6b1f8949",
+      "bytes": 426389,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-MailTools-2.22-1.src.tar.zst",
+      "file": "perl-MailTools-2.22-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-MailTools-2.22-1.src.tar.zst",
+      "sha256": "29fef1de846cf2f8dbdf917d09506484e3c03e65390ae1ba09f0a9b6edd79c5d",
+      "bytes": 59545,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Net-HTTP-6.24-1.src.tar.zst",
+      "file": "perl-Net-HTTP-6.24-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Net-HTTP-6.24-1.src.tar.zst",
+      "sha256": "031e99fb674ecd9a9fd58d4d507886c70265b60e41f22d87fea2a8d2de802150",
+      "bytes": 44876,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Net-SMTP-SSL-1.04-2.src.tar.zst",
+      "file": "perl-Net-SMTP-SSL-1.04-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Net-SMTP-SSL-1.04-2.src.tar.zst",
+      "sha256": "58c46d51a96374784c99aa1614790f51e008f3aa49eaa09aeb00043bd8b26d93",
+      "bytes": 3412,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Net-SSLeay-1.96-1.src.tar.zst",
+      "file": "perl-Net-SSLeay-1.96-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Net-SSLeay-1.96-1.src.tar.zst",
+      "sha256": "f82d5f930e8f2d729cff6f8e0f51589a40be5b668a20a077ca1ad7e8969da460",
+      "bytes": 669537,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-TermReadKey-2.38-8.src.tar.zst",
+      "file": "perl-TermReadKey-2.38-8.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-TermReadKey-2.38-8.src.tar.zst",
+      "sha256": "1f3578c8f135ae60dd8a079aa40a2e395bbca232198624c4d6565e15e8364dd2",
+      "bytes": 86227,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-TimeDate-2.35-1.src.tar.zst",
+      "file": "perl-TimeDate-2.35-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-TimeDate-2.35-1.src.tar.zst",
+      "sha256": "ba5a5bc33fb5203ae51f6d7fbd35c4de00aeaa3cf0f605532dcc2769dae8e248",
+      "bytes": 69737,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-Try-Tiny-0.32-1.src.tar.zst",
+      "file": "perl-Try-Tiny-0.32-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-Try-Tiny-0.32-1.src.tar.zst",
+      "sha256": "2c382fef45d2b37d27fb33240ac6777fdb7519f2f00c2fab73f373babf860e97",
+      "bytes": 37199,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-URI-5.34-1.src.tar.zst",
+      "file": "perl-URI-5.34-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-URI-5.34-1.src.tar.zst",
+      "sha256": "22b7661f44c3562610fa93ca6e58cea3f7dadccc2e3d0862434033851b10cca0",
+      "bytes": 135462,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-WWW-RobotRules-6.02-3.src.tar.zst",
+      "file": "perl-WWW-RobotRules-6.02-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-WWW-RobotRules-6.02-3.src.tar.zst",
+      "sha256": "c209b919cea0993c87f92c496f5b28efea09cdc65f8598069f196050597dd631",
+      "bytes": 9953,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-http-cookiejar-0.014-1.src.tar.zst",
+      "file": "perl-http-cookiejar-0.014-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-http-cookiejar-0.014-1.src.tar.zst",
+      "sha256": "5ef62da28f114239738606282730bb2571b68a01062fce3428556866d3479d04",
+      "bytes": 30086,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/perl-libwww-6.82-1.src.tar.zst",
+      "file": "perl-libwww-6.82-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/perl-libwww-6.82-1.src.tar.zst",
+      "sha256": "bfafa2859099a970264a7fe0b5d94f918c57bf77e5674d9085dc1c3d9d85bdcb",
+      "bytes": 188983,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/pinentry-1.3.2-1.src.tar.zst",
+      "file": "pinentry-1.3.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/pinentry-1.3.2-1.src.tar.zst",
+      "sha256": "53ca524e953f6d15fd057f21975a30c322036cd8bb3574daea64d5385aecc349",
+      "bytes": 615437,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/readline-8.3.003-1.src.tar.zst",
+      "file": "readline-8.3.003-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/readline-8.3.003-1.src.tar.zst",
+      "sha256": "8b9e2370bf80d30cdb1bfeb00be1e2be2c9ec8b92838ffcb5ddc4805ac0a899e",
+      "bytes": 3355502,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/rebase-4.5.0-5.src.tar.zst",
+      "file": "rebase-4.5.0-5.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/rebase-4.5.0-5.src.tar.zst",
+      "sha256": "5e9c24c35a881888c045aa04b676f79d238e870a7391f595665e9bd9d26b09c9",
+      "bytes": 341196,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/sed-4.9-1.src.tar.zst",
+      "file": "sed-4.9-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/sed-4.9-1.src.tar.zst",
+      "sha256": "a9686da7c1f3cb2ba7ae5f20f30d9ef38f7bba993f9c777b43bd13c7fbd7cc58",
+      "bytes": 1399712,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/serf-1.3.10-2.src.tar.zst",
+      "file": "serf-1.3.10-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/serf-1.3.10-2.src.tar.zst",
+      "sha256": "1cdec9bb11a6bbe96ecd7f04ee8a0ac953696c46de253accea64f92656a5f9bb",
+      "bytes": 151396,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/sqlite-3.53.0-1.src.tar.zst",
+      "file": "sqlite-3.53.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/sqlite-3.53.0-1.src.tar.zst",
+      "sha256": "a38fb467e2f178041a5b0c9f32e797259e789514772648f0395f1869e860ce9a",
+      "bytes": 25259761,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/ssh-pageant-1.4.r15.gc804ba4-1.src.tar.zst",
+      "file": "ssh-pageant-1.4.r15.gc804ba4-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/ssh-pageant-1.4.r15.gc804ba4-1.src.tar.zst",
+      "sha256": "21e48b0979d3d79548ca7ea3cff4127c6b835a0b4797f6324a8949f80fac810c",
+      "bytes": 306916,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/subversion-1.14.5-3.src.tar.zst",
+      "file": "subversion-1.14.5-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/subversion-1.14.5-3.src.tar.zst",
+      "sha256": "1c53f5aaa8059783414f242330063fc7e3e2624ecdea4869df410e34563c4d4a",
+      "bytes": 8693109,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/tar-1.35-3.src.tar.zst",
+      "file": "tar-1.35-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/tar-1.35-3.src.tar.zst",
+      "sha256": "eeef1210f2f3db98bdf301ab72e0e8886b8348938e58dfc58897639143eebf0b",
+      "bytes": 2322225,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/tig-2.6.0-1.src.tar.zst",
+      "file": "tig-2.6.0-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/tig-2.6.0-1.src.tar.zst",
+      "sha256": "307f4fbe0b2d3fa313d63b31855507faadf1c4dbb1f437b35e2d6b1d129a1d17",
+      "bytes": 1181362,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/unzip-6.0-3.src.tar.zst",
+      "file": "unzip-6.0-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/unzip-6.0-3.src.tar.zst",
+      "sha256": "cac4880eed19117a26ee8827619e6a22110adf2ba18f4ca0d94ba5dd5d4d1453",
+      "bytes": 1383852,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/util-linux-2.40.2-2.src.tar.zst",
+      "file": "util-linux-2.40.2-2.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/util-linux-2.40.2-2.src.tar.zst",
+      "sha256": "ea018e116866c0e2d9a3d6cee3f0d09801e6725789b6f99fd1979dfc7a68b703",
+      "bytes": 8864602,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/vim-9.2.0357-1.src.tar.zst",
+      "file": "vim-9.2.0357-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/vim-9.2.0357-1.src.tar.zst",
+      "sha256": "c0bcfb7bb05199e27c6873abc6045ddbac67b191be6e951ebce50d95694c969b",
+      "bytes": 19867424,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/which-2.23-4.src.tar.zst",
+      "file": "which-2.23-4.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/which-2.23-4.src.tar.zst",
+      "sha256": "8d63c3d19b860fed1fd63c70b91455d7039b4a66a8d256aa3f32749eeab0ee36",
+      "bytes": 203441,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/winpty-0.4.3-3.src.tar.zst",
+      "file": "winpty-0.4.3-3.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/winpty-0.4.3-3.src.tar.zst",
+      "sha256": "98e542802b6b2d310b4fdca678de5f19957922f19654a2f0c3c1a11aa32578ac",
+      "bytes": 184161,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "xpdf-4.00",
+      "file": "xpdf-4.00.source",
+      "url": "https://dl.xpdfreader.com/old/xpdf-4.00.tar.gz",
+      "sha256": "ff3d92c42166e35b1ba6aec9b5f0adffb5fc05a3eb95dc49505b6e344e4216d6",
+      "bytes": 854175,
+      "kind": "upstream-source",
+      "group": "core-and-producer-recipes"
+    },
+    {
+      "id": "msys/xz-5.8.3-1.src.tar.zst",
+      "file": "xz-5.8.3-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/xz-5.8.3-1.src.tar.zst",
+      "sha256": "3f6e933808bd34918fd98eda3442483901ec123c8272733b960932e541d7b770",
+      "bytes": 1663486,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "msys/zlib-1.3.2-1.src.tar.zst",
+      "file": "zlib-1.3.2-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/zlib-1.3.2-1.src.tar.zst",
+      "sha256": "b3ec151674ce25015b16b28394d679ac0eedee03d02be33f93367c3a2b4d426d",
+      "bytes": 1322579,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    },
+    {
+      "id": "native-core-dependency/zlib",
+      "file": "zlib-1.3.2.zip",
+      "url": "https://zlib.net/zlib132.zip",
+      "sha256": "e8bf55f3017aa181690990cb58a994e77885da140609fc8f94abe9b65d2cae28",
+      "bytes": 1616754,
+      "kind": "native-core-dependency-source",
+      "group": "core-and-producer-recipes",
+      "license": "Zlib"
+    },
+    {
+      "id": "msys/zstd-1.5.7-1.src.tar.zst",
+      "file": "zstd-1.5.7-1.src.tar.zst",
+      "url": "https://repo.msys2.org/msys/sources/zstd-1.5.7-1.src.tar.zst",
+      "sha256": "19e11d517b005cba22d0f04969a74ffa08443429ff9dc80596d323b9483534f5",
+      "bytes": 2401343,
+      "kind": "msys-source-package",
+      "group": "msys2"
+    }
+  ],
+  "notes": [
+    "Unmodified upstream source package archives include producer patches and build recipes.",
+    "Git-next overlay, patches, build scripts, licenses and locks are in the matching repository source release.",
+    "Apple system frameworks remain OS requirements; MSVC redistributable components retain their vendor license."
+  ]
+}

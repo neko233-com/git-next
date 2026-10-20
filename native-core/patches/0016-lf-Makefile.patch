@@ -1,0 +1,10 @@
+--- a/Makefile
++++ b/Makefile
+@@ -1174,6 +1174,7 @@
+ LIB_OBJS += fsmonitor-settings.o
+ LIB_OBJS += gettext.o
+ LIB_OBJS += git-next.o
++LIB_OBJS += git-next-eol.o
+ LIB_OBJS += git-next-printf.o
+ LIB_OBJS += yyjson.o
+ BASIC_CFLAGS += -DGIT_NEXT_NATIVE -DNO_GETTEXT

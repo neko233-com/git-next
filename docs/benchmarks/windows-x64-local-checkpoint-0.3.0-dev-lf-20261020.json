@@ -1,0 +1,48 @@
+{
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "platform": "Windows x64",
+  "client_sha256": "14644c1fcefee0d03a8d59cc30fcc6e2276a315840f6e5e8d440c18a17db3550",
+  "source_tree_sha256": "0962a00ae5a28ce10f00f0b50fe5e5246bcd2697df4dff0ccb912da3cf52e33d",
+  "helpers": [
+    {
+      "name": "git-next-lfs.exe",
+      "sha256": "5fb05fa991c95fa07946b1329617649716dab82283a2be8d56ecb875f2a84d64"
+    },
+    {
+      "name": "git-next-lfs-filter.exe",
+      "sha256": "4b96000ace3859129a5037a5a51339adc38b0ce28770b88a1a02db77856d1de3"
+    }
+  ],
+  "installed_bytes_match": true,
+  "system_git_replaced": false,
+  "replacement_ready": false,
+  "original_git_executable_preserved": true,
+  "user_path_unchanged": true,
+  "non_eol_configuration_preserved": true,
+  "credential_ssh_files_preserved": true,
+  "global_eol": {
+    "core.autocrlf": "input",
+    "core.eol": "lf"
+  },
+  "existing_repositories_automatically_renormalized": false,
+  "real_existing_login_verified": false,
+  "new_macos_linux_runtime_verified": false,
+  "checks": [
+    "Rust tests",
+    "format/clippy",
+    "read-command differential",
+    "restore/reset differential",
+    "LF/Unity-format/binary/renormalization fixtures",
+    "local/public HTTPS",
+    "worktree",
+    "config",
+    "status cache",
+    "native/HTTPS LFS",
+    "local/HTTPS/SSH push",
+    "strict SSH host verification",
+    "terminal",
+    "isolated Windows installation",
+    "installed LF/restoration suites"
+  ]
+}

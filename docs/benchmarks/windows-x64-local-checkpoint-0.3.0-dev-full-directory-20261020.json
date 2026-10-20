@@ -1,0 +1,202 @@
+{
+  "status": "pass",
+  "source_tree_sha256": "36a7442e8262fbb3ae8b9745fb65a3fbc54de4ea5959cee94f2e66d1dbb3ae03",
+  "binaries": {
+    "git-lfs.exe": "a320588ee7d3acb7611b3cf7ea126273733b84f4b8f353f372446d90a6e82aad",
+    "git-next-lfs-filter.exe": "12de567b42e4de0b78861d5842aac325efaa2360ae9cf2843e8942a8f37838ea",
+    "git-next.exe": "d9a171391f83b86181730cd78069121d6a30c0b516711b97a2c36b6383a31049",
+    "git-terminal.exe": "4c8ef25c694d93096d23e2759c9e20aa68be920be00ebec1fa0bcdc4c3fd1555",
+    "git.exe": "e9a2748050b895daf8972aaef353d276d49c1aaf3fda10c627afd2f405fdced2"
+  },
+  "source_archive": "accepted-source-36a7442e8262fbb3ae8b9745fb65a3fbc54de4ea5959cee94f2e66d1dbb3ae03.zip",
+  "source_archive_sha256": "018e0c606db9bec39dd4620ec284a9cb00297e3aa43684f6ddeb6411fa9a7e79",
+  "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+  "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+  "real_account_login_verified": false,
+  "system_git_replaced": false,
+  "installed_bytes_match": true,
+  "managed_gcm_installed": true,
+  "helper_sha256": "b7f0e61535b7bab81ea11126ecf1e7ad4486426df69921a78a680dc40bae2c12",
+  "original_git_and_profile_files_unchanged": true,
+  "managed_gcm_files": 52,
+  "client_sha256": "d9a171391f83b86181730cd78069121d6a30c0b516711b97a2c36b6383a31049",
+  "user_path_unchanged": true,
+  "global_eol": "lf",
+  "global_autocrlf": "input",
+  "fmt": true,
+  "complete_git_parity": false,
+  "binary_sha256": "d9a171391f83b86181730cd78069121d6a30c0b516711b97a2c36b6383a31049",
+  "rust_tests": true,
+  "clippy": true,
+  "isolated_install_uninstall": true,
+  "installed_fixtures": [
+    "eol",
+    "status_cache",
+    "diff",
+    "managed_gcm_https"
+  ],
+  "isolated_support_upgrade_rollback_uninstall": true,
+  "schema_version": 1,
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "scope": "Windows x64 installed directory-only metadata query, shared scan cache and lazy diff; declared subsets only",
+  "checks": [
+    {
+      "test": "tests/merge_acceptance.py",
+      "options": [
+        "--object-format",
+        "sha1"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "ba735bec4bb56d59026665ac626332e0228c067f2a138f8e96d4e27435c10151"
+    },
+    {
+      "test": "tests/merge_acceptance.py",
+      "options": [
+        "--object-format",
+        "sha256"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "ba735bec4bb56d59026665ac626332e0228c067f2a138f8e96d4e27435c10151"
+    },
+    {
+      "test": "tests/merge_message_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "ca37af70115d7d375cc302494ffc5d28e5fb3c480560c5c671d115c1f71cff8c"
+    },
+    {
+      "test": "tests/commit_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+    },
+    {
+      "test": "tests/merge_pending_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "7eb308d1b7449d340cb1d33cf8ef9c96306f4667b8a97e49a0f1418bb3106eed"
+    },
+    {
+      "test": "tests/repository_format_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+    },
+    {
+      "test": "tests/config_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "166de10aed35973d3943c5d51a779989ab80f143c79d182526a967405e882f95"
+    },
+    {
+      "test": "tests/status_cache_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+    },
+    {
+      "test": "tests/diff_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+    },
+    {
+      "test": "tests/restore_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+    },
+    {
+      "test": "tests/eol_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+    },
+    {
+      "test": "tests/worktree_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+    },
+    {
+      "test": "tests/push_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "d23fc9826dd445c44a977ebdde3f61b361ec4a7d14a6852fbfa0ab185cbb960c"
+    },
+    {
+      "test": "tests/lfs_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "c4785854aa921c3db75bcca0732a8515dd649205a452076c24db87874a080316"
+    },
+    {
+      "test": "tests/lfs_transfer_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "5b2b83d86b3c3afec75eca5c8dc90bfcbb6b103d31a1640e9c5091035e52d443"
+    },
+    {
+      "test": "tests/ssh_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "10553554e8b3532436848112262bc2a8ee5de4853628fa62a55963f511a5cac1"
+    },
+    {
+      "test": "tests/gcm_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "a2a85b6285373353398bed3609e174237e69ff9b022ea97b5d61271f18b9cfb2"
+    },
+    {
+      "test": "tests/acceptance.py",
+      "options": [
+        "--https"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "tests/acceptance.py",
+      "options": [
+        "--https",
+        "--system-config-enabled"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "tests/native_discovery_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "e078462acc73fd3c14c9f0272aa95673cfc4c9fb56102885d14fffc6de33b228"
+    },
+    {
+      "test": "tests/terminal_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "de2c1a8b2d51187d265e7ba57793ac7c18b95a064a7fa69ebb22cdcdcd1452bc"
+    }
+  ],
+  "windows_cache_unit_tests": 5,
+  "windows_metadata_api_check": {
+    "status": "pass",
+    "scope": "Windows filesystem API metadata equivalence only; product conformance is separate",
+    "harness_sha256": "13f9957921d2fad17b61da21e443d56bb878a79d10a5e3e2f61ba00a06b06900",
+    "entries_compared": 6,
+    "full_matches_prior_query_and_live_metadata": true,
+    "unicode_empty_regular_directory_hardlink": true,
+    "actual_junction_reparse_tag": true,
+    "actual_symlink_tested": false,
+    "user_files_modified": false
+  },
+  "benchmarks": [
+    "windows-x64-0.3.0-dev-full-directory-system-20261020.json",
+    "windows-x64-0.3.0-dev-10000-full-directory-20261020.json",
+    "windows-x64-0.3.0-dev-100000-packed-full-directory-20261020.json"
+  ],
+  "native_macos_new_checkpoint": false,
+  "linux_reports_retain_earlier_source_identity": true,
+  "release_published": false
+}

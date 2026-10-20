@@ -1,0 +1,10 @@
+--- a/http.h
++++ b/http.h
+@@ -8,6 +8,7 @@
+ 
+ #include <curl/curl.h>
+ #include <curl/easy.h>
++#include "git-next-curl.h"
+ 
+ #include "gettext.h"
+ #include "strbuf.h"

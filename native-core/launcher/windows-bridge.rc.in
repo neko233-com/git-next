@@ -1,0 +1,28 @@
+/* Copyright 2026 git-next contributors. SPDX-License-Identifier: MIT */
+#include <windows.h>
+1 VERSIONINFO
+ FILEVERSION @FILE_VERSION@
+ PRODUCTVERSION @FILE_VERSION@
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+BEGIN
+ BLOCK "StringFileInfo"
+ BEGIN
+  BLOCK "040904b0"
+  BEGIN
+   VALUE "CompanyName", "git-next contributors\0"
+   VALUE "FileDescription", "git-next compatibility entrypoint\0"
+   VALUE "FileVersion", "@PRODUCT_VERSION@\0"
+   VALUE "InternalName", "git-next-bridge\0"
+   VALUE "LegalCopyright", "Copyright 2026 git-next contributors\0"
+   VALUE "ProductName", "git-next\0"
+   VALUE "ProductVersion", "@PRODUCT_VERSION@\0"
+  END
+ END
+ BLOCK "VarFileInfo"
+ BEGIN
+  VALUE "Translation", 0x409, 1200
+ END
+END

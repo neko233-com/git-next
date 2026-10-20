@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "status": "posix-runtime-materials-and-native-language-compiled-not-runtime-accepted",
+  "source_tree_sha256": "5ec4d819f170d09dc7adbfe10d43bdcc96736c7136cee9be4506b277cda95b19",
+  "windows_compiled_binaries": {
+    "git.exe": {
+      "sha256": "25ee1f8c1417526ce0c72b12b513004f14fd4e5f302df1012546b192c9f47a11",
+      "bytes": 5247488
+    },
+    "git-remote-http.exe": {
+      "sha256": "43f01367e63e56ae0067c5cc2ba39a594f61a717c51ca08d0fb0e246e4bf7ebc",
+      "bytes": 3142656
+    },
+    "git-http-fetch.exe": {
+      "sha256": "04ebf66ade5cdac35d2b70a3d9be30b3d7f76b82bb19bac55b32890dd0fca21c",
+      "bytes": 3125760
+    },
+    "git-http-push.exe": {
+      "sha256": "a8a2cba51d92eb288660d65e6d3c95f1b76c9fbee75da1bb0dbc4c50059e0cff",
+      "bytes": 3927040
+    },
+    "git-http-backend.exe": {
+      "sha256": "fd784ed16ea407f65391bcad40db428c3af5dcbd3a21f9b145f6a0f99558f810",
+      "bytes": 2173952
+    },
+    "git-daemon.exe": {
+      "sha256": "a4d275a55d355759beda195b3b78c3ed0433031cf49283b2d132c0a37b72d9d8",
+      "bytes": 2177024
+    },
+    "git-shell.exe": {
+      "sha256": "f2c429a0c8295dcd98716c5c341f1973ed7d0dbcdbb99f8b404291d3407a4fad",
+      "bytes": 2160128
+    },
+    "scalar.exe": {
+      "sha256": "55f0912f60b8e0cfedf21ce6c60fddf735088a52e8355b727ebedea7c78d7b13",
+      "bytes": 2206720
+    },
+    "git-imap-send.exe": {
+      "sha256": "a46faf426ec74002984c9e10a258dad633464cd20afa39d967bff74c55ac7b80",
+      "bytes": 3119104
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "96d1ce5bfe08daf787f1c5aa20c3207674857c98c77408ee40579c5e5bd1b197",
+      "bytes": 2156032
+    }
+  },
+  "windows_build_receipt_sha256": "d689961faa331e6a26e12e0ba145d5d41962d30d2b2b54f38872f5d32578a829",
+  "native_patch_count": 43,
+  "chinese_catalog": {
+    "upstream": 6226,
+    "product": 37,
+    "total": 6263
+  },
+  "linux_runtime": {
+    "artifact": {
+      "name": "runtime-assets.tar.gz",
+      "sha256": "8eb5f7a2d15859d452293e42cd1b12f0f734b1913498745cecc85893dfa8d719",
+      "bytes": 98409747
+    },
+    "files": 2840,
+    "native_images_inspected": 415,
+    "payload_bytes": 260089970,
+    "copied_tool_inputs": {
+      "build_native_core.py": "a18157393a75a1e8371a2152e72f923486a30ec2dbcbe3d79dfafee48d3cc58b",
+      "build_native_posix.py": "44bda671bac4aa8a81092d87a85239a183db0cbc6da4f89dcaa8c59ef22e6a9a",
+      "collect_linux_runtime.py": "73a5b4a5ff00f949d58e9c512384f07e79efe94cf68ce2f8382c4f59f9355fb2",
+      "extract_build_archive.py": "edba889aed051f00b6638faade691efdb747caabe91c4ac877aa7dbac841f880",
+      "posix_images.py": "1bb839bd4297aad1441e4507ce2a78409a8caff89125f0ccbf1517720a1db6bc"
+    },
+    "cleanup": {
+      "container_absent": true,
+      "volume_absent": true
+    },
+    "core_input_source_tree_sha256": "712baee592d9b27872d213b668f1e08ec930cb1adfcf44ecb83d9d9e8a79aa46",
+    "subsequent_source_only_changes": [
+      "producer ownership/notice collection",
+      "IDN/GSSAPI/HTTP2 explicit dependency recipe"
+    ]
+  },
+  "shared_git_data": {
+    "files": 1398,
+    "payload_bytes": 24670940,
+    "sources": {
+      "schema_version": 1,
+      "version": "2.54.0",
+      "manuals": {
+        "asset": "git-manpages-2.54.0.tar.xz",
+        "url": "https://www.kernel.org/pub/software/scm/git/git-manpages-2.54.0.tar.xz",
+        "sha256": "292062d18f3a215213ea8317ed22b94f02ad9572520b9293164d7db3eb888953",
+        "bytes": 622912,
+        "metadata_source": "https://www.kernel.org/pub/software/scm/git/sha256sums.asc",
+        "metadata_sha256": "651650b65a26b27d1bcbc150c700cd23353060a0e8ad22d261c8ff993430397d",
+        "trust": "official-https-checksum-list",
+        "publisher_signature_verified": false
+      },
+      "portable_ui_and_html": {
+        "producer": "git-for-windows/git",
+        "tag": "v2.54.0.windows.1",
+        "archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd"
+      },
+      "license": "per-file-upstream-notices",
+      "product_executed": false,
+      "tests_executed": false
+    },
+    "manifest_sha256": "184c1100eeb1368edd492163a970abaf1e79b73d679ee0cb22f6449962b7b41b"
+  },
+  "current_source_files": {
+    "tools/assemble_native_posix.py": "18d8b7e9bf7961cf4e81698f966172833545fdbc2e3a91678b4d83b6fdce06da",
+    "tools/assemble_native_windows.py": "65ecee286e235fce04e21401bf175af09a85ac541f687458e39879569e37dbf2",
+    "tools/collect_linux_runtime.py": "a9994632c09380f7838aed3e5a8e30eeb46a9d4c94b64d3817b5ac0a06637cc5",
+    "tools/prepare_linux_runtime.py": "06430a31c0c70b5fe2639a986f46759ce2374122eb923598c6334e24cd58c0d7",
+    "tools/extract_build_archive.py": "edba889aed051f00b6638faade691efdb747caabe91c4ac877aa7dbac841f880",
+    "tools/posix_images.py": "bccfdc24a203692c5565fff7b28e78884ec2f392e0882d25064dd19c43ee995c",
+    "tools/prepare_git_shared_assets.py": "d1a2161db35d71adc31a5e3376ce4a0fa5b5c24a58a2965ffd223060867b57a3",
+    "tools/build_native_dependencies.py": "ab3c70593dd55f3a400a3bfaf8cf6950bc737dbe008ae0803af3b185f1395abe",
+    "tools/collect_posix_prerequisites.py": "f314db70b755f733336b180f748cad9b2c202b88005319fa13b50753516f8bfb",
+    "tools/build_native_linux.py": "b83e976e3882d669659d8ca6cc8731ee7b5a3a0913aa66428fc1b23a4512d0f7",
+    "tools/build_native_core.py": "9a74dad9503fed0d44c244b76790806a61e94a800a3a5afd2d4210968d99fe4e",
+    "tools/integrate_native_core.py": "09e2ce110a7953cd79feede6a78afe3ae684b4941e71a94d8c6dacb693fad92b",
+    "packaging/native-dependencies.lock.json": "bbf6b1115802a5b3029ed3755530e347e6b6fe6ad45570ab184f1530fe175d54",
+    "packaging/git-shared-runtime.lock.json": "ffcca5589105ebdcd1d284384b59d309245c9c99add994a769034a85b4e23b4f",
+    "native-core/overlay/git-next.c": "a33a8654237daa1279bd18c1d5aa58bab5a8ec6261276a78d74004490f2a7d6f",
+    "native-core/overlay/git-next.h": "638b0a51062f942da14f12c1de0f8e3e870d03bdcf495a963d393bae7396134d",
+    "native-core/patches/series.json": "12c7eea45435639c4277002ab7973e74faa7e903c3aa367a7c72953fef83b560"
+  },
+  "generic_posix_assembly_executed": false,
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "released": false,
+  "complete_git_parity": false,
+  "release_eligible": false
+}

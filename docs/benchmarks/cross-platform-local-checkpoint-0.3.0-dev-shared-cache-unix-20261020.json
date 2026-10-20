@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "platforms": {
+    "linux_x64": {
+      "checkpoint": "linux-x64-local-checkpoint-0.3.0-dev-shared-cache-unix-20261020.json",
+      "binary_sha256": "7f4c40db82e0c4bcfc815c6b5ccf498c1411d71c416b41315684d517a154ce8d",
+      "source_tree_sha256": "c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e",
+      "local_fixture_suites": 9,
+      "emulated_arm64": false,
+      "physical_arm64_accepted": false
+    },
+    "linux_arm64": {
+      "checkpoint": "linux-arm64-local-checkpoint-0.3.0-dev-shared-cache-unix-20261020.json",
+      "binary_sha256": "7ac7baa11c5c6ca6c12d468a03870a024b6b6b2897bcb5b16ebe9f94b0d8e78d",
+      "source_tree_sha256": "c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e",
+      "local_fixture_suites": 9,
+      "emulated_arm64": true,
+      "physical_arm64_accepted": false
+    },
+    "windows_arm64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "aarch64-pc-windows-gnullvm",
+      "build_jobs": 1,
+      "source_tree_sha256": "c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e",
+      "binaries": {
+        "git.exe": "0279fb25feb2d1b826e7e1c148a1387cecebb3bca01e7fa447819876e31c1849",
+        "git-next.exe": "cb6a0cdc44907c16f277752925cc84ff91e6a0c65211370e8274c17f90f1fcda",
+        "git-terminal.exe": "b29cec6f3e0665a90cea8c72f40174c8cd8aa38c1210fdf5f6492236f0942be6",
+        "git-lfs.exe": "841d37487cb6130c88a2dccc2b0b5ccc3657facae5b27520f56c571434f848d3",
+        "git-next-lfs-filter.exe": "687fccdd53e2321d033529a815c4ca045ac7a3601c7cc28e6ef4ec15191dff58"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false
+    },
+    "windows_x64_source_regression": {
+      "status": "pass",
+      "binary_sha256": "6522af292ab7fda06142cd2a84d17678a4cad4f81ccc14f42533ae8e77e4a961",
+      "checks": [
+        {
+          "test": "config_acceptance.py",
+          "exit_code": 0,
+          "harness_sha256": "166de10aed35973d3943c5d51a779989ab80f143c79d182526a967405e882f95"
+        },
+        {
+          "test": "native_discovery_acceptance.py",
+          "exit_code": 0,
+          "harness_sha256": "e078462acc73fd3c14c9f0272aa95673cfc4c9fb56102885d14fffc6de33b228"
+        },
+        {
+          "test": "eol_acceptance.py",
+          "exit_code": 0,
+          "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+        },
+        {
+          "test": "gcm_acceptance.py",
+          "exit_code": 0,
+          "harness_sha256": "a2a85b6285373353398bed3609e174237e69ff9b022ea97b5d61271f18b9cfb2"
+        }
+      ],
+      "scope": "Windows optimized configuration/discovery/LF/GCM regression for Unix discovery source change; not installed or performance acceptance",
+      "source_tree_sha256": "c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e",
+      "installed": false,
+      "performance_accepted": false
+    },
+    "windows_x64_installed": {
+      "checkpoint": "windows-x64-local-checkpoint-0.3.0-dev-shared-cache-20261020.json",
+      "binary_sha256": "9b17af708c3515da39217c7078ac7e3b87f4863dfca8e5e28519e5f4a7166014",
+      "source_tree_sha256": "3946a3de87ffb72f5f4b0304fcf35fd49bae54a602b3e43234762797d2bc9d28",
+      "installed": true
+    }
+  },
+  "source_archive": "accepted-source-c52aea3e4014e58473b0d8207015e9986c09a8ac70c42f72521d834bdadb545e.zip",
+  "source_archive_sha256": "a867e5e9a275ec4ce7ec54d692287524b16a0a56655aa700028b8cec6cf29143",
+  "complete_git_parity": false,
+  "system_git_replaced": false,
+  "native_macos_new_checkpoint": false,
+  "release_published": false,
+  "scope": "Linux x64 Docker and emulated ARM64 local LF/Unix-discovery conformance; Windows ARM64 compile only; installed Windows keeps its separately accepted bytes"
+}

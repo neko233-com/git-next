@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 git-next contributors. MIT license. -->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="git-next" Manufacturer="neko233-com" Language="1033"
+           Version="$(MsiVersion)" ProductCode="$(ProductCode)" UpgradeCode="$(UpgradeCode)"
+           Scope="$(PackageScope)" InstallerVersion="500" Compressed="yes">
+    <MajorUpgrade Schedule="afterInstallExecute" AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer git-next version is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+    <Property Id="ARPNOMODIFY" Value="1" />
+    <Property Id="ARPCOMMENTS" Value="$(ProductDescription)" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/neko233-com/git-next" />
+    <Property Id="PREVIOUSINSTALLFOLDER">
+      <RegistrySearch Id="PreviousUserInstallRoot" Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)"
+                      Name="InstallRoot" Type="raw" Bitness="always64" />
+    </Property>
+    <SetProperty Id="INSTALLFOLDER" Value="[PREVIOUSINSTALLFOLDER]" Before="CostFinalize"
+                 Condition="PREVIOUSINSTALLFOLDER AND NOT INSTALLFOLDER" Sequence="both" />
+    <Property Id="REPLACEGIT" Value="0" Secure="yes" />
+    <Launch Condition="Installed OR REPLACEGIT &lt;&gt; &quot;1&quot;"
+            Message="This package installs git-next separately. Git takeover requires the separately verified migration procedure." />
+    <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    <Property Id="REBOOT" Value="ReallySuppress" />
+    <?if $(InstallScope) = machine ?>
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="MsiRootDirectory" Name="git-next">
+        <Directory Id="INSTALLFOLDER" Name="$(Platform)">
+          <Directory Id="BINDIR" Name="bin" />
+          <Directory Id="UPDATERDIR" Name="updater" />
+          <Directory Id="PREVIEWDIR" Name="preview"><Directory Id="PREVIEWBINDIR" Name="bin" /></Directory>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="CommonAppDataFolder">
+      <Directory Id="DATAROOT" Name="git-next">
+        <Directory Id="UPDATESROOT" Name="updates"><Directory Id="UPDATESTATE" Name="$(Platform)" /></Directory>
+        <Directory Id="CONFIGROOT" Name="config" />
+        <Directory Id="COMPONENTSROOT" Name="components" />
+        <Directory Id="MIGRATIONSROOT" Name="migrations" />
+      </Directory>
+    </StandardDirectory>
+    <?else?>
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsDirectory" Name="Programs">
+        <Directory Id="MsiRootDirectory" Name="git-next-msi">
+        <Directory Id="INSTALLFOLDER" Name="$(Platform)">
+          <Directory Id="BINDIR" Name="bin" />
+          <Directory Id="UPDATERDIR" Name="updater" />
+          <Directory Id="PREVIEWDIR" Name="preview">
+            <Directory Id="PREVIEWBINDIR" Name="bin" />
+          </Directory>
+        </Directory>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+    <?endif?>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="StartMenuDirectory" Name="git-next ($(Platform))" />
+    </StandardDirectory>
+    <Component Id="UserIntegration" Directory="BINDIR" Guid="*">
+      <RegistryValue Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)" Name="InstallRoot"
+                     Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
+      <Environment Id="UserPath" Name="PATH" Value="[BINDIR]" Action="set"
+                   Part="last" System="$(PathSystem)" Permanent="no" />
+      <Shortcut Id="TerminalShortcut" Directory="StartMenuDirectory" Name="Git Terminal"
+                Target="[INSTALLFOLDER]$(TerminalRelativePath)" WorkingDirectory="INSTALLFOLDER" />
+      <Shortcut Id="UpdateShortcut" Directory="StartMenuDirectory" Name="Update git-next"
+                Target="[System64Folder]WindowsPowerShell\v1.0\powershell.exe"
+                Arguments="-NoLogo -NoProfile -ExecutionPolicy Bypass -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Apply"
+                WorkingDirectory="UPDATERDIR" />
+      <RemoveFolder Id="RemoveStartMenuDirectory" Directory="StartMenuDirectory" On="uninstall" />
+      <RemoveFolder Id="RemoveBinDirectory" Directory="BINDIR" On="uninstall" />
+      <RemoveFolder Id="RemoveUpdaterDirectory" Directory="UPDATERDIR" On="uninstall" />
+      <RemoveFolder Id="RemovePreviewBinDirectory" Directory="PREVIEWBINDIR" On="uninstall" />
+      <RemoveFolder Id="RemovePreviewDirectory" Directory="PREVIEWDIR" On="uninstall" />
+      <RemoveFolder Id="RemoveInstallDirectory" Directory="INSTALLFOLDER" On="uninstall" />
+      <RemoveFolder Id="RemoveMsiRootDirectory" Directory="MsiRootDirectory" On="uninstall" />
+    </Component>
+    <?if $(InstallScope) = machine ?>
+    <Component Id="MachineParentSecurity" Directory="MsiRootDirectory" Guid="*">
+      <RegistryValue Root="HKLM" Key="Software\git-next\MSI\$(Platform)" Name="ParentRoot" Value="[MsiRootDirectory]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineRootSecurity" Directory="INSTALLFOLDER" Guid="*">
+      <RegistryValue Root="HKLM" Key="Software\git-next\MSI\$(Platform)" Name="Scope" Value="machine" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineDataSecurity" Directory="DATAROOT" Guid="*" Permanent="yes">
+      <RegistryValue Root="HKLM" Key="Software\git-next\State" Name="Root" Value="[DATAROOT]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineMigrationSecurity" Directory="MIGRATIONSROOT" Guid="*" Permanent="yes">
+      <RegistryValue Root="HKLM" Key="Software\git-next\State" Name="Migrations" Value="[MIGRATIONSROOT]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineUpdateState" Directory="UPDATESTATE" Guid="*" Permanent="yes">
+      <RegistryValue Root="HKLM" Key="Software\git-next\State\$(Platform)" Name="Updates" Value="[UPDATESTATE]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineConfigState" Directory="CONFIGROOT" Guid="*" Permanent="yes">
+      <RegistryValue Root="HKLM" Key="Software\git-next\State" Name="Config" Value="[CONFIGROOT]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <Component Id="MachineComponentState" Directory="COMPONENTSROOT" Guid="*" Permanent="yes">
+      <RegistryValue Root="HKLM" Key="Software\git-next\State" Name="Components" Value="[COMPONENTSROOT]" Type="string" KeyPath="yes" />
+      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
+    </Component>
+    <?endif?>
+    <CustomAction Id="RollbackRegisterUpdater" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRegistration" />
+    <CustomAction Id="RegisterUpdater" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Register" />
+    <CustomAction Id="RollbackRuntimeConfiguration" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRuntimeConfiguration" />
+    <CustomAction Id="InitializeRuntimeConfiguration" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode InitializeRuntimeConfiguration" />
+    <CustomAction Id="CommitRuntimeConfiguration" Directory="System64Folder" Execute="commit" Impersonate="$(TaskImpersonate)" Return="ignore"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode CommitRuntimeConfiguration" />
+    <CustomAction Id="RollbackUnregisterUpdater" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRegistration" />
+    <CustomAction Id="UnregisterUpdater" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Unregister" />
+    <CustomAction Id="GuardTakeoverUninstall" Directory="System64Folder" Execute="immediate" Impersonate="yes" Return="check"
+                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode GuardRemoval" />
+    <InstallExecuteSequence>
+      <Custom Action="GuardTakeoverUninstall" Before="InstallInitialize" Condition="Installed AND REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+      <Custom Action="RollbackRuntimeConfiguration" After="WriteRegistryValues" Condition="NOT REMOVE~=&quot;ALL&quot;" />
+      <Custom Action="InitializeRuntimeConfiguration" After="RollbackRuntimeConfiguration" Condition="NOT REMOVE~=&quot;ALL&quot;" />
+      <Custom Action="CommitRuntimeConfiguration" After="InitializeRuntimeConfiguration" Condition="NOT REMOVE~=&quot;ALL&quot;" />
+      <Custom Action="RollbackRegisterUpdater" After="CommitRuntimeConfiguration" Condition="NOT REMOVE~=&quot;ALL&quot;" />
+      <Custom Action="RegisterUpdater" After="RollbackRegisterUpdater" Condition="NOT REMOVE~=&quot;ALL&quot;" />
+      <Custom Action="RollbackUnregisterUpdater" Before="UnregisterUpdater" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+      <Custom Action="UnregisterUpdater" Before="RemoveRegistryValues" Condition="REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
+    </InstallExecuteSequence>
+    <Feature Id="ProductFeature" Title="git-next" Level="1">
+      <ComponentRef Id="UserIntegration" />
+      <?if $(InstallScope) = machine ?>
+      <ComponentRef Id="MachineParentSecurity" />
+      <ComponentRef Id="MachineRootSecurity" /><ComponentRef Id="MachineDataSecurity" />
+      <ComponentRef Id="MachineMigrationSecurity" /><ComponentRef Id="MachineUpdateState" />
+      <ComponentRef Id="MachineConfigState" /><ComponentRef Id="MachineComponentState" />
+      <?endif?>
+      <ComponentGroupRef Id="Payload" />
+    </Feature>
+  </Package>
+</Wix>

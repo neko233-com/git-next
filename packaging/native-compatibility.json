@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "product": "git-next",
+  "status": "implementation-complete-awaiting-local-release-gates",
+  "engine": "source-built-git-next-native-core",
+  "default_branch": "main",
+  "compatibility_baseline": "2.54.0.windows.1",
+  "external_git_fallback": false,
+  "external_ssh_fallback": false,
+  "complete_git_parity": true,
+  "release_eligible": false,
+  "features": {
+    "full_git_cli_and_repository_semantics": true,
+    "git_network_protocols": true,
+    "lfs": true,
+    "full_credential_helper_compatibility": true,
+    "hooks_and_signing": true,
+    "submodules_and_linked_worktrees": true,
+    "cross_platform_lf_defaults": true,
+    "canonical_filtered_status": true,
+    "native_english_chinese_language_selection": true,
+    "owned_ssh_shell_and_runtime": true,
+    "msi_lifecycle_and_automatic_updates": true,
+    "version_build_options_json": true
+  },
+  "intentional_extensions": [
+    "git-next product identity",
+    "LF defaults respect explicit repository attributes/configuration",
+    "language get/set/reset",
+    "eol doctor and opt-in repository migration"
+  ],
+  "replacement_blockers": [
+    "D08 final local consolidated acceptance",
+    "D09 paired performance acceptance",
+    "D10 accepted release packaging and workstation takeover"
+  ],
+  "performance": "Actual paired median/p95 and process memory are reported; no universal speedup claim",
+  "macos_acceptance_scope": "Dockerfile_mac package/Mach-O/shell static validation; no native product execution on Mac host"
+}

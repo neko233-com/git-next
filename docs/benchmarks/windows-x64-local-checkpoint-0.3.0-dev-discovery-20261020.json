@@ -1,0 +1,114 @@
+{
+  "installed_bytes_match": true,
+  "global_eol": "lf",
+  "client_sha256": "62d7a0cc8ee82e6eaa9254cb16da7ae24dd76e0b95426e2eb3c4acd363a4d586",
+  "managed_gcm_installed": true,
+  "global_autocrlf": "input",
+  "status": "pass",
+  "user_path_unchanged": true,
+  "original_git_and_profile_files_unchanged": true,
+  "system_git_replaced": false,
+  "managed_gcm_files": 52,
+  "real_account_login_verified": false,
+  "helper_sha256": "b7f0e61535b7bab81ea11126ecf1e7ad4486426df69921a78a680dc40bae2c12",
+  "schema_version": 1,
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "scope": "Windows x64 experimental local preview and managed GCM; no complete takeover",
+  "source_tree_sha256": "5e370be4db0acac32c2fe7c752f62637a3cd19e50ab25079a8193deab90a7360",
+  "complete_git_parity": false,
+  "gcm_archive_sha256": "529ea8aa1379b3a11bd8aafe4705a839cf253a41e14908fca113abeefa30657f",
+  "gcm_signature_verified": true,
+  "enabled_system_tripwire_passed": true,
+  "lf_fixture_passed_installed": true,
+  "managed_gcm_https_fixture_passed_installed": true,
+  "native_macos_linux_new_checkpoint": false,
+  "release_published": false,
+  "checks": [
+    {
+      "test": "tests/native_discovery_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/gcm_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/credential_support_install_acceptance.ps1",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/install_acceptance.ps1",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/config_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/eol_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/restore_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/diff_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/worktree_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/status_cache_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/push_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/lfs_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/lfs_transfer_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/ssh_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/acceptance.py",
+      "system_enabled": true,
+      "exit_code": 0
+    },
+    {
+      "test": "tests/terminal_acceptance.py",
+      "system_enabled": false,
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "fail",
+  "phase": "correctness",
+  "matrix_sha256": "14e2cd8868ce672bedc767764746bda6d727fd91a2cc02bee63dca76092a718a",
+  "reference_sha256": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5",
+  "source_tree_sha256": "ff1591e8b19ac77da921376a7aac6d72d49c141ef394063619a6159e4728f401",
+  "results": [
+    {
+      "case": "windows-core-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 13.189
+    },
+    {
+      "case": "windows-owned-integrations",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 5.959
+    },
+    {
+      "case": "windows-dpapi-migration",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 3.479
+    },
+    {
+      "case": "windows-update-contracts",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 0.665
+    },
+    {
+      "case": "linux-x64",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 12.149
+    },
+    {
+      "case": "linux-arm64",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 39.304
+    },
+    {
+      "case": "macos-arm64",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 3.359
+    },
+    {
+      "case": "docker-login-migration",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 43.474
+    },
+    {
+      "case": "posix-updater-race-contracts",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 0.552
+    },
+    {
+      "case": "msi-user",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 0.422
+    },
+    {
+      "case": "msi-machine",
+      "status": "fail",
+      "exit_code": 1,
+      "seconds": 1.473
+    },
+    {
+      "case": "frozen-input-readback",
+      "status": "pass"
+    }
+  ],
+  "release_eligible": false,
+  "native_mac_product_executed": false,
+  "personal_account_accessed": false,
+  "elapsed_seconds": 50.829,
+  "wall_clock_target_seconds": 60.0,
+  "wall_clock_target_met": true,
+  "workers": 10,
+  "msi_transactions_serialized": true,
+  "checks_skipped_to_meet_time_target": false
+}

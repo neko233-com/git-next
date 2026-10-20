@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "status": "linux-x64-core-compiled-posix-primary-helpers-staged-not-runtime-accepted",
+  "source_tree_sha256": "712baee592d9b27872d213b668f1e08ec930cb1adfcf44ecb83d9d9e8a79aa46",
+  "product_version": "0.3.0-dev",
+  "git_compatibility_version": "2.54.0.git-next.0.3.0-dev",
+  "binaries": {
+    "git": {
+      "sha256": "c4d8fb020e8414c6a95b5879b92a7d801218e0c1eb3f86fb1d768b9eb6d376b6",
+      "bytes": 6502856
+    },
+    "git-remote-http": {
+      "sha256": "b68b5470d68e1bae2cf2b95e778e9258aff37b9c14195c3672793caab0c0efda",
+      "bytes": 5958576
+    },
+    "git-http-fetch": {
+      "sha256": "1a758c6637398340c02ae46599c7c90d92709cd67ca991bcc6b6469b2e186eb6",
+      "bytes": 5941680
+    },
+    "git-http-push": {
+      "sha256": "8010000fbd6dfe9ed56f3c72de180dc96217b98c15287ccc0cf85823c497e227",
+      "bytes": 6153840
+    },
+    "git-http-backend": {
+      "sha256": "b892cd3cf2034d9bb4d874dd393d4847dad67f16c231f824d1d6559f2026e008",
+      "bytes": 4677096
+    },
+    "git-daemon": {
+      "sha256": "8d4cbaa6ca389973315d08c0c0c99b766cc9eab9f3761a78901a4393e482bdc7",
+      "bytes": 4681608
+    },
+    "git-shell": {
+      "sha256": "21434aa93169c256d4ab1f1de80410378af22fe78fb440c046603d18b7ecfd56",
+      "bytes": 4659136
+    },
+    "scalar": {
+      "sha256": "c0d4ad187caa2f9b303cf6e2cce058aa38e45d6e0b0b37e6eeafcb77bc0a2e79",
+      "bytes": 4707216
+    },
+    "git-imap-send": {
+      "sha256": "f2ccc0a0ae127d3ded916744ba57447da9599c72224b079234dabd9e520eeecc",
+      "bytes": 5954680
+    },
+    "git-sh-i18n--envsubst": {
+      "sha256": "5466343668ab81bb162c5b5c818f5c729f07cb51a3bf1bccfb169cadebbca824",
+      "bytes": 4659200
+    }
+  },
+  "generated_version_header_sha256": "de3f4709ba75b0656d97c7f2835ab86ee17b8aba84b7ed3b0d241d0e72471f04",
+  "perl_runtime_header_sha256": "f1f9ae3aafbe5488e70b97296a5f6c62ceac567b8a237c2193219134e226299d",
+  "staged_core_files": 243,
+  "archive": {
+    "name": "native-build-products.tar.gz",
+    "bytes": 62420246,
+    "sha256": "a66fb3a18b0f5ea3c27ee6a9b9ef4fa192cd0024015860322ab8b4b2e3b7dc3c"
+  },
+  "builder_input_sources": {
+    "build_native_core.py": "a18157393a75a1e8371a2152e72f923486a30ec2dbcbe3d79dfafee48d3cc58b",
+    "build_native_dependencies.py": "bd1fe569277595d2d5515cf2f560d741e993ee3d978c529e83cb0f3b870e8b1f",
+    "build_native_posix.py": "5a4127c5f4372787bd6af666946cbd41f44de6af0333352ad9e3b31e8e7ff126",
+    "collect_posix_prerequisites.py": "270f778236a45b6a32175c8a733912d80fcede08ebcafd0be5d043084242e042"
+  },
+  "current_source_files": {
+    "tools/build_native_dependencies.py": "bd1fe569277595d2d5515cf2f560d741e993ee3d978c529e83cb0f3b870e8b1f",
+    "tools/build_native_posix.py": "44bda671bac4aa8a81092d87a85239a183db0cbc6da4f89dcaa8c59ef22e6a9a",
+    "tools/build_native_linux.py": "aa3b268d728f832b666f11aac01cbccd294f9c33fa4585b1ea16580165e4ace6",
+    "tools/collect_posix_prerequisites.py": "270f778236a45b6a32175c8a733912d80fcede08ebcafd0be5d043084242e042",
+    "tools/fetch_posix_helpers.py": "f0f7ed4779c7958e0cdc94f42968518bc012fd4447901f147bc20703fd1fe91c",
+    "packaging/native-dependencies.lock.json": "981193443d64983a15ea4d1d218c50a3d1625a66dda89eb5db0891146d28f210",
+    "packaging/posix-helpers.lock.json": "ed95e190c78ad79a272fff0b3396d71c26b70d6324e92c42cf8e44d32bfd3eeb",
+    "native-core/overlay/git-next-runtime.h": "8de10bd20308a32a5aaee84d301ac4862dbdf31f9a17d587de3bef8c7496bb6e",
+    "native-core/overlay/git-next-perl-header.pl": "f1f9ae3aafbe5488e70b97296a5f6c62ceac567b8a237c2193219134e226299d",
+    "native-core/patches/series.json": "3ff85179df7d09454ade0b6ca51206376f78eb8d6f0db48ef2c50a82cc22a5cf",
+    "packaging/windows/Takeover.Core.psm1": "771f8293a286bdb7d3ef5e402d8962dc43ff23d0acd0e78b91c51ada4496a235"
+  },
+  "base_image": "debian@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587",
+  "docker_cleanup": {
+    "container_absent": true,
+    "volume_absent": true
+  },
+  "dependency_sources": {
+    "zlib": {
+      "version": "1.3.2",
+      "archive": "zlib-1.3.2.zip",
+      "url": "https://zlib.net/zlib132.zip",
+      "sha256": "e8bf55f3017aa181690990cb58a994e77885da140609fc8f94abe9b65d2cae28",
+      "bytes": 1616754,
+      "source_prefix": "zlib-1.3.2",
+      "license": "Zlib",
+      "build_file": "CMakeLists.txt"
+    },
+    "curl": {
+      "version": "8.23.0",
+      "archive": "curl-8.23.0.tar.xz",
+      "url": "https://curl.se/download/curl-8.23.0.tar.xz",
+      "sha256": "8dadd7d2536a314f982ad05a651b713f426bf7d02cc2c76cffb9796f2218e6c5",
+      "bytes": 2990916,
+      "source_prefix": "curl-8.23.0",
+      "license": "curl",
+      "build_file": "CMakeLists.txt"
+    },
+    "expat": {
+      "version": "2.8.3",
+      "archive": "expat-2.8.3.tar.xz",
+      "url": "https://github.com/libexpat/libexpat/releases/download/R_2_8_3/expat-2.8.3.tar.xz",
+      "sha256": "f6256df90c906773d344da084402b7d3e4f22ed41b1a59c989098a83d3ea0c85",
+      "bytes": 517264,
+      "source_prefix": "expat-2.8.3",
+      "license": "MIT",
+      "build_file": "CMakeLists.txt"
+    },
+    "pcre2": {
+      "version": "10.48",
+      "archive": "pcre2-10.48.tar.bz2",
+      "url": "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.48/pcre2-10.48.tar.bz2",
+      "sha256": "b6c68fdf6f3ac31388b50aa89ff0fc49c00c987c16e7b5146491d12003f2c8ed",
+      "bytes": 2213024,
+      "source_prefix": "pcre2-10.48",
+      "license": "BSD-3-Clause",
+      "build_file": "CMakeLists.txt"
+    },
+    "nghttp2": {
+      "version": "1.68.1",
+      "archive": "nghttp2-1.68.1.tar.xz",
+      "url": "https://github.com/nghttp2/nghttp2/releases/download/v1.68.1/nghttp2-1.68.1.tar.xz",
+      "sha256": "6abd7ab0a7f1580d5914457cb3c85eb80455657ee5119206edbd7f848c14f0b2",
+      "bytes": 1675948,
+      "source_prefix": "nghttp2-1.68.1",
+      "license": "MIT",
+      "build_file": "CMakeLists.txt"
+    }
+  },
+  "posix_tls_prerequisite_components": {
+    "gnutls": {
+      "version": "3.7.9",
+      "pkg_config_sha256": "cef165aff5771ba9a73ceb67123d77f1343ea7bbf111326da126e4d514c33d17"
+    },
+    "libpsl": {
+      "version": "0.21.2",
+      "pkg_config_sha256": "e6d04562395a29eb4a4e1cd7fd641a8260c76215498bd46f4925a6511b1e6fba"
+    }
+  },
+  "tls_backend": "GnuTLS",
+  "primary_helpers": {
+    "linux-x64": {
+      "manifest_sha256": "a06f9fcd4f776792ebf399046a720ddd0dc64b871244a176a5b03dd0985d71c6",
+      "files": 7,
+      "images": {
+        "usr/bin/git-lfs": {
+          "platform": "linux-x64",
+          "sha256": "6b92b05c4588b4a5373b2b4102dbb302757d8ec6671da67cf9e4f9ccb01cd349"
+        },
+        "usr/lib/git-next/gcm/git-credential-manager": {
+          "platform": "linux-x64",
+          "sha256": "001d6a42871009ca29cb2e6a51e6f6eb51491f05519401e00a30977672b521af"
+        }
+      },
+      "producer_components": {
+        "lfs": {
+          "version": "3.7.1",
+          "asset": "git-lfs-linux-amd64-v3.7.1.tar.gz",
+          "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-linux-amd64-v3.7.1.tar.gz",
+          "bytes": 5524590,
+          "sha256": "1c0b6ee5200ca708c5cebebb18fdeb0e1c98f1af5c1a9cba205a4c0ab5a5ec08",
+          "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-lfs/git-lfs",
+          "source_tag": "v3.7.1"
+        },
+        "gcm": {
+          "version": "2.7.3",
+          "asset": "gcm-linux-x64-2.7.3.tar.gz",
+          "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-x64-2.7.3.tar.gz",
+          "bytes": 37627317,
+          "sha256": "c7935c3e1b22681d56011b580086aeb6d60f3f0aaf6ef9c581480356988ff804",
+          "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+          "source_tag": "v2.7.3"
+        }
+      },
+      "product_executed": false
+    },
+    "linux-arm64": {
+      "manifest_sha256": "767c6a90733d788e0ec88cd2304e223137d1c71efa8c26a31badeb15611fd2ed",
+      "files": 7,
+      "images": {
+        "usr/bin/git-lfs": {
+          "platform": "linux-arm64",
+          "sha256": "83a0e15428950cf52d8806223f05cc61788f965ed90fb634226a5610c852bba3"
+        },
+        "usr/lib/git-next/gcm/git-credential-manager": {
+          "platform": "linux-arm64",
+          "sha256": "a83b478483288d57f49d9e4a77d9724dd322ebb16acffd8869b2bafc7491b0e0"
+        }
+      },
+      "producer_components": {
+        "lfs": {
+          "version": "3.7.1",
+          "asset": "git-lfs-linux-arm64-v3.7.1.tar.gz",
+          "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-linux-arm64-v3.7.1.tar.gz",
+          "bytes": 5025763,
+          "sha256": "73a9c90eeb4312133a63c3eaee0c38c019ea7bfa0953d174809d25b18588dd8d",
+          "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-lfs/git-lfs",
+          "source_tag": "v3.7.1"
+        },
+        "gcm": {
+          "version": "2.7.3",
+          "asset": "gcm-linux-arm64-2.7.3.tar.gz",
+          "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-arm64-2.7.3.tar.gz",
+          "bytes": 35883174,
+          "sha256": "291763d626106891d794b17bd7c02fe77c3d9924193fdde9e284d1d1f3fe5c21",
+          "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+          "source_tag": "v2.7.3"
+        }
+      },
+      "product_executed": false
+    },
+    "macos-arm64": {
+      "manifest_sha256": "03307e359d66819af9f6ce6de1d2c7e8a07b20d8e7adc762a83a8eef6eda0b00",
+      "files": 241,
+      "images": {
+        "usr/bin/git-lfs": {
+          "platform": "macos-arm64",
+          "sha256": "48bb6497160105ef852044da75147acee19502efd5f164b9a4429c3a60be7d4a"
+        },
+        "usr/lib/git-next/gcm/git-credential-manager": {
+          "platform": "macos-arm64",
+          "sha256": "312ee623fc8ac8946db49effd5e67532439415c4958692df3e7870138358cf8a"
+        }
+      },
+      "producer_components": {
+        "lfs": {
+          "version": "3.7.1",
+          "asset": "git-lfs-darwin-arm64-v3.7.1.zip",
+          "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-darwin-arm64-v3.7.1.zip",
+          "bytes": 5289015,
+          "sha256": "76260fb34f4ee622ff0a66b857e5954aa49c7e343a92e57a1ec4a760618c94b2",
+          "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-lfs/git-lfs",
+          "source_tag": "v3.7.1"
+        },
+        "gcm": {
+          "version": "2.7.3",
+          "asset": "gcm-osx-arm64-2.7.3.tar.gz",
+          "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-osx-arm64-2.7.3.tar.gz",
+          "bytes": 41772786,
+          "sha256": "7051a5e953bcd37a182330a0f18bc6842c4cac143b537f8c49a8c5906d335c80",
+          "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+          "license": "MIT",
+          "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+          "source_tag": "v2.7.3"
+        }
+      },
+      "product_executed": false
+    }
+  },
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "original_git_removed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "evidence_limit": "Linux x64 core/static source/image checks and staged helper inputs only. No complete POSIX runtime/package, Mac build, live authentication, correctness or performance acceptance.",
+  "remaining": [
+    "D02 owned POSIX SSH/shell/signing and library closure plus full assembly inputs",
+    "D06 cross-platform updater/release manifest",
+    "D07 all five final packages/source-license/regression inputs",
+    "D08 consolidated regression",
+    "D09 paired performance batch",
+    "D10 one release and actual workstation takeover"
+  ]
+}

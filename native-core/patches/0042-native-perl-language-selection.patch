@@ -1,0 +1,57 @@
+--- a/perl/Git/I18N.pm
++++ b/perl/Git/I18N.pm
+@@ -44,6 +44,28 @@
+ 	return;
+ }
+ 
++# Copyright 2026 git-next contributors. Native catalog bridge.
++sub __native_translation {
++	my ($count, $singular, $plural) = @_;
++	require File::Basename;
++	require File::Spec;
++	my $directory = File::Basename::dirname(__FILE__);
++	my $program = File::Spec->catfile($directory, '..', '..', '..', 'bin', 'git');
++	$program .= '.exe' if -f "$program.exe";
++	die "Required owned git-next translation core is missing" unless -x $program;
++	my @arguments = ('i18n--gettext');
++	push @arguments, '--plural', "$count" if defined $count;
++	push @arguments, '--', $singular;
++	push @arguments, $plural if defined $count;
++	local $ENV{MSYS2_ARG_CONV_EXCL} = '*';
++	open my $reader, '-|', $program, @arguments or die "Could not start owned git-next translation core";
++	local $/;
++	my $translated = <$reader> // '';
++	close $reader or die "Owned git-next translation core failed";
++	utf8::decode($translated) if utf8::is_utf8($singular);
++	return $translated;
++}
++
+ BEGIN
+ {
+ 	# Used by our test script to see if it should test fallbacks or
+@@ -52,9 +74,8 @@
+ 
+ 	local $@;
+ 	eval {
+-		__bootstrap_locale_messages();
+-		*__ = \&Locale::Messages::gettext;
+-		*__n = \&Locale::Messages::ngettext;
++		*__ = sub ($) { __native_translation(undef, $_[0], undef) };
++		*__n = sub ($$$) { __native_translation($_[2], $_[0], $_[1]) };
+ 		1;
+ 	} or do {
+ 		# Tell test.pl that we couldn't load the gettext library.
+@@ -89,9 +110,10 @@
+ 
+ =head1 DESCRIPTION
+ 
+-Git's internal Perl interface to gettext via L<Locale::Messages>. If
+-L<Locale::Messages> can't be loaded (it's not a core module) we
+-provide stub passthrough fallbacks.
++Git-next's Perl interface uses its owned native core and compiled catalog.
++Language selection follows the same command-line, environment and saved
++preferences as C and shell commands. The legacy bootstrap names remain for
++source compatibility; a missing owned translation core fails explicitly.
+ 
+ This is a distilled interface to gettext, see C<info '(gettext)Perl'>
+ for the full interface. This module implements only a small part of

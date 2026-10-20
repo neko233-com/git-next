@@ -1,0 +1,10 @@
+--- a/git-compat-util.h
++++ b/git-compat-util.h
+@@ -1128,6 +1128,7 @@
+ #include "banned.h"
+ #ifdef GIT_NEXT_NATIVE
+ #include "git-next-printf.h"
++#include "git-next-runtime.h"
+ #endif
+ 
+ /*

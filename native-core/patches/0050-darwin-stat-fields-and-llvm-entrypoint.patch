@@ -1,0 +1,25 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -274,6 +274,9 @@
+ 
+ 
+ #Platform Specific
++if(APPLE)
++	add_compile_definitions(USE_ST_TIMESPEC USE_NSEC)
++endif()
+ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+ 	if(MSVC)
+ 		include_directories(${CMAKE_SOURCE_DIR}/compat/vcbuild/include)
+@@ -762,9 +765,10 @@
+ 	if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+ 		target_link_options(common-main PUBLIC -municode -Wl,--nxcompat -Wl,--dynamicbase -Wl,--pic-executable,-e,mainCRTStartup)
+ 	elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang")
+-		target_link_options(common-main PUBLIC -municode -Wl,-nxcompat -Wl,-dynamicbase -Wl,-entry:wmainCRTStartup)
+ 		if(MSVC)
+-			target_link_options(common-main PUBLIC -Wl,invalidcontinue.obj)
++			target_link_options(common-main PUBLIC -municode -Wl,-nxcompat -Wl,-dynamicbase -Wl,-entry:wmainCRTStartup -Wl,invalidcontinue.obj)
++		else()
++			target_link_options(common-main PUBLIC -municode -Wl,--nxcompat -Wl,--dynamicbase -Wl,--entry,wmainCRTStartup)
+ 		endif()
+ 	elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+ 		target_link_options(common-main PUBLIC /IGNORE:4217 /IGNORE:4049 /NOLOGO /ENTRY:wmainCRTStartup /SUBSYSTEM:CONSOLE invalidcontinue.obj)

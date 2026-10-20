@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "scope": "Windows reference-output validation failure and reference-only stability; no valid wide-tree latency or takeover acceptance",
+  "os": "Windows-11-10.0.26300-SP0",
+  "reference_only": {
+    "scope": "Reference Git-only stability diagnostic; no native client executed; no performance acceptance",
+    "reference_version": "git version 2.54.0.windows.1",
+    "files": 10000,
+    "directories": 1000,
+    "index_stage_entries_unchanged": true,
+    "stage_sha256": "1bc35083d70389fe93d76724998bd10e7e9831f04f664e1268fd956d383d71e4",
+    "results": [
+      {
+        "configuration": "default",
+        "runs": 60,
+        "nonempty_status_count": 2,
+        "failures": [
+          {
+            "iteration": 23,
+            "sample": " D dir-50/file-000050.txt\n D dir-50/file-001050.txt\n D dir-50/file-002050.txt\n D dir-50/file-003050.txt\n D dir-50/file-004050.txt\n D dir-50/file-005050.txt\n D dir-50/file-006050.txt\n D dir-50/file-007050.txt\n D dir-50/file-008050.txt\n D dir-50/file-009050.txt\n",
+            "sample_file_exists": true,
+            "sample_file_sha256": "61c758c7972dffc8ae7b07e21740e1c513f841b71ebddd2db2a98b7939550258"
+          },
+          {
+            "iteration": 32,
+            "sample": " D dir-418/file-000418.txt\n D dir-418/file-001418.txt\n D dir-418/file-002418.txt\n D dir-418/file-003418.txt\n D dir-418/file-004418.txt\n D dir-418/file-005418.txt\n D dir-418/file-006418.txt\n D dir-418/file-007418.txt\n D dir-418/file-008418.txt\n D dir-418/file-009418.txt\n",
+            "sample_file_exists": true,
+            "sample_file_sha256": "65d4f2e4ccb74332e6cb7af34311fe5ae08094f07c8cf441e86ed66a84effe5f"
+          }
+        ]
+      },
+      {
+        "configuration": "without_fscache",
+        "runs": 60,
+        "nonempty_status_count": 0,
+        "failures": []
+      },
+      {
+        "configuration": "without_preload",
+        "runs": 60,
+        "nonempty_status_count": 0,
+        "failures": []
+      }
+    ],
+    "harness_sha256": "b06c2ca0454ab98bff44b370989ca43d19a573e39d8fa5e149b15e63c7456f60"
+  },
+  "failed_cross_client_validation": {
+    "status": "fail",
+    "stage": "output validation",
+    "operation": "status_clean",
+    "client": "git",
+    "binary_sha256": "5a1fbe43b25ea962c3e3123e2593a437267539090c41ca1ec261934645e99de5",
+    "source_tree_sha256": "ff0059a4f94085624a276933841a7031b1c6fe90a5ad8a86ab65f548e30763b5",
+    "files": 10000,
+    "directories": 1000,
+    "harness_sha256": "03223e2f7fca5290f8f7521713dc3b48fe8c308a363deaf516aba795e6e9ce95",
+    "actual_sample": " D dir-512/file-000512.txt\n D dir-512/file-001512.txt\n D dir-512/file-002512.txt\n D dir-512/file-003512.txt\n D dir-512/file-004512.txt\n D dir-512/file-005512.txt\n D dir-512/file-006512.txt\n D dir-512/file-007512.txt\n D dir-512/file-008512.txt\n D dir-512/file-009512.txt\n",
+    "expected_sample": "",
+    "initial_stage_sha256": "1bc35083d70389fe93d76724998bd10e7e9831f04f664e1268fd956d383d71e4",
+    "valid_latency_report": false,
+    "probes": {
+      "reference_retry": {
+        "exit_code": 0,
+        "output_sample": ""
+      },
+      "reference_without_fscache": {
+        "exit_code": 0,
+        "output_sample": ""
+      },
+      "reference_without_fsmonitor": {
+        "exit_code": 0,
+        "output_sample": ""
+      }
+    },
+    "current_stage_sha256": "1bc35083d70389fe93d76724998bd10e7e9831f04f664e1268fd956d383d71e4",
+    "live_file_samples": [
+      {
+        "path": "dir-512/file-000512.txt",
+        "exists": true,
+        "is_file": true,
+        "size": 352,
+        "sha256": "a6be9f8a713c088074a84dc01320b3af82b33f6e7ffc56e3ac9b37ab8cced931"
+      },
+      {
+        "path": "dir-512/file-001512.txt",
+        "exists": true,
+        "is_file": true,
+        "size": 368,
+        "sha256": "e747ac8afe5fa3cdf8ad947fd0e103b99e4d399063108c54cfb4c64be6362efa"
+      },
+      {
+        "path": "dir-512/file-002512.txt",
+        "exists": true,
+        "is_file": true,
+        "size": 368,
+        "sha256": "ba539659dd0000333863970899df11d8860b9beab6d5f54ec161733da82eaa53"
+      },
+      {
+        "path": "dir-512/file-003512.txt",
+        "exists": true,
+        "is_file": true,
+        "size": 368,
+        "sha256": "0f947a9ab3e24ccf71ed6aabf5095f047733532e34d297a0e7aefda212600648"
+      },
+      {
+        "path": "dir-512/file-004512.txt",
+        "exists": true,
+        "is_file": true,
+        "size": 368,
+        "sha256": "109ad9828e3a6175ecf677ba6a0067730513fc6a155395437130af3532dc55f0"
+      }
+    ]
+  },
+  "original_git_and_global_configuration_unchanged": true
+}

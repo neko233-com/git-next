@@ -1,0 +1,39 @@
+--- a/exec-cmd.c
++++ b/exec-cmd.c
+@@ -54,10 +54,7 @@
+ 	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, BINDIR)) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "git"))) {
+-		prefix = FALLBACK_RUNTIME_PREFIX;
+-		trace_printf("RUNTIME_PREFIX requested, "
+-				"but prefix computation failed.  "
+-				"Using static fallback '%s'.\n", prefix);
++		die("git-next runtime layout is invalid; run the owned package from its bin directory");
+ 	}
+ 	return prefix;
+ }
+@@ -351,7 +348,14 @@
+ 
+ const char **prepare_git_cmd(struct strvec *out, const char **argv)
+ {
+-	strvec_push(out, "git");
++	static const char *program;
++	if (!program)
++#ifdef GIT_WINDOWS_NATIVE
++		program = system_path("bin/git.exe");
++#else
++		program = system_path("bin/git");
++#endif
++	strvec_push(out, program);
+ 	strvec_pushv(out, argv);
+ 	return out->v;
+ }
+@@ -364,7 +368,7 @@
+ 	trace_argv_printf(nargv.v, "trace: exec:");
+ 
+ 	/* execvp() can only ever return if it fails */
+-	sane_execvp("git", (char **)nargv.v);
++	sane_execvp(nargv.v[0], (char **)nargv.v);
+ 
+ 	trace_printf("trace: exec failed: %s\n", strerror(errno));
+ 

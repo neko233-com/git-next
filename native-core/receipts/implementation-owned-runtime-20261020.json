@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "status": "integrated-core-compiled-not-runtime-accepted",
+  "utc": "2026-10-20T04:42:49.698913+00:00",
+  "source_tree_sha256": "b8d5c281dfa3b562390505daf0cb27be17196657b6b65b8cf355d294db5605f7",
+  "upstream_commit": "2b8a3ab140826ac423c2845ef81d4c6ac4f7bf3c",
+  "product_version": "0.3.0-dev",
+  "binaries": {
+    "git.exe": {
+      "sha256": "ad67b967e761e2bdbae9184fdced2571513429d3d835ccdc6646a85874aa52ad",
+      "bytes": 5242368
+    },
+    "git-remote-http.exe": {
+      "sha256": "b92c32131f8914bf4effe281ba6f5ba22d0bf30f9ad996633514747fe5a724d1",
+      "bytes": 3003392
+    },
+    "git-http-fetch.exe": {
+      "sha256": "5ff2bfad4da46b8662c3dec8295f2828ea4f7da243872b203be1b87629997871",
+      "bytes": 2986496
+    },
+    "git-http-push.exe": {
+      "sha256": "958576c4f8bfe6e517252d22816412345bb7a2aeab75db2e20e5b2aac01624fa",
+      "bytes": 3788288
+    },
+    "git-http-backend.exe": {
+      "sha256": "4cd4c5a45868b20878977897ab3ab70b049b8096f52994acb655108a2349daaf",
+      "bytes": 2171904
+    },
+    "git-daemon.exe": {
+      "sha256": "14cd630f3656557f1fdaf4dc1b074825bf6ff98268da2e223be0fc4fce8204eb",
+      "bytes": 2174976
+    },
+    "git-shell.exe": {
+      "sha256": "28e3c1b62fcd94c24666304dd7db7fd6da76db8be8f9a2068012f1ab03224127",
+      "bytes": 2158080
+    },
+    "scalar.exe": {
+      "sha256": "cbfd2baa1618ecdf6b8e7d5a31435beae3bc1ce1dcfedf74e261ad1a0a426875",
+      "bytes": 2204160
+    },
+    "git-imap-send.exe": {
+      "sha256": "12c78dba66070988cbfd8c9489ecfd1e4bfe527de3b9df412580754aaa23fc14",
+      "bytes": 2969088
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "335b06eb5fcc3a7172b8c25f658933b1c7440a799df2dda1a11a126ee8904586",
+      "bytes": 2153984
+    }
+  },
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "scope": "D03/D04 implementation plus D01/D02 owned-path/iconv compilation; complete distribution and D08/D09 acceptance remain pending",
+  "catalog": {
+    "source": "po/zh_CN.po",
+    "source_sha256": "109273a7ec724df58ab363b9701fb3edef290eac3d551bb40b24862f2fc75923",
+    "generated_sha256": "24f6c9086da845aa0edf7f5038b5414da17ca2d1e442d684d085285e11869e4a",
+    "translations": 6250,
+    "upstream_translations": 6226,
+    "additional_source": "native-core/locale/zh_CN.json",
+    "additional_source_sha256": "17896ff06145dcda41b6ba6fcf96df09fd68968faf7ea7939ceca237ebebad58",
+    "portable_formats": 66,
+    "fuzzy_entries_excluded": true
+  },
+  "overlays": {
+    "git-next-eol.c": "2917f5bf6e0e9f5c6b1584899f0e40c43f3d61630d22e00d89fdd04128f4a4e0",
+    "git-next-iconv.c": "a5b5a28765e412993e3affbae4fdfa8b2ed57bb8d8f5261ce88cac527f375217",
+    "git-next-iconv.h": "9649f219086235de6df66a5b98736956e8548a56087c21d1d0f189dfdb501876",
+    "git-next-printf.c": "ce3341ca0df3c48ea3345cf1819a793d4b206a25c50a70e318c9877d1f0bb907",
+    "git-next-printf.h": "21fd17527713f867640f227d23652abd938bacd4f6654f1ce820db6edf8778fa",
+    "git-next.c": "74273b29152415c9d9ba651ea9500c0760e3eee938e5142082bac8d4f3e086d1",
+    "git-next.h": "f06368b1c2c5925ebe13c6958b2890f228a1f64cb121e53e0c95089e92217a46",
+    "yyjson.c": "ac2e9bbb2e2d9149d90878d40506a1d624fa0b33c979a11b61075c54782c6d6a",
+    "yyjson.h": "175867c5493a5df648cec566717fa1c29aa2f6096f5f0cf1efad0b65e1f6d7b3"
+  },
+  "patch_series_sha256": "77488cb17076f7ebf8cfaedac17e8f51b57eb9e36fbdc96692bfc5be7e79ef9f",
+  "runtime_archives": {
+    "windows-x64": {
+      "archive_url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.tar.bz2",
+      "archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd"
+    },
+    "windows-arm64": {
+      "archive_url": "https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-arm64.tar.bz2",
+      "archive_sha256": "ce10b24c74ac9c724ab81e2ee30d06e7ee693977a552b8da4e434e909a641847"
+    }
+  },
+  "iconv_imports": {
+    "x64": {
+      "schema_version": 1,
+      "status": "iconv-imports-prepared-not-runtime-accepted",
+      "platform": "windows-x64",
+      "upstream_runtime_archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd",
+      "dll_sha256": "7a282a854e01be726c6cccfe46f548c716aa45b3014818468253aaa4efbcd067",
+      "header_sha256": "9649f219086235de6df66a5b98736956e8548a56087c21d1d0f189dfdb501876",
+      "import_library_sha256": "1d4f4eedaf67eb9b84f66238b77c175d9034a1c20e960cd41deb03fcee0cee1c",
+      "exported_api": [
+        "libiconv",
+        "libiconv_close",
+        "libiconv_open"
+      ],
+      "errno_bridge": "native-core/overlay/git-next-iconv.c",
+      "product_executed": false,
+      "tests_executed": false,
+      "installed": false,
+      "release_eligible": false
+    },
+    "arm64": {
+      "schema_version": 1,
+      "status": "iconv-imports-prepared-not-runtime-accepted",
+      "platform": "windows-arm64",
+      "upstream_runtime_archive_sha256": "ce10b24c74ac9c724ab81e2ee30d06e7ee693977a552b8da4e434e909a641847",
+      "dll_sha256": "5eb3e024adbeb40e990530b64498fa5305b4ebeaa34db971196f92317f70a35d",
+      "header_sha256": "9649f219086235de6df66a5b98736956e8548a56087c21d1d0f189dfdb501876",
+      "import_library_sha256": "09c83440d1d5b29fd9addfdd470870ac93c0b492d26903acbb272e0e2bc30a71",
+      "exported_api": [
+        "libiconv",
+        "libiconv_close",
+        "libiconv_open"
+      ],
+      "errno_bridge": "native-core/overlay/git-next-iconv.c",
+      "product_executed": false,
+      "tests_executed": false,
+      "installed": false,
+      "release_eligible": false
+    }
+  }
+}

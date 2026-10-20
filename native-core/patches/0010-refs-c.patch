@@ -1,0 +1,14 @@
+--- a/refs.c
++++ b/refs.c
+@@ -703,9 +703,9 @@
+ #ifdef WITH_BREAKING_CHANGES
+ 		ret = xstrdup("main");
+ #else
+-		ret = xstrdup("master");
++		ret = xstrdup("main");
+ #endif /* WITH_BREAKING_CHANGES */
+-		if (!quiet)
++		if (!quiet && strcmp(ret, "main"))
+ 			advise_if_enabled(ADVICE_DEFAULT_BRANCH_NAME,
+ 					  _(default_branch_name_advice), ret);
+ 	}

@@ -1,0 +1,22 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -275,7 +275,7 @@
+ 
+ #Platform Specific
+ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+-	if(CMAKE_C_COMPILER_ID STREQUAL "MSVC" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")
++	if(MSVC)
+ 		include_directories(${CMAKE_SOURCE_DIR}/compat/vcbuild/include)
+ 		add_compile_definitions(_CRT_SECURE_NO_WARNINGS _CRT_NONSTDC_NO_DEPRECATE)
+ 	endif()
+@@ -1284,7 +1284,9 @@
+ 
+ # This test script takes an extremely long time and is known to time out even
+ # on fast machines because it requires in excess of one hour to run
+-set_tests_properties("t.suite.t7112-reset-submodule" PROPERTIES TIMEOUT 4000)
++if(TEST "t.suite.t7112-reset-submodule")
++	set_tests_properties("t.suite.t7112-reset-submodule" PROPERTIES TIMEOUT 4000)
++endif()
+ 
+ endif()#BUILD_TESTING
+ 

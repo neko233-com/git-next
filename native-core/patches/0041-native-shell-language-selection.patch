@@ -1,0 +1,35 @@
+--- a/git-sh-i18n.sh
++++ b/git-sh-i18n.sh
+@@ -16,8 +16,11 @@
+ export TEXTDOMAINDIR
+ 
+ # First decide what scheme to use...
+-GIT_INTERNAL_GETTEXT_SH_SCHEME=fallthrough
+-if test -n "@USE_GETTEXT_SCHEME@"
++GIT_INTERNAL_GETTEXT_SH_SCHEME=git-next
++if test "$GIT_INTERNAL_GETTEXT_SH_SCHEME" = git-next
++then
++	: the owned core selects the language and compiled catalog
++elif test -n "@USE_GETTEXT_SCHEME@"
+ then
+ 	GIT_INTERNAL_GETTEXT_SH_SCHEME="@USE_GETTEXT_SCHEME@"
+ elif test -n "$GIT_INTERNAL_GETTEXT_TEST_FALLBACKS"
+@@ -38,6 +41,18 @@
+ 
+ # ... and then follow that decision.
+ case "$GIT_INTERNAL_GETTEXT_SH_SCHEME" in
++git-next)
++	gettext () {
++		git i18n--gettext -- "$1"
++	}
++
++	eval_gettext () {
++		gettext "$1" | (
++			export PATH $(git sh-i18n--envsubst --variables "$1");
++			git sh-i18n--envsubst "$1"
++		)
++	}
++	;;
+ gnu)
+ 	# Use libintl's gettext.sh, or fall back to English if we can't.
+ 	. gettext.sh

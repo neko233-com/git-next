@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "scope": "warm status on separate equivalent native-created zero-stat indexes; process creation and output included",
+  "versions": {
+    "git_next": "git-next version 0.3.0-dev (experimental)",
+    "before_refresh": "git-next version 0.3.0-dev (experimental)",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "binary_sha256": {
+    "git_next": "1a8586643f4f19dfd85b4709cf390def289068073570485560c3213c7c4250aa",
+    "before_refresh": "48664c5164947490fb3fd0633d65695fd59b80fb2315f972085c6beef5b315e3",
+    "git": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5"
+  },
+  "os": "Windows-11-10.0.26300-SP0",
+  "cpu_count": 32,
+  "files": 1000,
+  "runs_per_client": 40,
+  "randomized_order_seed": 233,
+  "runtime_git_on_native_path": false,
+  "first_status_ms": {
+    "before_refresh": 96.716,
+    "git_next": 119.841,
+    "git": 116.805
+  },
+  "results": {
+    "git_next": {
+      "median_ms": 41.487,
+      "p95_ms": 45.621
+    },
+    "before_refresh": {
+      "median_ms": 95.104,
+      "p95_ms": 99.516
+    },
+    "git": {
+      "median_ms": 38.118,
+      "p95_ms": 43.911
+    }
+  },
+  "full_git_parity": false
+}

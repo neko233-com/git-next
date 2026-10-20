@@ -1,0 +1,28 @@
+--- a/connect.c
++++ b/connect.c
+@@ -1,6 +1,7 @@
+ #define USE_THE_REPOSITORY_VARIABLE
+ 
+ #include "git-compat-util.h"
++#include "exec-cmd.h"
+ #include "config.h"
+ #include "environment.h"
+ #include "gettext.h"
+@@ -1391,8 +1392,16 @@
+ 		conn->use_shell = 0;
+ 
+ 		ssh = getenv("GIT_SSH");
+-		if (!ssh)
++		if (!ssh) {
++#ifdef GIT_WINDOWS_NATIVE
++			static const char *owned_ssh;
++			if (!owned_ssh)
++				owned_ssh = system_path("runtime/usr/bin/ssh.exe");
++			ssh = owned_ssh;
++#else
+ 			ssh = "ssh";
++#endif
++		}
+ 		variant = determine_ssh_variant(ssh, 0);
+ 	}
+ 

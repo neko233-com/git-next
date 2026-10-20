@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "integrated-core-compiled-not-runtime-accepted",
+  "utc": "2026-10-20T04:17:48.966520+00:00",
+  "source_tree_sha256": "6b28f700f6b6fbde8ff446c054dbabdeadadd2637074b8d080b5b5af4d73e26a",
+  "upstream_commit": "2b8a3ab140826ac423c2845ef81d4c6ac4f7bf3c",
+  "product_version": "0.3.0-dev",
+  "binaries": {
+    "git.exe": {
+      "sha256": "788fb9f525436b59d76ff78e7502368193a527f1873c2afc0e5d7443dff7437e",
+      "bytes": 5238784
+    },
+    "git-remote-http.exe": {
+      "sha256": "26ab95ad5b8e0180e55b62c1d14d776f5c002deb409c40c7e2327ac22625a31d",
+      "bytes": 2999808
+    },
+    "git-http-fetch.exe": {
+      "sha256": "7589644f5f6f543c2b24d85bcf4287e2d277c89e85d299f684d99752a852ffcb",
+      "bytes": 2982912
+    },
+    "git-http-push.exe": {
+      "sha256": "6867bebd651dcb497ca5ad77d12ca398d064507a795e4abd60d985deef65346d",
+      "bytes": 3785216
+    },
+    "git-http-backend.exe": {
+      "sha256": "e01a63bb8d91e506ef757ab411c271391058ae33045f5f55c5e42e587ab45430",
+      "bytes": 2168320
+    },
+    "git-daemon.exe": {
+      "sha256": "2c2b7a502c8110b982183981ae6e87dd5d830b57497b30c15248e3823ab67c2b",
+      "bytes": 2172416
+    },
+    "git-shell.exe": {
+      "sha256": "d61c9ca41864ec216568b912270526161b1a47b3da811ef7594009c52e0e6ff5",
+      "bytes": 2155008
+    },
+    "scalar.exe": {
+      "sha256": "c4930f2c4c1b44a32c8c064fab13d60e826fea43925e846533bc675fa965d6a4",
+      "bytes": 2201088
+    }
+  },
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "scope": "D03/D04 implementation integration and Windows x64 compilation only; D08/D09 acceptance pending",
+  "catalog": {
+    "source": "po/zh_CN.po",
+    "source_sha256": "109273a7ec724df58ab363b9701fb3edef290eac3d551bb40b24862f2fc75923",
+    "generated_sha256": "24f6c9086da845aa0edf7f5038b5414da17ca2d1e442d684d085285e11869e4a",
+    "translations": 6250,
+    "upstream_translations": 6226,
+    "additional_source": "native-core/locale/zh_CN.json",
+    "additional_source_sha256": "17896ff06145dcda41b6ba6fcf96df09fd68968faf7ea7939ceca237ebebad58",
+    "portable_formats": 66,
+    "fuzzy_entries_excluded": true
+  },
+  "overlays": {
+    "git-next-eol.c": "bdc7d07f5793106157c623cfe24a18e722805bac3d25bca251edd487568c1afe",
+    "git-next-printf.c": "ce3341ca0df3c48ea3345cf1819a793d4b206a25c50a70e318c9877d1f0bb907",
+    "git-next-printf.h": "21fd17527713f867640f227d23652abd938bacd4f6654f1ce820db6edf8778fa",
+    "git-next.c": "74273b29152415c9d9ba651ea9500c0760e3eee938e5142082bac8d4f3e086d1",
+    "git-next.h": "bb4ac7bdc8244a3a3781819b9f087a7f21ba33f377ddd1a7072d29cb2e52b4f2",
+    "yyjson.c": "ac2e9bbb2e2d9149d90878d40506a1d624fa0b33c979a11b61075c54782c6d6a",
+    "yyjson.h": "175867c5493a5df648cec566717fa1c29aa2f6096f5f0cf1efad0b65e1f6d7b3"
+  },
+  "patch_series_sha256": "f13f0eaaeb0edcb580f3b3c8e8dffbab874a85ecd6ba06c065bc4e7c7808e346"
+}

@@ -1,0 +1,7 @@
+{
+  "version": "0.21.5",
+  "source": "https://raw.githubusercontent.com/rockdaboot/libpsl/0.21.5/include/libpsl.h.in",
+  "sha256": "6591fd46b9846403f59d436b11cbb1017f3031801181a7b258a1d3729ad57be9",
+  "license": "MIT",
+  "scope": "Public ABI header only; provider DLL provenance is the pinned Windows runtime asset manifest"
+}

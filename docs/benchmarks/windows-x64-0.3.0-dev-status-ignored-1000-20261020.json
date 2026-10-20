@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "git_next": "git-next version 0.3.0-dev (experimental)",
+    "git": "git version 2.54.0.windows.1",
+    "git_next_baseline": "git-next version 0.3.0-dev (experimental)"
+  },
+  "harness_sha256": "cd2a31408d2deaccd758cda214615204a21ab69269f65301153b7705879e8694",
+  "binary_sha256": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+  "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+  "source_hash_origin": "current build inputs",
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "files": 1000,
+  "runs_per_client_per_command": 40,
+  "configured_data_directories": 16,
+  "actual_data_directories": 16,
+  "command_timeout_seconds": 120,
+  "fixture_layout": "loose",
+  "fixture_local_eol": "existing isolated/system settings",
+  "randomized_order_seed": 233,
+  "runtime_git_ssh_on_path": false,
+  "client_core_fscache": "default",
+  "system_configuration": "enabled conventional filesystem paths",
+  "results": {
+    "version": {
+      "git_next": {
+        "median_ms": 7.063,
+        "p95_ms": 8.442,
+        "min_ms": 5.663
+      },
+      "git": {
+        "median_ms": 19.115,
+        "p95_ms": 19.965,
+        "min_ms": 16.343
+      },
+      "git_next_baseline": {
+        "median_ms": 7.184,
+        "p95_ms": 7.761,
+        "min_ms": 6.079
+      }
+    },
+    "rev_parse": {
+      "git_next": {
+        "median_ms": 10.936,
+        "p95_ms": 12.078,
+        "min_ms": 10.054
+      },
+      "git": {
+        "median_ms": 20.37,
+        "p95_ms": 21.988,
+        "min_ms": 18.565
+      },
+      "git_next_baseline": {
+        "median_ms": 10.862,
+        "p95_ms": 11.955,
+        "min_ms": 9.719
+      }
+    },
+    "status_clean": {
+      "git_next": {
+        "median_ms": 16.334,
+        "p95_ms": 17.243,
+        "min_ms": 14.86
+      },
+      "git": {
+        "median_ms": 25.846,
+        "p95_ms": 27.611,
+        "min_ms": 23.841
+      },
+      "git_next_baseline": {
+        "median_ms": 16.503,
+        "p95_ms": 17.928,
+        "min_ms": 14.982
+      }
+    },
+    "cat_file": {
+      "git_next": {
+        "median_ms": 11.185,
+        "p95_ms": 12.28,
+        "min_ms": 10.143
+      },
+      "git": {
+        "median_ms": 21.016,
+        "p95_ms": 23.743,
+        "min_ms": 19.696
+      },
+      "git_next_baseline": {
+        "median_ms": 11.18,
+        "p95_ms": 12.644,
+        "min_ms": 10.106
+      }
+    },
+    "diff_clean": {
+      "git_next": {
+        "median_ms": 15.386,
+        "p95_ms": 17.106,
+        "min_ms": 14.232
+      },
+      "git": {
+        "median_ms": 22.278,
+        "p95_ms": 24.883,
+        "min_ms": 20.264
+      },
+      "git_next_baseline": {
+        "median_ms": 15.305,
+        "p95_ms": 17.358,
+        "min_ms": 14.085
+      }
+    },
+    "show_metadata": {
+      "git_next": {
+        "median_ms": 11.535,
+        "p95_ms": 13.581,
+        "min_ms": 10.261
+      },
+      "git": {
+        "median_ms": 23.179,
+        "p95_ms": 26.501,
+        "min_ms": 20.625
+      },
+      "git_next_baseline": {
+        "median_ms": 11.778,
+        "p95_ms": 13.889,
+        "min_ms": 10.32
+      }
+    },
+    "log_metadata": {
+      "git_next": {
+        "median_ms": 12.119,
+        "p95_ms": 13.591,
+        "min_ms": 10.912
+      },
+      "git": {
+        "median_ms": 23.358,
+        "p95_ms": 25.318,
+        "min_ms": 20.866
+      },
+      "git_next_baseline": {
+        "median_ms": 12.201,
+        "p95_ms": 13.316,
+        "min_ms": 11.066
+      }
+    }
+  },
+  "full_git_parity": false,
+  "native_baseline_identity": {
+    "binary_sha256": "ecf1b66b6dd11075aed235579ece1a8ffaf07d88e2717b19a77858029723c42d",
+    "source_tree_sha256": "12462786684b9e50dfeb56d1b818dc4007a18861577b3dca698da0b6d8fd1a98"
+  }
+}

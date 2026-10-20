@@ -1,0 +1,17 @@
+--- a/git.rc.in
++++ b/git.rc.in
+@@ -7,11 +7,11 @@
+   BEGIN
+     BLOCK "040904b0"   /* LANG_ENGLISH/SUBLANG_ENGLISH_US, Unicode CP */
+     BEGIN
+-      VALUE "CompanyName", "The Git Development Community\0"
+-      VALUE "FileDescription", "Git for Windows\0"
++      VALUE "CompanyName", "git-next contributors; based on Git\0"
++      VALUE "FileDescription", "git-next native Git-compatible client\0"
+       VALUE "InternalName", "git\0"
+       VALUE "OriginalFilename", "git.exe\0"
+-      VALUE "ProductName", "Git\0"
++      VALUE "ProductName", "git-next\0"
+       VALUE "ProductVersion", "@GIT_VERSION@\0"
+       VALUE "FileVersion", "@GIT_VERSION@\0"
+     END

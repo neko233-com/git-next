@@ -1,0 +1,15 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -892,7 +892,11 @@
+ list(TRANSFORM perl_modules REPLACE "${CMAKE_SOURCE_DIR}/" "")
+ 
+ #create perl header
+-file(STRINGS ${CMAKE_SOURCE_DIR}/perl/header_templates/fixed_prefix.template.pl perl_header )
++if(WIN32)
++	file(STRINGS ${CMAKE_SOURCE_DIR}/perl/header_templates/fixed_prefix.template.pl perl_header )
++else()
++	file(STRINGS ${CMAKE_SOURCE_DIR}/git-next-perl-header.pl perl_header)
++endif()
+ string(REPLACE "@PATHSEP@" ":" perl_header "${perl_header}")
+ string(REPLACE "@INSTLIBDIR@" "${INSTLIBDIR}" perl_header "${perl_header}")
+ file(WRITE ${CMAKE_BINARY_DIR}/GIT-PERL-HEADER ${perl_header})

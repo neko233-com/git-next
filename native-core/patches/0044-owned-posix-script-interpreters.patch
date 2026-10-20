@@ -1,0 +1,28 @@
+--- a/run-command.c
++++ b/run-command.c
+@@ -1,6 +1,7 @@
+ #define DISABLE_SIGN_COMPARE_WARNINGS
+ 
+ #include "git-compat-util.h"
++#include "git-next.h"
+ #include "run-command.h"
+ #include "environment.h"
+ #include "exec-cmd.h"
+@@ -407,7 +408,7 @@
+ 	set_error_routine(old_errfn);
+ }
+ 
+-static int prepare_cmd(struct strvec *out, const struct child_process *cmd)
++static int prepare_cmd(struct strvec *out, struct child_process *cmd)
+ {
+ 	if (!cmd->args.v[0])
+ 		BUG("command is empty");
+@@ -444,7 +445,7 @@
+ 		}
+ 	}
+ 
+-	return 0;
++	return git_next_prepare_interpreter(out, &cmd->env);
+ }
+ 
+ static char **prep_childenv(const char *const *deltaenv)

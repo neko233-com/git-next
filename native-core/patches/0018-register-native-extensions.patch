@@ -1,0 +1,26 @@
+--- a/git.c
++++ b/git.c
+@@ -536,6 +536,10 @@
+ }
+ 
+ static struct cmd_struct commands[] = {
++	{ "language", cmd_git_next_language, 0 },
++	{ "eol", cmd_git_next_eol, 0 },
++	{ "compatibility", cmd_git_next_report, 0 },
++	{ "doctor", cmd_git_next_report, 0 },
+ 	{ "add", cmd_add, RUN_SETUP | NEED_WORK_TREE },
+ 	{ "am", cmd_am, RUN_SETUP | NEED_WORK_TREE },
+ 	{ "annotate", cmd_annotate, RUN_SETUP },
+@@ -990,12 +994,6 @@
+ 	 */
+ 	setup_path();
+ 
+-	{
+-		int result = git_next_command(argc, argv);
+-		if (result >= 0)
+-			return result;
+-	}
+-
+ 	for (int i = 0; i < argc; i++)
+ 		strvec_push(&args, argv[i]);
+ 

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "version": "2.54.0",
+  "manuals": {
+    "asset": "git-manpages-2.54.0.tar.xz",
+    "url": "https://www.kernel.org/pub/software/scm/git/git-manpages-2.54.0.tar.xz",
+    "sha256": "292062d18f3a215213ea8317ed22b94f02ad9572520b9293164d7db3eb888953",
+    "bytes": 622912,
+    "metadata_source": "https://www.kernel.org/pub/software/scm/git/sha256sums.asc",
+    "metadata_sha256": "651650b65a26b27d1bcbc150c700cd23353060a0e8ad22d261c8ff993430397d",
+    "trust": "official-https-checksum-list",
+    "publisher_signature_verified": false
+  },
+  "portable_ui_and_html": {
+    "producer": "git-for-windows/git",
+    "tag": "v2.54.0.windows.1",
+    "archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd"
+  },
+  "license": "per-file-upstream-notices",
+  "product_executed": false,
+  "tests_executed": false
+}

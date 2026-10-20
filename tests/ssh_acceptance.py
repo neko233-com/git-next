@@ -132,6 +132,9 @@ def main():
             run("clone", "ssh://fixture/repository.git", str(target))
             assert (target / "README.md").read_bytes() == b"native ssh\n"
             subprocess.run([reference, "fsck", "--full"], cwd=target, env=env, check=True, capture_output=True)
+            expected_refs = subprocess.run([reference, "ls-remote", str(source)], env=env,
+                                           check=True, capture_output=True).stdout.splitlines()
+            assert expected_refs and sorted(run("ls-remote", "ssh://fixture/repository.git").splitlines()) == sorted(expected_refs)
             empty_known = root / "unknown_hosts"
             empty_known.write_text("")
             run("ls-remote", "ssh://fixture/repository.git", trusted=empty_known, success=False)
@@ -140,6 +143,7 @@ def main():
             wrong.write_text(f"[127.0.0.1]:{port} {other.get_name()} {other.get_base64()}\n", encoding="utf-8")
             run("ls-remote", "ssh://fixture/repository.git", trusted=wrong, success=False)
             print(json.dumps({"status": "pass", "embedded_ssh_clone": True, "host_config": True,
+                              "advertised_refs_match_reference": True,
                               "unknown_host_rejected": True, "changed_host_rejected": True,
                               "client_path_contains_git_or_ssh": False, "production_accessed": False}, indent=2))
         finally:

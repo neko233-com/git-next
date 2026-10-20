@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "binary_sha256": "bb56bd09b241aacfce291b157124ec1e7811ff7c99110de888d575fd0414f5f0",
+  "source_tree_sha256": "458af23b856b3e73cd49d41570c0db17c26480e9385f061deed5af1c1aca79fd",
+  "harness_sha256": "feefc5ff6e6283ff0a1e519efc67b41f37309c9d4eccaafe8c948e2c03ae1609",
+  "http_fixture_sha256": "d23fc9826dd445c44a977ebdde3f61b361ec4a7d14a6852fbfa0ab185cbb960c",
+  "versions": {
+    "git_next": "git version 2.54.0.windows.1.git-next.0.3.0",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "files": 1000,
+  "initial_worktree_bytes": 270259,
+  "incremental_file_edits": 10,
+  "fixture_contents": "16 repeated LF text lines per data file; one attribute policy; next commit edits 10 files",
+  "measured_at_utc": "2026-10-20T15:39:58.876012+00:00",
+  "runs_per_client_per_command": 20,
+  "randomized_order_seed": 233,
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "results": {
+    "clone": {
+      "git_next": {
+        "median_ms": 647.878,
+        "p95_ms": 686.775,
+        "min_ms": 611.478,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 12820480,
+        "peak_working_set_p95_bytes": 12849152
+      },
+      "git": {
+        "median_ms": 638.482,
+        "p95_ms": 811.772,
+        "min_ms": 599.616,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 7241728,
+        "peak_working_set_p95_bytes": 7241728
+      }
+    },
+    "fetch": {
+      "git_next": {
+        "median_ms": 324.544,
+        "p95_ms": 371.997,
+        "min_ms": 292.614,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 12697600,
+        "peak_working_set_p95_bytes": 12726272
+      },
+      "git": {
+        "median_ms": 320.249,
+        "p95_ms": 362.118,
+        "min_ms": 302.363,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 7229440,
+        "peak_working_set_p95_bytes": 7241728
+      }
+    },
+    "pull_ff_only": {
+      "git_next": {
+        "median_ms": 418.85,
+        "p95_ms": 472.167,
+        "min_ms": 377.787,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 12818432,
+        "peak_working_set_p95_bytes": 12832768
+      },
+      "git": {
+        "median_ms": 418.478,
+        "p95_ms": 481.761,
+        "min_ms": 369.802,
+        "peak_working_set_samples": 20,
+        "peak_working_set_median_bytes": 7241728,
+        "peak_working_set_p95_bytes": 7254016
+      }
+    }
+  },
+  "performance_accepted": true,
+  "authenticated_request_counts": {
+    "clone": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "fetch": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "pull_ff_only": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "runtime_git_ssh_on_path": false,
+  "scope": "loopback smart HTTPS, temporary private CA and static fixture authorization; clone/fetch/ff-only pull",
+  "system_configuration": "disabled with isolated profiles and explicit input/LF fixture policy",
+  "tls_backends": {
+    "git_next": "Schannel",
+    "git": "Schannel"
+  },
+  "memory_scope": "Windows primary process peak working set; queried after latency interval; transport/child processes excluded",
+  "certificate_verification": "enabled; private fixture CA and loopback IP SAN; no user trust store changes",
+  "http_response_protocol": "HTTP/1.0",
+  "protocol_scope": "fixture default smart HTTP; no v2 packet or object-reuse acceptance",
+  "verification": "each trial verifies HEAD/tracking refs, all worktree bytes, staged IDs, fsck and unchanged source object bytes; fetch preserves HEAD/index/worktree",
+  "packet_bytes_or_object_reuse_proven": false,
+  "real_provider_login_verified": false,
+  "full_git_parity": false
+}

@@ -1,0 +1,36 @@
+{
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "platform": "Windows x64",
+  "client_sha256": "451b2b341603907500f2c14bb7be2ed2f2fcb0157bd0bc3102fbf40b8f5b20e7",
+  "helpers": [
+    {
+      "name": "git-next-lfs.exe",
+      "sha256": "76b385c4f886ff9e3af104e8c9cb5dd90ea130883a304d47b161148ca26418fc"
+    },
+    {
+      "name": "git-next-lfs-filter.exe",
+      "sha256": "d3e6c63a4f7fe59ba6ca57da9e2654990cf10a4c5b075b9fd1b245bf0f3e26d1"
+    }
+  ],
+  "installed_bytes_match": true,
+  "system_git_replaced": false,
+  "replacement_ready": false,
+  "original_git_and_profile_files_unchanged": true,
+  "user_path_unchanged": true,
+  "real_existing_login_verified": false,
+  "checks": [
+    "Rust tests",
+    "format/clippy",
+    "diff/show/log byte and exit comparison",
+    "repository-no-write checks",
+    "local repository",
+    "worktree",
+    "config",
+    "status cache",
+    "native LFS",
+    "HTTPS LFS",
+    "isolated Windows installation",
+    "installed read-command suite"
+  ]
+}

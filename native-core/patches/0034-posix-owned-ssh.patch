@@ -1,0 +1,14 @@
+--- a/connect.c
++++ b/connect.c
+@@ -1399,7 +1399,10 @@
+ 				owned_ssh = system_path("runtime/usr/bin/ssh.exe");
+ 			ssh = owned_ssh;
+ #else
+-			ssh = "ssh";
++			static const char *owned_ssh;
++			if (!owned_ssh)
++				owned_ssh = system_path("runtime/usr/bin/ssh");
++			ssh = owned_ssh;
+ #endif
+ 		}
+ 		variant = determine_ssh_variant(ssh, 0);

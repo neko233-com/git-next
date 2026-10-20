@@ -1,0 +1,20 @@
+--- a/setup.c
++++ b/setup.c
+@@ -7,6 +7,7 @@
+ #include "environment.h"
+ #include "exec-cmd.h"
+ #include "gettext.h"
++#include "git-next.h"
+ #include "hex.h"
+ #include "object-file.h"
+ #include "object-name.h"
+@@ -2823,6 +2824,9 @@
+ 	reinit = create_default_files(template_dir, original_git_dir,
+ 				      &repo_fmt, init_shared_repository);
+ 
++	if (!reinit)
++		git_next_configure_new_repo(the_repository, !(flags & INIT_DB_SKIP_REFDB));
++
+ 	if (!(flags & INIT_DB_SKIP_REFDB))
+ 		create_reference_database(initial_branch, flags & INIT_DB_QUIET);
+ 	create_object_directory();

@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "git_next": "git version 2.54.0.windows.1.git-next.0.3.0",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "harness_sha256": "a5e62c48406fdca07148116d64a56ccdee27006dd3d9511a922f0d800537e38f",
+  "binary_sha256": "bb56bd09b241aacfce291b157124ec1e7811ff7c99110de888d575fd0414f5f0",
+  "source_tree_sha256": "458af23b856b3e73cd49d41570c0db17c26480e9385f061deed5af1c1aca79fd",
+  "source_hash_origin": "recorded checkpoint verified against binary hash",
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "files": 100000,
+  "runs_per_client_per_command": 40,
+  "configured_data_directories": 1000,
+  "actual_data_directories": 1000,
+  "command_timeout_seconds": 30,
+  "fixture_setup_timeout_seconds": 180,
+  "fixture_layout": "packed",
+  "fixture_local_eol": "input/lf",
+  "randomized_order_seed": 233,
+  "runtime_git_ssh_on_path": false,
+  "client_core_fscache": "default",
+  "system_configuration": "enabled conventional filesystem paths",
+  "results": {
+    "version": {
+      "git_next": {
+        "median_ms": 12.464,
+        "p95_ms": 15.573,
+        "min_ms": 10.907,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 10506240,
+        "peak_working_set_p95_bytes": 10522624
+      },
+      "git": {
+        "median_ms": 21.207,
+        "p95_ms": 26.988,
+        "min_ms": 18.753,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7241728
+      }
+    },
+    "rev_parse": {
+      "git_next": {
+        "median_ms": 14.936,
+        "p95_ms": 17.153,
+        "min_ms": 13.38,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 10913792,
+        "peak_working_set_p95_bytes": 10932224
+      },
+      "git": {
+        "median_ms": 23.218,
+        "p95_ms": 25.623,
+        "min_ms": 21.471,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7262208
+      }
+    },
+    "status_clean": {
+      "git_next": {
+        "median_ms": 86.173,
+        "p95_ms": 93.876,
+        "min_ms": 78.837,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 58095616,
+        "peak_working_set_p95_bytes": 58245120
+      },
+      "git": {
+        "median_ms": 95.485,
+        "p95_ms": 101.678,
+        "min_ms": 88.901,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7254016
+      }
+    },
+    "cat_file": {
+      "git_next": {
+        "median_ms": 15.978,
+        "p95_ms": 17.423,
+        "min_ms": 14.176,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 11247616,
+        "peak_working_set_p95_bytes": 11264000
+      },
+      "git": {
+        "median_ms": 24.278,
+        "p95_ms": 25.749,
+        "min_ms": 22.362,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7237632
+      }
+    },
+    "diff_clean": {
+      "git_next": {
+        "median_ms": 81.576,
+        "p95_ms": 101.088,
+        "min_ms": 72.816,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 53235712,
+        "peak_working_set_p95_bytes": 53346304
+      },
+      "git": {
+        "median_ms": 93.525,
+        "p95_ms": 116.364,
+        "min_ms": 79.539,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7258112
+      }
+    },
+    "show_metadata": {
+      "git_next": {
+        "median_ms": 70.424,
+        "p95_ms": 78.754,
+        "min_ms": 64.21,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 52105216,
+        "peak_working_set_p95_bytes": 52146176
+      },
+      "git": {
+        "median_ms": 57.774,
+        "p95_ms": 63.701,
+        "min_ms": 52.413,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7241728
+      }
+    },
+    "log_metadata": {
+      "git_next": {
+        "median_ms": 16.296,
+        "p95_ms": 18.466,
+        "min_ms": 15.074,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 11972608,
+        "peak_working_set_p95_bytes": 11988992
+      },
+      "git": {
+        "median_ms": 24.935,
+        "p95_ms": 27.699,
+        "min_ms": 22.589,
+        "peak_working_set_samples": 40,
+        "peak_working_set_median_bytes": 7233536,
+        "peak_working_set_p95_bytes": 7258112
+      }
+    }
+  },
+  "full_git_parity": false,
+  "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded"
+}

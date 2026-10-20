@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "status": "windows-migration-implementation-compiled-not-runtime-accepted",
+  "source_tree_sha256": "e2470599d1f8ad82fc052b3079dbe6af35e820425ccfd1972a702ea82ad21583",
+  "product_version": "0.3.0-dev",
+  "binaries": {
+    "git.exe": {
+      "sha256": "e84aeeae546caaa5cb41faabb3db87feea092adf5c006aadc5c0ae7f57eabe02",
+      "bytes": 5243904
+    },
+    "git-remote-http.exe": {
+      "sha256": "aed38f6b8214d2246319b777ce106f4aa9ee28354c357a1330a3d97c93eb7d07",
+      "bytes": 3141632
+    },
+    "git-http-fetch.exe": {
+      "sha256": "1970f0a479e5b918ba0dcab5d98e09f9ed0e884c78a7194c588e7f2fee015470",
+      "bytes": 3124736
+    },
+    "git-http-push.exe": {
+      "sha256": "0d670ed80fb6afdea927f30a19026f28c5f9f6fa19cdcb9649ac2baeb1126b38",
+      "bytes": 3926016
+    },
+    "git-http-backend.exe": {
+      "sha256": "68f8ac8416faea91269048f7adde30e17695b5305218d7ee36d21ac5d540212c",
+      "bytes": 2172928
+    },
+    "git-daemon.exe": {
+      "sha256": "0d4b98a58dd12d28fcab667af7585ae35c21b0901c04015442b29d2b43190bcd",
+      "bytes": 2175488
+    },
+    "git-shell.exe": {
+      "sha256": "8802dfe74ad9376437fc8fa6454bf4a86330216626792331013d1d6ac723866d",
+      "bytes": 2159616
+    },
+    "scalar.exe": {
+      "sha256": "b6a3861d23676222c438586316f67b5a960446468546a8b31b27e4a5db2e06c0",
+      "bytes": 2205696
+    },
+    "git-imap-send.exe": {
+      "sha256": "2702dd005b5bb42da26c8c08698fae78421b82a9d172fc440abc15fc75c52b25",
+      "bytes": 3118080
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "bbd372cb9d9991f052288037c4590a6576c0d0837745e68a6685b6e7af08c64d",
+      "bytes": 2155008
+    }
+  },
+  "bridge": {
+    "source_sha256": "5c7dc71786de576bd69044ddee7ef377153fa582af0aa4e9a799f6c42d39be5d",
+    "resource_sha256": "d3510791b697c92a186c571e428bf8c6ff1c3af267f9958c5b302e629894fc91",
+    "binaries": {
+      "git-next-bridge.exe": {
+        "sha256": "00aee334fcbce4cd0467fbd243ff896bc33346444989f263a8345103fa673b16",
+        "bytes": 8192
+      },
+      "git-next-bridge-gui.exe": {
+        "sha256": "aedb35a3c9edb8c87a004e470409c588e4435a42f21c05fde81cf12d7f4a5895",
+        "bytes": 7680
+      }
+    },
+    "imports": {
+      "git-next-bridge.exe": [
+        "kernel32.dll",
+        "advapi32.dll"
+      ],
+      "git-next-bridge-gui.exe": [
+        "kernel32.dll",
+        "advapi32.dll",
+        "user32.dll"
+      ]
+    }
+  },
+  "distribution": {
+    "files": 9742,
+    "bytes": 524181277,
+    "native_import_images_inspected": 50,
+    "manifest_sha256": "8ef2b6f26396090e4c88e1f0ae4bd5853300d2aa491498d7dbc78f893fae8486"
+  },
+  "msi": {
+    "asset": "git-next-0.3.0-dev-windows-x64.msi",
+    "complete_git_parity": false,
+    "distribution_manifest_sha256": "8ef2b6f26396090e4c88e1f0ae4bd5853300d2aa491498d7dbc78f893fae8486",
+    "installation_runtime_accepted": false,
+    "msi_version": "0.3.0",
+    "packaging_files": {
+      "native_msi.py": "bb28dc6bb9d060413d45f67e715d52c465e35538687a87daaeaa5da7e2228096",
+      "windows/Product.wxs": "24394059713041582aed7972bbb81c18e7f5469a23681380dc520b8985ca5120"
+    },
+    "payload_files": 9744,
+    "platform": "windows-x64",
+    "product_code": "{375B4094-581A-5516-B962-C4454FB8D244}",
+    "product_executed": false,
+    "release_eligible": false,
+    "sha256": "e8eee64217014a514b202f4a0c5375ae694257c3ee2486c032b81e31d1858f53",
+    "size": 117760549,
+    "source_tree_sha256": "e2470599d1f8ad82fc052b3079dbe6af35e820425ccfd1972a702ea82ad21583",
+    "status": "built-not-accepted",
+    "tests_executed": false,
+    "upgrade_code": "{981F8880-E13B-4D22-A36E-A1B166601663}",
+    "version": "0.3.0-dev",
+    "wix_version": "5.0.2+aa65968c"
+  },
+  "packaged_script_hashes": {
+    "updater/update.ps1": "f40378dd4091fc384888455a787e8aa5da6815c3650429462d4324509f685b9b",
+    "updater/Update.Core.psm1": "198f619d4f1cba583317ed1581208a20bedfdd5b3e81437bfa46de036fc34b76",
+    "updater/messages.zh-CN.json": "559fcef01b572f351485d9f318c993f78038e6af471aafadbd25382c83a38467",
+    "migration/takeover.ps1": "71be2f832a61773573225a1a0fb8d9b17375fc7ac9900b191b6ef73795bd4c07",
+    "migration/Takeover.Core.psm1": "f3a3adc82c167831a6cfb82d67201050c28122a1cf383101b3cc564d35d12202"
+  },
+  "current_script_hashes": {
+    "updater/update.ps1": "f40378dd4091fc384888455a787e8aa5da6815c3650429462d4324509f685b9b",
+    "updater/Update.Core.psm1": "198f619d4f1cba583317ed1581208a20bedfdd5b3e81437bfa46de036fc34b76",
+    "updater/messages.zh-CN.json": "dd1c649a16a6917a309772895215c28a1959fe7e5f33e6c66c38b543f4b1b375",
+    "migration/takeover.ps1": "2d8246b154d02ca52e96cdfbb55aea00fe1059d61ff2b638afcb1ab557110d4c",
+    "migration/Takeover.Core.psm1": "242ceafa48437a4e3681c129217e6f29d81292d08772f614b2e61f2e28a7ecaa"
+  },
+  "packaged_scripts_are_current": false,
+  "source_changes_after_package": "Added an explicit user-scope package field and a machine-to-user takeover rejection; the checkpoint MSI predates these source-only guards.",
+  "workstation_metadata": {
+    "original_git_registration_scope": "machine",
+    "direct_git_install_service_count": 0,
+    "indirect_service_callers_verified": false,
+    "accounts_or_credentials_queried": false
+  },
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "original_git_removed": false,
+  "release_eligible": false,
+  "remaining": [
+    "D05 machine-wide MSI/privileged updater/global caller and recovery support",
+    "D02 preserved customized runtime configuration consumers and other platform runtime inputs",
+    "D06 final update integration",
+    "D07 five-platform packages/source-license/batch inputs",
+    "D08-D10 consolidated acceptance and one final release/takeover"
+  ]
+}

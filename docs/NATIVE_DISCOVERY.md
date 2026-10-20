@@ -1,0 +1,23 @@
+# Native configuration discovery
+
+## Compatibility and rollout scope
+
+Configuration discovery must inspect files and environment variables without executing `git`, including when system configuration is enabled. The old Git executable is not a discovery API. Existing configuration, includes, credentials, repositories, objects, refs and LFS bytes remain in place.
+
+On Windows, recognize the conventional Git for Windows `cmd`, architecture-specific `bin`, and `libexec/git-core` layouts from `EXEPATH`, PATH and the existing conventional installation locations. Read the discovered installation's `etc/gitconfig` as system configuration and the existing `%PROGRAMDATA%/Git/config` as earlier system configuration. Apply `GIT_CONFIG_SYSTEM` and boolean `GIT_CONFIG_NOSYSTEM` before loading files, and load duplicate source paths only once. Relative includes keep their original parent directory. `config --system` selects the same system path inside and outside repositories.
+
+Auxiliary executable discovery honors `GIT_EXEC_PATH` and recognizes filesystem `libexec/git-core` directories without calling `git --exec-path`. Explicitly configured hooks, filters and credential helpers remain separate, authorized subprocesses; native repository operations never delegate to Git or OpenSSH. This change does not yet migrate helper dependencies out of an old Git installation.
+
+On Unix, retain `/etc/gitconfig` and recognize prefix-relative installation configuration and conventional auxiliary directories from filesystem paths. Recognize the active executable's Homebrew `Cellar/git/<version>/bin` or `opt/git/bin` layout after resolving symlinks, including the normal brew `bin/git` link and external links to that Cellar executable. Homebrew sets `sysconfdir` to the shared brew-prefix `etc`, outside Cellar; select that `etc/gitconfig` with system scope and preserve relative includes. `GIT_CONFIG_SYSTEM`, `GIT_CONFIG_NOSYSTEM` and `config --system` must use the same source, including explicit writes. An inactive distribution and a versioned Cellar `etc/gitconfig` are not merged into the selected Homebrew configuration. [Official Homebrew Git formula](https://github.com/Homebrew/homebrew-core/blob/main/Formula/g/git.rb).
+
+This is a filesystem/configuration-path change with no migration, copying or rewrite of existing files. Explicit config writes retain the normal lock/atomic-write behavior. Rollback is the previous binary. Unrecognized custom distribution paths require an explicit configuration path. Apple Git, actual Homebrew/macOS installation/helper login and Linux distribution variations still need their own acceptance; synthetic Linux layouts do not establish native Mac claims. The matching optimized source passes the Unix fixture and eight other local suites in Linux x64 and emulated ARM64 containers; exact bytes/images and limitations are recorded in [acceptance](ACCEPTANCE.md).
+
+No data migration or repacking is performed. The change adds a vendored `gix-path` patch and enables filesystem-only installation configuration in the existing `gix` loader. Rollback is the previous binary, preserving all original files and origins. Migration/removal of the old installation remains a separate, blocked takeover gate. Discovery allocates a bounded set of paths and avoids subprocess startup; performance claims require measurement of the final binary.
+
+## Acceptance
+
+`python tests/native_discovery_acceptance.py <binary>` isolates the client from any sibling `git` executable, enables system configuration, places an executable tripwire named `git` on PATH, and exercises init, configuration, includes, overrides and status. The fixture must read expected file values without triggering the tripwire. Reference Git is used only for independent fixture comparisons, never as the client's runtime implementation.
+
+The pre-change Windows binary fails this check during `init`: it executes the tripwire. The optimized and installed client `62d7a0cc8ee82e6eaa9254cb16da7ae24dd76e0b95426e2eb3c4acd363a4d586` passes; see [current acceptance](ACCEPTANCE.md).
+
+`python tests/native_discovery_unix_acceptance.py <binary>` runs on Unix. It creates temporary ordinary-prefix/Homebrew-bin/opt/Cellar/external-symlink layouts with executable tripwires, checks repository and non-repository contexts, system scope and overrides, helper multiplicity, relative includes and explicit system writes. The earlier Linux checkpoint reproduces the Homebrew failure. The fixture never modifies a host installation, existing login or user repository; actual Mac installation remains a separate gate.

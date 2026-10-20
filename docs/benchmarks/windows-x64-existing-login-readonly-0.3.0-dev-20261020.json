@@ -1,0 +1,100 @@
+{
+  "status": "pass",
+  "scope": "Existing GitHub HTTPS helper credential with native Git config callback, verified by a separate HTTPS authenticated-user API request; no private Git remote, new login, UI renewal or full migration acceptance",
+  "binary_sha256": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+  "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+  "https_existing_account_component": {
+    "status": "pass",
+    "scope": "Real existing GitHub HTTPS helper credential read and official authenticated-user API only; no private Git remote or full migration claim",
+    "binary_sha256": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+    "managed_helper_sha256": "b7f0e61535b7bab81ea11126ecf1e7ad4486426df69921a78a680dc40bae2c12",
+    "native_config_callback_used": true,
+    "original_git_openssh_on_path": false,
+    "interaction_disabled": true,
+    "helper_store_erase_invoked": false,
+    "credential_identity_or_token_values_recorded": false,
+    "provider_redirects_followed": false,
+    "helper_exit_code": 0,
+    "existing_helper_returned_credential": true,
+    "provider_identity_http_status": 200,
+    "profile_files_unchanged": true
+  },
+  "ssh_native_check": {
+    "status": "inconclusive",
+    "scope": "Real read-only public GitHub SSH ref query with existing local login; no private-repository or full compatibility claim",
+    "binary_sha256": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+    "client_path_contains_git_or_openssh": false,
+    "strict_host_key_verification_preserved": true,
+    "client_interactivity_disabled": true,
+    "credential_or_key_values_recorded": false,
+    "profile_files_unchanged": true,
+    "remote_repository_mutations": false,
+    "exit_code": 128,
+    "error_category": "existing_identity_authentication_not_accepted"
+  },
+  "ssh_direct_reference_check": {
+    "status": "diagnostic",
+    "scope": "Real read-only native SSH versus explicit direct OpenSSH default-identity comparison; no full-login acceptance",
+    "binaries_sha256": {
+      "native": "c425734c0640a587932cc2563db5cd41e5d4a624e1b09eaf26edfe3182f6de28",
+      "reference": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5",
+      "reference_ssh": "ff3de79218b536e7460e14f470cefca2c2516f2320ee8a54114c015254f37cef"
+    },
+    "results": [
+      {
+        "client": "native_existing_configuration",
+        "profile_unchanged": true,
+        "credential_or_key_values_recorded": false,
+        "exit_code": 128,
+        "advertised_main": false,
+        "diagnostic_flags": {
+          "unsupported_ssh_option": false,
+          "key_load_failure": false,
+          "identity_authentication_failure": true,
+          "host_key_failure": false,
+          "connection_failure": false
+        }
+      },
+      {
+        "client": "reference_direct_default_identity",
+        "profile_unchanged": true,
+        "credential_or_key_values_recorded": false,
+        "exit_code": 128,
+        "advertised_main": false,
+        "diagnostic_flags": {
+          "unsupported_ssh_option": false,
+          "key_load_failure": false,
+          "identity_authentication_failure": true,
+          "host_key_failure": false,
+          "connection_failure": false
+        }
+      }
+    ],
+    "original_git_used_only_as_reference": true,
+    "runtime_git_openssh_fallback_enabled": false,
+    "credential_or_key_values_recorded": false,
+    "default_identity_files_present": 1,
+    "profile_files_unchanged": true
+  },
+  "gcm_source": {
+    "source": "Official GCM v2.7.3 source archive",
+    "archive_sha256": "f92500aacf9628fbdd4a3abc123df106a20ad138006d216da035cd1eb096f1e7",
+    "zip_comment": "5fa7116896c82164996a609accd1c5ad90fe730a",
+    "matching_sources": [
+      "git-credential-manager-2.7.3/src/shared/Core.Tests/GitVersionTests.cs",
+      "git-credential-manager-2.7.3/src/shared/Core/CommandContext.cs",
+      "git-credential-manager-2.7.3/src/shared/Core/Constants.cs",
+      "git-credential-manager-2.7.3/src/shared/Core/GitVersion.cs"
+    ],
+    "scope": "Source inspection only; no source extraction or workflow execution"
+  },
+  "gcm_callback_resolution_source_sha256": "f1e30f75c80ca51b37090670f12ad965bb4d5bde8d9f55097911a9934ec57d90",
+  "harnesses_sha256": {
+    "probe_existing_gcm_readonly.py": "d5cf59813292135860df33e09b06e86f6416f1f4942c6fbdff754a643a4492de",
+    "probe_existing_ssh_readonly.py": "07bd62adca9eb95f1d7fa48bbbc114c0731375aebf586645b55d5f08aad78dc4",
+    "compare_existing_ssh_readonly.py": "4784d8806096cf719c1f74b1d63ffc642ac835258d12827065ce743a2cb67f6d"
+  },
+  "private_git_remote_accepted": false,
+  "complete_git_parity": false,
+  "system_git_replaced": false
+}

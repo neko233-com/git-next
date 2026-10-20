@@ -1,0 +1,2 @@
+# Shared text normalization; preserve explicit per-path and binary rules below.
+* text=auto eol=lf

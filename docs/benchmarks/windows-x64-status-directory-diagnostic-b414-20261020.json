@@ -1,0 +1,225 @@
+{
+  "status": "fail",
+  "binary_sha256": "b41410ed990bdf3973b3264ff2d719ab507c2175a80bf38d041c1889c8b3e674",
+  "harness_sha256": "cc32d37726db283c462caec07027194b98a97b153638fd95a65b81ef1dd5ed97",
+  "checks": [
+    "sha1: file/directory and nested repository --porcelain",
+    "sha1: file/directory and nested repository --porcelain -z",
+    "sha1: file/directory and nested repository --porcelain -uall",
+    "sha1: file/directory and nested repository --porcelain -- file",
+    "sha1: file/directory and nested repository --porcelain -- file/*.txt",
+    "sha1: file/directory and nested repository --porcelain -- loose",
+    "sha1: file/directory and nested repository --porcelain -- loose/*",
+    "sha1: file/directory and nested repository --porcelain -- loose :(exclude)loose/one.txt",
+    "sha1: file/directory and nested repository --porcelain -- tracked :(exclude)tracked/keep.txt",
+    "sha1: staged deletion and same-name untracked directory --porcelain",
+    "sha1: staged deletion and same-name untracked directory --porcelain -z",
+    "sha1: staged deletion and same-name untracked directory --porcelain -uall",
+    "sha1: staged deletion and same-name untracked directory --porcelain -uno",
+    "sha1: staged deletion and same-name untracked directory --porcelain -- file",
+    "sha1: tracked file replaced by empty directory --porcelain",
+    "sha256: file/directory and nested repository --porcelain",
+    "sha256: file/directory and nested repository --porcelain -z",
+    "sha256: file/directory and nested repository --porcelain -uall",
+    "sha256: file/directory and nested repository --porcelain -- file",
+    "sha256: file/directory and nested repository --porcelain -- file/*.txt",
+    "sha256: file/directory and nested repository --porcelain -- loose",
+    "sha256: file/directory and nested repository --porcelain -- loose/*",
+    "sha256: file/directory and nested repository --porcelain -- loose :(exclude)loose/one.txt",
+    "sha256: file/directory and nested repository --porcelain -- tracked :(exclude)tracked/keep.txt",
+    "sha256: staged deletion and same-name untracked directory --porcelain",
+    "sha256: staged deletion and same-name untracked directory --porcelain -z",
+    "sha256: staged deletion and same-name untracked directory --porcelain -uall",
+    "sha256: staged deletion and same-name untracked directory --porcelain -uno",
+    "sha256: staged deletion and same-name untracked directory --porcelain -- file",
+    "sha256: tracked file replaced by empty directory --porcelain"
+  ],
+  "mismatches": [
+    {
+      "object_format": "sha1",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D folder/old.txt\n?? file/\n?? folder\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": " D file\n D folder/old.txt\n?? folder\n?? loose/\n?? tracked/new.txt\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "-z"
+      ],
+      "actual": " D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/deep/\u0000?? loose/one.txt\u0000?? loose/subrepo/\u0000?? tracked/new.txt\u0000",
+      "expected": " D file\u0000 D folder/old.txt\u0000?? folder\u0000?? loose/\u0000?? tracked/new.txt\u0000"
+    },
+    {
+      "object_format": "sha1",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose"
+      ],
+      "actual": "?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose/*"
+      ],
+      "actual": "?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose",
+        ":(exclude)loose/one.txt"
+      ],
+      "actual": "?? loose/deep/\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D folder/old.txt\n?? file/\n?? folder\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": "D  file\n D folder/old.txt\n?? file/\n?? folder\n?? loose/\n?? tracked/new.txt\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain",
+        "-z"
+      ],
+      "actual": " D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/deep/\u0000?? loose/one.txt\u0000?? loose/subrepo/\u0000?? tracked/new.txt\u0000",
+      "expected": "D  file\u0000 D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/\u0000?? tracked/new.txt\u0000"
+    },
+    {
+      "object_format": "sha1",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "file"
+      ],
+      "actual": "D  file\n",
+      "expected": "D  file\n?? file/\n"
+    },
+    {
+      "object_format": "sha1",
+      "label": "tracked file replaced by empty directory",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D file\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": " D file\n?? loose/\n?? tracked/new.txt\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D folder/old.txt\n?? file/\n?? folder\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": " D file\n D folder/old.txt\n?? folder\n?? loose/\n?? tracked/new.txt\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "-z"
+      ],
+      "actual": " D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/deep/\u0000?? loose/one.txt\u0000?? loose/subrepo/\u0000?? tracked/new.txt\u0000",
+      "expected": " D file\u0000 D folder/old.txt\u0000?? folder\u0000?? loose/\u0000?? tracked/new.txt\u0000"
+    },
+    {
+      "object_format": "sha256",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose"
+      ],
+      "actual": "?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose/*"
+      ],
+      "actual": "?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "file/directory and nested repository",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "loose",
+        ":(exclude)loose/one.txt"
+      ],
+      "actual": "?? loose/deep/\n?? loose/subrepo/\n",
+      "expected": "?? loose/\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D folder/old.txt\n?? file/\n?? folder\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": "D  file\n D folder/old.txt\n?? file/\n?? folder\n?? loose/\n?? tracked/new.txt\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain",
+        "-z"
+      ],
+      "actual": " D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/deep/\u0000?? loose/one.txt\u0000?? loose/subrepo/\u0000?? tracked/new.txt\u0000",
+      "expected": "D  file\u0000 D folder/old.txt\u0000?? file/\u0000?? folder\u0000?? loose/\u0000?? tracked/new.txt\u0000"
+    },
+    {
+      "object_format": "sha256",
+      "label": "staged deletion and same-name untracked directory",
+      "arguments": [
+        "--porcelain",
+        "--",
+        "file"
+      ],
+      "actual": "D  file\n",
+      "expected": "D  file\n?? file/\n"
+    },
+    {
+      "object_format": "sha256",
+      "label": "tracked file replaced by empty directory",
+      "arguments": [
+        "--porcelain"
+      ],
+      "actual": " D file\n?? loose/deep/\n?? loose/one.txt\n?? loose/subrepo/\n?? tracked/new.txt\n",
+      "expected": " D file\n?? loose/\n?? tracked/new.txt\n"
+    }
+  ],
+  "runtime_git_ssh_on_path": false,
+  "scope": "Retained b414 file/directory and nested-repository status output failure; all native index/HEAD no-write checks pass"
+}

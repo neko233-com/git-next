@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "status": "windows-scope-implementation-complete-not-runtime-accepted",
+  "product_version": "0.3.0-dev",
+  "source_tree_sha256": "48de5b3bf8da7d628e4c178989b3e3f8739b4634f2fed98150d11dd4feafce5c",
+  "git_compatibility_version": "2.54.0.windows.1.git-next.0.3.0-dev",
+  "generated_version_header_sha256": "c64dea716f45a1ae04e626037770bf6b0bdce37b880a058e6fce67ad302e78b6",
+  "binaries": {
+    "git.exe": {
+      "sha256": "b6e5816ebc7df0fe2bf188fcde07217c0b4ac77a02c75a38583684d888664d41",
+      "bytes": 5246464
+    },
+    "git-remote-http.exe": {
+      "sha256": "2c848a1d394ba0c4de521cb69ead11af3c2fc9dff7eb55c631c9ecf49053c341",
+      "bytes": 3142656
+    },
+    "git-http-fetch.exe": {
+      "sha256": "43f3719a0c4eddc73f88e55dfaf78b65f03407b249bba4d8711bf154e32c5652",
+      "bytes": 3125760
+    },
+    "git-http-push.exe": {
+      "sha256": "f2f55464a2f7ade89853ba706951401c9d558280ea3e5f3146271ea677e3203f",
+      "bytes": 3927040
+    },
+    "git-http-backend.exe": {
+      "sha256": "2bcb476955bbf7b62f8e217c490bc12321f3eb91df3c0765d48d8e1b6d8c1a56",
+      "bytes": 2173952
+    },
+    "git-daemon.exe": {
+      "sha256": "3619693fa74a93e8aec537b8c7f7e367595f6d330090d3ed013f69df743927cb",
+      "bytes": 2177024
+    },
+    "git-shell.exe": {
+      "sha256": "e9781a01a45d7f3f99f1a7de12c2f7e27dd1890628bbcad940de0b3e4ba1c4b9",
+      "bytes": 2160128
+    },
+    "scalar.exe": {
+      "sha256": "aeb8100d634d3fbbc2bf262d692e77349af7b4a06a10394596e3729c7c91be95",
+      "bytes": 2206720
+    },
+    "git-imap-send.exe": {
+      "sha256": "7b6e7e20c81d8b290cfe28e076e790cfa6ee96f6385ba1d68984eb15fa02ec81",
+      "bytes": 3119104
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "7e8fcfd7349964a16772d521a57e86be406ef68272280315c42fa88cdc459353",
+      "bytes": 2156032
+    }
+  },
+  "current_source_files": {
+    "install.ps1": "b24838057d07e82688b45aede233b674b93722e2f16c9e1802791a459967f0dd",
+    "packaging/native_msi.py": "a040dd7014f60ab0ea4c5b7caadf2c7a8bfffc8c854ba139fe18d30e6b8c3530",
+    "packaging/windows/Product.wxs": "244b1b0a5dcf1dc3e618a95d98df65c429265c664728d092250c817094d11dfc",
+    "packaging/windows/takeover.ps1": "f94ffcdace3a9d2d82586ad04322a38ca4b73b04424d9b9106962c5105cb8576",
+    "packaging/windows/Takeover.Core.psm1": "6e298c4ade63df6d7718d54c5e6b39680f585be900d6f8acb5d437a29dcf547a",
+    "packaging/windows/update.ps1": "f153ad7f9a1a0e2f533eba20bfc30c4b13770145fbf3b9425a34438e40259bc1",
+    "packaging/windows/Update.Core.psm1": "ac0efa71917eb031d548c3b486a83f9bc2b363e0945d9d17e55241862cb820b0",
+    "packaging/windows/Scope.Core.ps1": "78c8d6785001e6b202a5e369e049d74be9a7ab2e6687c89806451b601ca2fa02",
+    "packaging/windows/Scope.Native.cs": "bf73825c2a8ba712f6659f06e5eb823cd6dca0052745467d27acd09b55e133f6",
+    "packaging/windows/install-tls-provider.ps1": "b987b81b7c02c50adf32dad31d8347bbd38b18ab11fa5a58fbdc7b72d6905522",
+    "native-core/launcher/windows-bridge.c": "f80f855cb14ecc7c334210233a3bea8e70524927e861a6d09152f0e3a217d6ad",
+    "native-core/launcher/windows-bridge.rc.in": "d3510791b697c92a186c571e428bf8c6ff1c3af267f9958c5b302e629894fc91",
+    "native-core/overlay/git-next.c": "7ab6f168ab297e3d9edc798f2464f91828dd6f4e22448183d6e57c3eea9e2283",
+    "native-core/overlay/git-next.h": "2ed9e28593e36e330610105e56f2ba806599fb949a20edaad9a7578684a09ec7",
+    "native-core/patches/series.json": "2165e3609be0432433de9a0ccc46639588aa91786ed8a9ac724501bb4dd8cabe",
+    "tools/build_native_core.py": "a18157393a75a1e8371a2152e72f923486a30ec2dbcbe3d79dfafee48d3cc58b",
+    "tools/integrate_native_core.py": "30d62223aed6414f174fdfb4c93b518507ee855d207e22cb0753d92b4735e0f1"
+  },
+  "compiled_msi_flavors": [
+    {
+      "asset": "git-next-0.3.0-dev-windows-x64.msi",
+      "complete_git_parity": false,
+      "distribution_manifest_sha256": "a1de3383cf676adf72051bc7afaa38623c9867f74c4843fa2783f9b1b4f6c81b",
+      "install_scope": "machine",
+      "installation_runtime_accepted": false,
+      "msi_version": "0.3.0",
+      "packaging_files": {
+        "native_msi.py": "a040dd7014f60ab0ea4c5b7caadf2c7a8bfffc8c854ba139fe18d30e6b8c3530",
+        "windows/Product.wxs": "244b1b0a5dcf1dc3e618a95d98df65c429265c664728d092250c817094d11dfc"
+      },
+      "payload_files": 9896,
+      "platform": "windows-x64",
+      "product_code": "{4353A1E6-0E76-512E-B75B-81FE6028ED85}",
+      "product_executed": false,
+      "release_eligible": false,
+      "sha256": "26d80d9aa6194c032175dcf0bc60faf3fc13c5e157b41bc311cc5476e90f9c68",
+      "size": 124100804,
+      "source_tree_sha256": "064d0888b1a35359422bb402931dcda811f46ed081ecce011d45775403fe5af6",
+      "status": "built-not-accepted",
+      "tests_executed": false,
+      "upgrade_code": "{8C7712E8-6254-59D7-9AF9-5E5488927D43}",
+      "version": "0.3.0-dev",
+      "wix_version": "5.0.2+aa65968c"
+    },
+    {
+      "asset": "git-next-0.3.0-dev-windows-x64-user.msi",
+      "complete_git_parity": false,
+      "distribution_manifest_sha256": "a1de3383cf676adf72051bc7afaa38623c9867f74c4843fa2783f9b1b4f6c81b",
+      "install_scope": "user",
+      "installation_runtime_accepted": false,
+      "msi_version": "0.3.0",
+      "packaging_files": {
+        "native_msi.py": "a040dd7014f60ab0ea4c5b7caadf2c7a8bfffc8c854ba139fe18d30e6b8c3530",
+        "windows/Product.wxs": "244b1b0a5dcf1dc3e618a95d98df65c429265c664728d092250c817094d11dfc"
+      },
+      "payload_files": 9896,
+      "platform": "windows-x64",
+      "product_code": "{375B4094-581A-5516-B962-C4454FB8D244}",
+      "product_executed": false,
+      "release_eligible": false,
+      "sha256": "dcca41131742c58fd6fde2c299728adcd74dea5adf9036c823f43f209db42460",
+      "size": 123421208,
+      "source_tree_sha256": "064d0888b1a35359422bb402931dcda811f46ed081ecce011d45775403fe5af6",
+      "status": "built-not-accepted",
+      "tests_executed": false,
+      "upgrade_code": "{981F8880-E13B-4D22-A36E-A1B166601663}",
+      "version": "0.3.0-dev",
+      "wix_version": "5.0.2+aa65968c"
+    }
+  ],
+  "packaged_vs_current_source": {
+    "migration/Takeover.Core.psm1": {
+      "packaged_sha256": "e2a4df8c289888b2f72259feef10f805f4d5d045816b43272dc00d596e2ab7b5",
+      "current_source_sha256": "6e298c4ade63df6d7718d54c5e6b39680f585be900d6f8acb5d437a29dcf547a",
+      "matches_current_source": false
+    },
+    "migration/takeover.ps1": {
+      "packaged_sha256": "6dfd5f1129c63536fa5f105627491461d91b070db1686ec0b1ab9aa39cffd059",
+      "current_source_sha256": "f94ffcdace3a9d2d82586ad04322a38ca4b73b04424d9b9106962c5105cb8576",
+      "matches_current_source": false
+    },
+    "updater/update.ps1": {
+      "packaged_sha256": "a062466b22ea0ca09d775b38551fcb9f06d2e55d1f66add02d4c6711f5b864d4",
+      "current_source_sha256": "f153ad7f9a1a0e2f533eba20bfc30c4b13770145fbf3b9425a34438e40259bc1",
+      "matches_current_source": false
+    },
+    "updater/Update.Core.psm1": {
+      "packaged_sha256": "2cf240a27b6af007a12787ecd8d48cd78a7e8116bc4511f79933237e1ad3da4a",
+      "current_source_sha256": "ac0efa71917eb031d548c3b486a83f9bc2b363e0945d9d17e55241862cb820b0",
+      "matches_current_source": false
+    },
+    "updater/Scope.Core.ps1": {
+      "packaged_sha256": "78c8d6785001e6b202a5e369e049d74be9a7ab2e6687c89806451b601ca2fa02",
+      "current_source_sha256": "78c8d6785001e6b202a5e369e049d74be9a7ab2e6687c89806451b601ca2fa02",
+      "matches_current_source": true
+    },
+    "updater/Scope.Native.cs": {
+      "packaged_sha256": "bf73825c2a8ba712f6659f06e5eb823cd6dca0052745467d27acd09b55e133f6",
+      "current_source_sha256": "bf73825c2a8ba712f6659f06e5eb823cd6dca0052745467d27acd09b55e133f6",
+      "matches_current_source": true
+    }
+  },
+  "builtin_aliases": 152,
+  "static_native_import_images": 199,
+  "implementation_features": [
+    "machine-and-user-msi",
+    "stable-existing-user-upgrade-identities",
+    "protected-machine-state-and-atomic-files",
+    "system-worker-without-saved-password",
+    "matching-hive-console-and-gui-legacy-bridges",
+    "explicit-builtin-aliases",
+    "scoped-config-and-tls-provider",
+    "private-backup-uninstall-rollback",
+    "scope-aware-path-mapping-and-rollback",
+    "shared-updater-migration-lock",
+    "native-update-cli-and-language-handoff",
+    "incremental-version-input-dependency"
+  ],
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "original_git_removed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "remaining": [
+    "D02 custom runtime configuration consumers and remaining platform runtimes",
+    "D06 cross-platform updater and final release manifest integration",
+    "D07 all five current packages, corresponding sources and full regression inputs",
+    "D08 consolidated regression",
+    "D09 final paired performance batch",
+    "D10 one release and actual workstation replacement"
+  ],
+  "evidence_limit": "Earlier MSI compilation predates later PATH/update/version source edits; D07 must rebuild final packages. No installer/task/product has run."
+}

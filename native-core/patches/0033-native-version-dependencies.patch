@@ -1,0 +1,26 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -709,6 +709,7 @@
+ 		"${CMAKE_BINARY_DIR}/version-def.h"
+ 	DEPENDS "${SH_EXE}" "${CMAKE_SOURCE_DIR}/GIT-VERSION-GEN"
+ 		"${CMAKE_SOURCE_DIR}/version-def.h.in"
++		"${CMAKE_SOURCE_DIR}/version"
+ 	VERBATIM)
+ list(APPEND libgit_SOURCES "${CMAKE_BINARY_DIR}/version-def.h")
+ 
+@@ -722,6 +723,7 @@
+ 				"${CMAKE_BINARY_DIR}/git.rc"
+ 			DEPENDS "${CMAKE_SOURCE_DIR}/GIT-VERSION-GEN"
+ 				"${CMAKE_SOURCE_DIR}/git.rc.in"
++				"${CMAKE_SOURCE_DIR}/version"
+ 			VERBATIM)
+ 
+ 	if(NOT MSVC)#use windres when compiling with gcc and clang
+@@ -902,6 +904,7 @@
+ 		"${CMAKE_BINARY_DIR}/GIT-VERSION-FILE"
+ 	DEPENDS ${SH_EXE} "${CMAKE_SOURCE_DIR}/GIT-VERSION-GEN"
+ 		"${CMAKE_SOURCE_DIR}/GIT-VERSION-FILE.in"
++		"${CMAKE_SOURCE_DIR}/version"
+ 	VERBATIM)
+ 
+ foreach(script ${git_perl_scripts} ${perl_modules})

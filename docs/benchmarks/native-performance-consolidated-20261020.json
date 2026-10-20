@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "phase": "performance",
+  "matrix_sha256": "f53e35a95841fffc674e9dcca4dc9b7ce554dd6fbbb9105bcf58bb7873c384a1",
+  "reference_sha256": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5",
+  "source_tree_sha256": "458af23b856b3e73cd49d41570c0db17c26480e9385f061deed5af1c1aca79fd",
+  "results": [
+    {
+      "case": "performance-1000",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 13.79,
+      "started_seconds_from_batch": 3.303,
+      "finished_seconds_from_batch": 17.093
+    },
+    {
+      "case": "performance-10000",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 26.351,
+      "started_seconds_from_batch": 17.093,
+      "finished_seconds_from_batch": 43.444
+    },
+    {
+      "case": "performance-100000",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 87.719,
+      "started_seconds_from_batch": 43.444,
+      "finished_seconds_from_batch": 131.163
+    },
+    {
+      "case": "performance-network",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 233.002,
+      "started_seconds_from_batch": 131.163,
+      "finished_seconds_from_batch": 364.166
+    },
+    {
+      "case": "frozen-input-readback",
+      "status": "pass"
+    }
+  ],
+  "release_eligible": false,
+  "native_mac_product_executed": false,
+  "personal_account_accessed": false,
+  "elapsed_seconds": 371.473,
+  "wall_clock_target_seconds": 60.0,
+  "wall_clock_target_met": false,
+  "workers": 1,
+  "msi_transactions_serialized": true,
+  "checks_skipped_to_meet_time_target": false
+}

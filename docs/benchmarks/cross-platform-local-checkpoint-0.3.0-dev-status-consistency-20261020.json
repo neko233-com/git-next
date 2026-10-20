@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "platforms": {
+    "windows_x64": {
+      "checkpoint": "windows-x64-local-checkpoint-0.3.0-dev-status-consistency-20261020.json",
+      "source_tree_sha256": "0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346",
+      "binary_sha256": "e5a1e9f8fe833c84c2a30cd57b9d6bf3fddc9cc7d4a7c4658726b8989d5ec800",
+      "installed": true
+    },
+    "linux_x64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "x86_64-unknown-linux-musl",
+      "build_jobs": 8,
+      "source_tree_sha256": "0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346",
+      "binaries": {
+        "git": "a4ec13f1e32899ca03d971196724fa16c21e6bf6c9299bb39289d7fa14ced624",
+        "git-next": "74b686044871b88c2d7c444550b718a94867436ae3d2d23e6d4155860d3e38f5",
+        "git-terminal": "2d6d57a80faf186dd106dfd133fbf563fc38f38d0b45a5d299be294bfb8f2529",
+        "git-lfs": "38bc6dc4e643b5319b44da389802a5ba2ee45ae69793707e315baa337e46dbcf",
+        "git-next-lfs-filter": "b33896c295676c49f27f2873af7d6134c3cd0f40114721bd7c2cea28ff0260fe"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false,
+      "runtime": {
+        "status": "pass",
+        "scope": "Linux x64 Docker container local LF/status/restore/read/worktree/commit/format/Unix-discovery subset; no network/login/Mac or native-host performance acceptance",
+        "binary_sha256": "74b686044871b88c2d7c444550b718a94867436ae3d2d23e6d4155860d3e38f5",
+        "native_version": "git-next version 0.3.0-dev (experimental)",
+        "reference_version": "git version 2.47.3",
+        "machine": "x86_64",
+        "libc": [
+          "glibc",
+          "2.41"
+        ],
+        "python_version": "3.14.8",
+        "results": [
+          {
+            "test": "eol_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+          },
+          {
+            "test": "status_cache_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+          },
+          {
+            "test": "status_head_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "808253bcffc90e51af33a7eaf18db1cdc138ea1ce37c82d64afc1311a56ea782"
+          },
+          {
+            "test": "status_head_paths_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "fed42056048acadaef93107b6fda9c331ee026aa671795e7b05ae73565047e76"
+          },
+          {
+            "test": "restore_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+          },
+          {
+            "test": "diff_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+          },
+          {
+            "test": "worktree_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+          },
+          {
+            "test": "acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+          },
+          {
+            "test": "commit_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+          },
+          {
+            "test": "repository_format_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+          },
+          {
+            "test": "native_discovery_unix_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+          }
+        ],
+        "image_id": "sha256:fbfeaf61ca4a0a0204947f6778b0d0535b3c3ada819f2056dd89044a5e4ccf3e",
+        "target": "x86_64-unknown-linux-musl",
+        "container_platform": "linux/amd64",
+        "emulated_arm64": false
+      },
+      "local_fixture_suites": 11,
+      "physical_arm64_accepted": false,
+      "native_host_performance_accepted": false
+    },
+    "linux_arm64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "aarch64-unknown-linux-gnu.2.28",
+      "build_jobs": 8,
+      "source_tree_sha256": "0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346",
+      "binaries": {
+        "git": "d8ccb87860ab85eb0cae7e7eb86693ad52cc89d23b91e76c6822ac805d86913e",
+        "git-next": "fa5c1a7e3430baf2b25196f94fc9c1e04a7f74e6a9937c599db76c968bfb06bf",
+        "git-terminal": "13d45a19e4e32a4ee62881fd6245d1927aea9f5832e77bacad3c32fff07bc6d3",
+        "git-lfs": "2f7049ce1a88ca15c0a376556bd6dd32b009b779636671bdad779e8b16426d7b",
+        "git-next-lfs-filter": "1208a78589f719dd2fb9f9afe3951b8270de124cb844eef5df76062db46de08b"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false,
+      "runtime": {
+        "status": "pass",
+        "scope": "Emulated Linux ARM64 Docker local LF/status/restore/read/worktree/commit/format/Unix-discovery subset; no physical ARM64 or performance acceptance",
+        "binary_sha256": "fa5c1a7e3430baf2b25196f94fc9c1e04a7f74e6a9937c599db76c968bfb06bf",
+        "native_version": "git-next version 0.3.0-dev (experimental)",
+        "reference_version": "git version 2.47.3",
+        "machine": "aarch64",
+        "libc": [
+          "glibc",
+          "2.41"
+        ],
+        "python_version": "3.14.8",
+        "results": [
+          {
+            "test": "eol_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+          },
+          {
+            "test": "status_cache_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+          },
+          {
+            "test": "status_head_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "808253bcffc90e51af33a7eaf18db1cdc138ea1ce37c82d64afc1311a56ea782"
+          },
+          {
+            "test": "status_head_paths_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "fed42056048acadaef93107b6fda9c331ee026aa671795e7b05ae73565047e76"
+          },
+          {
+            "test": "restore_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+          },
+          {
+            "test": "diff_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+          },
+          {
+            "test": "worktree_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+          },
+          {
+            "test": "acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+          },
+          {
+            "test": "commit_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+          },
+          {
+            "test": "repository_format_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+          },
+          {
+            "test": "native_discovery_unix_acceptance.py",
+            "exit_code": 0,
+            "harness_sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+          }
+        ],
+        "image_id": "sha256:fe56484a6f1e0d50fa74d299733369e3abe8ec5c26f1f1f8b5b0f4250fa37c1f",
+        "target": "aarch64-unknown-linux-gnu",
+        "container_platform": "linux/arm64",
+        "emulated_arm64": true
+      },
+      "local_fixture_suites": 11,
+      "physical_arm64_accepted": false,
+      "native_host_performance_accepted": false
+    },
+    "windows_arm64": {
+      "status": "pass",
+      "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+      "requested_target": "aarch64-pc-windows-gnullvm",
+      "build_jobs": 1,
+      "source_tree_sha256": "0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346",
+      "binaries": {
+        "git.exe": "a9a2955564548fca457ebbdd4d193300870c814acf70f6596f5a96b06155daaa",
+        "git-next.exe": "68326492a20612259564615316802e420295dfecac38a06d3127f7876153bd69",
+        "git-terminal.exe": "16167df35edde82771df089588172d8934515100f9441ed44e96d6a31992eb0d",
+        "git-lfs.exe": "4b52dfddc3f21919395a1586c2827765ddba09e6ac1e5bc71b75db812cea75d6",
+        "git-next-lfs-filter.exe": "8a83c74b790aff42450fce805fcb6bb4f8a79625f8e8e04cdf351ce787478768"
+      },
+      "complete_git_parity": false,
+      "native_runtime_accepted": false
+    }
+  },
+  "source_tree_sha256": "0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346",
+  "source_archive": "accepted-source-0204625412ce15d7e07cbbe49b29691bff83f5cdeff45c33b9d00838ef03a346.zip",
+  "source_archive_sha256": "3307e93af2649a50b1be4b95e088687dec078140df408228e5d2d20263798a84",
+  "native_macos_new_checkpoint": false,
+  "complete_git_parity": false,
+  "system_git_replaced": false,
+  "release_published": false
+}

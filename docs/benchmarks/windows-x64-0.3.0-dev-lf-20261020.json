@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "git_next": "git-next version 0.3.0-dev (experimental)",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "binary_sha256": "14644c1fcefee0d03a8d59cc30fcc6e2276a315840f6e5e8d440c18a17db3550",
+  "source_tree_sha256": "0962a00ae5a28ce10f00f0b50fe5e5246bcd2697df4dff0ccb912da3cf52e33d",
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "files": 1000,
+  "runs_per_client_per_command": 40,
+  "randomized_order_seed": 233,
+  "runtime_git_ssh_on_path": false,
+  "client_core_fscache": "default",
+  "results": {
+    "version": {
+      "git_next": {
+        "median_ms": 7.161,
+        "p95_ms": 8.41,
+        "min_ms": 6.019
+      },
+      "git": {
+        "median_ms": 18.141,
+        "p95_ms": 20.413,
+        "min_ms": 17.003
+      }
+    },
+    "rev_parse": {
+      "git_next": {
+        "median_ms": 10.891,
+        "p95_ms": 12.437,
+        "min_ms": 9.551
+      },
+      "git": {
+        "median_ms": 20.476,
+        "p95_ms": 22.425,
+        "min_ms": 18.293
+      }
+    },
+    "status_clean": {
+      "git_next": {
+        "median_ms": 40.408,
+        "p95_ms": 44.413,
+        "min_ms": 38.435
+      },
+      "git": {
+        "median_ms": 36.94,
+        "p95_ms": 39.395,
+        "min_ms": 34.696
+      }
+    },
+    "cat_file": {
+      "git_next": {
+        "median_ms": 10.787,
+        "p95_ms": 11.7,
+        "min_ms": 9.806
+      },
+      "git": {
+        "median_ms": 20.889,
+        "p95_ms": 22.538,
+        "min_ms": 19.224
+      }
+    },
+    "diff_clean": {
+      "git_next": {
+        "median_ms": 39.747,
+        "p95_ms": 42.607,
+        "min_ms": 36.857
+      },
+      "git": {
+        "median_ms": 28.292,
+        "p95_ms": 30.86,
+        "min_ms": 26.468
+      }
+    },
+    "show_metadata": {
+      "git_next": {
+        "median_ms": 10.936,
+        "p95_ms": 12.438,
+        "min_ms": 10.059
+      },
+      "git": {
+        "median_ms": 22.359,
+        "p95_ms": 27.358,
+        "min_ms": 20.468
+      }
+    },
+    "log_metadata": {
+      "git_next": {
+        "median_ms": 10.715,
+        "p95_ms": 11.819,
+        "min_ms": 9.776
+      },
+      "git": {
+        "median_ms": 21.002,
+        "p95_ms": 23.224,
+        "min_ms": 19.242
+      }
+    }
+  },
+  "full_git_parity": false
+}

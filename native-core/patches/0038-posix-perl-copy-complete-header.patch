@@ -1,0 +1,20 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -894,12 +894,12 @@
+ #create perl header
+ if(WIN32)
+ 	file(STRINGS ${CMAKE_SOURCE_DIR}/perl/header_templates/fixed_prefix.template.pl perl_header )
++	string(REPLACE "@PATHSEP@" ":" perl_header "${perl_header}")
++	string(REPLACE "@INSTLIBDIR@" "${INSTLIBDIR}" perl_header "${perl_header}")
++	file(WRITE ${CMAKE_BINARY_DIR}/GIT-PERL-HEADER ${perl_header})
+ else()
+-	file(STRINGS ${CMAKE_SOURCE_DIR}/git-next-perl-header.pl perl_header)
+-endif()
+-string(REPLACE "@PATHSEP@" ":" perl_header "${perl_header}")
+-string(REPLACE "@INSTLIBDIR@" "${INSTLIBDIR}" perl_header "${perl_header}")
+-file(WRITE ${CMAKE_BINARY_DIR}/GIT-PERL-HEADER ${perl_header})
++	configure_file(${CMAKE_SOURCE_DIR}/git-next-perl-header.pl ${CMAKE_BINARY_DIR}/GIT-PERL-HEADER COPYONLY)
++endif()
+ 
+ add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/GIT-VERSION-FILE"
+ 	COMMAND "${SH_EXE}" "${CMAKE_SOURCE_DIR}/GIT-VERSION-GEN"

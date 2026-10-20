@@ -1,0 +1,13 @@
+--- a/read-cache.c
++++ b/read-cache.c
+@@ -484,7 +484,9 @@
+ 	     */
+ 	    (!S_ISLNK(st->st_mode) || ce->ce_stat_data.sd_size != MAX_PATH) &&
+ #endif
+-	    (S_ISGITLINK(ce->ce_mode) || ce->ce_stat_data.sd_size != 0))
++	    (S_ISGITLINK(ce->ce_mode) ||
++	     (ce->ce_stat_data.sd_size != 0 &&
++	      !would_convert_to_git(istate, ce->name))))
+ 		return changed;
+ 
+ 	changed_fs = ce_modified_check_fs(istate, ce, st);

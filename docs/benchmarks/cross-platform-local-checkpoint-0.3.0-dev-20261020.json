@@ -1,0 +1,51 @@
+{
+  "status": "pass",
+  "scope": "four target builds; installed Windows x64; Linux x64 container and Linux ARM64 emulated local subsets only",
+  "source_tree_sha256": "0b6b6099dca69f3e1dfc1644ac4abbcbd9edaf571617f9b561dfa04babf1c9f9",
+  "complete_git_parity": false,
+  "windows_x64": {
+    "client_sha256": "264214cf4e6b7547b63db7c50b883cbe596b5721397d6ca0b6288dd6b52e4e41",
+    "preview_installed": true
+  },
+  "linux_x64": {
+    "client_sha256": "79df609cd1a4514c95d2aff85b1f3a008e87cfe020ab24e3e95a1b1826829d3d",
+    "container_local_suites": 8
+  },
+  "linux_arm64": {
+    "status": "pass",
+    "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+    "requested_target": "aarch64-unknown-linux-gnu.2.28",
+    "source_tree_sha256": "0b6b6099dca69f3e1dfc1644ac4abbcbd9edaf571617f9b561dfa04babf1c9f9",
+    "binaries": {
+      "git": "0fed3b7bae49f13071350fdd9d8bff7de7b2c820215b7d98ca665feb14f6f8eb",
+      "git-next": "6a63745f9237ef8243e185270811cd18877907c57c0b7820e15ca9536ea606dc",
+      "git-terminal": "139689267d825f9482e2071db84000a91a4722674edb2dd1cda4e36574b3ab46",
+      "git-lfs": "7b5a1f3eaab7052de317ab5ba36f6bd28e8cad3c1b50945bef7486f60a6f0945",
+      "git-next-lfs-filter": "cfed4033daab774578af2591ce242a2dac2cbba068ae6139876abe8fa8921585"
+    },
+    "complete_git_parity": false,
+    "native_runtime_accepted": false,
+    "emulated_container_local_suites": 8,
+    "physical_arm64_accepted": false
+  },
+  "windows_arm64": {
+    "status": "pass",
+    "scope": "cross-compilation and executable machine verification only; no native runtime acceptance",
+    "requested_target": "aarch64-pc-windows-gnullvm",
+    "source_tree_sha256": "0b6b6099dca69f3e1dfc1644ac4abbcbd9edaf571617f9b561dfa04babf1c9f9",
+    "binaries": {
+      "git.exe": "c8f88f7343e5b51c722bba85b3f75193782800122dcae89276412abc8984417b",
+      "git-next.exe": "bfbfca233704cbaaea66d4836a84817e9f08e971d054bff6cba6f04bf4ea4e4d",
+      "git-terminal.exe": "a98425f39ccb83ad3279a083ddb080c287fee4880616ffe142ebd8775343aade",
+      "git-lfs.exe": "c26ec176d87de15e9681a6c2a8c4339505ccd84c271bbe038d6177e111d84048",
+      "git-next-lfs-filter.exe": "03a0fa2f59150462e76a001575aa4f07cc31e2cfe6159be702887416eb19def4"
+    },
+    "complete_git_parity": false,
+    "native_runtime_accepted": false
+  },
+  "macos_arm64": {
+    "current_build_accepted": false,
+    "current_native_runtime_accepted": false
+  },
+  "release_published": false
+}

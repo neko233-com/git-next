@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "status": "integrated-core-compiled-not-runtime-accepted",
+  "utc": "2026-10-20T05:45:59.412738+00:00",
+  "source_tree_sha256": "198db8421d53a4696596f055e91323837495ec513e58f04ff5e97011108683ba",
+  "upstream_commit": "2b8a3ab140826ac423c2845ef81d4c6ac4f7bf3c",
+  "product_version": "0.3.0-dev",
+  "binaries": {
+    "git.exe": {
+      "sha256": "9fdae8fdb6469bc75d7d7fcede04dbcaa2738e35b35eb3f0a5050231f075b735",
+      "bytes": 5243392
+    },
+    "git-remote-http.exe": {
+      "sha256": "325a944e6d3cedb089bd17c1ec6aee59e6dfcf5c9fe6582bd7f5aeb09c841630",
+      "bytes": 3141120
+    },
+    "git-http-fetch.exe": {
+      "sha256": "d344b53f12430a58fd82635a2ccd6c8e4fa1c7b21977044f5218e51056770e45",
+      "bytes": 3124224
+    },
+    "git-http-push.exe": {
+      "sha256": "f12fef38a3afa9d5a51612e213fdd14a135fa1d13c1d979872aaf0296bcba078",
+      "bytes": 3924992
+    },
+    "git-http-backend.exe": {
+      "sha256": "68f3f242ac78b39f2f97f15c205c18589412171338b32af92e9169aaf10bdd55",
+      "bytes": 2172416
+    },
+    "git-daemon.exe": {
+      "sha256": "19cf27a834418cf38bdd6d2ff2ee622985692fdd17b66c6dbf77ea49a13c1b31",
+      "bytes": 2175488
+    },
+    "git-shell.exe": {
+      "sha256": "a2dc0ec1794044e73347e55068c1fdfe1cae6d2174fca262d81e5d7e76c86208",
+      "bytes": 2158592
+    },
+    "scalar.exe": {
+      "sha256": "4832e6dc8129d2821b229a884fe5520f2e9f47217ea8b5caaabb807faec2e6b5",
+      "bytes": 2205184
+    },
+    "git-imap-send.exe": {
+      "sha256": "d193a21ba202d7263353ec8651091db63e0cd04b987e5443ee22edb52fc46949",
+      "bytes": 3117056
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "1e9600dec8b0478741eed89107ac8b4098671d4d46d8007f4ae3e0abe293287a",
+      "bytes": 2154496
+    }
+  },
+  "dependency_libraries": {
+    "libcurl.lib": "2ff8c89565d43000ff8ca3117cbf070ad826a8643fbc1545e8f0bf6612381cf9",
+    "libexpatMD.lib": "f5929961cb5b32e141d1ae12976418f270e671708cd5b36918dfccef79feca23",
+    "nghttp2.lib": "233252a8f4e07f0a0dd2ba4b1fbc1c339430174fe5a9bf9b3c57db6c742e6bc6",
+    "pcre2-8-static.lib": "d3d25265a5ed13a52889a8ab4249436e405ba6c3adbc4b8aaae264829bbc242b",
+    "pcre2-posix-static.lib": "53f2cab866983106f27be192bdf42bd0e8783477648922c87ddf19d036239849",
+    "zs.lib": "e388d3d9b0404d166cd97191133eae66b682891cf509d3acedc92dd24bbdf4ea"
+  },
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "scope": "D01 implementation checkpoint with resolved owned native PE dependency closure; D02/D05-D07 remain open; no product commands or tests executed",
+  "catalog": {
+    "source": "po/zh_CN.po",
+    "source_sha256": "109273a7ec724df58ab363b9701fb3edef290eac3d551bb40b24862f2fc75923",
+    "generated_sha256": "ca811db6b8fdee278dfc73ce5a4801e7ffb6b55e7b5f7bdc17e60271034818d6",
+    "translations": 6256,
+    "upstream_translations": 6226,
+    "additional_source": "native-core/locale/zh_CN.json",
+    "additional_source_sha256": "7d0016e72fdca122b73590b3186810e3d71c03b0ff6b1ada4d842200c990a0b3",
+    "portable_formats": 66,
+    "fuzzy_entries_excluded": true
+  },
+  "public_suffix_dependency": {
+    "schema_version": 1,
+    "status": "libpsl-imports-prepared-not-runtime-accepted",
+    "platform": "windows-x64",
+    "version": "0.21.5",
+    "header_source": "https://raw.githubusercontent.com/rockdaboot/libpsl/0.21.5/include/libpsl.h.in",
+    "header_sha256": "6591fd46b9846403f59d436b11cbb1017f3031801181a7b258a1d3729ad57be9",
+    "import_library_sha256": "1768243dbd1d1eee83bd7c42e8ff23580aa6979b56a039cb0e180048519242d4",
+    "upstream_runtime_archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd",
+    "files": {
+      "libpsl-5.dll": {
+        "sha256": "b31fc70eda598a39b65fe2736d815518db0652d641346f75eac40c2a0499b058",
+        "archive_member": "mingw64/bin/libpsl-5.dll"
+      },
+      "libidn2-0.dll": {
+        "sha256": "9880b52651a0247640a2531d777380f7c35fac7efa7e3979b265ddcb78db8642",
+        "archive_member": "mingw64/bin/libidn2-0.dll"
+      },
+      "libunistring-5.dll": {
+        "sha256": "70813b4aaa82f8b0999d8c2fdd4c49c6d31035f17325f5f138f39f7273449adf",
+        "archive_member": "mingw64/bin/libunistring-5.dll"
+      },
+      "libiconv-2.dll": {
+        "sha256": "7a282a854e01be726c6cccfe46f548c716aa45b3014818468253aaa4efbcd067",
+        "archive_member": "mingw64/bin/libiconv-2.dll"
+      },
+      "libintl-8.dll": {
+        "sha256": "0537c3dd2378218508ebe3cc416d72a99ee2d24ae1c5525e23458f32544ef861",
+        "archive_member": "mingw64/bin/libintl-8.dll"
+      }
+    },
+    "exported_api": [
+      "psl_builtin",
+      "psl_check_version_number",
+      "psl_free",
+      "psl_get_version",
+      "psl_is_cookie_domain_acceptable",
+      "psl_is_public_suffix",
+      "psl_latest"
+    ],
+    "product_executed": false,
+    "tests_executed": false
+  },
+  "http2_linkage": "static nghttp2; no nghttp2.dll import",
+  "distribution": {
+    "manifest_sha256": "d771f89e4183bb338a0c8fb0844db0a6ab3af316c783129a83ecd621b02fa9a1",
+    "files": 9734,
+    "bytes": 524067782,
+    "core_entrypoints": [
+      "bin/git.exe",
+      "cmd/git.exe",
+      "runtime/bin/git.exe",
+      "runtime/cmd/git.exe",
+      "runtime/mingw64/bin/git.exe",
+      "runtime/mingw64/libexec/git-core/git.exe",
+      "bin/git-next.exe"
+    ],
+    "native_import_images_inspected": 48,
+    "upstream_git_core_deployed": false,
+    "openssl_provider_bundled": false
+  },
+  "msi": {
+    "asset": "git-next-0.3.0-dev-windows-x64.msi",
+    "complete_git_parity": false,
+    "distribution_manifest_sha256": "d771f89e4183bb338a0c8fb0844db0a6ab3af316c783129a83ecd621b02fa9a1",
+    "installation_runtime_accepted": false,
+    "msi_version": "0.3.0",
+    "packaging_files": {
+      "native_msi.py": "ef27f7ffbb6ae8287ab24d3fbaa4d40c1df1d4663965313c2877455220dc0632",
+      "windows/Product.wxs": "b6c4d925ab5a03c3cc1fac313df7cb30ee1fbd13cab957fdf94f31ada18a08bd"
+    },
+    "payload_files": 9736,
+    "platform": "windows-x64",
+    "product_code": "{375B4094-581A-5516-B962-C4454FB8D244}",
+    "product_executed": false,
+    "release_eligible": false,
+    "sha256": "6c04c367007c7d8b4ed7a8896dab898be50d156e23b5e36e4e933d99e654782c",
+    "size": 117732475,
+    "source_tree_sha256": "198db8421d53a4696596f055e91323837495ec513e58f04ff5e97011108683ba",
+    "status": "built-not-accepted",
+    "tests_executed": false,
+    "upgrade_code": "{981F8880-E13B-4D22-A36E-A1B166601663}",
+    "version": "0.3.0-dev",
+    "wix_version": "5.0.2+aa65968c"
+  },
+  "static_provider_api": {
+    "required_exports": 25,
+    "platforms": [
+      "windows-x64",
+      "windows-arm64"
+    ],
+    "missing_exports": [],
+    "executed": false
+  }
+}

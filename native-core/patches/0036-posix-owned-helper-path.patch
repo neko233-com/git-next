@@ -1,0 +1,23 @@
+--- a/exec-cmd.c
++++ b/exec-cmd.c
+@@ -60,6 +60,8 @@
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/cmd")) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "cmd")) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/bin")) &&
++#else
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/usr/bin")) &&
+ #endif
+ 	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, BINDIR)) &&
+@@ -349,10 +351,10 @@
+ 		char *owned = system_path("bin");
+ 		add_path(&new_path, owned);
+ 		free(owned);
+-#ifdef GIT_WINDOWS_NATIVE
+ 		owned = system_path(GIT_NEXT_RUNTIME_NATIVE_BIN);
+ 		add_path(&new_path, owned);
+ 		free(owned);
++#ifdef GIT_WINDOWS_NATIVE
+ 		owned = system_path("runtime/usr/bin");
+ 		add_path(&new_path, owned);
+ 		free(owned);

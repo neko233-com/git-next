@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "git_next": "git-next version 0.3.0-dev (experimental)",
+    "git": "git version 2.54.0.windows.1",
+    "git_next_baseline": "git-next version 0.3.0-dev (experimental)"
+  },
+  "harness_sha256": "7deca645b59b514037d0fe9973fd67e654768aeb94b51b1d5f45e66d663b3cf0",
+  "binary_sha256": "5a1fbe43b25ea962c3e3123e2593a437267539090c41ca1ec261934645e99de5",
+  "source_tree_sha256": "ff0059a4f94085624a276933841a7031b1c6fe90a5ad8a86ab65f548e30763b5",
+  "source_hash_origin": "current build inputs",
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "files": 100000,
+  "runs_per_client_per_command": 40,
+  "configured_data_directories": 16,
+  "actual_data_directories": 16,
+  "command_timeout_seconds": 180,
+  "fixture_layout": "packed",
+  "fixture_local_eol": "input/lf",
+  "randomized_order_seed": 233,
+  "runtime_git_ssh_on_path": false,
+  "client_core_fscache": "default",
+  "system_configuration": "enabled conventional filesystem paths",
+  "results": {
+    "version": {
+      "git_next": {
+        "median_ms": 7.921,
+        "p95_ms": 9.116,
+        "min_ms": 6.128
+      },
+      "git": {
+        "median_ms": 20.846,
+        "p95_ms": 24.286,
+        "min_ms": 18.33
+      },
+      "git_next_baseline": {
+        "median_ms": 8.08,
+        "p95_ms": 9.489,
+        "min_ms": 5.991
+      }
+    },
+    "rev_parse": {
+      "git_next": {
+        "median_ms": 11.658,
+        "p95_ms": 13.12,
+        "min_ms": 10.189
+      },
+      "git": {
+        "median_ms": 21.498,
+        "p95_ms": 23.669,
+        "min_ms": 19.298
+      },
+      "git_next_baseline": {
+        "median_ms": 11.756,
+        "p95_ms": 13.286,
+        "min_ms": 10.625
+      }
+    },
+    "status_clean": {
+      "git_next": {
+        "median_ms": 98.239,
+        "p95_ms": 103.171,
+        "min_ms": 94.611
+      },
+      "git": {
+        "median_ms": 78.021,
+        "p95_ms": 85.348,
+        "min_ms": 72.462
+      },
+      "git_next_baseline": {
+        "median_ms": 91.827,
+        "p95_ms": 101.45,
+        "min_ms": 88.016
+      }
+    },
+    "cat_file": {
+      "git_next": {
+        "median_ms": 21.862,
+        "p95_ms": 55.421,
+        "min_ms": 15.258
+      },
+      "git": {
+        "median_ms": 35.979,
+        "p95_ms": 86.446,
+        "min_ms": 25.598
+      },
+      "git_next_baseline": {
+        "median_ms": 21.035,
+        "p95_ms": 37.865,
+        "min_ms": 14.645
+      }
+    },
+    "diff_clean": {
+      "git_next": {
+        "median_ms": 64.574,
+        "p95_ms": 72.969,
+        "min_ms": 60.595
+      },
+      "git": {
+        "median_ms": 62.923,
+        "p95_ms": 71.55,
+        "min_ms": 56.624
+      },
+      "git_next_baseline": {
+        "median_ms": 64.082,
+        "p95_ms": 77.806,
+        "min_ms": 59.929
+      }
+    },
+    "show_metadata": {
+      "git_next": {
+        "median_ms": 12.14,
+        "p95_ms": 13.395,
+        "min_ms": 10.898
+      },
+      "git": {
+        "median_ms": 46.731,
+        "p95_ms": 52.189,
+        "min_ms": 43.75
+      },
+      "git_next_baseline": {
+        "median_ms": 12.017,
+        "p95_ms": 13.319,
+        "min_ms": 10.25
+      }
+    },
+    "log_metadata": {
+      "git_next": {
+        "median_ms": 12.071,
+        "p95_ms": 13.042,
+        "min_ms": 11.016
+      },
+      "git": {
+        "median_ms": 23.383,
+        "p95_ms": 24.442,
+        "min_ms": 21.214
+      },
+      "git_next_baseline": {
+        "median_ms": 12.309,
+        "p95_ms": 13.283,
+        "min_ms": 10.798
+      }
+    }
+  },
+  "full_git_parity": false,
+  "native_baseline_identity": {
+    "binary_sha256": "d9a171391f83b86181730cd78069121d6a30c0b516711b97a2c36b6383a31049",
+    "source_tree_sha256": "36a7442e8262fbb3ae8b9745fb65a3fbc54de4ea5959cee94f2e66d1dbb3ae03"
+  }
+}

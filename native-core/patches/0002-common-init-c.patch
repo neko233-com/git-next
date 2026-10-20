@@ -1,0 +1,18 @@
+--- a/common-init.c
++++ b/common-init.c
+@@ -4,6 +4,7 @@
+ #include "common-init.h"
+ #include "exec-cmd.h"
+ #include "gettext.h"
++#include "git-next.h"
+ #include "attr.h"
+ #include "repository.h"
+ #include "setup.h"
+@@ -48,6 +49,7 @@
+ 	git_resolve_executable_dir(argv[0]);
+ 
+ 	setlocale(LC_CTYPE, "");
++	git_next_prepare(argv);
+ 	git_setup_gettext();
+ 
+ 	initialize_repository(the_repository);

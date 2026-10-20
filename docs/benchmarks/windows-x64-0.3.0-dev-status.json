@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "versions": {
+    "git_next": "git-next version 0.3.0-dev (experimental)",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "binary_sha256": "1a8586643f4f19dfd85b4709cf390def289068073570485560c3213c7c4250aa",
+  "source_tree_sha256": "f3454d844750154c35431269fe921350c1c22c4003c13fa5dcc93daa37407525",
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "files": 1000,
+  "runs_per_client_per_command": 40,
+  "randomized_order_seed": 233,
+  "runtime_git_ssh_on_path": false,
+  "client_core_fscache": "default",
+  "results": {
+    "version": {
+      "git_next": {
+        "median_ms": 6.201,
+        "p95_ms": 7.081,
+        "min_ms": 5.628
+      },
+      "git": {
+        "median_ms": 17.218,
+        "p95_ms": 18.609,
+        "min_ms": 15.94
+      }
+    },
+    "rev_parse": {
+      "git_next": {
+        "median_ms": 9.915,
+        "p95_ms": 11.099,
+        "min_ms": 9.132
+      },
+      "git": {
+        "median_ms": 19.698,
+        "p95_ms": 21.727,
+        "min_ms": 18.105
+      }
+    },
+    "status_clean": {
+      "git_next": {
+        "median_ms": 39.973,
+        "p95_ms": 41.997,
+        "min_ms": 37.347
+      },
+      "git": {
+        "median_ms": 36.767,
+        "p95_ms": 39.298,
+        "min_ms": 34.995
+      }
+    },
+    "cat_file": {
+      "git_next": {
+        "median_ms": 9.964,
+        "p95_ms": 10.888,
+        "min_ms": 9.123
+      },
+      "git": {
+        "median_ms": 20.482,
+        "p95_ms": 22.878,
+        "min_ms": 19.334
+      }
+    }
+  },
+  "full_git_parity": false
+}

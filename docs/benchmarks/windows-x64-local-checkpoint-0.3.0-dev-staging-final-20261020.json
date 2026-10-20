@@ -1,0 +1,271 @@
+{
+  "status": "pass",
+  "source_tree_sha256": "76b2196346bf081f9c06b5185077179ec5c8171f8daf8ecca8eab4224345b767",
+  "binaries": {
+    "git-lfs.exe": "cddae30346b867f2fa611ff74eebcc581acf7895451f05556d12bd5fc04ee492",
+    "git-next-lfs-filter.exe": "10d94a7a2189e06df7c21c129e9bb17f215d6e692f4978ec9c0620a2d84c727e",
+    "git-next.exe": "a4ba7c7b3e3a48fb4a58b0b59b6ef31c0ace13a15ac0d64bf60d24a109c28c00",
+    "git-terminal.exe": "6c9693c0d3bbbfd0d03d720ec3cc0875e75e804299f8ed7d8ffdbeeae3a74ff3",
+    "git.exe": "b2bb46e6ca45f1003e3820f402c46c8d177d031d4ffa8b69c9080132eee00a6c"
+  },
+  "source_archive": "accepted-source-76b2196346bf081f9c06b5185077179ec5c8171f8daf8ecca8eab4224345b767.zip",
+  "source_archive_sha256": "3138e124ba4fbdf4a18485b274b66b9160b5ee1ca86fb4fb875279868583f445",
+  "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+  "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+  "client_sha256": "a4ba7c7b3e3a48fb4a58b0b59b6ef31c0ace13a15ac0d64bf60d24a109c28c00",
+  "helper_sha256": "b7f0e61535b7bab81ea11126ecf1e7ad4486426df69921a78a680dc40bae2c12",
+  "managed_gcm_installed": true,
+  "system_git_replaced": false,
+  "user_path_unchanged": true,
+  "installed_bytes_match": true,
+  "managed_gcm_files": 52,
+  "global_eol": "lf",
+  "global_autocrlf": "input",
+  "original_git_and_profile_files_unchanged": true,
+  "real_account_login_verified": false,
+  "fmt": true,
+  "installed_fixtures": [
+    "eol",
+    "status_cache",
+    "diff",
+    "status_format",
+    "status_directory",
+    "add_directory",
+    "managed_gcm_https"
+  ],
+  "complete_git_parity": false,
+  "rust_tests": true,
+  "isolated_install_uninstall": true,
+  "clippy": true,
+  "isolated_support_upgrade_rollback_uninstall": true,
+  "binary_sha256": "a4ba7c7b3e3a48fb4a58b0b59b6ef31c0ace13a15ac0d64bf60d24a109c28c00",
+  "acceptance_harness_archive": "staging-final-acceptance-harnesses.zip",
+  "acceptance_harness_archive_sha256": "3590fd67fd28142eb2c6511260e6e96b2c6f038eb4492c8fa64df220d9dc15e9",
+  "container_runner_sha256": "a8b6f8c5112d22c79543552b228a2fa70ccec19aeec6899c99d8c56e7f40db82",
+  "container_host_sha256": "0853f3fb7c281f370bd12e115a444854d345d53eae800a38702abba5bcf90beb",
+  "schema_version": 1,
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "scope": "Installed Windows x64 LF/status and ordinary staging consistency; declared subset, not complete Git parity",
+  "checks": [
+    {
+      "test": "tests/merge_acceptance.py",
+      "options": [
+        "--object-format",
+        "sha1"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "ba735bec4bb56d59026665ac626332e0228c067f2a138f8e96d4e27435c10151"
+    },
+    {
+      "test": "tests/merge_acceptance.py",
+      "options": [
+        "--object-format",
+        "sha256"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "ba735bec4bb56d59026665ac626332e0228c067f2a138f8e96d4e27435c10151"
+    },
+    {
+      "test": "tests/merge_message_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "ca37af70115d7d375cc302494ffc5d28e5fb3c480560c5c671d115c1f71cff8c"
+    },
+    {
+      "test": "tests/commit_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+    },
+    {
+      "test": "tests/merge_pending_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "7eb308d1b7449d340cb1d33cf8ef9c96306f4667b8a97e49a0f1418bb3106eed"
+    },
+    {
+      "test": "tests/repository_format_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+    },
+    {
+      "test": "tests/config_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "166de10aed35973d3943c5d51a779989ab80f143c79d182526a967405e882f95"
+    },
+    {
+      "test": "tests/status_cache_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+    },
+    {
+      "test": "tests/status_head_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "808253bcffc90e51af33a7eaf18db1cdc138ea1ce37c82d64afc1311a56ea782"
+    },
+    {
+      "test": "tests/status_head_paths_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "fed42056048acadaef93107b6fda9c331ee026aa671795e7b05ae73565047e76"
+    },
+    {
+      "test": "tests/status_format_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "cb0a8edb63f90263abcdc20baaa0c00dca1fff66d9fc98d8ab5bfb905dbecb85"
+    },
+    {
+      "test": "tests/status_directory_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "cc32d37726db283c462caec07027194b98a97b153638fd95a65b81ef1dd5ed97"
+    },
+    {
+      "test": "tests/add_directory_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "062a7bee465e71bb7c45985801a6337b7c2d38a80c4c1fc23a220181d24f2fab",
+      "revalidated_after_harness_update": true
+    },
+    {
+      "test": "tests/diff_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "7e052c2d164dfb0d48d6087c4c0de5d9e1a195d1888d8a1ed12902d8d4ebb465"
+    },
+    {
+      "test": "tests/restore_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+    },
+    {
+      "test": "tests/eol_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+    },
+    {
+      "test": "tests/worktree_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+    },
+    {
+      "test": "tests/status_wide_acceptance.py",
+      "options": [
+        "--files",
+        "1000",
+        "--directories",
+        "128",
+        "--runs",
+        "6"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "9a1a33042d90acf1084f53a0f8892ac3468b4db76a5a4ca6b7f8726d43934b9b"
+    },
+    {
+      "test": "tests/push_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "d23fc9826dd445c44a977ebdde3f61b361ec4a7d14a6852fbfa0ab185cbb960c"
+    },
+    {
+      "test": "tests/lfs_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "c4785854aa921c3db75bcca0732a8515dd649205a452076c24db87874a080316"
+    },
+    {
+      "test": "tests/lfs_transfer_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "5b2b83d86b3c3afec75eca5c8dc90bfcbb6b103d31a1640e9c5091035e52d443"
+    },
+    {
+      "test": "tests/ssh_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "10553554e8b3532436848112262bc2a8ee5de4853628fa62a55963f511a5cac1"
+    },
+    {
+      "test": "tests/gcm_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "a2a85b6285373353398bed3609e174237e69ff9b022ea97b5d61271f18b9cfb2"
+    },
+    {
+      "test": "tests/acceptance.py",
+      "options": [
+        "--https"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "tests/acceptance.py",
+      "options": [
+        "--https",
+        "--system-config-enabled"
+      ],
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "tests/native_discovery_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "e078462acc73fd3c14c9f0272aa95673cfc4c9fb56102885d14fffc6de33b228"
+    },
+    {
+      "test": "tests/terminal_acceptance.py",
+      "options": [],
+      "exit_code": 0,
+      "harness_sha256": "de2c1a8b2d51187d265e7ba57793ac7c18b95a064a7fa69ebb22cdcdcd1452bc"
+    }
+  ],
+  "installed_wide_stability": {
+    "status": "pass",
+    "scope": "Native wide-tree stability; independent bytes/stage/refs/fsck, not reference-status timing",
+    "binary_sha256": "a4ba7c7b3e3a48fb4a58b0b59b6ef31c0ace13a15ac0d64bf60d24a109c28c00",
+    "harness_sha256": "9a1a33042d90acf1084f53a0f8892ac3468b4db76a5a4ca6b7f8726d43934b9b",
+    "files": 10000,
+    "directories": 1000,
+    "results": [
+      {
+        "object_format": "sha1",
+        "status_runs": 60,
+        "all_worktree_bytes_verified": true,
+        "worktree_sha256": "415ed897d6a0a31a1859bbe73bdc511bca13ef7649fe37405c2afda68aceeda8",
+        "staged_object_ids_and_head_unchanged": true,
+        "stage_sha256": "1bc35083d70389fe93d76724998bd10e7e9831f04f664e1268fd956d383d71e4",
+        "optional_lock_no_write_and_no_leaked_lock": true
+      },
+      {
+        "object_format": "sha256",
+        "status_runs": 60,
+        "all_worktree_bytes_verified": true,
+        "worktree_sha256": "415ed897d6a0a31a1859bbe73bdc511bca13ef7649fe37405c2afda68aceeda8",
+        "staged_object_ids_and_head_unchanged": true,
+        "stage_sha256": "70650aa5417aed833f592871b5484e1a2e1504e4a33648ed53945103596b1c69",
+        "optional_lock_no_write_and_no_leaked_lock": true
+      }
+    ],
+    "runtime_git_ssh_on_path": false,
+    "system_configuration": "enabled with isolated profiles",
+    "full_git_parity": false
+  },
+  "benchmarks": [
+    "windows-x64-0.3.0-dev-staging-final-system-20261020.json"
+  ],
+  "earlier_large_and_network_measurements_keep_b414_identity": true,
+  "parent_link_renormalization_intentionally_refused": true,
+  "native_macos_new_checkpoint": false,
+  "release_published": false
+}

@@ -1,0 +1,16 @@
+--- a/contrib/buildsystems/CMakeLists.txt
++++ b/contrib/buildsystems/CMakeLists.txt
+@@ -161,10 +161,9 @@
+ find_package(EXPAT)
+ find_package(Iconv)
+ 
+-#Don't use libintl on Windows Visual Studio and Clang builds
+-if(NOT (WIN32 AND (CMAKE_C_COMPILER_ID STREQUAL "MSVC" OR CMAKE_C_COMPILER_ID STREQUAL "Clang")))
+-	find_package(Intl)
+-endif()
++# git-next uses a compiled native catalog on all platforms.
++set(Intl_FOUND FALSE)
++set(NO_GETTEXT 1)
+ 
+ find_package(PkgConfig)
+ if(PkgConfig_FOUND)

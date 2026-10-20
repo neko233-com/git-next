@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "product": "git-next",
+  "version": "0.3.0-dev",
+  "scope": "loopback smart HTTPS, temporary private CA and static fixture authorization; clone/fetch/ff-only pull",
+  "binary_sha256": "b41410ed990bdf3973b3264ff2d719ab507c2175a80bf38d041c1889c8b3e674",
+  "source_tree_sha256": "f154f968929ee652c6f46d559dd0fb23a15f6e439c9cf8982cd59e7efa1d0cb6",
+  "source_archive": "accepted-source-f154f968929ee652c6f46d559dd0fb23a15f6e439c9cf8982cd59e7efa1d0cb6.zip",
+  "source_archive_sha256": "b5f11d5ff3c373100183abab2c1c88d3df43b1f1e444aa912dc1cd30284faf61",
+  "benchmark": "windows-x64-0.3.0-dev-network-https-status-format-20261020.json",
+  "benchmark_sha256": "4ee9d0e07edfa54b855f618d73b8acbdcb606a6fe7bc6f0a66deda6bebf27209",
+  "performance_scope": "40 paired warm loopback HTTPS samples per operation; all data checks pass; not WAN/SSH/provider/v2/byte-reuse acceptance",
+  "complete_git_parity": false,
+  "system_git_replaced": false,
+  "real_provider_login_verified": false,
+  "release_published": false
+}

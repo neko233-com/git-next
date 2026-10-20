@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "cross-platform-update-implementation-complete-not-runtime-accepted",
+  "posix_updater": {
+    "schema_version": 1,
+    "status": "posix-updaters-compiled-not-runtime-accepted",
+    "compiler": "go version go1.27.2 windows/amd64",
+    "sources": {
+      "context.go": "79785da5f228cb3a863781a83c24eb0bd7c2c031a78756dd1198a263b12280fe",
+      "go.mod": "bdc423ec90afc5cc9ec6d758ff504ed853e2e560b80541497c13eb0da6e5aaee",
+      "install.go": "56930ac17da08e85386b6befa6473c16e62a12565ac5646ce37b53d80aaeec43",
+      "LICENSE": "ff3fa59b464e53051dbd6c6528aeb35b1796ac606a0bf38df8371c8f540024ba",
+      "main.go": "c0e821efcbe951b9437cb75c93d55d5517b84e68bfbbfab7b93438b4af3e4798",
+      "metadata.go": "151ffc194da17f75ad6d27af315a9b18243d56977ef2cff0b4757079bfc0deab",
+      "package.go": "6d8895af0242b63f58b48d841678b14d2db61e9e9e6896f229f4f3f6edce519e",
+      "service.go": "a8350aa7384c2d655689aba7c159dc604b2da29b0dd4df23cd1843ab4badf444",
+      "transaction.go": "63f56af02cdd0f397338a57b028901b66dbfb74878b3d05c7a38c099ab40a4f7"
+    },
+    "binaries": {
+      "linux-x64": {
+        "sha256": "f8a930c50d5951f5db0618bbf71952cdc561d07d95cd0fba7a6562c24e87498d",
+        "bytes": 7422112
+      },
+      "linux-arm64": {
+        "sha256": "d8d6eb6cf863184aac46fa5893b9bb2225029945a4976c684138a1927abb122a",
+        "bytes": 6815904
+      },
+      "macos-arm64": {
+        "sha256": "4b73e145b0995bb483f3d1122be1b3b41931b36e0299b5eeb9e5a9de3d984db1",
+        "bytes": 7015986
+      }
+    },
+    "product_executed": false,
+    "tests_executed": false,
+    "services_installed": false,
+    "installed": false,
+    "release_eligible": false
+  },
+  "windows_native_core": {
+    "source_tree_sha256": "6c523c539b127f7111b25ea3758ec4b029710476f2811262922aa2a9decb3906",
+    "binaries": {
+      "git.exe": {
+        "sha256": "fd93111d25815c3001ab0777579c59efb95fb3b7e0e45078430a29537351e3f4",
+        "bytes": 5247488
+      },
+      "git-remote-http.exe": {
+        "sha256": "cb5fee0132535c1bf3a5e4e8791ae7aebf463a62d53d5b54638e03477dd9ccf4",
+        "bytes": 3142656
+      },
+      "git-http-fetch.exe": {
+        "sha256": "8fd68d2bd1bbf34b5ea2b1d96b8199a0200279695b8db7738a5c6d4a4eaaf3cc",
+        "bytes": 3125760
+      },
+      "git-http-push.exe": {
+        "sha256": "93f34e142f0332a95abc79f5099d7231b8fa22c199883ced78d6d6576052021b",
+        "bytes": 3927040
+      },
+      "git-http-backend.exe": {
+        "sha256": "910d950484cf70a0b3a8d483d3bd7aa5db053aad29e7bbea7c59c1a1734176a5",
+        "bytes": 2173952
+      },
+      "git-daemon.exe": {
+        "sha256": "ad61c5bb27296e1f4db0b708be9b38f37449eff14300db631ccfaaf8c41a7a7f",
+        "bytes": 2177024
+      },
+      "git-shell.exe": {
+        "sha256": "b33c59ae62bf09522379c151278c87432f36b1a21ab5096c3e6fc291ba4df98f",
+        "bytes": 2160128
+      },
+      "scalar.exe": {
+        "sha256": "71d249c97f9cbc8e5062824fa3081923bd5775aa659a8f481428afc3815d1d49",
+        "bytes": 2206720
+      },
+      "git-imap-send.exe": {
+        "sha256": "d30baaa0401f0fd6f5e1fad6ead7585dce21a4b155646b4792e129709495eff4",
+        "bytes": 3119104
+      },
+      "git-sh-i18n--envsubst.exe": {
+        "sha256": "8bff48aaee4c5393c9c7bafeb3fce489c554503231259a410de376f6a88d84c1",
+        "bytes": 2156032
+      }
+    }
+  },
+  "current_sources": {
+    "tools/build_posix_updater.py": "7c228a31608aefc929d30fb7f429c56cbd11cbe581f4250a493a9f9aab15d872",
+    "tools/build_native_core.py": "f4ecea02e0521ee648ac56f33000519c42e02c07038402e676e3531c384b9f69",
+    "packaging/windows/update.ps1": "b03c24a58bee1882a079689041e8970326702c9e4079b11800b62718af12abb0",
+    "packaging/windows/Update.Core.psm1": "7ec77e5d733e878f56fd7639c9373912ad82a7e46fb1c687a6446e5eb3242600",
+    "packaging/windows/messages.zh-CN.json": "2df5ad8b563df00e30bccf9ca82c8323088cccb324fa39433ad30b0dc2a35643",
+    "native-core/overlay/git-next.c": "197f2b886e361f742e4413a174299c39b04f72e03a8651d9e2fda2646acdcf64",
+    "native-core/overlay/git-next-runtime.h": "8de10bd20308a32a5aaee84d301ac4862dbdf31f9a17d587de3bef8c7496bb6e",
+    "tests/containers/Dockerfile_mac": "a934cffdc0463fd1c0a458ed1c5bcb9110e0e672992ea2a05b94c6b5f1d7b297",
+    "tests/containers/mac_package_static.py": "7d6652248242c5707264758b9eb46b549f141d5e486956ae1737b186ad93dbe1"
+  },
+  "update_metadata": "official-github-api-digest-with-official-https-fallback",
+  "payload_transport": "anonymous-mirror-probes-with-official-size-sha256-verification",
+  "scheduling": {
+    "windows": "existing-scoped-tasks",
+    "linux": "systemd-owned-worker",
+    "macos": "launchd-owned-worker"
+  },
+  "posix_activation": "separate-verified-version-directory-and-journalled-atomic-current-symlink",
+  "posix_retention": "retain-prior-versions-for-running-processes-and-explicit-rollback",
+  "package_manifest_generation": "D07",
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "services_started": false,
+  "msi_installed": false,
+  "complete_git_parity": false,
+  "release_eligible": false
+}

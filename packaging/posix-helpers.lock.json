@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "platforms": {
+    "linux-x64": {
+      "lfs": {
+        "version": "3.7.1",
+        "asset": "git-lfs-linux-amd64-v3.7.1.tar.gz",
+        "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-linux-amd64-v3.7.1.tar.gz",
+        "bytes": 5524590,
+        "sha256": "1c0b6ee5200ca708c5cebebb18fdeb0e1c98f1af5c1a9cba205a4c0ab5a5ec08",
+        "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-lfs/git-lfs",
+        "source_tag": "v3.7.1"
+      },
+      "gcm": {
+        "version": "2.7.3",
+        "asset": "gcm-linux-x64-2.7.3.tar.gz",
+        "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-x64-2.7.3.tar.gz",
+        "bytes": 37627317,
+        "sha256": "c7935c3e1b22681d56011b580086aeb6d60f3f0aaf6ef9c581480356988ff804",
+        "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+        "source_tag": "v2.7.3"
+      }
+    },
+    "linux-arm64": {
+      "lfs": {
+        "version": "3.7.1",
+        "asset": "git-lfs-linux-arm64-v3.7.1.tar.gz",
+        "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-linux-arm64-v3.7.1.tar.gz",
+        "bytes": 5025763,
+        "sha256": "73a9c90eeb4312133a63c3eaee0c38c019ea7bfa0953d174809d25b18588dd8d",
+        "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-lfs/git-lfs",
+        "source_tag": "v3.7.1"
+      },
+      "gcm": {
+        "version": "2.7.3",
+        "asset": "gcm-linux-arm64-2.7.3.tar.gz",
+        "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-arm64-2.7.3.tar.gz",
+        "bytes": 35883174,
+        "sha256": "291763d626106891d794b17bd7c02fe77c3d9924193fdde9e284d1d1f3fe5c21",
+        "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+        "source_tag": "v2.7.3"
+      }
+    },
+    "macos-arm64": {
+      "lfs": {
+        "version": "3.7.1",
+        "asset": "git-lfs-darwin-arm64-v3.7.1.zip",
+        "url": "https://github.com/git-lfs/git-lfs/releases/download/v3.7.1/git-lfs-darwin-arm64-v3.7.1.zip",
+        "bytes": 5289015,
+        "sha256": "76260fb34f4ee622ff0a66b857e5954aa49c7e343a92e57a1ec4a760618c94b2",
+        "metadata_source": "https://api.github.com/repos/git-lfs/git-lfs/releases/255184872",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-lfs/git-lfs",
+        "source_tag": "v3.7.1"
+      },
+      "gcm": {
+        "version": "2.7.3",
+        "asset": "gcm-osx-arm64-2.7.3.tar.gz",
+        "url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-osx-arm64-2.7.3.tar.gz",
+        "bytes": 41772786,
+        "sha256": "7051a5e953bcd37a182330a0f18bc6842c4cac143b537f8c49a8c5906d335c80",
+        "metadata_source": "https://api.github.com/repos/git-ecosystem/git-credential-manager/releases/295273974",
+        "license": "MIT",
+        "source_repository": "https://github.com/git-ecosystem/git-credential-manager",
+        "source_tag": "v2.7.3"
+      }
+    }
+  },
+  "product_executed": false,
+  "tests_executed": false
+}

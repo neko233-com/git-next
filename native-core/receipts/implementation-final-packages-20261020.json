@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "status": "implementation-final-packages-and-batch-inputs",
+  "product": "git-next",
+  "version": "0.3.0",
+  "source_tree_sha256": "ff1591e8b19ac77da921376a7aac6d72d49c141ef394063619a6159e4728f401",
+  "platforms": [
+    "windows-x64",
+    "windows-arm64",
+    "linux-x64",
+    "linux-arm64",
+    "macos-arm64"
+  ],
+  "artifacts": {
+    ".evidence/native-final-packages-20261020/windows-x64/git-next-distribution.json": {
+      "sha256": "47fd7088564c502d214cf28fc5068ae35e65b96d9cf95083d72afb46dd3bc598",
+      "bytes": 2431911
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-x64.msi": {
+      "sha256": "1e7cfda97177c091d422cd7f7c3358c9d724171950b14d3b27588ede4e66ece5",
+      "bytes": 127582574
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-x64.receipt.json": {
+      "sha256": "4e3e8c4632d51ac948aa20b794cfc89eb294ed8af917e8ba46eb099ec848ebc1",
+      "bytes": 1034
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-x64-user.msi": {
+      "sha256": "9d8b4028e1ffd4e0328dcc99a03abdeecaa067b9b3081c2dd452c6cbaec7a1b6",
+      "bytes": 126898336
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-x64-user.receipt.json": {
+      "sha256": "119d11cd9ce1eaa10353b048f233bff7fdc6334fe3fb6d78be3093258d214d44",
+      "bytes": 1036
+    },
+    ".evidence/native-final-packages-20261020/windows-arm64/git-next-distribution.json": {
+      "sha256": "d1ddcca54b12e638d66cec339a31fbc9e191c51cc9fadd0977cd82aba033549d",
+      "bytes": 2028104
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-arm64.msi": {
+      "sha256": "1a24cf00dd4c84de95def59bba354deff7af49a84b467c7e22b814f0881e9a94",
+      "bytes": 176652656
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-arm64.receipt.json": {
+      "sha256": "a4054645d447894425fb3ca9d382886edfc5e9cf346f607ca79a5ac80f32e7d7",
+      "bytes": 1038
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-arm64-user.msi": {
+      "sha256": "2b321e06217748dae50ae1a20589a4ff79102ff5b857b7b1681e9a0d3c69755e",
+      "bytes": 176284212
+    },
+    ".evidence/native-final-packages-20261020/msi/git-next-0.3.0-windows-arm64-user.receipt.json": {
+      "sha256": "242a0d5e1d94c9e6226d1f84164951913db86f796dba5fa7b09c5521880e9010",
+      "bytes": 1040
+    },
+    ".evidence/native-final-packages-20261020/linux-x64/output/distribution.tar.gz": {
+      "sha256": "fc5a99d1804cee07bb0e4fa7aa0cb6727c496d18313412fb5e7bbb47d038f24d",
+      "bytes": 143067120
+    },
+    ".evidence/native-final-packages-20261020/linux-x64/output/assembly.json": {
+      "sha256": "2d7e3b64ecf438157696cf7e2d29ca26f93015752368fce9ae3e2ecef2bdb375",
+      "bytes": 799
+    },
+    ".evidence/native-final-packages-20261020/linux-arm64/output/distribution.tar.gz": {
+      "sha256": "e50322c09aea67fa5c0441abd883e65dee73433de9b30f4f84bf00f047c824e7",
+      "bytes": 138641426
+    },
+    ".evidence/native-final-packages-20261020/linux-arm64/output/assembly.json": {
+      "sha256": "0c36a9b9adca80c201f5d0bd1a92e2b782063966fbd8da0fb1b09d58362523e4",
+      "bytes": 801
+    },
+    ".evidence/native-final-packages-20261020/macos-arm64/macos-distribution.tar.gz": {
+      "sha256": "abc8b22d21c01233431de2226c5fe61774415acc7e9cb02cb6bfdc939c4939de",
+      "bytes": 148436659
+    },
+    ".evidence/corresponding-source-bundles-20261020/git-next-corresponding-sources-core-and-producer-recipes.zip": {
+      "sha256": "c8e1ac83cb239b13f76280cf05a1221ced3273cf1ab451ab5868cfbddb8f5dea",
+      "bytes": 161028658
+    },
+    ".evidence/corresponding-source-bundles-20261020/git-next-corresponding-sources-debian.zip": {
+      "sha256": "0ea1d630d95b66c74096043aeacb8a983e3d99e14bc1a746246e6a6e6cce1707",
+      "bytes": 366231354
+    },
+    ".evidence/corresponding-source-bundles-20261020/git-next-corresponding-sources-homebrew.zip": {
+      "sha256": "82f8bc1c855ed5285646fac3c0c31217da0e660203ed73ed3a104bb06a47d9ce",
+      "bytes": 205444882
+    },
+    ".evidence/corresponding-source-bundles-20261020/git-next-corresponding-sources-msys2.zip": {
+      "sha256": "2b99e7bd24848143f13194e1474a57704d764f054f33a92089d462e6eb673e62",
+      "bytes": 774878589
+    },
+    ".evidence/corresponding-source-bundles-20261020/sources.json": {
+      "sha256": "f2d7828154e3f1bf52bdf5fb6405fa69bcd79786679feefecfc09fec45b60f15",
+      "bytes": 1074
+    }
+  },
+  "harness_entry": "tools/product_batch.py --native-packages MATRIX --reference ORIGINAL --output NEW --workers 8 --wall-clock-target 60",
+  "harnesses": {
+    "tools\\native_product_batch.py": "b0a58dad1185f089a32d62a7b354c45ad9599c8e2f93f7834ce48147c1937959",
+    "tools\\freeze_native_batch.py": "ffa5a56b9c3e1746735cfeb9aa9a09014b1dfc413715531e18166a382af804b4",
+    "tools\\native_docker_batch.py": "74040824f976ffa4512586615f3c79023213e4b9b2ba78487fa65a60190a5b31",
+    "tests\\native_contract_acceptance.py": "1740a86469471db505b1798dd35057859786d332aab7422f4f6a21e9c0fc719f",
+    "tests\\native_integrations_acceptance.py": "991b1b2762e58e66158427fb74704b36a695a3e9845f54d879afdc2f04af130b",
+    "tests\\containers\\native_run.py": "c2a3323fff0af443710b89f29c8fa5f2649214fe86e854fa7dc9ba36b99110ca",
+    "tests\\containers\\migration_host.py": "51c16aab1dbde7732847e47d81d88baa6b7b81a08a90d8ed0a56abab733134c0",
+    "tests\\containers\\migration_client.py": "f36cf62ea3e315fa24ae9d172a470225e966c7a5dc79d32fdc6c9240be2c42af",
+    "tests\\containers\\mac_package_static.py": "7b08dfcd52bf59180c7a080879687ae7fa192ec1d78e5e4f716b4c170f103271",
+    "tests\\msi_acceptance.ps1": "8588046ad29078e936f80a8359e7252e8e6ecf366febbe59c39b99373e61d93a",
+    "tests\\updater_acceptance.ps1": "d466101a5fc67b79af74fdb224db502b0c22744319014daad008f947c85b60de",
+    "packaging\\posix\\updater\\updater_test.go": "1c0049fdcb113ffdda82110babaed524a9a77567d9e065e9c7f230dfe2cffe8f"
+  },
+  "implementation_closed": 7,
+  "deliverables_total": 10,
+  "regression_started": false,
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "release_eligible": false,
+  "macos_acceptance_scope": "Docker static package and shell; no native product execution",
+  "corresponding_source_components": 459
+}

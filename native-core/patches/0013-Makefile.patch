@@ -1,0 +1,13 @@
+--- a/Makefile
++++ b/Makefile
+@@ -1173,6 +1173,10 @@
+ LIB_OBJS += fsmonitor-ipc.o
+ LIB_OBJS += fsmonitor-settings.o
+ LIB_OBJS += gettext.o
++LIB_OBJS += git-next.o
++LIB_OBJS += git-next-printf.o
++LIB_OBJS += yyjson.o
++BASIC_CFLAGS += -DGIT_NEXT_NATIVE -DNO_GETTEXT
+ LIB_OBJS += git-zlib.o
+ LIB_OBJS += gpg-interface.o
+ LIB_OBJS += graph.o

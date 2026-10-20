@@ -1,0 +1,11 @@
+--- a/run-command.c
++++ b/run-command.c
+@@ -277,7 +277,7 @@
+ char *git_shell_path(void)
+ {
+ #ifndef GIT_WINDOWS_NATIVE
+-	return xstrdup(SHELL_PATH);
++	return system_path("runtime/usr/bin/sh");
+ #else
+ 	char *p = system_path("runtime/usr/bin/sh.exe");
+ 	convert_slashes(p);

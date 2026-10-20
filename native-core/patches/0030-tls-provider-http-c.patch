@@ -1,0 +1,33 @@
+--- a/http.c
++++ b/http.c
+@@ -1579,6 +1579,16 @@
+ 	FREE_AND_NULL(cached_accept_language);
+ }
+ 
++static size_t git_next_curl_read(char *buffer, size_t size, size_t count, void *file)
++{
++	return fread(buffer, size, count, file);
++}
++
++static size_t git_next_curl_write(char *buffer, size_t size, size_t count, void *file)
++{
++	return fwrite(buffer, size, count, file);
++}
++
+ struct active_request_slot *get_active_slot(void)
+ {
+ 	struct active_request_slot *slot = active_queue_head;
+@@ -1640,8 +1650,11 @@
+ 	curl_easy_setopt(slot->curl, CURLOPT_RESOLVE, host_resolutions);
+ 	curl_easy_setopt(slot->curl, CURLOPT_ERRORBUFFER, curl_errorstr);
+ 	curl_easy_setopt(slot->curl, CURLOPT_CUSTOMREQUEST, NULL);
+-	curl_easy_setopt(slot->curl, CURLOPT_READFUNCTION, NULL);
+-	curl_easy_setopt(slot->curl, CURLOPT_WRITEFUNCTION, NULL);
++	/* FILE objects and callbacks must use the host CRT, even with a provider DLL. */
++	curl_easy_setopt(slot->curl, CURLOPT_READFUNCTION, git_next_curl_read);
++	curl_easy_setopt(slot->curl, CURLOPT_READDATA, stdin);
++	curl_easy_setopt(slot->curl, CURLOPT_WRITEFUNCTION, git_next_curl_write);
++	curl_easy_setopt(slot->curl, CURLOPT_WRITEDATA, stdout);
+ 	curl_easy_setopt(slot->curl, CURLOPT_POSTFIELDS, NULL);
+ 	curl_easy_setopt(slot->curl, CURLOPT_POSTFIELDSIZE, -1L);
+ 	curl_easy_setopt(slot->curl, CURLOPT_UPLOAD, 0L);

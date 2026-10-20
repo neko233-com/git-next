@@ -1,0 +1,45 @@
+--- a/exec-cmd.c
++++ b/exec-cmd.c
+@@ -3,6 +3,7 @@
+ #include "environment.h"
+ #include "exec-cmd.h"
+ #include "gettext.h"
++#include "git-next.h"
+ #include "path.h"
+ #include "run-command.h"
+ #include "strvec.h"
+@@ -51,6 +52,14 @@
+ 	assert(is_absolute_path(executable_dirname));
+ 
+ 	if (!prefix &&
++#ifdef GIT_WINDOWS_NATIVE
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/mingw64/bin")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/clangarm64/bin")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/mingw64/libexec/git-core")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/clangarm64/libexec/git-core")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/cmd")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "runtime/bin")) &&
++#endif
+ 	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, BINDIR)) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "git"))) {
+@@ -335,6 +344,19 @@
+ 
+ 	git_set_exec_path(exec_path);
+ 	add_path(&new_path, exec_path);
++	{
++		char *owned = system_path("bin");
++		add_path(&new_path, owned);
++		free(owned);
++#ifdef GIT_WINDOWS_NATIVE
++		owned = system_path(GIT_NEXT_RUNTIME_NATIVE_BIN);
++		add_path(&new_path, owned);
++		free(owned);
++		owned = system_path("runtime/usr/bin");
++		add_path(&new_path, owned);
++		free(owned);
++#endif
++	}
+ 
+ 	if (old_path)
+ 		strbuf_addstr(&new_path, old_path);

@@ -1,0 +1,11 @@
+--- a/setup.c
++++ b/setup.c
+@@ -2825,7 +2825,7 @@
+ 				      &repo_fmt, init_shared_repository);
+ 
+ 	if (!reinit)
+-		git_next_configure_new_repo(the_repository, !(flags & INIT_DB_SKIP_REFDB));
++		git_next_configure_new_repo(the_repository);
+ 
+ 	if (!(flags & INIT_DB_SKIP_REFDB))
+ 		create_reference_database(initial_branch, flags & INIT_DB_QUIET);

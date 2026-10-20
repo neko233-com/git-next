@@ -1,0 +1,12 @@
+{
+  "status": "fixture_setup_failed",
+  "scope": "100000-file loose fixture; no valid command latency result",
+  "binary_sha256": "264214cf4e6b7547b63db7c50b883cbe596b5721397d6ca0b6288dd6b52e4e41",
+  "source_tree_sha256": "0b6b6099dca69f3e1dfc1644ac4abbcbd9edaf571617f9b561dfa04babf1c9f9",
+  "reference_version": "git version 2.54.0.windows.1",
+  "fixture_layout": "loose",
+  "files": 100000,
+  "stage": "reference Git add before fixture commit",
+  "timeout_seconds": 180,
+  "results": null
+}

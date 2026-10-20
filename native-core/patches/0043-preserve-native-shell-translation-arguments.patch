@@ -1,0 +1,11 @@
+--- a/git-sh-i18n.sh
++++ b/git-sh-i18n.sh
+@@ -43,7 +43,7 @@
+ case "$GIT_INTERNAL_GETTEXT_SH_SCHEME" in
+ git-next)
+ 	gettext () {
+-		git i18n--gettext -- "$1"
++		MSYS2_ARG_CONV_EXCL='*' git i18n--gettext -- "$1"
+ 	}
+ 
+ 	eval_gettext () {

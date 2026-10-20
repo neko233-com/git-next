@@ -1,0 +1,35 @@
+--- a/environment.c
++++ b/environment.c
+@@ -11,6 +11,7 @@
+ #define USE_THE_REPOSITORY_VARIABLE
+ 
+ #include "git-compat-util.h"
++#include "git-next.h"
+ #include "abspath.h"
+ #include "advice.h"
+ #include "attr.h"
+@@ -64,7 +65,7 @@
+ char *askpass_program;
+ char *excludes_file;
+ enum auto_crlf auto_crlf = AUTO_CRLF_FALSE;
+-enum eol core_eol = EOL_UNSET;
++enum eol core_eol = EOL_LF;
+ int global_conv_flags_eol = CONV_EOL_RNDTRP_WARN;
+ char *check_roundtrip_encoding;
+ enum rebase_setup_type autorebase = AUTOREBASE_NEVER;
+@@ -398,6 +399,7 @@
+ 	}
+ 
+ 	if (!strcmp(var, "core.autocrlf")) {
++		git_next_lf_defaults = 0;
+ 		if (value && !strcasecmp(value, "input")) {
+ 			auto_crlf = AUTO_CRLF_INPUT;
+ 			return 0;
+@@ -419,6 +421,7 @@
+ 	}
+ 
+ 	if (!strcmp(var, "core.eol")) {
++		git_next_lf_defaults = 0;
+ 		if (value && !strcasecmp(value, "lf"))
+ 			core_eol = EOL_LF;
+ 		else if (value && !strcasecmp(value, "crlf"))

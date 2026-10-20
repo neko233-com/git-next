@@ -1,0 +1,9 @@
+# macOS package/static-shell acceptance only: this image runs Linux, never Mach-O.
+FROM debian@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587
+RUN apt-get update && apt-get install --no-install-recommends -y python3 bash && rm -rf /var/lib/apt/lists/*
+WORKDIR /acceptance
+COPY mac_package_static.py /acceptance/mac_package_static.py
+COPY package_input.py /acceptance/package_input.py
+ENV HOME=/tmp/home USERPROFILE=/tmp/home SSH_ROOT_PATH=/tmp/ssh
+ENTRYPOINT ["python3", "/acceptance/mac_package_static.py"]
+CMD ["--package", "/package", "--output", "/results/macos-package-static.json"]

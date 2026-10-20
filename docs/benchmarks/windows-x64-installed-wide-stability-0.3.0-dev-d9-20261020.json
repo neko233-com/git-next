@@ -1,0 +1,32 @@
+{
+  "status": "pass",
+  "scope": "Additional wide-tree stability acceptance of installed d9 bytes; no new build, latency or full takeover claim",
+  "binary_sha256": "d9a171391f83b86181730cd78069121d6a30c0b516711b97a2c36b6383a31049",
+  "harness_sha256": "9a1a33042d90acf1084f53a0f8892ac3468b4db76a5a4ca6b7f8726d43934b9b",
+  "files": 10000,
+  "directories": 1000,
+  "results": [
+    {
+      "object_format": "sha1",
+      "status_runs": 60,
+      "all_worktree_bytes_verified": true,
+      "worktree_sha256": "415ed897d6a0a31a1859bbe73bdc511bca13ef7649fe37405c2afda68aceeda8",
+      "staged_object_ids_and_head_unchanged": true,
+      "stage_sha256": "1bc35083d70389fe93d76724998bd10e7e9831f04f664e1268fd956d383d71e4",
+      "optional_lock_no_write_and_no_leaked_lock": true
+    },
+    {
+      "object_format": "sha256",
+      "status_runs": 60,
+      "all_worktree_bytes_verified": true,
+      "worktree_sha256": "415ed897d6a0a31a1859bbe73bdc511bca13ef7649fe37405c2afda68aceeda8",
+      "staged_object_ids_and_head_unchanged": true,
+      "stage_sha256": "70650aa5417aed833f592871b5484e1a2e1504e4a33648ed53945103596b1c69",
+      "optional_lock_no_write_and_no_leaked_lock": true
+    }
+  ],
+  "runtime_git_ssh_on_path": false,
+  "system_configuration": "enabled with isolated profiles",
+  "full_git_parity": false,
+  "source_tree_sha256": "36a7442e8262fbb3ae8b9745fb65a3fbc54de4ea5959cee94f2e66d1dbb3ae03"
+}

@@ -13,6 +13,7 @@ def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument("binary", type=Path)
     parser.add_argument("--https", action="store_true")
+    parser.add_argument("--system-config-enabled", action="store_true")
     args = parser.parse_args()
     binary = str(args.binary.resolve())
     reference = shutil.which("git")
@@ -25,7 +26,7 @@ def main():
         empty_path = root / "empty-path"
         empty_path.mkdir()
         env = {**os.environ, "HOME": str(home), "USERPROFILE": str(home),
-               "GIT_CONFIG_NOSYSTEM": "1", "GIT_CONFIG_GLOBAL": str(home / "config"),
+               "GIT_CONFIG_NOSYSTEM": "0" if args.system_config_enabled else "1", "GIT_CONFIG_GLOBAL": str(home / "config"),
                "GIT_AUTHOR_NAME": "Acceptance", "GIT_AUTHOR_EMAIL": "acceptance@example.invalid",
                "GIT_COMMITTER_NAME": "Acceptance", "GIT_COMMITTER_EMAIL": "acceptance@example.invalid"}
         env.pop("GIT_DIR", None)
@@ -47,6 +48,14 @@ def main():
 
         def new(*command, **kwargs):
             return run(binary, *command, client=True, **kwargs)
+
+        for command in [("--version",), ("-v",), ("version",), ("version", "--build-options")]:
+            assert b"git-next" in new(*command)
+        identity = json.loads(new("--version", "--json"))
+        assert identity["product"] == "git-next" and identity["complete_git_parity"] is False
+        readiness = json.loads(new("doctor", "--json"))
+        assert readiness["replacement_ready"] is False and readiness["blockers"]
+        checks.append("all version forms identify git-next; structured doctor reports actual replacement blockers")
 
         source = root / "source"
         run(reference, "init", "-b", "main", source)
@@ -77,11 +86,11 @@ def main():
         assert new("rev-parse", "origin/main", cwd=target).strip() == expected
         assert new("rev-parse", "HEAD", cwd=target).strip() == head
         assert (target / "README.md").read_text() == "hello\n"
-        new("pull", "--ff-only", cwd=target, success=False)
-        assert new("rev-parse", "HEAD", cwd=target).strip() == head
-        assert (target / "README.md").read_text() == "hello\n"
+        new("pull", "--ff-only", cwd=target)
+        assert new("rev-parse", "HEAD", cwd=target).strip() == expected
+        assert (target / "README.md").read_text() == "second\n"
         run(reference, "fsck", "--full", cwd=target)
-        checks.append("incremental local packed fetch; unimplemented checkout refuses without changing HEAD/worktree")
+        checks.append("incremental local packed fetch and native fast-forward pull update HEAD/index/worktree")
         new("clone", source, target, success=False)
         new("not-a-command", cwd=target, success=False)
         new("push", cwd=target, success=False)
@@ -126,11 +135,16 @@ def main():
         checks.append("nested repositories, merge state and active hooks refuse without unsafe writes")
         if args.https:
             network = root / "https"
-            new("clone", "--depth", "1", "https://github.com/octocat/Hello-World.git", network)
+            public_url = "https://github.com/octocat/Hello-World.git"
+            expected_refs = run(reference, "ls-remote", public_url).splitlines()
+            actual_refs = new("ls-remote", public_url).splitlines()
+            assert expected_refs and sorted(actual_refs) == sorted(expected_refs)
+            new("clone", "--depth", "1", public_url, network)
             assert new("status", "--porcelain", cwd=network) == b""
             run(reference, "fsck", "--full", cwd=network)
-            checks.append("public HTTPS shallow clone; PATH contains no Git/SSH")
+            checks.append("public HTTPS complete advertised refs match reference and shallow clone passes; client PATH contains no Git/SSH")
         print(json.dumps({"status": "pass", "binary_sha256": hashlib.sha256(Path(binary).read_bytes()).hexdigest(),
+                          "system_configuration_enabled": args.system_config_enabled,
                           "checks": checks, "full_git_parity": False}, indent=2))
 
 

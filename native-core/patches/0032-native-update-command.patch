@@ -1,0 +1,11 @@
+--- a/git.c
++++ b/git.c
+@@ -537,6 +537,8 @@
+ 
+ static struct cmd_struct commands[] = {
+ 	{ "language", cmd_git_next_language, 0 },
++	{ "update", cmd_git_next_update, 0 },
++	{ "update-git-for-windows", cmd_git_next_update, 0 },
+ 	{ "eol", cmd_git_next_eol, 0 },
+ 	{ "compatibility", cmd_git_next_report, 0 },
+ 	{ "doctor", cmd_git_next_report, 0 },

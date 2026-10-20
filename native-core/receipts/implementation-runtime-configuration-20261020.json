@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "status": "windows-config-implemented-posix-dispatch-integrated-not-runtime-accepted",
+  "current_integrated_source_tree_sha256": "e439672489b006662cd18e95b1839ec50b7db8288f2d3c24ce080fabe31b232b",
+  "compiled_windows_source_tree_sha256": "11d1491f61bd8a4d74be9eb5e19d47bbf65cf007771d2ae323c2580daa912e0a",
+  "compiled_windows_binaries": {
+    "git.exe": {
+      "sha256": "2410b4d6f0c3c390576efe8cd7aa493948eb87dcfb145c1c6036680b59cfbdaf",
+      "bytes": 5246464
+    },
+    "git-remote-http.exe": {
+      "sha256": "47b52bb42b85d29a711994a3ed11059dad4d59323b381829288a0dc98a84ca8f",
+      "bytes": 3142656
+    },
+    "git-http-fetch.exe": {
+      "sha256": "47bcbd0f0a0eff1685e33f98ff604d5c7062a289489535d57bc8aca55222d819",
+      "bytes": 3125760
+    },
+    "git-http-push.exe": {
+      "sha256": "187eb6264c61f1cc72fd453f5f5ba5f792783babc1b76304f6e76591970545b4",
+      "bytes": 3927040
+    },
+    "git-http-backend.exe": {
+      "sha256": "e6793d924889cd4b919f27bd4a06afc5d36a907767bc0527cc27b09df7e81dfb",
+      "bytes": 2173952
+    },
+    "git-daemon.exe": {
+      "sha256": "99ffa00d5e4da18e649e04c1f7e0807dc797ef33a217e150c22ab05a6b480b67",
+      "bytes": 2177024
+    },
+    "git-shell.exe": {
+      "sha256": "5ba0a2421ef71fa67e851ea346ab75e250610d364c4d08b3b4aa01270c4b2aed",
+      "bytes": 2160128
+    },
+    "scalar.exe": {
+      "sha256": "a57b26c939abb72637be72cde7a7b214cf802a83003952388829e283c9bb9461",
+      "bytes": 2206720
+    },
+    "git-imap-send.exe": {
+      "sha256": "77b48b1fd49f6e60ec39a8ce376037410fc277f6b2521c35bbe989698f37528a",
+      "bytes": 3119104
+    },
+    "git-sh-i18n--envsubst.exe": {
+      "sha256": "77cf1dea20910b3821a249165ac927b6a4305858f611d416e4925b4ec0e5fffa",
+      "bytes": 2156032
+    }
+  },
+  "current_source_files": {
+    "packaging/windows/Runtime.Configuration.ps1": "8016146741963828ddb1cd9cdde06fedefd81d9f70403d16aae2834bbff50bdb",
+    "packaging/windows/Update.Core.psm1": "7ec77e5d733e878f56fd7639c9373912ad82a7e46fb1c687a6446e5eb3242600",
+    "packaging/windows/update.ps1": "c09167642fdf3738f2fdfc4b90babba5e597d800f97f3c2750844bf2c18e06a6",
+    "packaging/windows/Takeover.Core.psm1": "3443aa56b11ba7f636485040cdae2f049de16031e13471997c9d298ed51f1544",
+    "packaging/windows/Product.wxs": "4ca7e109db89f1520c91787ac74605cacc6f55c22b02fc7ef6bb69391f4bb94b",
+    "packaging/native_msi.py": "edb62f15a5cdc9df4df5ccc2d954a74730ba7b94217f39164c193a8f8050509c",
+    "packaging/build_msi.py": "d33bd73fedf0bb01533b60ddb747f4c1393fdd240db5bb2bc4246ac3ad27621c",
+    "tools/assemble_native_windows.py": "4a4f2e11d34e5592b1de52546f27d4cd9fa4cc19db1ddab8cc68121abe585dd2",
+    "native-core/overlay/git-next-curl.c": "16c62caf66fd93c6a26388d9da5db72f9a73923f78f37eb9ec779518a6e89bca",
+    "native-core/overlay/git-next-runtime.h": "7308e53667dbb5656f94905be1afe2d4b1918a49a2c14235f30035aae7709bbb",
+    "native-core/patches/series.json": "3002fb97ddf428c5523c804ba98e9c0f680d4d3b879c7c6535843144a8c91f9a",
+    "packaging/windows/messages.zh-CN.json": "3c2de2cf034a1f30641be753d6fc51d8373d0f493fb7c82345557b6e38943055"
+  },
+  "runtime_archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd",
+  "windows_configuration_default_files": 58,
+  "configuration_roots": [
+    "runtime/etc",
+    "runtime/usr/etc",
+    "runtime/mingw64/etc",
+    "runtime/clangarm64/etc"
+  ],
+  "features": [
+    "immutable-stock-defaults",
+    "mutable-consumer-paths",
+    "preserve-custom-files-on-upgrade",
+    "private-journal-before-writes",
+    "snapshot-source-hash-checks",
+    "msi-rollback-and-commit",
+    "original-config-to-owned-consumer-migration",
+    "preserve-private-file-access-and-msys-attributes",
+    "conflicting-edits-stop-recovery",
+    "owned-active-tls-config",
+    "posix-absolute-owned-ssh-and-shell",
+    "posix-owned-runtime-prefix-and-path"
+  ],
+  "source_syntax_only": [
+    "PowerShell parser without import/invocation",
+    "Python compilation",
+    "WiX XML parse"
+  ],
+  "product_executed": false,
+  "tests_executed": false,
+  "installed": false,
+  "original_git_removed": false,
+  "complete_git_parity": false,
+  "release_eligible": false,
+  "evidence_limit": "The Windows TLS config selection compiled before the later POSIX dispatch patches. The new configuration layout/MSI actions await the accumulated D07 package rebuild and D08 lifecycle checks.",
+  "remaining": [
+    "D02 remaining platform runtime builders/assembly",
+    "D06 cross-platform updater and final manifest integration",
+    "D07 five final packages, corresponding sources/licenses and full regression inputs",
+    "D08 consolidated regression",
+    "D09 paired performance batch",
+    "D10 one release and actual takeover"
+  ],
+  "localized_configuration_messages": 13
+}

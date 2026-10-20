@@ -1,0 +1,10 @@
+--- a/exec-cmd.c
++++ b/exec-cmd.c
+@@ -58,6 +58,7 @@
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/mingw64/libexec/git-core")) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/clangarm64/libexec/git-core")) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/cmd")) &&
++	    !(prefix = strip_path_suffix(executable_dirname, "cmd")) &&
+ 	    !(prefix = strip_path_suffix(executable_dirname, "runtime/bin")) &&
+ #endif
+ 	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&

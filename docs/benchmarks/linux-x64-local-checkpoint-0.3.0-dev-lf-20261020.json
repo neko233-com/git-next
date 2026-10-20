@@ -1,0 +1,61 @@
+{
+  "status": "pass",
+  "scope": "Linux x64 Docker container local LF/status/restore/read/worktree/commit/format subset; no network/login/Mac or native-host performance acceptance",
+  "binary_sha256": "79df609cd1a4514c95d2aff85b1f3a008e87cfe020ab24e3e95a1b1826829d3d",
+  "native_version": "git-next version 0.3.0-dev (experimental)",
+  "reference_version": "git version 2.47.3",
+  "machine": "x86_64",
+  "libc": [
+    "glibc",
+    "2.41"
+  ],
+  "python_version": "3.14.8",
+  "results": [
+    {
+      "test": "eol_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "8a944a7c4545e53836e7c04d18a90ac81f46bcdc945579cef5f7b780ffb9d610"
+    },
+    {
+      "test": "status_cache_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "42a90bce21ba044a0992fe4e7ea0ef5f15943ca62fc469cf8a9b2a1a01e83add"
+    },
+    {
+      "test": "restore_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "faf7112be084bab8783c1826bb51bd2bd2298e36ab412425e08f7caa55435d64"
+    },
+    {
+      "test": "diff_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "eab07dafb41d4ec46cc68bec41c7265910531e451076a70e46703db5523fce00"
+    },
+    {
+      "test": "worktree_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "836945c5a59519ee6063e12477ec88a6a5e5d1dad5ad8615a6b25c0259269897"
+    },
+    {
+      "test": "acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "b18652164a6ecdce23dfccdc6e07c0da62450c66c3a54f66b95b19078d247c83"
+    },
+    {
+      "test": "commit_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "71cbcc67fc9b08b50380cf031ef1e925c0a69d547561d7cad34c788ff0fba905"
+    },
+    {
+      "test": "repository_format_acceptance.py",
+      "exit_code": 0,
+      "harness_sha256": "95ad4e0232ac51eb77b419a80f88b10cba6b6caa9e80de8b3b175b35841bcc87"
+    }
+  ],
+  "image_id": "sha256:fbfeaf61ca4a0a0204947f6778b0d0535b3c3ada819f2056dd89044a5e4ccf3e",
+  "source_tree_sha256": "0b6b6099dca69f3e1dfc1644ac4abbcbd9edaf571617f9b561dfa04babf1c9f9",
+  "target": "x86_64-unknown-linux-musl",
+  "binary_has_no_dynamic_interpreter": true,
+  "complete_git_parity": false,
+  "native_macos_accepted": false
+}

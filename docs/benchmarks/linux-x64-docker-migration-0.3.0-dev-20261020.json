@@ -1,0 +1,104 @@
+{
+  "status": "pass",
+  "scope": "Docker Linux x64 fixture accounts; no real account/profile mounts",
+  "source_tree_sha256": "f079bc55ad4d1336363ed19573d3c98f96a0f31b261b8072361565b0e62e0767",
+  "binary_sha256": "f35cfe0806c12c27f2fd7975f5bd290489a7e411d467bdccfc93377e660712e5",
+  "gcm_archive_sha256": "c7935c3e1b22681d56011b580086aeb6d60f3f0aaf6ef9c581480356988ff804",
+  "gcm_archive_url": "https://github.com/git-ecosystem/git-credential-manager/releases/download/v2.7.3/gcm-linux-x64-2.7.3.tar.gz",
+  "harnesses": {
+    "migration_host.py": "3e3765f8dfe73e5c2216d0ee3878216ba8012e9d01f7a689dd13a8dea5dd8cb9",
+    "migration.Dockerfile": "a6a0faf64fc37aa991b3dfee092354cb603a0ccace8273f8ea53bf4789138b6b",
+    "migration_server.py": "0c85aa64bc05c2954526ffa65f4a1b48419f82a4a5dc90efc7000c2cf14af608",
+    "migration_client.py": "4f8e6c1d647c73d73929f0f66d1dd453ca5c8f0fd5c971c406a6798d5e021b7c",
+    "push_acceptance.py": "d23fc9826dd445c44a977ebdde3f61b361ec4a7d14a6852fbfa0ab185cbb960c"
+  },
+  "isolation": {
+    "runtime_network_internal": true,
+    "published_ports": false,
+    "real_profile_mounted": false,
+    "read_only_rootfs": true,
+    "fixture_data_in_disposable_volume_and_tmpfs": true
+  },
+  "images": {
+    "server": "sha256:a46372e31af44373de26d721d38c3929f4289c0c38c0a75becee7a372b3130a4",
+    "client": "sha256:efb125bdf8eed31362347ca86e44101ae2cb6c329bd3d9a41e6e5448b9b92310"
+  },
+  "cleanup": [
+    {
+      "kind": "container",
+      "name": "git-next-migration-05daf83d1c6b-client",
+      "absent_after_cleanup": true
+    },
+    {
+      "kind": "container",
+      "name": "git-next-migration-05daf83d1c6b-server",
+      "absent_after_cleanup": true
+    },
+    {
+      "kind": "volume",
+      "name": "git-next-migration-05daf83d1c6b-volume",
+      "absent_after_cleanup": true
+    },
+    {
+      "kind": "network",
+      "name": "git-next-migration-05daf83d1c6b-network",
+      "absent_after_cleanup": true
+    },
+    {
+      "kind": "image",
+      "name": "git-next-migration-05daf83d1c6b:client",
+      "absent_after_cleanup": true
+    },
+    {
+      "kind": "image",
+      "name": "git-next-migration-05daf83d1c6b:server",
+      "absent_after_cleanup": true
+    }
+  ],
+  "reference_base_image": "sha256:fbfeaf61ca4a0a0204947f6778b0d0535b3c3ada819f2056dd89044a5e4ccf3e",
+  "acceptance": {
+    "status": "pass",
+    "scope": "Linux x64 isolated Docker migration/authentication/LF subset; generated accounts only",
+    "binary_sha256": "f35cfe0806c12c27f2fd7975f5bd290489a7e411d467bdccfc93377e660712e5",
+    "gcm_binary_sha256": "001d6a42871009ca29cb2e6a51e6f6eb51491f05519401e00a30977672b521af",
+    "native_version": "git-next version 0.3.0-dev (experimental)",
+    "reference_version": "git version 2.47.3",
+    "checks": [
+      "old Git repository/index/config read directly with native branded git; optional locks disabled",
+      "Unity-style pure CRLF save stays clean; real edit remains visible and stages canonical LF; binary bytes preserved",
+      "migrated named manager helper authenticates private HTTPS read and native push without changing credential files",
+      "private authenticated HTTPS clone checks out LF text and exact binary bytes",
+      "private authenticated HTTPS incremental fetch and ff-only pull preserve the migrated repository",
+      "rejected saved HTTPS login leaves repository/profile/remote refs unchanged and retains the saved login",
+      "missing login refuses without prompting, repository changes or credential deletion",
+      "private untrusted TLS certificate refuses; verification remains enabled",
+      "incomplete managed support refuses without original Git fallback or profile/repository writes",
+      "existing SSH config/private key/known_hosts authenticate native read, clone, fetch and push without OpenSSH",
+      "unknown/changed SSH host keys and rejected private identity refuse while preserving repository/profile",
+      "reference fsck passes for the server and all three working repositories; no leftover writer locks",
+      "client image physically excludes original Git/OpenSSH; execve audit contains native Git and standalone GCM only"
+    ],
+    "https_authenticated_requests": 9,
+    "ssh_authenticated_sessions": 8,
+    "ssh_commands": {
+      "git-upload-pack": 3,
+      "git-receive-pack": 1
+    },
+    "client_executables": [
+      "/tmp/gcm/git-credential-manager",
+      "/tmp/native/git",
+      "/usr/bin/dpkg-query",
+      "/usr/local/bin/dpkg-query",
+      "/usr/local/bin/python",
+      "/usr/local/sbin/dpkg-query",
+      "/usr/sbin/dpkg-query"
+    ],
+    "profile_bytes_preserved": true,
+    "real_account_accessed": false,
+    "full_git_takeover_accepted": false
+  },
+  "all_owned_resources_removed": true,
+  "acceptance_harness_archive": "docker-migration-20261020-harnesses.zip",
+  "acceptance_harness_archive_sha256": "1d9979123aebcc8f3737d793ef13c72594caad8b1cd15bfd315e37d920907ca8",
+  "acceptance_harness_is_authoritative_for_runtime_scripts": true
+}

@@ -1,0 +1,24 @@
+--- a/git.rc.in
++++ b/git.rc.in
+@@ -1,7 +1,8 @@
+ #include<winuser.h>
++#include "git-next-identity.h"
+ 1 VERSIONINFO
+-FILEVERSION     @GIT_MAJOR_VERSION@,@GIT_MINOR_VERSION@,@GIT_MICRO_VERSION@,@GIT_PATCH_LEVEL@
+-PRODUCTVERSION  @GIT_MAJOR_VERSION@,@GIT_MINOR_VERSION@,@GIT_MICRO_VERSION@,@GIT_PATCH_LEVEL@
++FILEVERSION     GIT_NEXT_RESOURCE_VERSION
++PRODUCTVERSION  GIT_NEXT_RESOURCE_VERSION
+ BEGIN
+   BLOCK "StringFileInfo"
+   BEGIN
+@@ -12,8 +13,8 @@
+       VALUE "InternalName", "git\0"
+       VALUE "OriginalFilename", "git.exe\0"
+       VALUE "ProductName", "git-next\0"
+-      VALUE "ProductVersion", "@GIT_VERSION@\0"
+-      VALUE "FileVersion", "@GIT_VERSION@\0"
++      VALUE "ProductVersion", GIT_NEXT_RESOURCE_VERSION_STRING
++      VALUE "FileVersion", GIT_NEXT_RESOURCE_VERSION_STRING
+     END
+   END
+ 

@@ -1,0 +1,11 @@
+--- a/config.c
++++ b/config.c
+@@ -1467,6 +1467,8 @@
+ char *git_system_config(void)
+ {
+ 	char *system_config = xstrdup_or_null(getenv("GIT_CONFIG_SYSTEM"));
++	if (!system_config)
++		system_config = git_next_migration_config();
+ 	if (!system_config)
+ 		system_config = system_path(ETC_GITCONFIG);
+ 	normalize_path_copy(system_config, system_config);

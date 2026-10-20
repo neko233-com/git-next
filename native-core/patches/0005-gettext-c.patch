@@ -1,0 +1,12 @@
+--- a/gettext.c
++++ b/gettext.c
+@@ -49,6 +49,9 @@
+  */
+ const char *get_preferred_languages(void)
+ {
++#ifdef GIT_NEXT_NATIVE
++	return git_next_preferred_languages();
++#endif
+ 	const char *retval;
+ 
+ 	retval = getenv("LANGUAGE");

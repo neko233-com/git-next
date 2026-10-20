@@ -1,0 +1,50 @@
+--- a/git.c
++++ b/git.c
+@@ -1,6 +1,7 @@
+ #define USE_THE_REPOSITORY_VARIABLE
+ 
+ #include "builtin.h"
++#include "git-next.h"
+ #include "config.h"
+ #include "environment.h"
+ #include "exec-cmd.h"
+@@ -175,7 +176,15 @@
+ 		/*
+ 		 * Check remaining flags.
+ 		 */
+-		if (skip_prefix(cmd, "--exec-path", &cmd)) {
++		if (!strcmp(cmd, "--language")) {
++			if (*argc < 2)
++				die("--language requires a value");
++			git_next_language_override((*argv)[1]);
++			(*argv)++;
++			(*argc)--;
++		} else if (skip_prefix(cmd, "--language=", &cmd)) {
++			git_next_language_override(cmd);
++		} else if (skip_prefix(cmd, "--exec-path", &cmd)) {
+ 			if (*cmd == '=')
+ 				git_set_exec_path(cmd + 1);
+ 			else {
+@@ -929,6 +938,9 @@
+ 			cmd = slash + 1;
+ 	}
+ 
++	if (!strcasecmp(cmd, "git-next") || !strcasecmp(cmd, "git-next.exe"))
++		cmd = "git";
++
+ 	trace_command_performance(argv);
+ 
+ 	/*
+@@ -977,6 +989,12 @@
+ 	 * time.
+ 	 */
+ 	setup_path();
++
++	{
++		int result = git_next_command(argc, argv);
++		if (result >= 0)
++			return result;
++	}
+ 
+ 	for (int i = 0; i < argc; i++)
+ 		strvec_push(&args, argv[i]);
