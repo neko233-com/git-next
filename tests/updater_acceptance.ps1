@@ -171,6 +171,14 @@ try {
     Check 'installed payload hashes accepted' $true
     [IO.File]::WriteAllBytes($file,[byte[]]::new(1))
     Reject 'modified installed files reject update' { Assert-GnInstalledFiles $packageRoot $package }
+    $aclResult = & (Get-Module Update.Core) {
+        $security = [Security.AccessControl.FileSecurity]::new()
+        $security.SetSecurityDescriptorSddlForm((Get-GnRuntimeConfigSecurity 'D:AI(A;ID;FA;;;BU)(A;ID;FA;;;SY)(A;ID;FA;;;BA)' $true))
+        $user = @($security.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]) | Where-Object { $_.IdentityReference.Value -eq 'S-1-5-32-545' })
+        return [pscustomobject]@{read_only=($user.Count -gt 0 -and -not (@($user | Where-Object { $_.FileSystemRights -band [Security.AccessControl.FileSystemRights]::Write }).Count));protected=$security.AreAccessRulesProtected}
+    }
+    Check 'inherited user full control becomes read-only machine configuration' $aclResult.read_only
+    Check 'machine configuration ACL is protected after inherited ACE conversion' $aclResult.protected
     $configurationSource = Join-Path $temporary 'runtime-default.conf'
     $configurationTarget = Join-Path $temporary 'runtime-active.conf'
     [IO.File]::WriteAllBytes($configurationSource,$payload)

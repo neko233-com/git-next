@@ -41,6 +41,8 @@ def main():
     for name in ('native-packages', 'correctness', 'performance', 'destination', 'wix', 'git'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--source-commit', required=True)
+    parser.add_argument('--windows-runtime-acl-fix', type=Path,
+                        help='Passed updater acceptance for the exact inherited-ACE conversion repair')
     parser.add_argument('--windows-tls-rename-fix', action='store_true',
                         help='Apply only the child-handle release fix to accepted Windows payloads; actual machine TLS acceptance is required before publication')
     args = parser.parse_args()
@@ -76,7 +78,22 @@ def main():
             parser.error('Only the exact accepted TLS child-handle fix may reuse unaffected gates')
     for name, digest in matrix['harnesses'].items():
         if args.windows_tls_rename_fix and name in (tls_script, 'tools/prepare_native_release.py'): continue
+        if args.windows_runtime_acl_fix and name in ('packaging/windows/Runtime.Configuration.ps1','tests/updater_acceptance.ps1'): continue
         if sha(ROOT/name) != digest: parser.error('Accepted source/harness input changed: ' + name)
+    acl_script = 'packaging/windows/Runtime.Configuration.ps1'
+    if args.windows_runtime_acl_fix:
+        replacement = (b'        $inherited = @($security.GetAccessRules($false,$true,[Security.Principal.SecurityIdentifier]))\n'
+                       b'        $security.SetAccessRuleProtection($true,$false)\n'
+                       b'        foreach ($rule in $inherited) {\n'
+                       b'            $security.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($rule.IdentityReference,$rule.FileSystemRights,$rule.AccessControlType))\n'
+                       b'        }\n')
+        current_acl = (ROOT/acl_script).read_bytes().replace(b'\r\n',b'\n')
+        previous_acl = current_acl.replace(replacement,b'        $security.SetAccessRuleProtection($true,$true)\n')
+        if not args.windows_tls_rename_fix or current_acl.count(replacement) != 1 or hashlib.sha256(previous_acl).hexdigest() != matrix['harnesses'][acl_script]:
+            parser.error('Only the exact inherited-ACE repair may reuse unaffected gates')
+        updater_gate = json.loads(args.windows_runtime_acl_fix.read_text(encoding='utf-8-sig'))
+        if updater_gate['status'] != 'pass' or not {'inherited user full control becomes read-only machine configuration','machine configuration ACL is protected after inherited ACE conversion'} <= set(updater_gate['checks']):
+            parser.error('Actual inherited-ACE updater regression must pass')
     output = args.destination.resolve()
     if output.exists(): parser.error('Release staging directory must be new')
     output.mkdir(parents=True)
@@ -90,6 +107,11 @@ def main():
             after_sha256=sha(ROOT/tls_script), payload_path='components/install-tls-provider.ps1',
             scope='Only release verified child handles before directory rename; all core, runtime, updater, GUI and MSI recipes remain accepted unchanged',
             required_before_publication='Fresh real machine TLS preparation, idempotence, pinned-file/ACL verification and actual workstation takeover')
+    if args.windows_runtime_acl_fix:
+        proof['windows_runtime_acl_fix'] = dict(before_sha256=matrix['harnesses'][acl_script],after_sha256=sha(ROOT/acl_script),
+            payload_path='updater/Runtime.Configuration.ps1',updater_acceptance_sha256=sha(args.windows_runtime_acl_fix),
+            scope='Convert inherited ACEs into explicit rules before removing non-administrator writes; preserve read/deny restrictions',
+            required_before_publication='Actual configuration migration and workstation takeover using this installed script')
     (output/'native-release-acceptance.json').write_bytes(encoded(proof))
     version = matrix['version']
     manuals = documents()
@@ -111,6 +133,12 @@ def main():
                 if sha(target/name) != proof['windows_tls_rename_fix']['before_sha256']:
                     parser.error('Accepted Windows TLS installer differs from the exact repaired baseline')
                 shutil.copyfile(ROOT/tls_script, target/name)
+                manifest['files'][name].update(sha256=sha(target/name), bytes=(target/name).stat().st_size)
+            if args.windows_runtime_acl_fix:
+                name = 'updater/Runtime.Configuration.ps1'
+                if sha(target/name) != proof['windows_runtime_acl_fix']['before_sha256']:
+                    parser.error('Accepted runtime configuration helper differs from the exact repaired baseline')
+                shutil.copyfile(ROOT/acl_script, target/name)
                 manifest['files'][name].update(sha256=sha(target/name), bytes=(target/name).stat().st_size)
             for name, data in manuals.items():
                 document = target/name

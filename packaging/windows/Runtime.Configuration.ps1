@@ -19,7 +19,11 @@ function Get-GnRuntimeConfigSecurity([string]$Access,[bool]$Machine) {
     elseif ($Machine) { $security.SetSecurityDescriptorSddlForm('D:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FR;;;BU)') }
     else { return $null }
     if ($Machine) {
-        $security.SetAccessRuleProtection($true,$true)
+        $inherited = @($security.GetAccessRules($false,$true,[Security.Principal.SecurityIdentifier]))
+        $security.SetAccessRuleProtection($true,$false)
+        foreach ($rule in $inherited) {
+            $security.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($rule.IdentityReference,$rule.FileSystemRights,$rule.AccessControlType))
+        }
         $security.SetOwner([Security.Principal.SecurityIdentifier]::new('S-1-5-32-544'))
         $unsafe = [int64]([Security.AccessControl.FileSystemRights]::WriteData -bor [Security.AccessControl.FileSystemRights]::AppendData -bor [Security.AccessControl.FileSystemRights]::WriteExtendedAttributes -bor [Security.AccessControl.FileSystemRights]::WriteAttributes -bor [Security.AccessControl.FileSystemRights]::Delete -bor [Security.AccessControl.FileSystemRights]::DeleteSubdirectoriesAndFiles -bor [Security.AccessControl.FileSystemRights]::ChangePermissions -bor [Security.AccessControl.FileSystemRights]::TakeOwnership)
         foreach ($rule in @($security.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]))) {

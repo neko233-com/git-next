@@ -40,6 +40,8 @@ A directly installed MSI preserves an existing default Git until the [protected 
 
 Windows machine TLS preparation releases verified child-file handles before its atomic directory rename. The protected ACL and exclusive platform lock remain active. `tests/tls_provider_install_acceptance.ps1` verifies fresh preparation, repeat preparation, pinned component bytes and machine ACLs against an installed MSI; this targeted gate complements the previously exercised MSI lifecycle.
 
+Machine configuration migration converts inherited ACL entries into explicit rules before removing non-administrator write permissions. Existing read and deny restrictions remain; the final protected configuration must pass the same machine-state checks. Updater regression covers inherited full-control input, and actual migration exercises the installed helper against existing system configuration.
+
 ## Linux and macOS
 
 Extract the accepted architecture-matching tar.gz, enter `git-next-<version>-<platform>` and run `./install.sh --scope user`. Explicitly elevated `--scope machine` selects a machine installation; `--manual-updates` omits service registration. Owned installers verify the accepted package identity and all payload members before writing managed versioned files; unrelated commands are refused. See [updates and removal](UPDATES.md).
