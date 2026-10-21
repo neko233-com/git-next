@@ -130,7 +130,7 @@ function Get-GnBootstrapMsiVersion([string]$Package) {
     try {
         $database=$installer.OpenDatabase($Package,0)
         $view=$database.OpenView('SELECT `Value` FROM `Property` WHERE `Property`=''ProductVersion''')
-        $view.Execute();$record=$view.Fetch()
+        [void]$view.Execute();$record=$view.Fetch()
         if (-not $record) { throw 'Verified MSI has no product version.' }
         $version=[string]$record.StringData(1)
         if ($version -cnotmatch '^[0-9]+\.[0-9]+\.[0-9]+$') { throw 'Verified MSI version is invalid.' }

@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "product": "git-terminal",
+  "results": [
+    {
+      "case": "format",
+      "status": "pass",
+      "seconds": 0.17
+    },
+    {
+      "case": "clippy",
+      "status": "pass",
+      "seconds": 44.248
+    },
+    {
+      "case": "unit",
+      "status": "pass",
+      "seconds": 29.828
+    },
+    {
+      "case": "shell-integration",
+      "status": "pass",
+      "seconds": 52.072
+    }
+  ]
+}

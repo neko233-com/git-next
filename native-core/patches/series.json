@@ -439,5 +439,12 @@
     "before_sha256": "909a31e3dc948da7319d92ce024bb52e919eeb791c6ce307e520f46b717b41d4",
     "after_sha256": "cd2003d22db0ffbad0fff1b452762fe63c3832f6602f46ab601ff5b1e2b9e5c3",
     "patch_sha256": "71e5e7540415efd835c51588fdc5b1d44065706a94d61840840a1d749c125a7b"
+  },
+  {
+    "path": "builtin/stash.c",
+    "patch": "0056-stash-sha256-hex-terminator.patch",
+    "before_sha256": "4441b4d8d3930e4d083638510920d4b0f175439061c59b7e4b2393e66da1edc8",
+    "after_sha256": "2b29fd151d6166806ea64b8c45b0dc55d0b1b2408154dbdce20e305371f9caf6",
+    "patch_sha256": "7a99cde6141ec564d25100cc938d231e46e38c06a0f2949280f56438ac1a55f4"
   }
 ]

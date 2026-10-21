@@ -1,0 +1,91 @@
+{
+  "status": "pass",
+  "scope": "all",
+  "paste_key": "shift-insert",
+  "ctrl_shift_v_registered_elsewhere": true,
+  "platform": "windows-x64",
+  "renderer": "gpui-fast",
+  "input_delivery": "owned HWND WM_CHAR UTF-16 commits; SendInput keyboard shortcuts",
+  "binary_sha256": "e8d4a8f8692df27d49e527e17bc4db4e49fe355c3ce2858e6eb38a10ca7facca",
+  "git_sha256": "3bc2edf09efc3c2a67758725a8e7dc009f25b62ab6f9daf5512774be69a8c8be",
+  "harness_sha256": "90bbc10ca6572222b2cbf65647ff5584d60118d74e17dc23d8c39e075d531334",
+  "clipboard_harness_sha256": "ccd4f2977a956befdb457acb8ac21dff239edc68b158dc4604ccb46f65e27fea",
+  "seconds": 25.287,
+  "personal_profile_accessed": false,
+  "terminal_contents_logged": false,
+  "results": [
+    {
+      "case": "identity-profiles-unicode-cwd-language-atomic-settings",
+      "status": "pass",
+      "seconds": 0.092
+    },
+    {
+      "case": "native-window-wm-char-unicode-commit-and-pty",
+      "status": "pass",
+      "seconds": 0.162
+    },
+    {
+      "case": "native-clipboard-paste-with-original-preserved-in-memory",
+      "status": "pass",
+      "seconds": 0.755
+    },
+    {
+      "case": "native-keyboard-tabs-independent-shells-and-close",
+      "status": "pass",
+      "seconds": 3.402
+    },
+    {
+      "case": "native-window-resize-reaches-conpty",
+      "status": "pass",
+      "seconds": 1.339
+    },
+    {
+      "case": "embedded-icon-native-caption-hit-areas-and-compact-window",
+      "status": "pass",
+      "seconds": 0.975
+    },
+    {
+      "case": "actual-gpui-gpu-window-chinese-and-color-screenshot",
+      "status": "pass",
+      "seconds": 0.525
+    },
+    {
+      "case": "native-mouse-selection-and-copy",
+      "status": "pass",
+      "seconds": 0.513
+    },
+    {
+      "case": "native-shift-page-and-mouse-wheel-scrollback",
+      "status": "pass",
+      "seconds": 1.342
+    },
+    {
+      "case": "tab-first-design-default-bash-live-command-highlighting",
+      "status": "pass",
+      "seconds": 2.739
+    },
+    {
+      "case": "original-clipboard-restored",
+      "status": "pass"
+    },
+    {
+      "case": "owned-window-exit-and-process-cleanup",
+      "status": "pass"
+    },
+    {
+      "case": "owned-bash-and-native-cmd-real-gui-pty-exit",
+      "status": "pass",
+      "seconds": 11.07
+    },
+    {
+      "case": "explicit-command-exit-status-propagation",
+      "status": "pass",
+      "seconds": 0.365
+    },
+    {
+      "case": "bounded-output-drain-and-command-exit-without-ui-deadlock",
+      "status": "pass",
+      "seconds": 0.637
+    }
+  ]
+}

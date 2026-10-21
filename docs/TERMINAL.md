@@ -1,5 +1,9 @@
 # Git-Terminal on Windows
 
+Windows combines tabs and native window buttons in one title bar with an original terminal/branch icon. Nine icon sizes are embedded in the EXE for Explorer, taskbar, Alt+Tab and installed shortcuts; no icon download is needed. Native drag, minimize, maximize/restore, close and Snap hit areas remain available. Tabs scroll in compact windows while caption controls stay visible.
+
+The icon source is `git-terminal/assets/git-terminal.svg` in the peer repository. Desktop acceptance checks icon handles, native caption hit areas, a 560×340 compact window, tabs, highlighting, ConPTY, clipboard and exit. Clipboard formats are copied eagerly in memory and restored without retaining remote OLE proxies; contents are not logged.
+
 The Windows product installs an independent Rust + GPUI Fast Git-Terminal beside the git-next client. Its source repository is https://github.com/neko233-com/git-terminal, a peer submodule of git-next in GitSSS. The historical src/bin/git-terminal.rs launcher is separate and is not the desktop application.
 
 The native terminal owns ConPTY sessions and draws through GPUI Fast. Tabs, Bash/PowerShell/CMD profiles, Unicode and Chinese input, selection, history, copy/paste, bracketed paste, zoom and resizing are implemented. The bundled default is the owned Bash shell, retaining familiar shell commands and HOME files. git-next comes first on each session PATH. No external terminal host or installed official Git is used as a fallback.

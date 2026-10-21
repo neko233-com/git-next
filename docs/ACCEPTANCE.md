@@ -1,8 +1,12 @@
 # Acceptance snapshot · 2026-10-21
 
-The [final 17-case native correctness evidence](benchmarks/native-correctness-final-20261021.json) passes, including both real Windows MSI scope lifecycles. The [14-case native desktop receipt](benchmarks/native-terminal-desktop-final-20261021.json) is reused only after matching GUI/core/Bash/runtime dependencies and the exact Windows read-safety configuration transition. The original foreground interruption, receipt hashes and elapsed times are retained. No product case is rerun merely to finalize that evidence.
+The [integrated 18-case acceptance](benchmarks/native-integrated-correctness-20261021.json) passes with exact artifact/source dependency checks. [32 common CLI scenarios](benchmarks/native-common-cli-20261021.json) cover 16 groups in SHA-1 and SHA-256 against complete official Git 2.54, including worktree/branch/checkout/revert, stash -u, conflict recovery and rejected-push protection; elapsed 31.482 seconds. Every scenario independently compares index/history and runs both object readers' fsck.
 
-Windows x64, Linux x64 and emulated Linux ARM64 execute native contracts; Windows ARM64 is cross-compiled and PE-checked. macOS is compiled natively and package/Mach-O/shell-checked through Dockerfile_mac without product execution. Workstation takeover and publication are separate from these gates; see [delivery status](DELIVERY_STATUS.md).
+The [actual final-package desktop run](benchmarks/native-integrated-terminal-desktop-20261021.json) passes all 15 cases in 25.287 seconds: embedded icon, integrated native title/tab bar and caption hit areas, compact layout, tabs, highlighting, PTY, clipboard restoration and exit. [Current Rust and real shell contracts](benchmarks/native-integrated-terminal-rust-20261021.json) also pass.
+
+Core, runtime and POSIX package bytes retain their preceding actual passed evidence. Both complete MSI lifecycles are retained only after identical installer/worker/configuration checks and a narrow executable/manual delta check. This means unchanged lifecycle contracts are reused; it does not claim every transaction was rerun on the GUI-only MSI rebuild. Actual final machine installation/takeover remains D10. The report preserves the interrupted desktop/OLE fixture failures, missing reference-backend failure and actual corrective reruns.
+
+Windows x64 and Linux x64/ARM64 execute runtime contracts. Windows ARM64 is cross-compiled and PE-checked. macOS is compiled natively and package/Mach-O/shell-checked in Dockerfile_mac without product execution. See [complete coverage](TEST_COVERAGE.md) and [delivery status](DELIVERY_STATUS.md).
 
 ## Historical checkpoints
 

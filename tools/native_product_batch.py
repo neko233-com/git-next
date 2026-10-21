@@ -29,6 +29,8 @@ def main():
     parser.add_argument('--workers',type=int,default=8,choices=range(1,17))
     parser.add_argument('--wall-clock-target',type=float,default=60,help='report the actual batch time against this target; never skip checks')
     parser.add_argument('--performance',action='store_true')
+    parser.add_argument('--performance-runs',type=int,default=40,choices=range(10,101))
+    parser.add_argument('--network-runs',type=int,default=20,choices=range(10,101))
     parser.add_argument('--correctness-receipt',type=Path)
     parser.add_argument('--reuse-msi-batch',type=Path)
     parser.add_argument('--reuse-msi-matrix',type=Path)
@@ -87,18 +89,19 @@ def main():
         checkpoint.write_text(json.dumps(dict(binary_sha256=sha(binary),source_tree_sha256=matrix['source_tree_sha256'])))
         for files,dirs in [(1000,16),(10000,1000),(100000,1000)]:
             results.append(run(('performance-'+str(files),[python,'tests/benchmark.py',str(binary),'--reference',str(reference),
-                '--runs','40','--files',str(files),'--directories',str(dirs),'--read-commands','--system-config-enabled','--native-distribution','--reference-read-safety',
+                '--runs',str(args.performance_runs),'--files',str(files),'--directories',str(dirs),'--read-commands','--system-config-enabled','--native-distribution','--reference-read-safety',
                 '--fixture-layout','packed','--source-checkpoint',str(checkpoint),'--output',str(output/('performance-'+str(files)+'.json'))],1800)))
         results.append(run(('performance-network',[python,'tests/network_benchmark.py',str(binary),'--reference',str(reference),
-                            '--runs','20','--native-distribution','--source-checkpoint',str(checkpoint),'--output',str(output/'performance-network.json')],1800)))
+                            '--runs',str(args.network_runs),'--native-distribution','--source-checkpoint',str(checkpoint),'--output',str(output/'performance-network.json')],1800)))
     else:
         terminal_runtime=prepare_terminal_runtime(win['directory'],output/'terminal-runtime')
         cases=[('windows-core-contracts',[python,'tests/native_contract_acceptance.py',str(binary),'--reference',str(reference),'--output',str(output/'windows-core.json')],1200),
+               ('windows-common-cli-contracts',[python,'tests/native_common_cli_acceptance.py',str(binary),'--reference',str(reference),'--output',str(output/'windows-common-cli.json')],180),
                ('windows-owned-integrations',[python,'tests/native_integrations_acceptance.py',str(binary),'--output',str(output/'windows-integrations.json')],900),
                ('windows-dpapi-migration',[python,'tests/gcm_acceptance.py',str(binary),'--helper',win['gcm'],'--native-distribution'],900),
                ('windows-update-contracts',[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File','tests/updater_acceptance.ps1'],900)]
         cases += [('windows-read-thread-contracts',[python,'tests/native_read_threads_acceptance.py',str(binary),'--output',str(output/'windows-read-threads.json')],240),
-                  ('windows-bootstrap-contracts',[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File','tests/bootstrap_acceptance.ps1','-Output',str(output/'windows-bootstrap.json')],120),
+                  ('windows-bootstrap-contracts',[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File','tests/bootstrap_acceptance.ps1','-PackagePath',win['msi_machine'],'-Output',str(output/'windows-bootstrap.json')],120),
                   ('windows-game-lfs-contracts',[python,'tests/native_game_project_acceptance.py',str(binary),'--output',str(output/'windows-game-lfs.json')],900),
                   ('terminal-rust-contracts',[python,'tests/terminal_product_acceptance.py','--source',str(ROOT.parent/'git-terminal'),'--distribution',str(terminal_runtime),'--output',str(output/'terminal-rust.json')],3600),
                   ('terminal-native-desktop',[python,str(ROOT.parent/'git-terminal/tests/windows_desktop_acceptance.py'),'--binary',str(terminal_runtime/'bin/git-terminal.exe'),'--git',str(terminal_runtime/'bin/git.exe'),'--output',str(output/'terminal-desktop.json')],900)]
@@ -163,6 +166,8 @@ def main():
                 elapsed_seconds=elapsed,wall_clock_target_seconds=args.wall_clock_target,
                 wall_clock_target_met=elapsed<args.wall_clock_target,
                 workers=1 if args.performance else args.workers,msi_transactions_serialized=True,
+                local_pairs_per_command=args.performance_runs if args.performance else None,
+                network_pairs_per_operation=args.network_runs if args.performance else None,
                 checks_skipped_to_meet_time_target=False)
     report['msi_scopes_reusing_unchanged_passed_evidence']=list(reused_msi)
     report['desktop_reusing_unchanged_passed_evidence']=bool(reused_desktop)

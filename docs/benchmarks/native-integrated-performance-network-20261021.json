@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "binary_sha256": "3bc2edf09efc3c2a67758725a8e7dc009f25b62ab6f9daf5512774be69a8c8be",
+  "source_tree_sha256": "fb505db886d459b37060171c91db4ad24098c87ac786a92321e767230195cb7f",
+  "harness_sha256": "feefc5ff6e6283ff0a1e519efc67b41f37309c9d4eccaafe8c948e2c03ae1609",
+  "http_fixture_sha256": "d23fc9826dd445c44a977ebdde3f61b361ec4a7d14a6852fbfa0ab185cbb960c",
+  "versions": {
+    "git_next": "git version 2.54.0.windows.1.git-next.0.3.0",
+    "git": "git version 2.54.0.windows.1"
+  },
+  "os": "Windows-11-10.0.26300-SP0",
+  "arch": "AMD64",
+  "cpu_count": 32,
+  "files": 1000,
+  "initial_worktree_bytes": 270259,
+  "incremental_file_edits": 10,
+  "fixture_contents": "16 repeated LF text lines per data file; one attribute policy; next commit edits 10 files",
+  "measured_at_utc": "2026-10-21T09:34:34.365889+00:00",
+  "runs_per_client_per_command": 10,
+  "randomized_order_seed": 233,
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "results": {
+    "clone": {
+      "git_next": {
+        "median_ms": 1024.611,
+        "p95_ms": 1272.92,
+        "min_ms": 898.38,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 12834816,
+        "peak_working_set_p95_bytes": 12873728
+      },
+      "git": {
+        "median_ms": 688.87,
+        "p95_ms": 826.414,
+        "min_ms": 596.423,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 7213056,
+        "peak_working_set_p95_bytes": 7217152
+      }
+    },
+    "fetch": {
+      "git_next": {
+        "median_ms": 290.339,
+        "p95_ms": 321.61,
+        "min_ms": 281.712,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 12697600,
+        "peak_working_set_p95_bytes": 12713984
+      },
+      "git": {
+        "median_ms": 298.652,
+        "p95_ms": 343.906,
+        "min_ms": 280.898,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 7229440,
+        "peak_working_set_p95_bytes": 7229440
+      }
+    },
+    "pull_ff_only": {
+      "git_next": {
+        "median_ms": 372.506,
+        "p95_ms": 388.928,
+        "min_ms": 354.879,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 12834816,
+        "peak_working_set_p95_bytes": 12865536
+      },
+      "git": {
+        "median_ms": 379.133,
+        "p95_ms": 430.399,
+        "min_ms": 343.93,
+        "peak_working_set_samples": 10,
+        "peak_working_set_median_bytes": 7229440,
+        "peak_working_set_p95_bytes": 7241728
+      }
+    }
+  },
+  "performance_accepted": true,
+  "authenticated_request_counts": {
+    "clone": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "fetch": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "pull_ff_only": {
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "runtime_git_ssh_on_path": false,
+  "scope": "loopback smart HTTPS, temporary private CA and static fixture authorization; clone/fetch/ff-only pull",
+  "system_configuration": "disabled with isolated profiles and explicit input/LF fixture policy",
+  "tls_backends": {
+    "git_next": "Schannel",
+    "git": "Schannel"
+  },
+  "memory_scope": "Windows primary process peak working set; queried after latency interval; transport/child processes excluded",
+  "certificate_verification": "enabled; private fixture CA and loopback IP SAN; no user trust store changes",
+  "http_response_protocol": "HTTP/1.0",
+  "protocol_scope": "fixture default smart HTTP; no v2 packet or object-reuse acceptance",
+  "verification": "each trial verifies HEAD/tracking refs, all worktree bytes, staged IDs, fsck and unchanged source object bytes; fetch preserves HEAD/index/worktree",
+  "packet_bytes_or_object_reuse_proven": false,
+  "real_provider_login_verified": false,
+  "full_git_parity": false
+}

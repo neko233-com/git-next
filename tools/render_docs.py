@@ -15,6 +15,7 @@ sources = {
     root / 'docs/BUILDING.md': 'building.html',
     root / 'docs/PERFORMANCE.md': 'performance.html',
     root / 'docs/ACCEPTANCE.md': 'acceptance.html',
+    root / 'docs/TEST_COVERAGE.md': 'test-coverage.html',
     root / 'docs/TAKEOVER.md': 'takeover.html',
     root / 'docs/LFS.md': 'lfs.html',
     root / 'docs/TERMINAL.md': 'terminal.html',
@@ -37,6 +38,10 @@ for source, name in sources.items():
     target = site / name
     template = target if target.exists() else site / 'index.html'
     prefix = template.read_text(encoding='utf-8').split('<main>')[0] + '<main>'
+    if 'href="test-coverage.html"' not in prefix:
+        prefix = prefix.replace('</nav>', '<a href="test-coverage.html">Test coverage</a></nav>')
+    if name == 'test-coverage.html':
+        prefix = re.sub(r'<title>.*?</title>', '<title>git-next · Test coverage</title>', prefix)
     if name == 'takeover.html':
         prefix = re.sub(r'<title>.*?</title>', '<title>git-next · Complete takeover</title>', prefix)
     if 'href="takeover.html"' not in prefix:

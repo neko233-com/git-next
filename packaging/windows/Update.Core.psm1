@@ -324,7 +324,8 @@ function Test-GnBusy([string]$InstallRoot) {
     } elseif ([IO.Directory]::Exists($InstallRoot)) {
         $names += @(Get-ChildItem -LiteralPath $InstallRoot -Recurse -File -Filter '*.exe' | ForEach-Object BaseName)
     }
-    foreach ($process in @(Get-Process -Name @($names | Sort-Object -Unique) -ErrorAction SilentlyContinue)) {
+    $patterns = @($names | Sort-Object -Unique | ForEach-Object { [WildcardPattern]::Escape($_) })
+    foreach ($process in @(Get-Process -Name $patterns -ErrorAction SilentlyContinue)) {
         try { $path = $process.MainModule.FileName }
         catch { return $true }
         if (-not $path -or $path.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { return $true }

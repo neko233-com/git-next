@@ -1,10 +1,16 @@
 # Copyright 2026 git-next contributors. MIT license.
-param([string]$Output)
+param([string]$Output,[string]$PackagePath)
 $ErrorActionPreference='Stop'
+$bootstrapFixturePackage=$PackagePath
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 . (Join-Path $root 'install.ps1')
 $results=@()
 function Assert([bool]$Condition,[string]$Message){if(-not $Condition){throw $Message}}
+if ($bootstrapFixturePackage) {
+    $actual=@(Get-GnBootstrapMsiVersion ([IO.Path]::GetFullPath($bootstrapFixturePackage)))
+    Assert ($actual.Count -eq 1 -and $actual[0] -is [string] -and $actual[0] -cmatch '^[0-9]+\.[0-9]+\.[0-9]+$') 'Real MSI metadata emitted extra COM pipeline values'
+    $results+=@{case='real-msi-version-is-exactly-one-scalar-string';status='pass';version=$actual[0]}
+}
 $originalArch=$env:PROCESSOR_ARCHITECTURE; $originalWow=$env:PROCESSOR_ARCHITEW6432
 try {
     $env:PROCESSOR_ARCHITECTURE='x86';$env:PROCESSOR_ARCHITEW6432='ARM64'

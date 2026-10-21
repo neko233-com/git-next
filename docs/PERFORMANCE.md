@@ -1,3 +1,32 @@
+# Current Windows measurements · 2026-10-21
+
+The [current matched-artifact batch](benchmarks/native-integrated-performance-20261021.json) passes all three file scales and local HTTPS workloads with **10 pairs per operation**, complete output/fixture verification and exact current core identity `fb505db8` / binary `3bc2edf0`. Both clients use the same declared Windows read-safety profile; the reference is complete official Git 2.54. The actual batch took **596.63 seconds**, exceeding the 60-second target. No checks were skipped. A 10-sample p95 is exploratory; the previous larger-sample reports below retain their original identities.
+
+Primary-process memory excludes children. These measurements do not imply universal speed or memory superiority. In particular, HTTPS clone remains slower than the reference; large full scans remain a latency limitation. Fetch and fast-forward pull are comparable in this generated local TLS fixture. This does not measure WAN providers or GitSSS same-branch push throughput.
+
+| Files | Operation | Native median ms | Reference median ms |
+| --- | --- | --- | --- |
+| 1000 | version | 11.375 | 20.16 |
+| 1000 | status_clean | 34.903 | 42.282 |
+| 1000 | diff_clean | 29.24 | 36.968 |
+| 1000 | show_metadata | 15.031 | 22.703 |
+| 1000 | grep_files | 78.82 | 87.898 |
+| 10000 | version | 11.941 | 19.273 |
+| 10000 | status_clean | 239.229 | 251.528 |
+| 10000 | diff_clean | 145.419 | 154.264 |
+| 10000 | show_metadata | 20.931 | 29.202 |
+| 10000 | grep_files | 700.734 | 703.387 |
+| 100000 | version | 11.887 | 20.512 |
+| 100000 | status_clean | 1911.129 | 1919.913 |
+| 100000 | diff_clean | 1364.5 | 1353.605 |
+| 100000 | show_metadata | 68.707 | 55.394 |
+| 100000 | grep_files | 7738.232 | 7787.639 |
+| HTTPS | clone | 1024.611 | 688.87 |
+| HTTPS | fetch | 290.339 | 298.652 |
+| HTTPS | pull_ff_only | 372.506 | 379.133 |
+
+## Previous larger-sample checkpoint
+
 # Final Windows measurements · 2026-10-21
 
 The [final paired batch](benchmarks/native-performance-final-20261021.json) passes all three file scales and loopback HTTPS workloads. Forty local pairs use the shipped Windows stability profile for the native client and the same five explicitly recorded reference overrides; twenty network pairs use the report's declared TLS settings. Every warm-up and sample must return the complete expected output. Primary-process peak memory is recorded separately; it excludes child processes. These measurements do not establish full Git compatibility or universal speed/memory superiority.

@@ -41,7 +41,7 @@ def main():
             parser.error('Wrong Windows package identity')
         built_terminal = manifest.get('git_terminal',{}).get('source_commit')
         peer=ROOT.parent/'git-terminal'
-        runtime_paths=['Cargo.toml','Cargo.lock','src','shell-integration','vendor/gpui-terminal',':(exclude)src/shell_acceptance.rs']
+        runtime_paths=['Cargo.toml','Cargo.lock','src','assets','build.rs','shell-integration','vendor/gpui-terminal',':(exclude)src/shell_acceptance.rs']
         if '#[cfg(all(test, windows))]\nmod shell_acceptance;' not in (peer/'src/main.rs').read_text():
             parser.error('The excluded terminal fixture must remain a test-only module')
         if (not built_terminal or subprocess.run(['git','-C',str(peer),'merge-base','--is-ancestor',built_terminal,terminal_commit],capture_output=True).returncode
@@ -110,7 +110,7 @@ def main():
         relative = path.relative_to(peer)
         if any(part in ('.git','.evidence','target') for part in relative.parts):
             continue
-        if path.is_file() and (path.suffix == '.rs' or relative.parts[0] == 'shell-integration' or relative.as_posix() in ('Cargo.toml','Cargo.lock','vendor/gpui-terminal/Cargo.toml','tests/windows_desktop_acceptance.py')):
+        if path.is_file() and (path.suffix == '.rs' or relative.parts[0] in ('assets','shell-integration') or (relative.parts[0] == 'tests' and path.suffix == '.py') or relative.as_posix() in ('Cargo.toml','Cargo.lock','vendor/gpui-terminal/Cargo.toml')):
             harnesses['../git-terminal/'+relative.as_posix()] = sha(path)
     harnesses['install.ps1'] = sha(ROOT/'install.ps1')
     report = dict(schema_version=1, product='git-next', version=version, source_tree_sha256=hashes.pop(),

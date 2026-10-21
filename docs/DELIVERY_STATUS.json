@@ -29,7 +29,7 @@
       "phase": "implementation",
       "status": "complete",
       "name": "Complete Git command and repository semantics",
-      "current": "One native core source compiles on all five targets. Windows packages override the automatic CPU*2 fallback with tested serial index/grep reads and disabled fscache/fsmonitor/preload. User/repository configuration keeps normal priority.",
+      "current": "One native core source compiles on all five targets. Windows packages override the automatic CPU*2 fallback with tested serial index/grep reads and disabled fscache/fsmonitor/preload. User/repository configuration keeps normal priority. SHA-256 stash hex terminator space repaired; native Windows x64/ARM64, Linux x64/ARM64 and macOS ARM64 cores rebuilt from the same fb505db8 source tree.",
       "remaining": "No implementation gap currently identified for this fixed core item. Platform/runtime/package closure remains in D02/D05-D07; all command, repository and failure acceptance remains D08. A discovered core defect reopens D01.",
       "completion_evidence": [
         "native-core/receipts/implementation-complete-core-20261020.json",
@@ -45,7 +45,7 @@
       "phase": "implementation",
       "status": "complete",
       "name": "Independent complete runtime and existing integrations",
-      "current": "Implementation complete for the peer GPUI Fast desktop terminal, built-in LFS filters/templates, game profiles, combined MSI and automatic trusted PowerShell bootstrap. Final combined runtime acceptance remains D08.",
+      "current": "Implementation complete for the peer GPUI Fast desktop terminal, built-in LFS filters/templates, game profiles, combined MSI and automatic trusted PowerShell bootstrap. Final combined runtime acceptance remains D08. The original nine-size EXE icon and native integrated tab/caption bar are committed in peer 84e4b7f; actual final-package desktop acceptance passes all 15 cases.",
       "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-five-platform-runtimes-20261020.json",
@@ -147,12 +147,13 @@
       "phase": "acceptance",
       "status": "complete",
       "name": "One consolidated correctness/platform/migration/install regression",
-      "current": "All 17 required correctness cases passed: Windows core/integrations/read safety/LFS/bootstrap/DPAPI/updater, terminal Rust/ConPTY, Linux runtimes, macOS static packaging, generated-login Docker migration, updater race checks and both full MSI lifecycles. Desktop uses the prior 14-case passed receipt with identical GUI/core/Bash/runtime dependencies and only the exact stable-read config transition. Original foreground interruption and elapsed time are retained; no product cases were rerun during receipt finalization.",
-      "remaining": "None for the frozen final acceptance scope. Windows ARM64 remains cross-compiled; macOS product runtime was not executed, as requested.",
+      "current": "The 18-case dependency-bound acceptance passes. Complete official Git 2.54 independently reads 32 SHA-1/SHA-256 common CLI scenarios; current terminal passes all 15 actual desktop cases plus formatting/clippy/unit/real-PTY shell contracts. Core/runtime/POSIX bytes are unchanged from the actual preceding batch. Both full MSI lifecycles are retained only after exact installer/worker/configuration and unchanged-runtime checks; permitted current Windows deltas are the two compiled terminal executables, their bound provenance and manuals.",
+      "remaining": "No remaining functional acceptance failure. Windows ARM64 is cross-compiled; macOS product runtime is not executed. Final actual machine installation and takeover remain D10.",
       "completion_evidence": [
-        "docs/benchmarks/native-correctness-final-20261021.json",
-        "docs/benchmarks/native-terminal-desktop-final-20261021.json",
-        "docs/benchmarks/native-windows-read-stability-20261021.json"
+        "docs/benchmarks/native-integrated-correctness-20261021.json",
+        "docs/benchmarks/native-common-cli-20261021.json",
+        "docs/benchmarks/native-integrated-terminal-desktop-20261021.json",
+        "docs/benchmarks/native-integrated-terminal-rust-20261021.json"
       ],
       "previous_core_evidence_preserved": true
     },
@@ -161,14 +162,14 @@
       "phase": "acceptance",
       "status": "complete",
       "name": "One final paired latency/performance batch",
-      "current": "The final matched-profile paired batch passed all 1000/10000/100000-file and loopback HTTPS workloads, with per-sample output validation, 40 local pairs and 20 network pairs. Windows native defaults and explicit reference read-safety settings match. Large full scans remain slow; no universal performance advantage is claimed.",
-      "remaining": "None for this fixed batch. The measured 1388.824 seconds did not meet the 60-second target.",
+      "current": "The current exact-artifact 10-pair local/HTTPS batch passes all five items in 596.63 seconds, with complete output checks at 1k/10k/100k files. Previous 40/20-pair reports retain their original hashes. Current HTTPS clone and large full scans remain slower than the desired low-latency ideal; no universal advantage is claimed.",
+      "remaining": "No remaining measurement gate for this fixed batch. The whole-batch 60-second target was not met.",
       "completion_evidence": [
-        "docs/benchmarks/native-performance-final-20261021.json",
-        "docs/benchmarks/native-performance-1000-20261021.json",
-        "docs/benchmarks/native-performance-10000-20261021.json",
-        "docs/benchmarks/native-performance-100000-20261021.json",
-        "docs/benchmarks/native-performance-network-20261021.json"
+        "docs/benchmarks/native-integrated-performance-20261021.json",
+        "docs/benchmarks/native-integrated-performance-1000-20261021.json",
+        "docs/benchmarks/native-integrated-performance-10000-20261021.json",
+        "docs/benchmarks/native-integrated-performance-100000-20261021.json",
+        "docs/benchmarks/native-integrated-performance-network-20261021.json"
       ]
     },
     {
@@ -176,8 +177,8 @@
       "phase": "delivery",
       "status": "partial",
       "name": "One release and actual Windows Git replacement",
-      "current": "The earlier unpublished native MSI was removed before final package acceptance. Official Git remains the active workstation command. No public tag or release exists.",
-      "remaining": "After all gates pass, publish one consolidated tag/package release and install/activate it on this workstation; verify callers, preserved login/data and rollback before removing the old distribution.",
+      "current": "Original Git remains the workstation default. The unsuccessful unpublished task MSI and its owned rollback records were retired before current acceptance. The final icon/titlebar MSI candidates are ready. No public tag/release exists.",
+      "remaining": "After the corrected local gates pass, install/activate once, verify fresh default Git and native terminal plus preserved profile fingerprints, then publish one consolidated version.",
       "completion_evidence": []
     }
   ],
@@ -198,6 +199,6 @@
     "total_deliverables": 10,
     "percent": 90,
     "implementation_complete": true,
-    "note": "Implementation, final correctness and final paired performance are complete; one publication and actual workstation takeover remain."
+    "note": "All implementation, expanded correctness and current-byte performance measurements complete; final actual installation/takeover and one public release remain."
   }
 }

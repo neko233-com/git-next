@@ -52,7 +52,7 @@ def main():
     expected = {'windows-core-contracts', 'windows-owned-integrations', 'windows-dpapi-migration',
                 'windows-update-contracts', 'linux-x64', 'linux-arm64', 'macos-arm64',
                 'docker-login-migration', 'posix-updater-race-contracts', 'msi-user', 'msi-machine', 'frozen-input-readback',
-                'windows-read-thread-contracts','windows-bootstrap-contracts','windows-game-lfs-contracts','terminal-rust-contracts','terminal-native-desktop'}
+                'windows-read-thread-contracts','windows-bootstrap-contracts','windows-game-lfs-contracts','terminal-rust-contracts','terminal-native-desktop','windows-common-cli-contracts'}
     if {item['case'] for item in gates[0]['results']} != expected or any(item['status'] != 'pass' for gate in gates for item in gate['results']):
         parser.error('Required local acceptance cases are missing or failed')
     if {item['case'] for item in gates[1]['results']} != {'performance-1000','performance-10000','performance-100000','performance-network','frozen-input-readback'}:

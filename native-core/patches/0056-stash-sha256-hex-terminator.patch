@@ -1,0 +1,11 @@
+--- a/builtin/stash.c
++++ b/builtin/stash.c
+@@ -1066,7 +1066,7 @@
+ 			  int quiet)
+ {
+ 	struct stash_info info;
+-	char revision[GIT_MAX_HEXSZ];
++	char revision[GIT_MAX_HEXSZ + 1];
+ 
+ 	oid_to_hex_r(revision, w_commit);
+ 	assert_stash_like(&info, revision);

@@ -56,6 +56,27 @@ try {
     $env:GIT_NEXT_LANGUAGE = 'english'
     $env:GIT_NEXT_CONFIG_HOME = Join-Path $temporary 'config'
     Check 'stable version ordering' (Test-GnNewer '1.2.0' '1.1.9')
+    & (Get-Module Update.Core) {
+        param($FixtureRoot)
+        $busyRoot=Join-Path $FixtureRoot 'literal-process-names'
+        [void][IO.Directory]::CreateDirectory($busyRoot)
+        Write-GnJson (Join-Path $busyRoot 'package.json') @{files=@{'usr/bin/[.exe'='fixture';'bin/git.exe'='fixture';'bin/q?.exe'='fixture'}}
+        $script:processFixtureRoot=$busyRoot
+        $script:processFixtureOwn=$false
+        function Get-Process {
+            param([string[]]$Name,$ErrorAction)
+            foreach($pattern in $Name) { [void][WildcardPattern]::new($pattern) }
+            if (-not ($Name -contains '`[') -or -not ($Name -contains 'q`?')) { throw 'Executable names were not escaped literally.' }
+            $path=if($script:processFixtureOwn){Join-Path $script:processFixtureRoot 'bin/git.exe'}else{'C:\unrelated\git.exe'}
+            [pscustomobject]@{MainModule=[pscustomobject]@{FileName=$path}}
+        }
+        try {
+            if(Test-GnBusy $busyRoot){throw 'Unrelated process blocked the update.'}
+            $script:processFixtureOwn=$true
+            if(-not(Test-GnBusy $busyRoot)){throw 'Owned running process was not detected.'}
+        } finally { Remove-Item Function:Get-Process;Remove-Variable processFixtureRoot,processFixtureOwn -Scope Script }
+    } $temporary
+    Check 'literal wildcard executable names and owned busy-process detection' $true
     Check 'stable replaces same preview' (Test-GnNewer '1.2.0' '1.2.0-dev')
     Check 'equal version is unchanged' (-not (Test-GnNewer '1.2.0' '1.2.0'))
     Check 'downgrade refused by ordering' (-not (Test-GnNewer '1.1.9' '1.2.0'))
