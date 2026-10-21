@@ -41,6 +41,8 @@ def main():
     for name in ('native-packages', 'correctness', 'performance', 'destination', 'wix', 'git'):
         parser.add_argument('--' + name, type=Path, required=True)
     parser.add_argument('--source-commit', required=True)
+    parser.add_argument('--windows-tls-rename-fix', action='store_true',
+                        help='Apply only the child-handle release fix to accepted Windows payloads; actual machine TLS acceptance is required before publication')
     args = parser.parse_args()
     matrix = json.loads(args.native_packages.read_text())
     identity = sha(args.native_packages)
@@ -64,7 +66,16 @@ def main():
     if actual != args.source_commit: parser.error('Project HEAD differs from the release source commit')
     for name, digest in matrix['files'].items():
         if sha(name) != digest: parser.error('Accepted package input changed: ' + name)
+    tls_script = 'packaging/windows/install-tls-provider.ps1'
+    if args.windows_tls_rename_fix:
+        added = (b'    # Windows cannot rename a directory while its child file handles remain open.\n'
+                 b'    # The protected ACL and exclusive platform lock still guard publication.\n'
+                 b'    foreach ($handle in $held) { $handle.Dispose() }\n    $held.Clear()\n')
+        current_tls = (ROOT/tls_script).read_bytes().replace(b'\r\n', b'\n')
+        if current_tls.count(added) != 1 or hashlib.sha256(current_tls.replace(added,b'')).hexdigest() != matrix['harnesses'][tls_script]:
+            parser.error('Only the exact accepted TLS child-handle fix may reuse unaffected gates')
     for name, digest in matrix['harnesses'].items():
+        if args.windows_tls_rename_fix and name in (tls_script, 'tools/prepare_native_release.py'): continue
         if sha(ROOT/name) != digest: parser.error('Accepted source/harness input changed: ' + name)
     output = args.destination.resolve()
     if output.exists(): parser.error('Release staging directory must be new')
@@ -74,6 +85,11 @@ def main():
                  correctness_sha256=sha(args.correctness), performance_sha256=sha(args.performance),
                  native_mac_product_executed=False, personal_account_accessed=False,
                  scope='accepted core/runtime bytes; release metadata, documentation and archive root finalized after local gates')
+    if args.windows_tls_rename_fix:
+        proof['windows_tls_rename_fix'] = dict(before_sha256=matrix['harnesses'][tls_script],
+            after_sha256=sha(ROOT/tls_script), payload_path='components/install-tls-provider.ps1',
+            scope='Only release verified child handles before directory rename; all core, runtime, updater, GUI and MSI recipes remain accepted unchanged',
+            required_before_publication='Fresh real machine TLS preparation, idempotence, pinned-file/ACL verification and actual workstation takeover')
     (output/'native-release-acceptance.json').write_bytes(encoded(proof))
     version = matrix['version']
     manuals = documents()
@@ -90,6 +106,12 @@ def main():
                 parser.error('Native package must embed the accepted complete identity')
             manifest.update(status='accepted-release-distribution', source_commit=args.source_commit,
                             release_eligible=True, remaining=[], acceptance=proof)
+            if args.windows_tls_rename_fix:
+                name = 'components/install-tls-provider.ps1'
+                if sha(target/name) != proof['windows_tls_rename_fix']['before_sha256']:
+                    parser.error('Accepted Windows TLS installer differs from the exact repaired baseline')
+                shutil.copyfile(ROOT/tls_script, target/name)
+                manifest['files'][name].update(sha256=sha(target/name), bytes=(target/name).stat().st_size)
             for name, data in manuals.items():
                 document = target/name
                 document.parent.mkdir(parents=True, exist_ok=True)

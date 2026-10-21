@@ -102,6 +102,10 @@ try {
     $stage = Assert-GnOwnedPath $platformRoot ([IO.Path]::GetFullPath($stage))
     $destination = Assert-GnOwnedPath $platformRoot ([IO.Path]::GetFullPath($destination))
     if ($Machine) { Set-GnMachinePublicObject $stage }
+    # Windows cannot rename a directory while its child file handles remain open.
+    # The protected ACL and exclusive platform lock still guard publication.
+    foreach ($handle in $held) { $handle.Dispose() }
+    $held.Clear()
     [IO.Directory]::Move($stage, $destination)
     $stage = $null
     if (-not $Quiet) { Write-Output 'Independent TLS provider prepared.' }

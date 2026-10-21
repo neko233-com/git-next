@@ -38,6 +38,8 @@ msiexec.exe /i .\git-next-0.3.0-windows-x64.msi
 
 A directly installed MSI preserves an existing default Git until the [protected takeover](TAKEOVER.md) is explicitly applied. The PowerShell bootstrap performs that step automatically. Windows Apps or `msiexec.exe /x <product-code>` removes the MSI. An active original-Git handoff must first be rolled back using its recorded transaction; the removal guard prevents breaking callers. Recovery backups, repositories and user credentials are retained. No blind deletion of unrelated Git installations occurs.
 
+Windows machine TLS preparation releases verified child-file handles before its atomic directory rename. The protected ACL and exclusive platform lock remain active. `tests/tls_provider_install_acceptance.ps1` verifies fresh preparation, repeat preparation, pinned component bytes and machine ACLs against an installed MSI; this targeted gate complements the previously exercised MSI lifecycle.
+
 ## Linux and macOS
 
 Extract the accepted architecture-matching tar.gz, enter `git-next-<version>-<platform>` and run `./install.sh --scope user`. Explicitly elevated `--scope machine` selects a machine installation; `--manual-updates` omits service registration. Owned installers verify the accepted package identity and all payload members before writing managed versioned files; unrelated commands are refused. See [updates and removal](UPDATES.md).
