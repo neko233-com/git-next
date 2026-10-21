@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "status": "five-platform-compilation-complete-not-runtime-accepted",
+  "version": "0.3.0",
+  "default_read_budget": "process-available-logical-cpus-times-two",
+  "explicit_index_and_grep_configuration_preserved": true,
+  "platforms": {
+    "windows-x64": {
+      "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+      "compiled": true,
+      "product_executed": false
+    },
+    "windows-arm64": {
+      "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+      "compiled": true,
+      "product_executed": false
+    },
+    "linux-x64": {
+      "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+      "compiled": true,
+      "product_executed": false
+    },
+    "linux-arm64": {
+      "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+      "compiled": true,
+      "product_executed": false
+    },
+    "macos-arm64": {
+      "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+      "compiled": true,
+      "product_executed": false
+    }
+  }
+}

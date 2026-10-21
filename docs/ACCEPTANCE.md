@@ -1,4 +1,10 @@
-# Acceptance snapshot · 2026-10-20
+# Acceptance snapshot · 2026-10-21
+
+The [final 17-case native correctness evidence](benchmarks/native-correctness-final-20261021.json) passes, including both real Windows MSI scope lifecycles. The [14-case native desktop receipt](benchmarks/native-terminal-desktop-final-20261021.json) is reused only after matching GUI/core/Bash/runtime dependencies and the exact Windows read-safety configuration transition. The original foreground interruption, receipt hashes and elapsed times are retained. No product case is rerun merely to finalize that evidence.
+
+Windows x64, Linux x64 and emulated Linux ARM64 execute native contracts; Windows ARM64 is cross-compiled and PE-checked. macOS is compiled natively and package/Mach-O/shell-checked through Dockerfile_mac without product execution. Workstation takeover and publication are separate from these gates; see [delivery status](DELIVERY_STATUS.md).
+
+## Historical checkpoints
 
 The first final-native [consolidated correctness batch](benchmarks/native-correctness-first-batch-20261020.json) completed in 50.829 seconds with ten parallel lanes. Windows x64, Linux x64 and emulated Linux ARM64 core contracts passed, including LF/language and repository/protocol operations; both Linux owned LFS/signing groups passed. The batch failed overall: Windows updater/signing, generated-login, MSI and Mac fixture failures require the recorded bulk repair and new matching-package regression. No performance/release/takeover acceptance follows from the elapsed-time target. The older Rust checkpoints below retain their historical scope.
 

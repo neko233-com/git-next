@@ -1,0 +1,29 @@
+#include <windows.h>
+1 VERSIONINFO
+ FILEVERSION @FILE_VERSION@
+ PRODUCTVERSION @FILE_VERSION@
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+ FILEFLAGS 0
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0
+BEGIN
+ BLOCK "StringFileInfo"
+ BEGIN
+  BLOCK "040904b0"
+  BEGIN
+   VALUE "CompanyName", "git-next contributors\0"
+   VALUE "FileDescription", "git-next Windows Installer worker\0"
+   VALUE "FileVersion", "@PRODUCT_VERSION@\0"
+   VALUE "InternalName", "msi-worker\0"
+   VALUE "LegalCopyright", "Copyright 2026 git-next contributors. MIT license.\0"
+   VALUE "OriginalFilename", "msi-worker.exe\0"
+   VALUE "ProductName", "git-next\0"
+   VALUE "ProductVersion", "@PRODUCT_VERSION@\0"
+  END
+ END
+ BLOCK "VarFileInfo"
+ BEGIN
+  VALUE "Translation", 0x0409, 1200
+ END
+END

@@ -1,0 +1,12 @@
+--- a/config.c
++++ b/config.c
+@@ -2499,7 +2499,8 @@
+ 		return 0;
+ 	}
+ 
+-	return 1;
++	*dest = 0;
++	return 0;
+ }
+ 
+ NORETURN

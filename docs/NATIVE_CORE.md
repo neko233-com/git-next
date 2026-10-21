@@ -2,7 +2,7 @@
 
 ## Scope and current status
 
-The [fixed delivery ledger](DELIVERY_STATUS.md) selects this source-built core as the single primary compatibility route. The [complete core implementation checkpoint](../native-core/receipts/implementation-complete-core-20261020.json) closes D01 implementation alongside the earlier D03/D04 LF/language implementation. All ten Windows x64 production targets, an owned full runtime tree and the full-payload MSI compile. None has been executed, installed or accepted. D02/D07 and all consolidated acceptance remain open; D06 updater implementation is complete; D05 installation/takeover implementation is complete, with lifecycle acceptance pending. Historical receipts retain their exact original source and binary scope.
+The [fixed delivery ledger](DELIVERY_STATUS.md) selects this source-built core as the primary compatibility route. All five targets compile from one source identity and include owned runtimes, LFS and GCM. Windows x64, Linux x64 and emulated Linux ARM64 native-core checks pass; macOS evidence covers Mach-O/package/shell static checks without product execution. Windows ships the tested stable read profile described in [performance](PERFORMANCE.md). Final combined MSI, performance and workstation evidence is tracked in the delivery ledger. Historical receipts below retain their exact original scope.
 
 The requested final product requires the full Git API and interaction surface, including rebase, stash, cherry-pick, revert, worktrees/submodules, hooks, signing, recovery and existing callers. The current Gitoxide/Russh preview remains incomplete. The user permits a different implementation when externally visible behavior remains compatible.
 

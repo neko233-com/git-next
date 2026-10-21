@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,11 +33,21 @@ def main():
         return str(path)
 
     version = json.loads((ROOT/'packaging/product.json').read_text())['version']
+    terminal_commit = subprocess.check_output(['git','-C',str(ROOT.parent/'git-terminal'),'rev-parse','HEAD'],text=True).strip()
     for platform in ('windows-x64', 'windows-arm64'):
         root = getattr(args, platform.replace('-', '_')).resolve(strict=True)
         manifest = json.loads((root/'git-next-distribution.json').read_text())
         if manifest['platform'] != platform or manifest['version'] != version:
             parser.error('Wrong Windows package identity')
+        built_terminal = manifest.get('git_terminal',{}).get('source_commit')
+        peer=ROOT.parent/'git-terminal'
+        runtime_paths=['Cargo.toml','Cargo.lock','src','shell-integration','vendor/gpui-terminal',':(exclude)src/shell_acceptance.rs']
+        if '#[cfg(all(test, windows))]\nmod shell_acceptance;' not in (peer/'src/main.rs').read_text():
+            parser.error('The excluded terminal fixture must remain a test-only module')
+        if (not built_terminal or subprocess.run(['git','-C',str(peer),'merge-base','--is-ancestor',built_terminal,terminal_commit],capture_output=True).returncode
+                or subprocess.run(['git','-C',str(peer),'diff','--quiet',built_terminal,terminal_commit,'--',*runtime_paths],capture_output=True).returncode
+                or subprocess.check_output(['git','-C',str(peer),'status','--porcelain','--untracked-files=no','--',*runtime_paths],text=True).strip()):
+            parser.error('Windows package differs from the committed peer runtime sources')
         hashes.add(manifest['source_tree_sha256'])
         for name, item in manifest['files'].items():
             path = root/name
@@ -88,12 +99,20 @@ def main():
         pin(path)
     pin(args.source_bundles/'sources.json')
     harnesses = {}
-    for folder in ('tools', 'tests', 'packaging'):
+    for folder in ('tools', 'tests', 'packaging', 'native-core'):
         for path in sorted((ROOT/folder).rglob('*')):
-            if path.is_file() and path.suffix in ('.py', '.ps1', '.psm1', '.cs', '.go', '.mod', '.json', '.wxs', '.sh', '.Dockerfile') and '__pycache__' not in path.parts:
+            if path.is_file() and path.suffix in ('.py', '.ps1', '.psm1', '.cs', '.go', '.mod', '.json', '.wxs', '.sh', '.Dockerfile', '.patch', '.c', '.h') and '__pycache__' not in path.parts:
                 harnesses[path.relative_to(ROOT).as_posix()] = sha(path)
     for name in ('tests/containers/Dockerfile_mac',):
         harnesses[name] = sha(ROOT/name)
+    peer = ROOT.parent/'git-terminal'
+    for path in sorted(peer.rglob('*')):
+        relative = path.relative_to(peer)
+        if any(part in ('.git','.evidence','target') for part in relative.parts):
+            continue
+        if path.is_file() and (path.suffix == '.rs' or relative.parts[0] == 'shell-integration' or relative.as_posix() in ('Cargo.toml','Cargo.lock','vendor/gpui-terminal/Cargo.toml','tests/windows_desktop_acceptance.py')):
+            harnesses['../git-terminal/'+relative.as_posix()] = sha(path)
+    harnesses['install.ps1'] = sha(ROOT/'install.ps1')
     report = dict(schema_version=1, product='git-next', version=version, source_tree_sha256=hashes.pop(),
                   platforms=platforms, files=files, harnesses=harnesses, race_binary=pin(args.race_binary),
                   go_race_image='golang@sha256:55395706e9703db746cc507abfc4eb2aea75918f8a8024e4848e2cb81004f5ad',

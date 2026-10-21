@@ -376,5 +376,68 @@
     "before_sha256": "66a97b6abb14b49c42ea22b9c91fb77b4091c0ea72eadb19712c3ab57e9ff861",
     "after_sha256": "3e27c6b4891a8bf29a00a74feb7ae0db992e65ec30827bf261355f978df9a4ab",
     "patch_sha256": "9480db9eaffcc1c137bd8254bbec63d9a6699db899f07607f279d20523054d2a"
+  },
+  {
+    "path": "config.c",
+    "patch": "0055-default-index-read-thread-auto-budget.patch",
+    "before_sha256": "802a21442aef6923752541d43a33657026df624787aa933216b376e154d58268",
+    "after_sha256": "a0cd442117cf4e919e9ff7e03da43ad9409a1cd456382e3018d376c436bf7ac9",
+    "patch_sha256": "51aa64ea55c3997b7d88e12c21b1b99b74d0e7fda347f3ce2bebec1e7ddf1d49"
+  },
+  {
+    "path": "read-cache.c",
+    "patch": "0056-apply-read-budget-to-index-decoding-and-offsets.patch",
+    "before_sha256": "b8a2583881e21108510ed32590a7f39bdddb52ea9e0a3234100a535b96cfd237",
+    "after_sha256": "909a31e3dc948da7319d92ce024bb52e919eeb791c6ce307e520f46b717b41d4",
+    "patch_sha256": "9b24f364acf61c9cae5b7db28ea18b12f4fcf9bcbb5674d2ed00a4c81a707924"
+  },
+  {
+    "path": "preload-index.c",
+    "patch": "0057-use-configurable-read-budget-with-heap-worker-state.patch",
+    "before_sha256": "803342c4cb5f2642fa8634265f493530f0a5f5ebecc96693ef2f4db03ae07e22",
+    "after_sha256": "3f37801c9d62761e19195c08b83a359d39c49f3c6fbde63012c8af81aa2ebe1b",
+    "patch_sha256": "2b0e86f42a9f0a20d15113154468110c157904b0f296c9b8bbaea5bf21d14de2"
+  },
+  {
+    "path": "builtin/grep.c",
+    "patch": "0058-default-readonly-grep-to-process-cpu-budget.patch",
+    "before_sha256": "7723fee813189df2ac97a985695fb671a142d1356752d3330318e40cb770e342",
+    "after_sha256": "3351bcdf002b450624fc1b4ba0b997c0b5bb99b654af429c4962decb2ff6e06b",
+    "patch_sha256": "a8a15ea0ed0ad67f55a7dfde292f0ce6e8bd162c44f4f1b37ba6e1b6732c40f8"
+  },
+  {
+    "path": "name-hash.c",
+    "patch": "0059-apply-index-read-budget-to-name-table-loading.patch",
+    "before_sha256": "4abc4b3c12c88241793d82838f554d077b1aebce57b416a5808e1d17c265886c",
+    "after_sha256": "489c0e3eae201c5600915d86b8807516c6027ddae82d9547fd914fdddf33857b",
+    "patch_sha256": "84cecea703848c470d22b54756f8829450e31f320fd7580d20267f0a78ac16d8"
+  },
+  {
+    "path": "builtin/grep.c",
+    "patch": "0060-include-trace-macros-for-grep-read-workers.patch",
+    "before_sha256": "3351bcdf002b450624fc1b4ba0b997c0b5bb99b654af429c4962decb2ff6e06b",
+    "after_sha256": "e3e5fbe4d4161f77f9d20e46546891c9b2a80531ce429fe0f560ba7c050a4a8b",
+    "patch_sha256": "b04f6ff7c8208dddd8cb623c77e47939a43db638b626f0b8df648328fb5b21b3"
+  },
+  {
+    "path": "name-hash.c",
+    "patch": "0061-bound-name-hash-workers-without-budget-overflow.patch",
+    "before_sha256": "489c0e3eae201c5600915d86b8807516c6027ddae82d9547fd914fdddf33857b",
+    "after_sha256": "e57aa130e804058a6778e2e66844ca32638ba5e813039e34f2df5c8edd550386",
+    "patch_sha256": "e0f5173f482c7d5fd178e276ed098db8e6d7a1b93eea6238ed5ad7bd7b2d370a"
+  },
+  {
+    "path": "preload-index.c",
+    "patch": "0062-portable-preload-index-worker-bound.patch",
+    "before_sha256": "3f37801c9d62761e19195c08b83a359d39c49f3c6fbde63012c8af81aa2ebe1b",
+    "after_sha256": "858da3cb682ed12263ef31126fd025a07205cfabd55bff99bee0e60bbd0c8b83",
+    "patch_sha256": "cb28a57dfdd8c79cefccc2e3136515bda98b5a1f9f13cb76ca4eaf5f4bb22eca"
+  },
+  {
+    "path": "read-cache.c",
+    "patch": "0063-portable-read-cache-worker-bound.patch",
+    "before_sha256": "909a31e3dc948da7319d92ce024bb52e919eeb791c6ce307e520f46b717b41d4",
+    "after_sha256": "cd2003d22db0ffbad0fff1b452762fe63c3832f6602f46ab601ff5b1e2b9e5c3",
+    "patch_sha256": "71e5e7540415efd835c51588fdc5b1d44065706a94d61840840a1d749c125a7b"
   }
 ]

@@ -9,6 +9,7 @@ import subprocess
 import tempfile
 
 from lfs_transfer_acceptance import Fixture
+from windows_msi_worker_acceptance import check_worker
 
 
 def main():
@@ -93,6 +94,8 @@ def main():
             gpgconf=gpg.with_name('gpgconf'+gpg.suffix)
             if gpgconf.is_file(): subprocess.run([str(gpgconf),'--kill','all'],env=env,capture_output=True,timeout=15)
         record('D02-owned-gpg-generated-key-commit-and-tag-verification',signing)
+        if os.name=='nt':
+            record('D05-native-no-console-msi-worker-unicode-quoting-exit-and-argument-guards',lambda:check_worker(binary.parent.parent/'updater/msi-worker.exe',root,env))
     report=dict(schema_version=1,status='pass' if all(item['status']=='pass' for item in results) else 'fail',
                 cases=results,personal_credentials_accessed=False,fixture_keys_deleted=True)
     if args.output.exists(): raise ValueError('Result output must be new')

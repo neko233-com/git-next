@@ -1,6 +1,8 @@
 # Native restore and reset
 
-The current source supports ordinary-file worktree restoration and common index/ref reset operations directly. The Windows optimized client `14644c1fcefee0d03a8d59cc30fcc6e2276a315840f6e5e8d440c18a17db3550` passed scoped acceptance and is installed as the separate preview. Full Git compatibility remains false.
+The primary product uses the complete source-built native Git compatibility core for restore, reset and recovery. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The narrower implementation details and installation hashes below describe the separate historical Rust preview.
+
+## Historical Rust preview
 
 `restore [-s SOURCE] [-S|--staged] [-W|--worktree] PATHS...` restores selected paths from the index or a tree. With `--staged`, HEAD is the default source. Combined staged/worktree restoration is supported, as are directory-relative paths, globs and exclusions. Unselected files and index entries remain intact. Worktree-only restore preserves staged object IDs while refreshing metadata for restored files. Selected target attributes and unselected current worktree attributes are snapshotted before conversion; filters run only for selected target files.
 

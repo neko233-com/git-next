@@ -387,8 +387,8 @@ function Set-GnUpdateTask([string]$InstallRoot, [string]$StateRoot, [string]$Pla
         $logon.Delay = 'PT5M'
     }
     $action = $definition.Actions.Create(0)
-    $action.Path = Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-    $action.Arguments = '-NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File "' + $scriptFile + '" -Mode Scheduled'
+    $action.Path = Join-Path $InstallRoot 'updater\msi-worker.exe'
+    $action.Arguments = '-Mode Scheduled'
     $action.Arguments += ' -Request "$(Arg0)"'
     $action.WorkingDirectory = Join-Path $InstallRoot 'updater'
     [void]$folder.RegisterTaskDefinition($taskName, $definition, 6, $sid, $null, $logonType, $taskSecurity)

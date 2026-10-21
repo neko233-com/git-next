@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "fixture_files": 10000,
+  "iterations_per_mode": 30,
+  "results": {
+    "git_next/default": {
+      "status_failures": 0,
+      "grep_failures": 26,
+      "exit_failures": 0,
+      "samples": [
+        {
+          "iteration": 0,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 1,
+          "unexpected_count": 0
+        },
+        {
+          "iteration": 1,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 2,
+          "unexpected_count": 0
+        },
+        {
+          "iteration": 2,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 2,
+          "unexpected_count": 0
+        }
+      ]
+    },
+    "git_next/single": {
+      "status_failures": 0,
+      "grep_failures": 0,
+      "exit_failures": 0,
+      "samples": []
+    },
+    "git/default": {
+      "status_failures": 0,
+      "grep_failures": 27,
+      "exit_failures": 0,
+      "samples": [
+        {
+          "iteration": 1,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 2,
+          "unexpected_count": 0
+        },
+        {
+          "iteration": 2,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 3,
+          "unexpected_count": 0
+        },
+        {
+          "iteration": 3,
+          "operation": "grep",
+          "exit_code": 0,
+          "stderr": "",
+          "missing_count": 1,
+          "unexpected_count": 0
+        }
+      ]
+    },
+    "git/single": {
+      "status_failures": 0,
+      "grep_failures": 0,
+      "exit_failures": 0,
+      "samples": []
+    }
+  },
+  "personal_account_accessed": false,
+  "tracked_file_bytes_unchanged": true,
+  "seconds": 128.829
+}

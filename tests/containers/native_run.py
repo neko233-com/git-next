@@ -26,8 +26,8 @@ def check(case):
     result=subprocess.run(command,capture_output=True,timeout=1800)
     Path('/results/'+name+'.log').write_bytes(result.stdout+b'\n'+result.stderr)
     return dict(case=name,status='pass' if result.returncode==0 else 'fail',exit_code=result.returncode)
-with ThreadPoolExecutor(max_workers=2) as pool:
-    checks=list(pool.map(check,[('native-contracts','native_contract_acceptance.py'),('native-integrations','native_integrations_acceptance.py')]))
+with ThreadPoolExecutor(max_workers=3) as pool:
+    checks=list(pool.map(check,[('native-contracts','native_contract_acceptance.py'),('native-integrations','native_integrations_acceptance.py'),('native-read-threads','native_read_threads_acceptance.py')]))
 report=dict(schema_version=1,status='pass' if all(item['status']=='pass' for item in checks) else 'fail',
             platform=manifest['platform'],package_manifest_sha256=hashlib.sha256((root/'package.json').read_bytes()).hexdigest(),
             files_verified=len(manifest['files']),cases=checks,personal_profile_mounted=False)

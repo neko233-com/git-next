@@ -1,6 +1,6 @@
 # Interface languages
 
-Native English and Simplified Chinese are integrated in the source-built primary core. The language commands are registered as Git builtins, including alias dispatch; settings, product resources/version JSON and 6226 upstream Chinese translations plus 37 product messages (6263 total) compile on Windows x64. [D04 is implementation-complete](DELIVERY_STATUS.md); no new-core language/runtime regression has run. The installed earlier preview does not contain these commands. Final packages and multilingual acceptance remain pending.
+Native English and Simplified Chinese are integrated in the source-built primary core. Language commands are Git builtins, including alias dispatch; resources include 6226 upstream Chinese translations plus 37 product messages (6263 total). Current Windows x64 and both Linux target language checks pass; macOS packaging/static evidence does not claim a product runtime test. The terminal follows the system language and supports manual switching. See [delivery status](DELIVERY_STATUS.md) for final package and workstation acceptance.
 
 ## Commands
 
@@ -14,7 +14,7 @@ git language list
 git --language english status
 ```
 
-Use `git-next` instead of `git` until the final takeover gates pass. `chinese`/`zh`/`zh-CN`/`zh-Hans` and `english`/`en`/`en-US` select built-in languages. `auto`/`system` returns to automatic selection. `get` prints a stable canonical `chinese` or `english` identifier. Its JSON response includes `schema_version`, resolved `language`, configured selection, source and supported languages. Set confirmation follows the newly saved language. Subcommand and option names remain stable English CLI identifiers.
+Use `git-next` before takeover, or `git` after installation activates its default entrypoint. `chinese`/`zh`/`zh-CN`/`zh-Hans` and `english`/`en`/`en-US` select built-in languages. `auto`/`system` returns to automatic selection. `get` prints a stable canonical `chinese` or `english` identifier. Its JSON response includes `schema_version`, resolved `language`, configured selection, source and supported languages. Set confirmation follows the newly saved language. Subcommand and option names remain stable English CLI identifiers.
 
 ## Selection and performance
 

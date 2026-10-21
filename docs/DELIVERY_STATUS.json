@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope_id": "git-next-complete-replacement-20261020",
-  "updated_on": "2026-10-20",
+  "updated_on": "2026-10-21",
   "scope_frozen": true,
   "primary_engine": "source-built-git-next-native-core",
   "reference_generation": "2.54.0.windows.1",
@@ -29,14 +29,15 @@
       "phase": "implementation",
       "status": "complete",
       "name": "Complete Git command and repository semantics",
-      "current": "The full upstream command/repository/protocol engine is integrated as the sole primary core, with product identity/LF/language extensions, owned recursive dispatch and all ten production targets. The complete Windows x64 distribution and full-payload MSI compile; no new product execution.",
+      "current": "One native core source compiles on all five targets. Windows packages override the automatic CPU*2 fallback with tested serial index/grep reads and disabled fscache/fsmonitor/preload. User/repository configuration keeps normal priority.",
       "remaining": "No implementation gap currently identified for this fixed core item. Platform/runtime/package closure remains in D02/D05-D07; all command, repository and failure acceptance remains D08. A discovered core defect reopens D01.",
       "completion_evidence": [
         "native-core/receipts/implementation-complete-core-20261020.json",
         "native-core/patches/series.json",
         "tools/assemble_native_windows.py",
         "packaging/native_msi.py",
-        "native-core/receipts/implementation-static-runtime-20261020.json"
+        "native-core/receipts/implementation-static-runtime-20261020.json",
+        "native-core/receipts/read-thread-five-platform-compilation-20261021.json"
       ]
     },
     {
@@ -44,15 +45,20 @@
       "phase": "implementation",
       "status": "complete",
       "name": "Independent complete runtime and existing integrations",
-      "current": "All five native cores compile from the same integrated source identity. Owned Windows runtime and POSIX SSH, shell, Perl/Python/Tcl, signing, LFS/GCM closures, desktop credential helpers and configuration lifecycle are implemented/staged. No product or installer executed.",
-      "remaining": "No further D02 implementation gap currently identified. Final complete packages/source-license delivery remain D07; real integration, caller, credential and failure acceptance remain D08. A discovered defect reopens D02.",
+      "current": "Implementation complete for the peer GPUI Fast desktop terminal, built-in LFS filters/templates, game profiles, combined MSI and automatic trusted PowerShell bootstrap. Final combined runtime acceptance remains D08.",
+      "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-five-platform-runtimes-20261020.json",
         "tools/collect_macos_runtime.py",
         "tools/collect_linux_runtime.py",
         "tools/assemble_native_posix.py",
-        "packaging/posix/updater/configuration.go"
-      ]
+        "packaging/posix/updater/configuration.go",
+        "tools/prepare_git_terminal.py",
+        "packaging/git-terminal-runtime.lock.json",
+        "packaging/lfs-hooks/source.json",
+        "install.ps1"
+      ],
+      "previous_core_evidence_preserved": true
     },
     {
       "id": "D03",
@@ -88,14 +94,19 @@
       "phase": "implementation",
       "status": "complete",
       "name": "MSI and reversible Windows takeover/removal",
-      "current": "Machine and user MSI, protected state/SYSTEM updater, scoped configuration/components, matching-hive bridges/builtin aliases, backup/uninstall/rollback and PATH recovery are implemented. Both x64 MSI scopes compile; later source-only edits are explicitly fingerprinted. No product, installer, task or migration executed.",
-      "remaining": "No further D05 implementation gap currently identified. Custom runtime configuration consumers remain D02; final current package rebuild remains D07. MSI lifecycle, callers, preserved login, failure and rollback acceptance remain D08/D10. A discovered defect reopens D05.",
+      "current": "Implementation complete for the peer GPUI Fast desktop terminal, built-in LFS filters/templates, game profiles, combined MSI and automatic trusted PowerShell bootstrap. Final combined runtime acceptance remains D08.",
+      "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-windows-scopes-20261020.json",
         "packaging/native_msi.py",
         "packaging/windows/Product.wxs",
-        "packaging/windows/Takeover.Core.psm1"
-      ]
+        "packaging/windows/Takeover.Core.psm1",
+        "tools/prepare_git_terminal.py",
+        "packaging/git-terminal-runtime.lock.json",
+        "packaging/lfs-hooks/source.json",
+        "install.ps1"
+      ],
+      "previous_core_evidence_preserved": true
     },
     {
       "id": "D06",
@@ -117,39 +128,47 @@
       "phase": "implementation",
       "status": "complete",
       "name": "Five platform packages and final consolidated regression inputs",
-      "current": "Five source-matched complete native distribution packages, four Windows MSI packages, four corresponding-source bundles and the complete native regression/performance harness inputs are generated. Only compilation/static assembly/material checks have run.",
-      "remaining": "No further D07 implementation gap identified. Runtime, migration, installation, update and Mac package/shell acceptance remain D08; paired performance remains D09. A discovered defect reopens its existing item.",
+      "current": "Implementation complete for the peer GPUI Fast desktop terminal, built-in LFS filters/templates, game profiles, combined MSI and automatic trusted PowerShell bootstrap. Final combined runtime acceptance remains D08.",
+      "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-final-packages-20261020.json",
         "packaging/corresponding-sources.lock.json",
         "tools/freeze_native_batch.py",
-        "tools/native_product_batch.py"
-      ]
+        "tools/native_product_batch.py",
+        "tools/prepare_git_terminal.py",
+        "packaging/git-terminal-runtime.lock.json",
+        "packaging/lfs-hooks/source.json",
+        "install.ps1"
+      ],
+      "previous_core_evidence_preserved": true
     },
     {
       "id": "D08",
       "phase": "acceptance",
       "status": "complete",
       "name": "One consolidated correctness/platform/migration/install regression",
-      "current": "The repaired immutable five-target matrix passed all 12 report items. Parallel functional lanes took 52.177 seconds; the full batch including serialized user/machine MSI lifecycles took 641.437 seconds. Original Git bytes, paths and generated-account fixture cleanup passed.",
-      "remaining": "No failed D08 case remains for this immutable candidate. D10 actual workstation takeover/caller acceptance is separate; its read-only preflight identified legacy wrapper/retired-updater mapping work before removal.",
+      "current": "All 17 required correctness cases passed: Windows core/integrations/read safety/LFS/bootstrap/DPAPI/updater, terminal Rust/ConPTY, Linux runtimes, macOS static packaging, generated-login Docker migration, updater race checks and both full MSI lifecycles. Desktop uses the prior 14-case passed receipt with identical GUI/core/Bash/runtime dependencies and only the exact stable-read config transition. Original foreground interruption and elapsed time are retained; no product cases were rerun during receipt finalization.",
+      "remaining": "None for the frozen final acceptance scope. Windows ARM64 remains cross-compiled; macOS product runtime was not executed, as requested.",
       "completion_evidence": [
-        "docs/benchmarks/native-correctness-consolidated-20261020.json"
-      ]
+        "docs/benchmarks/native-correctness-final-20261021.json",
+        "docs/benchmarks/native-terminal-desktop-final-20261021.json",
+        "docs/benchmarks/native-windows-read-stability-20261021.json"
+      ],
+      "previous_core_evidence_preserved": true
     },
     {
       "id": "D09",
       "phase": "acceptance",
       "status": "complete",
       "name": "One final paired latency/performance batch",
-      "current": "Consolidated paired correctness/timing checks passed. The material Windows status regression was fixed; startup and 1k/10k/100k status improved against the default reference. Per latest user direction, git-next targets practical high performance rather than extreme latency tuning; the ultra-low-latency requirement belongs to GitSSS server.",
-      "remaining": "Measured boundary: 100k-file show metadata was 70.424ms versus 57.774ms (p95 78.754ms versus 63.701ms). Network remained comparable. No universal speedup or total process-tree memory claim; no further extreme tuning requested.",
+      "current": "The final matched-profile paired batch passed all 1000/10000/100000-file and loopback HTTPS workloads, with per-sample output validation, 40 local pairs and 20 network pairs. Windows native defaults and explicit reference read-safety settings match. Large full scans remain slow; no universal performance advantage is claimed.",
+      "remaining": "None for this fixed batch. The measured 1388.824 seconds did not meet the 60-second target.",
       "completion_evidence": [
-        "docs/benchmarks/native-performance-consolidated-20261020.json",
-        "docs/benchmarks/native-performance-1000-20261020.json",
-        "docs/benchmarks/native-performance-10000-20261020.json",
-        "docs/benchmarks/native-performance-100000-20261020.json",
-        "docs/benchmarks/native-performance-network-20261020.json"
+        "docs/benchmarks/native-performance-final-20261021.json",
+        "docs/benchmarks/native-performance-1000-20261021.json",
+        "docs/benchmarks/native-performance-10000-20261021.json",
+        "docs/benchmarks/native-performance-100000-20261021.json",
+        "docs/benchmarks/native-performance-network-20261021.json"
       ]
     },
     {
@@ -157,9 +176,28 @@
       "phase": "delivery",
       "status": "partial",
       "name": "One release and actual Windows Git replacement",
-      "current": "Correctness and paired timing gates passed. Standard legacy cmd wrappers and retired producer update notification paths are mapped in the accepted Windows payload. Final release packaging, actual Windows installation/takeover and one publication are next.",
+      "current": "The earlier unpublished native MSI was removed before final package acceptance. Official Git remains the active workstation command. No public tag or release exists.",
       "remaining": "After all gates pass, publish one consolidated tag/package release and install/activate it on this workstation; verify callers, preserved login/data and rollback before removing the old distribution.",
       "completion_evidence": []
     }
-  ]
+  ],
+  "scope_addenda": [
+    {
+      "date": "2026-10-21",
+      "source": "explicit user requirement",
+      "requirements": [
+        "peer Git-Terminal submodule using Rust + GPUI Fast, bundled with Windows MSI",
+        "replace Git Bash desktop entry; no Git GUI entry",
+        "built-in LFS without another installer; game-asset workflow and failure acceptance"
+      ],
+      "core_accepted_source_tree_sha256": "458af23b856b3e73cd49d41570c0db17c26480e9385f061deed5af1c1aca79fd"
+    }
+  ],
+  "progress": {
+    "complete_deliverables": 9,
+    "total_deliverables": 10,
+    "percent": 90,
+    "implementation_complete": true,
+    "note": "Implementation, final correctness and final paired performance are complete; one publication and actual workstation takeover remain."
+  }
 }

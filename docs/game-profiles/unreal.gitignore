@@ -1,0 +1,6 @@
+# Build can contain required project source/configuration; preserve it.
+/Binaries/
+/DerivedDataCache/
+/Intermediate/
+/Saved/
+/.vs/

@@ -166,16 +166,22 @@ function Get-GnRelatedIntegration([string]$OriginalRoot) {
     foreach ($file in $files) {
         if (-not $seen.Add($file.FullName)) { continue }
         if ($file.Length -gt 2MB -or $file.Attributes -band [IO.FileAttributes]::ReparsePoint) { continue }
+        $retiredGui = $false
+        $retiredStartMenu = $false
         if ($file.Extension -ieq '.lnk') {
             $target = [Environment]::ExpandEnvironmentVariables($shell.CreateShortcut($file.FullName).TargetPath)
             if (-not $target.StartsWith($OriginalRoot+'\',[StringComparison]::OrdinalIgnoreCase)) { continue }
+            $retiredGui = [IO.Path]::GetFileName($target) -in @('git-gui.exe','gitk.exe')
+            foreach ($menu in @([Environment]::GetFolderPath('Programs'),[Environment]::GetFolderPath('CommonPrograms'))) {
+                if ($file.FullName.StartsWith((Join-Path $menu 'Git')+'\',[StringComparison]::OrdinalIgnoreCase)) { $retiredStartMenu = $true }
+            }
         } else {
             $text = [IO.File]::ReadAllText($file.FullName).Replace('\\','\').Replace('/','\')
             if ($text.IndexOf($OriginalRoot,[StringComparison]::OrdinalIgnoreCase) -lt 0) { continue }
         }
         $relative = ([BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash([Text.Encoding]::UTF8.GetBytes($file.FullName)))).Replace('-','').ToLowerInvariant()
         $access = (Get-Acl -LiteralPath $file.FullName).GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
-        $result += [pscustomobject]@{source=$file.FullName;relative=$relative;sha256=(Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant();attributes=[int]$file.Attributes;access=$access}
+        $result += [pscustomobject]@{source=$file.FullName;relative=$relative;sha256=(Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant();attributes=[int]$file.Attributes;access=$access;retired_gui=$retiredGui;retired_start_menu=$retiredStartMenu}
         if ($result.Count -gt 128) { throw 'Unexpected number of legacy integration files.' }
     }
     return $result
@@ -187,12 +193,19 @@ function Restore-GnFileAccess([string]$Path,[string]$Access) {
     Set-Acl -LiteralPath $Path -AclObject $security
 }
 
-function Copy-GnRelatedIntegration([string]$Backup,$Records,[bool]$Restore) {
+function Copy-GnRelatedIntegration([string]$Backup,$Records,[bool]$Restore,[switch]$ExcludeRetiredGui) {
     foreach ($record in $Records) {
         $stored = Assert-GnOwnedPath $Backup (Join-Path $Backup $record.relative)
         $source = if ($Restore) { $stored } else { $record.source }
         $target = if ($Restore) { $record.source } else { $stored }
         [void](Assert-GnOwnedPath ([IO.Path]::GetDirectoryName($record.source)) $record.source)
+        if ($Restore -and $ExcludeRetiredGui -and (($record.PSObject.Properties['retired_gui'] -and $record.retired_gui) -or ($record.PSObject.Properties['retired_start_menu'] -and $record.retired_start_menu))) {
+            if ([IO.File]::Exists($target)) {
+                if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'A legacy GUI shortcut changed; preserve it for review.' }
+                Remove-Item -LiteralPath $target -Force
+            }
+            continue
+        }
         if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'A legacy integration source changed; the file was preserved.' }
         if ([IO.File]::Exists($target)) {
             if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'A legacy integration destination changed; the file was preserved.' }
@@ -266,6 +279,7 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
         if (-not $file.pe) { $retained += $file; continue }
         if (-not $file.relative.EndsWith('.exe',[StringComparison]::OrdinalIgnoreCase)) { continue }
         $target = 'runtime/' + $file.relative
+        if ($file.relative -eq 'git-bash.exe' -and $package.files.PSObject.Properties['bin/git-terminal.exe']) { $target = 'bin/git-terminal.exe' }
         if ($file.relative -in @('cmd/git.exe','bin/git.exe')) { $target = $file.relative }
         if (-not $package.files.PSObject.Properties[$target] -and $file.relative -match '^cmd/(git-(?:receive-pack|upload-pack|upload-archive)|scalar)\.exe$') {
             $command = $Matches[1]
@@ -525,6 +539,12 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         }
         foreach ($record in $Plan.registry) {
             if ($record.path -ceq 'Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') { continue }
+            if ($record.path -match '\\shell\\git_(gui|shell)$') {
+                Assert-GnRegistryCanRestore $record
+                $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$($record.hive),[Microsoft.Win32.RegistryView]::Registry64)
+                try { $base.DeleteSubKeyTree($record.path,$false) } finally { $base.Dispose() }
+                continue
+            }
             Assert-GnRegistryCanRestore $record
             Restore-GnRegistrySnapshot $record
         }
@@ -533,7 +553,7 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
             $key = $base.OpenSubKey('Software\GitForWindows',$true)
             if ($key) { try { $key.SetValue('CurrentVersion','2.54.0.git-next') } finally { $key.Dispose() } }
         } finally { $base.Dispose() }
-        Copy-GnRelatedIntegration $relatedBackup $Plan.related $true
+        Copy-GnRelatedIntegration $relatedBackup $Plan.related $true -ExcludeRetiredGui
         $configRoot = [IO.Path]::GetDirectoryName($Plan.system_config)
         [void][IO.Directory]::CreateDirectory($configRoot)
         [void](Assert-GnOwnedPath $configRoot $Plan.system_config)
@@ -545,7 +565,7 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         # Preserve ordered multivars such as credential.helper without prepending new helpers.
         $selectedConfig = if ([IO.File]::Exists((Join-Path $Plan.original_root 'etc/gitconfig'))) { $legacyConfig } else { $baseConfig }
         $text += "`tpath = `"$selectedConfig`"`n"
-        $text += "[core]`n`tautocrlf = input`n`teol = lf`n"
+        $text += "[core]`n`tautocrlf = input`n`teol = lf`n`tfscache = false`n`tfsmonitor = false`n`tpreloadIndex = false`n[index]`n`tthreads = 1`n[grep]`n`tthreads = 1`n"
         $stream = Open-GnNewFile $Plan.system_config
         try { $data = [Text.UTF8Encoding]::new($false).GetBytes($text); $stream.Write($data,0,$data.Length); $stream.Flush($true) } finally { $stream.Dispose() }
         $Plan.system_config_sha256 = (Get-FileHash -LiteralPath $Plan.system_config -Algorithm SHA256).Hash.ToLowerInvariant()

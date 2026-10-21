@@ -11,6 +11,8 @@ import time
 import uuid
 
 from product_batch import require_implementation_complete
+from terminal_runtime_fixture import prepare_terminal_runtime
+from native_msi_evidence import load_reuse
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -28,6 +30,10 @@ def main():
     parser.add_argument('--wall-clock-target',type=float,default=60,help='report the actual batch time against this target; never skip checks')
     parser.add_argument('--performance',action='store_true')
     parser.add_argument('--correctness-receipt',type=Path)
+    parser.add_argument('--reuse-msi-batch',type=Path)
+    parser.add_argument('--reuse-msi-matrix',type=Path)
+    parser.add_argument('--reuse-desktop-batch',type=Path)
+    parser.add_argument('--reuse-desktop-matrix',type=Path)
     args=parser.parse_args()
     started_batch=time.monotonic()
     if args.wall_clock_target<=0: parser.error('A positive wall-clock target is required')
@@ -40,6 +46,14 @@ def main():
     for name,value in matrix['harnesses'].items():
         if sha(ROOT/name)!=value: parser.error('Frozen batch harness changed: '+name)
     reference=args.reference.resolve(strict=True);reference_sha=sha(reference)
+    if bool(args.reuse_msi_batch)!=bool(args.reuse_msi_matrix) or (args.performance and args.reuse_msi_batch):
+        parser.error('MSI evidence reuse requires both a correctness batch receipt and its matrix')
+    reused_msi=load_reuse(args.reuse_msi_batch,args.reuse_msi_matrix,matrix,reference_sha) if args.reuse_msi_batch else {}
+    if bool(args.reuse_desktop_batch)!=bool(args.reuse_desktop_matrix) or (args.performance and args.reuse_desktop_batch):
+        parser.error('Desktop evidence reuse requires its correctness batch and frozen matrix')
+    reused_desktop=load_reuse(args.reuse_desktop_batch,args.reuse_desktop_matrix,matrix,reference_sha,('terminal-native-desktop',)) if args.reuse_desktop_batch else {}
+    if args.reuse_desktop_batch and not reused_desktop:
+        parser.error('The exact desktop case did not pass in the supplied evidence')
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=False)
     identity=sha(args.native_packages)
     win=matrix['platforms']['windows-x64'];binary=Path(win['directory'])/'bin/git.exe'
@@ -73,15 +87,21 @@ def main():
         checkpoint.write_text(json.dumps(dict(binary_sha256=sha(binary),source_tree_sha256=matrix['source_tree_sha256'])))
         for files,dirs in [(1000,16),(10000,1000),(100000,1000)]:
             results.append(run(('performance-'+str(files),[python,'tests/benchmark.py',str(binary),'--reference',str(reference),
-                '--runs','40','--files',str(files),'--directories',str(dirs),'--read-commands','--system-config-enabled','--native-distribution',
+                '--runs','40','--files',str(files),'--directories',str(dirs),'--read-commands','--system-config-enabled','--native-distribution','--reference-read-safety',
                 '--fixture-layout','packed','--source-checkpoint',str(checkpoint),'--output',str(output/('performance-'+str(files)+'.json'))],1800)))
         results.append(run(('performance-network',[python,'tests/network_benchmark.py',str(binary),'--reference',str(reference),
                             '--runs','20','--native-distribution','--source-checkpoint',str(checkpoint),'--output',str(output/'performance-network.json')],1800)))
     else:
+        terminal_runtime=prepare_terminal_runtime(win['directory'],output/'terminal-runtime')
         cases=[('windows-core-contracts',[python,'tests/native_contract_acceptance.py',str(binary),'--reference',str(reference),'--output',str(output/'windows-core.json')],1200),
                ('windows-owned-integrations',[python,'tests/native_integrations_acceptance.py',str(binary),'--output',str(output/'windows-integrations.json')],900),
                ('windows-dpapi-migration',[python,'tests/gcm_acceptance.py',str(binary),'--helper',win['gcm'],'--native-distribution'],900),
                ('windows-update-contracts',[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File','tests/updater_acceptance.ps1'],900)]
+        cases += [('windows-read-thread-contracts',[python,'tests/native_read_threads_acceptance.py',str(binary),'--output',str(output/'windows-read-threads.json')],240),
+                  ('windows-bootstrap-contracts',[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File','tests/bootstrap_acceptance.ps1','-Output',str(output/'windows-bootstrap.json')],120),
+                  ('windows-game-lfs-contracts',[python,'tests/native_game_project_acceptance.py',str(binary),'--output',str(output/'windows-game-lfs.json')],900),
+                  ('terminal-rust-contracts',[python,'tests/terminal_product_acceptance.py','--source',str(ROOT.parent/'git-terminal'),'--distribution',str(terminal_runtime),'--output',str(output/'terminal-rust.json')],3600),
+                  ('terminal-native-desktop',[python,str(ROOT.parent/'git-terminal/tests/windows_desktop_acceptance.py'),'--binary',str(terminal_runtime/'bin/git-terminal.exe'),'--git',str(terminal_runtime/'bin/git.exe'),'--output',str(output/'terminal-desktop.json')],900)]
         for platform in ['linux-x64','linux-arm64','macos-arm64']:
             item=matrix['platforms'][platform]
             cases.append((platform,[python,'tools/native_docker_batch.py','--platform',platform,'--archive',item['archive'],
@@ -90,6 +110,10 @@ def main():
                             '--output',str(output/'docker-login-migration.json')],2400))
         msi_lane=[]
         for scope in ['user','machine']:
+            if 'msi-'+scope in reused_msi:
+                stamp=round(time.monotonic()-started_batch,3)
+                results.append(dict(**reused_msi['msi-'+scope],started_seconds_from_batch=stamp,finished_seconds_from_batch=stamp))
+                continue
             command=[shell,'-NoProfile','-ExecutionPolicy','Bypass','-File',
                      'tests/elevated_msi_acceptance.ps1' if scope=='machine' else 'tests/msi_acceptance.ps1',
                      '-Package',win['base_msi_'+scope],'-UpgradePackage',win['msi_'+scope]]
@@ -105,7 +129,14 @@ def main():
         cases.append(('posix-updater-race-contracts',command,900))
         # Repository/profile/container fixtures are independent. Windows Installer owns
         # one system-wide transaction, so both MSI scopes share one serial worker lane.
-        lanes=[[case] for case in cases]+[msi_lane]
+        desktop=next(case for case in cases if case[0]=='terminal-native-desktop')
+        if reused_desktop:
+            stamp=round(time.monotonic()-started_batch,3)
+            results.append(dict(**reused_desktop['terminal-native-desktop'],started_seconds_from_batch=stamp,finished_seconds_from_batch=stamp))
+        else:
+            results.append(run(desktop))
+        cases=[case for case in cases if case is not desktop]
+        lanes=[[case] for case in cases]
         def run_lane(lane):
             return [run(case) for case in lane]
         try:
@@ -117,6 +148,9 @@ def main():
                 value=json.loads(probe.stdout)[0]
                 if value['Config']['Labels'].get('git-next.owner')!='git-next-native-product-batch': raise ValueError('Unrelated race fixture')
                 subprocess.run(['docker','rm','-f',container],check=True)
+        # Avoid host process-initialization failures under the functional batch's load.
+        for case in msi_lane:
+            results.append(run(case))
     unchanged=sha(args.native_packages)==identity and sha(reference)==reference_sha
     unchanged=unchanged and all(sha(path)==value for path,value in matrix['files'].items())
     unchanged=unchanged and all(sha(ROOT/name)==value for name,value in matrix['harnesses'].items())
@@ -130,6 +164,9 @@ def main():
                 wall_clock_target_met=elapsed<args.wall_clock_target,
                 workers=1 if args.performance else args.workers,msi_transactions_serialized=True,
                 checks_skipped_to_meet_time_target=False)
+    report['msi_scopes_reusing_unchanged_passed_evidence']=list(reused_msi)
+    report['desktop_reusing_unchanged_passed_evidence']=bool(reused_desktop)
+    report['msi_transactions_after_parallel_functional_lanes']=not args.performance
     if not args.performance:
         functional=[item for item in results if item['case'] not in ('msi-user','msi-machine','frozen-input-readback')]
         report['parallel_functional_elapsed_seconds']=round(max(item['finished_seconds_from_batch'] for item in functional)-min(item['started_seconds_from_batch'] for item in functional),3)

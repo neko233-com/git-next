@@ -1,5 +1,7 @@
 # Native Git LFS
 
+The current native product bundles Git LFS 3.7.1, registers standard filters and supplies standard LFS hooks in new-repository templates. No separate LFS application installation is needed. Existing repositories/custom hooks remain untouched. [Game-project behavior and current scope](GAME_PROJECTS.md) supersede historical Rust preview notes below; final new-byte acceptance remains in the delivery ledger.
+
 The final native route uses the pinned owned Git LFS 3.7.1 primary helper, with Windows runtime inputs and Linux x64/ARM64/macOS ARM64 assets prepared. It preserves the standard pointer/cache/filter/transport interfaces; complete runtime assembly and D08 acceptance remain open. Historical Rust pointer/filter/basic-transfer implementation and subset evidence are retained below and do not establish final native-product compatibility.
 
 ## Local use

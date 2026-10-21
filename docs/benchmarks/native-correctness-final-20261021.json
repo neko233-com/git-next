@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "phase": "correctness",
+  "matrix_sha256": "a1a4a6f467d9669632a3c7aa3a00a819f010a45a7bd911d4251c2af531dc7a3b",
+  "reference_sha256": "81ef35ae005ca9318018d18e3327578ce939fb99feaad6b2d7c8ab15f3de8db5",
+  "source_tree_sha256": "f58f403a76709d8dc8829402c3ba9c7b5b42a90f4ff8126a7124b74f5d2bc693",
+  "results": [
+    {
+      "case": "terminal-native-desktop",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 0,
+      "dependency_scope": "terminal runtime bytes and exact desktop test",
+      "original_seconds": 23.23,
+      "reused_evidence_batch_sha256": "1c551358156c18d350bc5ecd7b9dc4231d97c4aae05e4f3e0a6b93cc86cf5af9",
+      "reused_evidence_matrix_sha256": "6531bcfffbe73ac392b68b249f26da1a315664d8e9bd115cad09273c225b6948",
+      "started_seconds_from_batch": 4.939,
+      "finished_seconds_from_batch": 4.939
+    },
+    {
+      "case": "windows-core-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 18.941,
+      "started_seconds_from_batch": 8.526,
+      "finished_seconds_from_batch": 27.466
+    },
+    {
+      "case": "windows-owned-integrations",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 11.509,
+      "started_seconds_from_batch": 8.526,
+      "finished_seconds_from_batch": 20.034
+    },
+    {
+      "case": "windows-dpapi-migration",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 6.551,
+      "started_seconds_from_batch": 8.526,
+      "finished_seconds_from_batch": 15.076
+    },
+    {
+      "case": "windows-update-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 1.804,
+      "started_seconds_from_batch": 8.526,
+      "finished_seconds_from_batch": 10.33
+    },
+    {
+      "case": "windows-read-thread-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 33.431,
+      "started_seconds_from_batch": 8.526,
+      "finished_seconds_from_batch": 41.958
+    },
+    {
+      "case": "windows-bootstrap-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 0.588,
+      "started_seconds_from_batch": 8.527,
+      "finished_seconds_from_batch": 9.114
+    },
+    {
+      "case": "windows-game-lfs-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 11.465,
+      "started_seconds_from_batch": 8.527,
+      "finished_seconds_from_batch": 19.992
+    },
+    {
+      "case": "terminal-rust-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 105.543,
+      "started_seconds_from_batch": 8.527,
+      "finished_seconds_from_batch": 114.07
+    },
+    {
+      "case": "linux-x64",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 16.823,
+      "started_seconds_from_batch": 9.114,
+      "finished_seconds_from_batch": 25.937
+    },
+    {
+      "case": "linux-arm64",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 47.571,
+      "started_seconds_from_batch": 10.33,
+      "finished_seconds_from_batch": 57.901
+    },
+    {
+      "case": "macos-arm64",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 13.376,
+      "started_seconds_from_batch": 15.076,
+      "finished_seconds_from_batch": 28.453
+    },
+    {
+      "case": "docker-login-migration",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 51.203,
+      "started_seconds_from_batch": 19.992,
+      "finished_seconds_from_batch": 71.195
+    },
+    {
+      "case": "posix-updater-race-contracts",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 1.553,
+      "started_seconds_from_batch": 20.034,
+      "finished_seconds_from_batch": 21.587
+    },
+    {
+      "case": "msi-user",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 506.708,
+      "started_seconds_from_batch": 114.264,
+      "finished_seconds_from_batch": 620.972
+    },
+    {
+      "case": "msi-machine",
+      "status": "pass",
+      "exit_code": 0,
+      "seconds": 443.151,
+      "started_seconds_from_batch": 620.972,
+      "finished_seconds_from_batch": 1064.123
+    },
+    {
+      "case": "frozen-input-readback",
+      "status": "pass"
+    }
+  ],
+  "release_eligible": false,
+  "native_mac_product_executed": false,
+  "personal_account_accessed": false,
+  "elapsed_seconds": 1071.771,
+  "wall_clock_target_seconds": 60,
+  "wall_clock_target_met": false,
+  "workers": 8,
+  "msi_transactions_serialized": true,
+  "checks_skipped_to_meet_time_target": false,
+  "msi_scopes_reusing_unchanged_passed_evidence": [],
+  "desktop_reusing_unchanged_passed_evidence": true,
+  "msi_transactions_after_parallel_functional_lanes": true,
+  "parallel_functional_elapsed_seconds": 109.131,
+  "parallel_functional_target_met": false,
+  "serialized_msi_lifecycle_seconds": 949.859,
+  "original_batch_sha256": "612517f7daa00c3c3a72fb4d6ab9297714c465703453b633963d344fb2be7259",
+  "original_matrix_sha256": "159f4e03975a4d630c9e729cb134f593c6f06588f0a95c45a01f90f7984fb934",
+  "external_desktop_focus_failure_log_sha256": "1ea59236d717baac20af805214b304566cf4442fcf022279562fc9a20dabc3cd",
+  "desktop_evidence_scope": "identical GUI/core/Bash/runtime bytes and desktop tests; exact stable-read config transition only; installer/docs excluded",
+  "product_cases_rerun_during_receipt_finalization": false,
+  "receipt_finalization_seconds": 6.208
+}

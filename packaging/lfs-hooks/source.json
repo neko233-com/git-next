@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/git-lfs/git-lfs/tree/v3.7.1",
+  "source_archive_sha256": "0e83566a9e2477e03627e7fd6bf81f01fadbf93dcaf6abd2686fca90f6bac7dd",
+  "source_file": "lfs/hook.go",
+  "source_file_sha256": "70101a348b034007b04e593968d679223ef8d31ba5964748013c398fc83f2760",
+  "standard_hook_version": "3.7.1",
+  "purpose": "recognizable standard LFS hooks for newly initialized/cloned repositories; preserve existing custom templates and hooks"
+}

@@ -1,6 +1,6 @@
 # Existing credentials and managed GCM
 
-The final native core uses Git credential helper protocol semantics, including the normal get/store/erase lifecycle. Owned GCM inputs are available for Windows and all three POSIX targets; final independent-runtime assembly and preserved-login acceptance remain open. Existing configuration/store identifiers remain compatibility contracts. The separately installed Rust preview and its historical subset behavior are not final native-product acceptance.
+The native core uses Git credential helper protocol semantics, including get/store/erase, and packages include owned GCM runtimes. Current Windows DPAPI and isolated Docker generated-account HTTPS/SSH migration checks pass without contacting the user's private accounts. Existing configuration/store identifiers remain compatibility contracts. Actual workstation profile preservation is recorded separately in [delivery status](DELIVERY_STATUS.md). Earlier preview checks below retain their original identities.
 
 ## Existing-account read check · 2026-10-20
 

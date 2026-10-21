@@ -14,6 +14,7 @@ import ssl
 import subprocess
 import tempfile
 import threading
+from urllib.parse import parse_qs, urlsplit
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -30,6 +31,8 @@ class Fixture:
         self.failure = None
         self.verified = []
         self.lock = threading.Lock()
+        self.locks_supported = False
+        self.asset_locks = {}
         owner = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -65,7 +68,33 @@ class Fixture:
                 if not authorized:
                     self.respond(401)
                     return
-                if self.path.endswith("/objects/batch"):
+                route = urlsplit(self.path).path
+                if owner.locks_supported and (route.endswith('/locks') or '/locks/' in route):
+                    value = json.loads(content) if content else {}
+                    if route.endswith('/locks/verify'):
+                        records = list(owner.asset_locks.values())
+                        self.respond(200,json.dumps({'ours':[item for item in records if item['owner']['name']=='fixture'],
+                                                     'theirs':[item for item in records if item['owner']['name']!='fixture']}).encode())
+                    elif route.endswith('/unlock'):
+                        identity = route.split('/')[-2]
+                        item = owner.asset_locks.get(identity)
+                        if not item: self.respond(404); return
+                        if item['owner']['name']!='fixture' and not value.get('force'): self.respond(403); return
+                        del owner.asset_locks[identity]
+                        self.respond(200,json.dumps({'lock':item}).encode())
+                    elif self.command == 'POST':
+                        existing = next((item for item in owner.asset_locks.values() if item['path']==value['path']),None)
+                        if existing: self.respond(409,json.dumps({'lock':existing,'message':'already locked'}).encode()); return
+                        identity = secrets.token_hex(12)
+                        item = dict(id=identity,path=value['path'],locked_at='2026-10-21T00:00:00Z',owner={'name':'fixture'})
+                        owner.asset_locks[identity] = item
+                        self.respond(201,json.dumps({'lock':item}).encode())
+                    else:
+                        query = parse_qs(urlsplit(self.path).query)
+                        items = list(owner.asset_locks.values())
+                        if 'path' in query: items=[item for item in items if item['path']==query['path'][0]]
+                        self.respond(200,json.dumps({'locks':items}).encode())
+                elif self.path.endswith("/objects/batch"):
                     batch = json.loads(content)
                     assert batch["operation"] in ("upload", "download") and "basic" in batch.get("transfers", ["basic"])
                     objects = []

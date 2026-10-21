@@ -83,7 +83,9 @@ try:
             assert {member.name for member in members} == {'NOTICE', 'git-credential-manager', 'libHarfBuzzSharp.so', 'libSkiaSharp.so'}
             assert all(member.isfile() and member.size < 100 * 1024 * 1024 for member in members)
             upstream.extractall(package, filter='data')
-        base = 'git-next-local-acceptance:20261020'
+        base = 'python:3.14-slim@sha256:a2b82f3c48559aa0a8446d9af49826b6e2b2016f4cd2afabfe6013ec53729170'
+        if docker('image', 'inspect', base, check=False).returncode:
+            docker('pull', base, timeout=300)
         base_id = docker('image', 'inspect', base, '--format', '{{.Id}}').stdout.decode().strip()
         report['reference_base_image'] = base_id
         for tag, stage in zip(tags, ('server', 'client')):

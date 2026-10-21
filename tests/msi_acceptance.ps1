@@ -78,6 +78,19 @@ function Snapshot {
     $files = [GitNext.Acceptance.Files]::Snapshot($installRoot,$expected)
     return ($files | ConvertTo-Json -Compress)
 }
+function CheckTerminalShortcut {
+    $path=Join-Path $startMenu 'Git Terminal.lnk'
+    Check 'owned terminal shortcut exists' (Test-Path -LiteralPath $path)
+    $shell=New-Object -ComObject WScript.Shell
+    $shortcut=$shell.CreateShortcut($path)
+    $manifest=Get-Content -LiteralPath (Join-Path $installRoot 'package.json') -Raw | ConvertFrom-Json
+    $native= [bool]$manifest.files.PSObject.Properties['bin/git-terminal.exe']
+    $expected=Join-Path $installRoot $(if($native){'bin\git-terminal.exe'}else{'runtime\git-bash.exe'})
+    Check 'terminal shortcut points to the installed runtime' ($shortcut.TargetPath -ieq $expected)
+    if($native){Check 'terminal shortcut preserves home launch arguments' ($shortcut.Arguments -ceq '--cd-to-home')}
+    [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($shell)
+}
+
 try {
     $env:HOME=$profileRoot
     $env:USERPROFILE=$profileRoot
@@ -101,11 +114,17 @@ try {
     Check 'preview git remains outside user PATH' (([Environment]::GetEnvironmentVariable('Path','User') -split ';') -notcontains (Join-Path $installRoot 'preview/bin'))
     [void](Msi ('/fomus ' + $base.product_code) 'repair.log')
     Check 'repair preserves actual payload bytes' ((Snapshot) -ceq $before)
+    CheckTerminalShortcut
     $task = $tasks.GetTask($taskName)
     $task.Enabled=$false
     # IRegisteredTask caches Xml; reacquire after changing Enabled.
     $taskBefore = $tasks.GetTask($taskName).Xml
     if ($upgrade) {
+        foreach ($relative in @('package.json','git-next-distribution.json','runtime/defaults/manifest.json')) {
+            $metadata = Join-Path $installRoot $relative
+            [IO.File]::SetLastWriteTimeUtc($metadata,([IO.File]::GetCreationTimeUtc($metadata)).AddMinutes(2))
+        }
+        Check 'rollback-style manifest timestamps preserve installed bytes' ((Snapshot) -ceq $before)
         # Metadata-only failure fixture exercises the real MSI rollback transaction.
         $failing = Join-Path $temporary 'failing-upgrade.msi'
         Copy-Item -LiteralPath $upgradePath -Destination $failing
@@ -138,6 +157,7 @@ try {
         }
         Check 'failed upgrade restores old registration' ($oldState -eq 5 -and $newState -eq -1)
         Check 'failed upgrade restores actual old bytes' ((Snapshot) -ceq $before)
+        CheckTerminalShortcut
         Check 'failed upgrade restores updater task' ($taskAfter -ceq $taskBefore)
         [void](Msi ('/i "' + $upgradePath + '" INSTALLFOLDER="' + $installRoot + '"') 'upgrade.log')
         $task = $tasks.GetTask($taskName); $task.Enabled=$false
@@ -146,6 +166,7 @@ try {
         Assert-GnInstalledFiles $installRoot (Get-Content -LiteralPath (Join-Path $installRoot 'package.json') -Raw | ConvertFrom-Json)
         $version = & $native version --json | ConvertFrom-Json
         Check 'upgraded native bytes identify requested version' ($LASTEXITCODE -eq 0 -and $version.version -ceq $upgrade.version)
+        CheckTerminalShortcut
         [void](Msi ('/i "' + $basePath + '" INSTALLFOLDER="' + $installRoot + '"') 'downgrade.log' $false 'A newer git-next version is already installed.')
         Check 'downgrade leaves newer product registered' ($installer.ProductState($upgrade.product_code) -eq 5)
     }
@@ -193,6 +214,7 @@ try {
             if ($unexpected.Count) { throw 'Unexpected updater-state files appeared; preserve them and inspect fixture logs.' }
             Remove-Item -LiteralPath $stateDirectory -Recurse -Force
         }
+        if (Test-Path -LiteralPath $startMenu) { throw 'Owned Start menu integration remains after uninstall; preserve the fixture and investigate.' }
         $resolved = [IO.Path]::GetFullPath($temporary)
         $allowed = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd('\') + '\git-next-msi-test-'
         if (-not $resolved.StartsWith($allowed,[StringComparison]::OrdinalIgnoreCase)) { throw 'Unexpected MSI cleanup directory.' }

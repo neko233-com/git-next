@@ -62,8 +62,6 @@
                      Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
       <Environment Id="UserPath" Name="PATH" Value="[BINDIR]" Action="set"
                    Part="last" System="$(PathSystem)" Permanent="no" />
-      <Shortcut Id="TerminalShortcut" Directory="StartMenuDirectory" Name="Git Terminal"
-                Target="[INSTALLFOLDER]$(TerminalRelativePath)" WorkingDirectory="INSTALLFOLDER" />
       <Shortcut Id="UpdateShortcut" Directory="StartMenuDirectory" Name="Update git-next"
                 Target="[System64Folder]WindowsPowerShell\v1.0\powershell.exe"
                 Arguments="-NoLogo -NoProfile -ExecutionPolicy Bypass -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Apply"
@@ -75,6 +73,21 @@
       <RemoveFolder Id="RemovePreviewDirectory" Directory="PREVIEWDIR" On="uninstall" />
       <RemoveFolder Id="RemoveInstallDirectory" Directory="INSTALLFOLDER" On="uninstall" />
       <RemoveFolder Id="RemoveMsiRootDirectory" Directory="MsiRootDirectory" On="uninstall" />
+    </Component>
+    <Component Id="TerminalIntegrationV2" Directory="BINDIR" Guid="*">
+      <RegistryValue Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)" Name="GpuiTerminalIntegration"
+                     Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
+      <?if $(TerminalHasArguments) = yes ?>
+      <Shortcut Id="TerminalShortcut" Directory="StartMenuDirectory" Name="Git Terminal"
+                Target="[INSTALLFOLDER]$(TerminalRelativePath)" Arguments="$(TerminalArguments)" WorkingDirectory="INSTALLFOLDER" />
+      <?else ?>
+      <Shortcut Id="TerminalShortcut" Directory="StartMenuDirectory" Name="Git Terminal"
+                Target="[INSTALLFOLDER]$(TerminalRelativePath)" WorkingDirectory="INSTALLFOLDER" />
+      <?endif ?>
+      <RegistryValue Root="$(RegistryHive)" Key="Software\Classes\Directory\shell\git-next-terminal" Value="Open Git-Terminal Here" Type="string" />
+      <RegistryValue Root="$(RegistryHive)" Key="Software\Classes\Directory\shell\git-next-terminal\command" Value="&quot;[INSTALLFOLDER]$(TerminalRelativePath)&quot; --cwd &quot;%1&quot;" Type="string" />
+      <RegistryValue Root="$(RegistryHive)" Key="Software\Classes\Directory\Background\shell\git-next-terminal" Value="Open Git-Terminal Here" Type="string" />
+      <RegistryValue Root="$(RegistryHive)" Key="Software\Classes\Directory\Background\shell\git-next-terminal\command" Value="&quot;[INSTALLFOLDER]$(TerminalRelativePath)&quot; --cwd &quot;%V&quot;" Type="string" />
     </Component>
     <?if $(InstallScope) = machine ?>
     <Component Id="MachineParentSecurity" Directory="MsiRootDirectory" Guid="*">
@@ -107,21 +120,21 @@
     </Component>
     <?endif?>
     <CustomAction Id="RollbackRegisterUpdater" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRegistration" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode RollbackRegistration" />
     <CustomAction Id="RegisterUpdater" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Register" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode Register" />
     <CustomAction Id="RollbackRuntimeConfiguration" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRuntimeConfiguration" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode RollbackRuntimeConfiguration" />
     <CustomAction Id="InitializeRuntimeConfiguration" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode InitializeRuntimeConfiguration" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode InitializeRuntimeConfiguration" />
     <CustomAction Id="CommitRuntimeConfiguration" Directory="System64Folder" Execute="commit" Impersonate="$(TaskImpersonate)" Return="ignore"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode CommitRuntimeConfiguration" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode CommitRuntimeConfiguration" />
     <CustomAction Id="RollbackUnregisterUpdater" Directory="System64Folder" Execute="rollback" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode RollbackRegistration" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode RollbackRegistration" />
     <CustomAction Id="UnregisterUpdater" Directory="System64Folder" Execute="deferred" Impersonate="$(TaskImpersonate)" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode Unregister" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode Unregister" />
     <CustomAction Id="GuardTakeoverUninstall" Directory="System64Folder" Execute="immediate" Impersonate="yes" Return="check"
-                  ExeCommand="&quot;[System64Folder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File &quot;[UPDATERDIR]update.ps1&quot; -Mode GuardRemoval" />
+                  ExeCommand="&quot;[UPDATERDIR]msi-worker.exe&quot; -Mode GuardRemoval" />
     <InstallExecuteSequence>
       <Custom Action="GuardTakeoverUninstall" Before="InstallInitialize" Condition="Installed AND REMOVE~=&quot;ALL&quot; AND NOT UPGRADINGPRODUCTCODE" />
       <Custom Action="RollbackRuntimeConfiguration" After="WriteRegistryValues" Condition="NOT REMOVE~=&quot;ALL&quot;" />
@@ -134,6 +147,7 @@
     </InstallExecuteSequence>
     <Feature Id="ProductFeature" Title="git-next" Level="1">
       <ComponentRef Id="UserIntegration" />
+      <ComponentRef Id="TerminalIntegrationV2" />
       <?if $(InstallScope) = machine ?>
       <ComponentRef Id="MachineParentSecurity" />
       <ComponentRef Id="MachineRootSecurity" /><ComponentRef Id="MachineDataSecurity" />

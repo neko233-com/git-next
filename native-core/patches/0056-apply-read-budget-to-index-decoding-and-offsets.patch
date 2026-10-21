@@ -1,0 +1,59 @@
+--- a/read-cache.c
++++ b/read-cache.c
+@@ -43,6 +43,7 @@
+ #include "utf8.h"
+ #include "fsmonitor.h"
+ #include "thread-utils.h"
++#include "git-next-read-threads.h"
+ #include "progress.h"
+ #include "sparse-index.h"
+ #include "csum-file.h"
+@@ -2209,7 +2210,7 @@
+ 	size_t mmap_size;
+ 	struct load_index_extensions p;
+ 	size_t extension_offset = 0;
+-	int nr_threads, cpus;
++	int nr_threads, cpus, read_budget;
+ 	struct index_entry_offset_table *ieot = NULL;
+ 
+ 	if (istate->initialized)
+@@ -2261,14 +2262,16 @@
+ 	if (repo_config_get_index_threads(the_repository, &nr_threads))
+ 		nr_threads = 1;
+ 
+-	/* TODO: does creating more threads than cores help? */
++	read_budget = nr_threads ? nr_threads : git_next_read_thread_budget();
++	/* Budget threads for reading; small indexes retain meaningful work per task. */
+ 	if (!nr_threads) {
+ 		nr_threads = istate->cache_nr / THREAD_COST;
+-		cpus = online_cpus();
++		cpus = read_budget;
+ 		if (nr_threads > cpus)
+ 			nr_threads = cpus;
+ 	}
+ 
++	trace2_data_intmax("git-next", the_repository, "read-thread-budget", read_budget);
+ 	if (!HAVE_THREADS)
+ 		nr_threads = 1;
+ 
+@@ -2294,9 +2297,11 @@
+ 		ieot = read_ieot_extension(mmap, mmap_size, extension_offset);
+ 
+ 	if (ieot) {
++		trace2_data_intmax("git-next", the_repository, "index-entry-workers", min(nr_threads, ieot->nr));
+ 		src_offset += load_cache_entries_threaded(istate, mmap, mmap_size, nr_threads, ieot);
+ 		free(ieot);
+ 	} else {
++		trace2_data_intmax("git-next", the_repository, "index-entry-workers", 1);
+ 		src_offset += load_all_cache_entries(istate, mmap, mmap_size, src_offset);
+ 	}
+ 
+@@ -2874,7 +2879,7 @@
+ 		 */
+ 		if (!nr_threads) {
+ 			ieot_blocks = istate->cache_nr / THREAD_COST;
+-			cpus = online_cpus();
++			cpus = git_next_read_thread_budget();
+ 			if (ieot_blocks > cpus - 1)
+ 				ieot_blocks = cpus - 1;
+ 		} else {

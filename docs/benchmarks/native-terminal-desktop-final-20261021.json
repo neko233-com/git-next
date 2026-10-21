@@ -1,0 +1,83 @@
+{
+  "status": "pass",
+  "scope": "all",
+  "paste_key": "shift-insert",
+  "ctrl_shift_v_registered_elsewhere": true,
+  "platform": "windows-x64",
+  "renderer": "gpui-fast",
+  "input_delivery": "owned HWND WM_CHAR UTF-16 commits; SendInput keyboard shortcuts",
+  "binary_sha256": "d4c7c7cd2d95a4fdc30a00ff84e46c10321f1a73730b7fec3d9184c9d84faa55",
+  "seconds": 23.099,
+  "personal_profile_accessed": false,
+  "terminal_contents_logged": false,
+  "results": [
+    {
+      "case": "identity-profiles-unicode-cwd-language-atomic-settings",
+      "status": "pass",
+      "seconds": 0.099
+    },
+    {
+      "case": "native-window-wm-char-unicode-commit-and-pty",
+      "status": "pass",
+      "seconds": 0.041
+    },
+    {
+      "case": "native-clipboard-paste-with-original-preserved-in-memory",
+      "status": "pass",
+      "seconds": 0.29
+    },
+    {
+      "case": "native-keyboard-tabs-independent-shells-and-close",
+      "status": "pass",
+      "seconds": 2.901
+    },
+    {
+      "case": "native-window-resize-reaches-conpty",
+      "status": "pass",
+      "seconds": 0.591
+    },
+    {
+      "case": "actual-gpui-gpu-window-chinese-and-color-screenshot",
+      "status": "pass",
+      "seconds": 0.478
+    },
+    {
+      "case": "native-mouse-selection-and-copy",
+      "status": "pass",
+      "seconds": 0.423
+    },
+    {
+      "case": "native-shift-page-and-mouse-wheel-scrollback",
+      "status": "pass",
+      "seconds": 1.266
+    },
+    {
+      "case": "tab-first-design-default-bash-live-command-highlighting",
+      "status": "pass",
+      "seconds": 2.709
+    },
+    {
+      "case": "original-clipboard-restored",
+      "status": "pass"
+    },
+    {
+      "case": "owned-window-exit-and-process-cleanup",
+      "status": "pass"
+    },
+    {
+      "case": "owned-bash-and-native-cmd-real-gui-pty-exit",
+      "status": "pass",
+      "seconds": 11.558
+    },
+    {
+      "case": "explicit-command-exit-status-propagation",
+      "status": "pass",
+      "seconds": 0.63
+    },
+    {
+      "case": "bounded-output-drain-and-command-exit-without-ui-deadlock",
+      "status": "pass",
+      "seconds": 0.807
+    }
+  ]
+}

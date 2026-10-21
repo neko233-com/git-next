@@ -1,7 +1,7 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Overview</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a></nav><main><h1>git-next</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Overview</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a></nav><main><h1>git-next</h1>
 <p><a href="../../README.zh-CN.md">简体中文</a> · <a href="index.html">Manual</a> · <a href="delivery-status.html">Delivery status</a></p>
 <p>git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.</p>
-<p>Version 0.3.0 passed the consolidated local correctness and paired performance gates. Final publication and workstation takeover are tracked separately. <a href="delivery-status.html">Current acceptance</a> distinguishes implementation, testing, publication and installation.</p>
+<p>Version 0.3.0 passed the final 17-case local correctness evidence and paired performance batch. Workstation takeover and publication are tracked separately in <a href="delivery-status.html">delivery status</a>. Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in <a href="performance.html">performance</a>.</p>
 <h2>Native packages</h2>
 <p>Download accepted packages from <a href="https://github.com/neko233-com/git-next/releases">GitHub Releases</a>. Candidate build output is not an installation recommendation. Released Windows packages include the owned runtime and require no Rust compiler.</p>
 <table>
@@ -30,7 +30,7 @@
 </tr>
 </tbody>
 </table>
-<p>Use the <a href="installation.html">native installation and removal guide</a>. Windows default-Git takeover is a separate protected migration after MSI acceptance; it preserves repository/profile data and provides a verified recovery backup. <a href="takeover.html">Takeover procedure</a>.</p>
+<p>Use the <a href="installation.html">native installation and removal guide</a>. The root <code>install.ps1</code> installs the accepted native MSI and automatically takes over registered Git for Windows (with UAC for machine installations); it preserves repository/profile data and provides a verified recovery backup. <a href="takeover.html">Takeover procedure</a>.</p>
 <h2>Commands and defaults</h2>
 <pre><code class="language-sh">git --version
 git version --json
@@ -47,147 +47,9 @@ git update check
 <h2>Evidence and source</h2>
 <p>Validation runs locally, with independent correctness lanes in parallel and Windows Installer transactions serialized. Reports retain actual elapsed time and failures. Performance uses a separate paired batch; measured medians, p95 and primary-process memory determine claims. No universal speedup is promised. <a href="building.html">Builds</a> · <a href="performance.html">Performance</a> · <a href="compatibility.html">Compatibility</a>.</p>
 <p>The native core is GPL-2.0-only with the declared dependency licenses and corresponding source bundles. <a href="corresponding-sources.html">Source/license delivery</a>. No GitHub Actions are used.</p>
-<h2>Historical Rust preview</h2>
-<p>The currently installed preview is a self-contained, experimental Git client built in Rust using Gitoxide and Russh. The intended command is <strong>git</strong>. New repositories default to <strong>main</strong>; existing repositories keep their branches and object layout. Runtime code does not launch Git or OpenSSH as a fallback.</p>
-<p><strong>This version is not a complete Git replacement.</strong> Native push, clean-worktree switch/checkout and two-parent merges are implemented in the declared subset. Native LFS pointers/cache/filters and HTTPS batch/basic transfer are available in the <a href="lfs.html">declared subset</a>. Complete merge/recovery, rebase, LFS/CLI/IDE behavior and existing-login migration remain open. The installer blocks system replacement and installs a separate <code>git-next</code> preview. Do not use it as an IDE's Git executable or on a production Git server yet. No universal speedup or memory claim has been established. <a href="takeover.html">Full workstation takeover requirements</a>.</p>
-<h2>Try it</h2>
-<p>Requires Rust 1.96+ and the platform's native compiler. Source installation resolves an official full commit SHA first, tries GitHub, then pinned GitHub transport mirrors if needed. Official SHA lookup fails closed; credentials and signatures are not obtained from mirrors. Mirror availability is not guaranteed.</p>
-<p>Windows PowerShell, after downloading and reviewing <code>install.ps1</code> from this repository:</p>
-<pre><code class="language-powershell">./install.ps1
-# Open a new terminal
-git-next --version
-git-next version --build-options
-git-next doctor --json
-git-next compatibility --json
-</code></pre>
-<p>Linux x64/ARM64 or macOS ARM64, after downloading and reviewing <code>install.sh</code>:</p>
-<pre><code class="language-sh">sh install.sh
-~/.local/bin/git-next --version
-</code></pre>
-<p>The preview command is <code>git-next</code>; a copy named <code>git</code> is stored outside PATH. Existing Git, credentials, SSH configuration and repositories are preserved. <code>-ReplaceGit</code> / <code>--replace-git</code> deliberately refuse while full parity is false. macOS Intel is not a supported target. <a href="installation.html">Installation and removal</a>.</p>
-<h2>Current functionality</h2>
-<table>
-<thead>
-<tr>
-<th>Area</th>
-<th>Implemented subset</th>
-<th>Boundary</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Objects and refs</td>
-<td>rev-parse, hash-object, cat-file, show-ref, ls-files, log</td>
-<td>Not complete Git flag/output parity</td>
-</tr>
-<tr>
-<td>Read commands</td>
-<td>Native diff, show and formatted log; patches, names, statistics and pathspecs</td>
-<td><a href="read-commands.html">Declared read-command subset</a>; full diff/history parity remains open</td>
-</tr>
-<tr>
-<td>Status output</td>
-<td>Default long format, porcelain v1/v2, branch/upstream headers, short/NUL, rename paths, untracked/ignored modes, pathspecs and ordinary submodule status</td>
-<td><a href="read-commands.html">Status subset</a>; full IDE/submodule/rename parity remains open</td>
-</tr>
-<tr>
-<td>Restoration</td>
-<td>Path restore, soft/mixed/hard/path reset, ORIG_HEAD and reflogs</td>
-<td><a href="restoration.html">Ordinary-file subset</a>; complete reset/restore parity remains open</td>
-</tr>
-<tr>
-<td>Cross-platform text</td>
-<td>LF defaults, shared Git/EditorConfig rules, canonical status and explicit renormalization</td>
-<td><a href="line-endings.html">LF policy</a>; explicit project exceptions and binary bytes preserved</td>
-</tr>
-<tr>
-<td>Local repositories</td>
-<td>init, clone, branch creation, remote, scoped/multivar config and command context</td>
-<td>Default main; SHA-1 local clone; no complete config/worktree/reftable parity</td>
-</tr>
-<tr>
-<td>Native write path</td>
-<td>add literal paths / -A, unsigned commit -m, declared message cleanup</td>
-<td>Simple merge conflicts can be staged and committed; active hooks/signing and other operation states refuse</td>
-</tr>
-<tr>
-<td>Network</td>
-<td>HTTPS/SSH clone, fetch, push, tags, atomic batch, exact leases, ls-remote</td>
-<td>Full refspec/hook/output/prune/submodule/LFS/partial-clone parity incomplete</td>
-</tr>
-<tr>
-<td>Worktree</td>
-<td>switch/checkout, branch creation, detached HEAD, pull --ff-only</td>
-<td>Clean ordinary-file worktrees only; changes, collisions, hooks and linked worktrees refuse</td>
-</tr>
-<tr>
-<td>Merge</td>
-<td>Two-parent merges, fast-forward modes, simple conflict resolution/continue/native abort</td>
-<td><a href="merge.html">Declared merge subset</a>; editor, complex conflicts and full recovery remain open</td>
-</tr>
-<tr>
-<td>LFS</td>
-<td>Native pointer/cache, clean/smudge/process, HTTPS upload/download and push integration</td>
-<td>SSH discovery, locking and full LFS semantics remain open; <a href="lfs.html">scope</a></td>
-</tr>
-<tr>
-<td>SSH</td>
-<td>Embedded Russh, strict known_hosts, key files and agent</td>
-<td>Selected OpenSSH config subset; proxy/jump/cert/Match unsupported</td>
-</tr>
-<tr>
-<td>Safety</td>
-<td>Index locks, atomic refs, no runtime Git fallback</td>
-<td>Experimental; isolated repositories first</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="compatibility.html">detailed compatibility</a> for exclusions and <a href="building.html">build/acceptance</a> for reproducible gates. Explicit user-configured Git filters may run their configured programs; that is distinct from an automatic Git fallback.</p>
-<h2>Platforms</h2>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>CPU</th>
-<th>Target</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Windows</td>
-<td>x64</td>
-<td>x86_64-pc-windows-msvc</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>ARM64</td>
-<td>aarch64-pc-windows-gnullvm</td>
-</tr>
-<tr>
-<td>Linux</td>
-<td>x64</td>
-<td>x86_64-unknown-linux-musl</td>
-</tr>
-<tr>
-<td>Linux</td>
-<td>ARM64</td>
-<td>aarch64-unknown-linux-gnu (glibc 2.28+)</td>
-</tr>
-<tr>
-<td>macOS</td>
-<td>ARM64 only</td>
-<td>aarch64-apple-darwin</td>
-</tr>
-</tbody>
-</table>
-<p>Compilation is not runtime acceptance. Windows x64 has disposable reference-Git comparisons, HTTPS and loopback SSH coverage. Other platform evidence is recorded separately in the build manual. No GitHub Actions are created or run; validation and packaging are local. No formal binary release is published until its declared gates pass.</p>
-<h2>Architecture and performance</h2>
-<p>Gitoxide supplies Git storage/protocol/index primitives; Russh supplies the built-in SSH transport. Local clones copy missing objects into an isolated temporary repository before publishing the destination, without hard links or source mutation. Fetch reuses existing objects. Worker caps avoid unbounded parallelism. Unsupported operations return errors instead of silently delegating to installed Git.</p>
-<p><code>--version</code>, <code>-v</code>, <code>version</code>, and <code>version --build-options</code> identify <strong>git-next</strong>; <code>--json</code> provides machine-readable product/engine identity. <code>doctor --json</code> lists the current replacement blockers. Version queries use a direct startup path without repository discovery or SSH setup.</p>
-<p>Performance must be measured per operation, repository, transport and cache state. The status scanner uses one worker per 2000 index entries, capped at eight, to avoid starting one worker per logical CPU on small repositories. <a href="performance.html">Measurement policy and local benchmark</a>. Complete Git compatibility is the release prerequisite for replacing a working installation.</p>
-<p>MIT license. See <a href="../../LICENSE">LICENSE</a>, <a href="../../Cargo.toml">dependencies</a> and <a href="../../AGENTS.md">engineering rules</a>.</p>
-<h2>Repository terminal</h2>
-<p><code>git-terminal --cwd PATH</code> opens a native repository shell with the isolated preview. Windows: PowerShell 7 or Windows PowerShell, Start menu shortcut, optional folder context menu. Unix: native shell. See <a href="installation.html#git-terminal">terminal setup</a>. Bash/POSIX emulation and full Git replacement remain separate unfinished compatibility goals.</p>
-<p>System configuration uses filesystem-only discovery. Verified standalone Windows GCM support retains an existing named helper and uses native git-next callbacks. See <a href="native-discovery.html">native discovery</a> and <a href="credentials.html">credentials</a>; real-account migration and full takeover remain open.</p>
-<p>Local LF/configuration/operation suites run in Linux x64 Docker and emulated Linux ARM64 containers. Exact accepted suite counts and source/binary identities are recorded in <a href="acceptance.html">acceptance</a>. Native Mac/physical ARM64, complete Linux/network performance and provider acceptance remain separate requirements.</p>
+<h2>Windows one-click installation</h2>
+<p>After obtaining the official release's <code>install.ps1</code>, run <code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1</code>. <strong>This automatically replaces registered Git for Windows</strong>, preserves configuration/login/repositories and records a protected rollback transaction. <code>-Plan</code> inspects the selection without changes. Offline MSI/TLS material and checksum requirements are documented in <a href="installation.html">installation</a>.</p>
+<p>Windows MSI installs the independent Rust + GPUI Fast <a href="terminal.html">Git-Terminal</a> beside Git-next, with tabs, Unicode/IME, copy/paste, scrollback and owned Bash plus PowerShell/CMD profiles. It replaces the Git Bash desktop entry and adds no Git GUI menu. <a href="game-projects.html">Built-in LFS and game profiles</a> cover Unity/Tuanjie and Unreal; no separate LFS installer is needed.</p>
+<h2>Source and historical preview</h2>
+<p>The native C core is GPL-2.0-only; owned packaging/extensions and the terminal carry their declared licenses. Pinned dependencies, notices and corresponding-source bundles accompany the release. No GitHub Actions are used. The independent Gitoxide/Russh Rust preview remains historical source; <a href="https://github.com/neko233-com/git-next/blob/ecee4ad91367327957d77ff4bdcb9349d8ee0511/README.md">the old entrypoint at its fixed revision</a> does not describe the current installer. Follow the native installation guide above.</p>
 </main></html>

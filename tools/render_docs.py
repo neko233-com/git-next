@@ -17,6 +17,8 @@ sources = {
     root / 'docs/ACCEPTANCE.md': 'acceptance.html',
     root / 'docs/TAKEOVER.md': 'takeover.html',
     root / 'docs/LFS.md': 'lfs.html',
+    root / 'docs/TERMINAL.md': 'terminal.html',
+    root / 'docs/GAME_PROJECTS.md': 'game-projects.html',
     root / 'docs/READ_COMMANDS.md': 'read-commands.html',
     root / 'docs/RESTORATION.md': 'restoration.html',
     root / 'docs/LINE_ENDINGS.md': 'line-endings.html',
@@ -47,7 +49,7 @@ for source, name in sources.items():
         prefix = re.sub(r'<title>.*?</title>', '<title>git-next · Read commands</title>', prefix)
     if 'href="read-commands.html"' not in prefix:
         prefix = prefix.replace('</nav>', '<a href="read-commands.html">Read commands</a></nav>')
-    for page, title in [('restoration.html', 'Restore and reset'), ('line-endings.html', 'LF policy'), ('native-discovery.html', 'Native discovery'), ('credentials.html', 'Credential support'), ('merge.html', 'Native merge'), ('updates.html', 'MSI and updates'), ('language.html', 'Interface languages'), ('native-core.html', 'Native core integration'), ('agents.html', 'Engineering workflow'), ('delivery-status.html', 'Delivery progress'), ('corresponding-sources.html', 'Runtime sources and licenses')]:
+    for page, title in [('restoration.html', 'Restore and reset'), ('line-endings.html', 'LF policy'), ('native-discovery.html', 'Native discovery'), ('credentials.html', 'Credential support'), ('merge.html', 'Native merge'), ('updates.html', 'MSI and updates'), ('language.html', 'Interface languages'), ('native-core.html', 'Native core integration'), ('agents.html', 'Engineering workflow'), ('delivery-status.html', 'Delivery progress'), ('corresponding-sources.html', 'Runtime sources and licenses'), ('terminal.html', 'Git-Terminal'), ('game-projects.html', 'Game projects')]:
         if name == page:
             prefix = re.sub(r'<title>.*?</title>', f'<title>git-next · {title}</title>', prefix)
         if f'href="{page}"' not in prefix:

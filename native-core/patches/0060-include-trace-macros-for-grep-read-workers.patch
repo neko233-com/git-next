@@ -1,0 +1,10 @@
+--- a/builtin/grep.c
++++ b/builtin/grep.c
+@@ -14,6 +14,7 @@
+ #include "hex.h"
+ #include "config.h"
+ #include "git-next-read-threads.h"
++#include "trace2.h"
+ #include "tag.h"
+ #include "tree-walk.h"
+ #include "parse-options.h"

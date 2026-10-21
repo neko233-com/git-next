@@ -28,6 +28,8 @@ def main():
     parser.add_argument("--fixture-layout", choices=("loose", "packed"), default="loose",
                         help="packed uses fixture-only fast-import and LF checkout instead of add")
     parser.add_argument("--client-fscache", choices=["default", "on", "off"], default="default")
+    parser.add_argument("--reference-read-safety", action="store_true",
+                        help="apply the shipped Windows read-safety defaults to the reference too")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--read-commands", action="store_true", help="also measure clean diff, show and log")
     parser.add_argument("--system-config-enabled", action="store_true", help="read conventional system configuration with an isolated user profile")
@@ -36,6 +38,9 @@ def main():
     parser.add_argument("--baseline-checkpoint", type=Path, help="required binary/source identity for the retained native client")
     parser.add_argument("--native-distribution", action="store_true")
     args = parser.parse_args()
+    reference_overrides = (["core.fscache=false", "core.fsmonitor=false", "core.preloadIndex=false",
+                            "index.threads=1", "grep.threads=1"] if args.reference_read_safety else [])
+    assert not args.reference_read_safety or os.name == "nt"
     assert args.runs >= 10 and args.files >= 1 and args.timeout > 0 and args.directories > 0
     assert bool(args.baseline_binary) == bool(args.baseline_checkpoint)
     binary = str(args.binary.resolve())
@@ -89,7 +94,8 @@ def main():
                 if args.client_fscache != "default":
                     variables.update(GIT_CONFIG_COUNT="1", GIT_CONFIG_KEY_0="core.fscache",
                                      GIT_CONFIG_VALUE_0="true" if args.client_fscache == "on" else "false")
-            result, elapsed, last_peak = measured_run([executable, *command], cwd=cwd, env=variables,
+            options = [value for setting in reference_overrides for value in ("-c", setting)] if executable == reference else []
+            result, elapsed, last_peak = measured_run([executable, *options, *command], cwd=cwd, env=variables,
                                                        timeout=args.setup_timeout if setup else args.timeout, data=input_bytes)
             assert result.returncode == 0, (command, result.stderr.decode(errors="replace"))
             return elapsed, result.stdout
@@ -170,7 +176,8 @@ def main():
         if args.read_commands:
             commands.extend([("diff_clean", ["diff", "--no-ext-diff", "--no-textconv"]),
                              ("show_metadata", ["show", "--no-patch", "--format=fuller"]),
-                             ("log_metadata", ["log", "-n", "20", "--format=%H%x00%s"])])
+                             ("log_metadata", ["log", "-n", "20", "--format=%H%x00%s"]),
+                             ("grep_files", ["grep", "-l", "-F", "benchmark fixture"])])
         for name, command in commands:
             print(f"Measuring {name}", file=sys.stderr, flush=True)
             expected = run(reference, command, cwd=repo)[1]
@@ -222,6 +229,7 @@ def main():
               "fixture_local_eol": "input/lf" if args.fixture_layout == "packed" else "existing isolated/system settings",
               "randomized_order_seed": 233, "runtime_git_ssh_on_path": False,
               "client_core_fscache": args.client_fscache,
+              "reference_read_safety_overrides": reference_overrides,
               "system_configuration": "enabled conventional filesystem paths" if args.system_config_enabled else "disabled",
               "results": results, "full_git_parity": False,
               "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded"}

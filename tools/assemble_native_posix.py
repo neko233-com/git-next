@@ -159,7 +159,11 @@ def main():
         if len(roots) != 1: parser.error('The SDK must provide one matching Tcl/Tk standard library: '+sentinel)
         interpreter_environment.append(variable+'='+roots[0])
     write('runtime/interpreter-environment',('\n'.join(interpreter_environment)+'\n').encode(),'owned-interpreter-paths')
-    write('runtime/etc/gitconfig',b'[core]\n\tautocrlf = input\n\teol = lf\n[init]\n\tdefaultBranch = main\n','managed-product-defaults')
+    write('runtime/etc/gitconfig',b'[core]\n\tautocrlf = input\n\teol = lf\n[init]\n\tdefaultBranch = main\n[filter "lfs"]\n\tclean = git-lfs clean -- %f\n\tsmudge = git-lfs smudge -- %f\n\tprocess = git-lfs filter-process\n\trequired = true\n','managed-product-defaults')
+    for hook in ('pre-push','post-checkout','post-commit','post-merge'):
+        copy(ROOT/'packaging/lfs-hooks'/hook,'runtime/usr/share/git-core/templates/hooks/'+hook,'builtin-standard-lfs-hook',0o755)
+    copy(ROOT/'packaging/lfs-hooks/LICENSE.md','LICENSES/git-lfs-hook-templates/LICENSE.md','lfs-hook-license')
+    copy(ROOT/'packaging/lfs-hooks/source.json','LICENSES/git-lfs-hook-templates/source.json','lfs-hook-source-identity')
     for name in ('README.md','README.zh-CN.md','AGENTS.md'):
         copy(ROOT/name,name,'product-documentation')
     copy(ROOT/'packaging/native-compatibility.json','compatibility.json','declared-native-compatibility')

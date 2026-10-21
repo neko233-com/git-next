@@ -1,4 +1,143 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Performance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a></nav><main><h1>Performance measurement policy</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Performance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a></nav><main><h1>Final Windows measurements · 2026-10-21</h1>
+<p>The <a href="../benchmarks/native-performance-final-20261021.json">final paired batch</a> passes all three file scales and loopback HTTPS workloads. Forty local pairs use the shipped Windows stability profile for the native client and the same five explicitly recorded reference overrides; twenty network pairs use the report's declared TLS settings. Every warm-up and sample must return the complete expected output. Primary-process peak memory is recorded separately; it excludes child processes. These measurements do not establish full Git compatibility or universal speed/memory superiority.</p>
+<p>Both the 1071.771-second correctness batch and 1388.824-second performance batch exceeded the 60-second target. Cases were not skipped or relabeled to meet that target. At 100000 files, complete status takes about 1.89 seconds and full worktree grep about 7.15 seconds; this is a current full-scan latency limitation. The stable profile prevents the reproduced incomplete reads; it is not a claim that the underlying Windows race is eliminated under explicit parallel-read overrides.</p>
+<table>
+<thead>
+<tr>
+<th>Files</th>
+<th>Operation</th>
+<th>Native median / p95 ms</th>
+<th>Reference median / p95 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1000</td>
+<td>version</td>
+<td>10.812 / 11.769</td>
+<td>18.491 / 19.657</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>status_clean</td>
+<td>34.778 / 36.592</td>
+<td>42.195 / 44.25</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>diff_clean</td>
+<td>26.278 / 27.629</td>
+<td>34.03 / 35.714</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>show_metadata</td>
+<td>15.443 / 17.002</td>
+<td>22.594 / 23.952</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>grep_files</td>
+<td>75.13 / 83.002</td>
+<td>83.683 / 92.171</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>version</td>
+<td>11.241 / 12.462</td>
+<td>18.889 / 20.126</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>status_clean</td>
+<td>214.638 / 228.737</td>
+<td>224.052 / 236.867</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>diff_clean</td>
+<td>147.799 / 161.302</td>
+<td>155.066 / 176.385</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>show_metadata</td>
+<td>19.95 / 22.875</td>
+<td>26.489 / 28.842</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>grep_files</td>
+<td>702.804 / 766.934</td>
+<td>712.344 / 790.701</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>version</td>
+<td>11.673 / 12.965</td>
+<td>19.751 / 22.159</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>status_clean</td>
+<td>1893.537 / 1950.727</td>
+<td>1905.992 / 1990.433</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>diff_clean</td>
+<td>1272.526 / 1332.905</td>
+<td>1287.109 / 1338.518</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>show_metadata</td>
+<td>61.536 / 66.172</td>
+<td>51.684 / 54.532</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>grep_files</td>
+<td>7148.149 / 7465.653</td>
+<td>7190.098 / 7662.198</td>
+</tr>
+</tbody>
+</table>
+<p>Full local reports: <a href="../benchmarks/native-performance-1000-20261021.json">1000</a>, <a href="../benchmarks/native-performance-10000-20261021.json">10000</a>, <a href="../benchmarks/native-performance-100000-20261021.json">100000</a>. The <a href="../benchmarks/native-windows-read-stability-20261021.json">read-stability diagnostic</a> retains both clients' failures under parallel defaults and successful stable-profile rounds.</p>
+<table>
+<thead>
+<tr>
+<th>Loopback HTTPS</th>
+<th>Native median / p95 ms</th>
+<th>Reference median / p95 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clone</td>
+<td>888.9 / 927.696</td>
+<td>585.136 / 618.876</td>
+</tr>
+<tr>
+<td>fetch</td>
+<td>295.248 / 325.771</td>
+<td>287.641 / 333.007</td>
+</tr>
+<tr>
+<td>pull_ff_only</td>
+<td>382.529 / 403.871</td>
+<td>366.613 / 397.414</td>
+</tr>
+</tbody>
+</table>
+<p><a href="../benchmarks/native-performance-network-20261021.json">Network report</a>. Native clone is slower in this fixture; this is not a WAN/provider or GitSSS server-throughput measurement. Earlier checkpoints below retain their original identities and are not reassigned to these defaults.</p>
+<h1>Native read thread defaults</h1>
+<p>The core's unconfigured automatic budget is twice the current process-available logical CPU count. Windows and Linux honor inherited process affinity; macOS uses the OS online CPU count. Shipped Windows packages override read concurrency with the stability profile below; the automatic budget remains available through explicit configuration and on POSIX.</p>
+<p>Windows ships <code>core.fscache=false</code>, <code>core.fsmonitor=false</code>, <code>core.preloadIndex=false</code>, <code>index.threads=1</code> and <code>grep.threads=1</code>. Takeover applies the same system defaults after legacy system configuration while preserving higher-priority user/repository settings. A 10000-file/1000-directory diagnostic reproduced omitted grep results in both the native client and reference Git with parallel reads; the exact stable profile completed 30 rounds per client without omissions and with unchanged file bytes. Disabling fscache alone did not fix grep. These defaults prioritize complete reads over speculative throughput; they do not establish the internal root cause or universal correctness.</p>
+<p>The final paired Windows batch uses shipped native defaults and explicitly applies these same five settings to the reference with <code>--reference-read-safety</code>. Reports include <code>reference_read_safety_overrides</code>; this is a comparison under matching stable settings, not stock reference defaults. Every warm-up/sample must return complete expected results before its timing is accepted.</p>
+<p>Index entry decoding, worktree stat preloading and case-insensitive index name-table loading use this budget. <code>index.threads</code> retains explicit user/repository/command-line priority; <code>1</code> requests serial work and <code>0</code>/<code>true</code> selects the automatic budget. Index optional EOIE/IEOT offset metadata allows compatible parallel decoding; object, ref and pack bytes are unaffected. Work is bounded by useful index blocks/entries. The old fixed preload cap of 20 is removed, with worker state allocated by the actual worker count. Read-only <code>git grep</code> uses the same automatic CPU*2 default; <code>grep.threads</code> and <code>--threads</code> override it normally. Compression, pack construction, checkout and fetch worker policies are unchanged.</p>
+<p><code>GIT_TRACE2_EVENT</code> reports the chosen read budget and actual index/preload/name-hash/grep workers. Acceptance checks default arithmetic, process affinity, explicit precedence, serial/parallel output equality and a very large explicit budget bounded by useful work. Paired benchmark runs include startup, index/status/read commands and full-file grep, reporting median, p95 and primary-process peak memory. Historical measurements below retain their original identities and must not be reassigned to the new defaults.</p>
+<h1>Performance measurement policy</h1>
 <p>No blanket faster-than-Git, low-memory or low-latency claim is established for this experimental version. Correctness and compatibility precede replacement.</p>
 <p>A Windows <code>FindFirstFileExW</code> large-fetch experiment was rejected before installation. In an eight-pair, instrumented 100000-file diagnostic, directory-walk median was 60.955 ms versus 57.781 ms for the instrumented baseline. Both scanned the same files and verified unchanged stage IDs/HEAD plus independent fsck. These are internal-phase diagnostics, not accepted process latency measurements. The uninstalled candidate was <code>94d37ceb...</code>; its new directory backend and dependency patch were removed. Existing accepted binaries and their timings remain unchanged. The diagnostic/source archive is retained locally under <code>.evidence/rejected-large-fetch-*</code>. <a href="https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfileexw">Microsoft API contract</a>.</p>
 <p>Use optimized final binaries. Record client/reference versions, source SHA, CPU/OS, repository object and worktree counts, transport, cache state, network and concurrency. Separate cold clone, warm clone, incremental fetch, already-current pull, status, object lookup and commit. Report median and tail latency across repeated trials, not a single fastest run. Compare identical results with independent fsck and refs/worktree checks.</p>

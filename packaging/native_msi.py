@@ -82,12 +82,14 @@ def main():
             parser.error('Distribution byte mismatch: '+name)
         files[name] = path
     required = ('bin/git.exe','bin/git-next.exe','cmd/git.exe','runtime/etc/gitconfig',
-                'updater/update.ps1','updater/Update.Core.psm1',
+                'updater/update.ps1','updater/Update.Core.psm1','updater/msi-worker.exe',
                 'components/install-tls-provider.ps1','components/tls-providers.lock.json','LICENSE')
     required += ('updater/Runtime.Configuration.ps1','runtime/defaults/manifest.json','migration/takeover.ps1','migration/Takeover.Core.psm1',
                  'migration/git-next-bridge.exe','migration/git-next-bridge-gui.exe')
     if any(name not in files for name in required):
         parser.error('The complete core/runtime/configuration/update payload is required.')
+    if not args.allow_experimental_local and ('bin/git-terminal.exe' not in files or manifest.get('git_terminal',{}).get('renderer') != 'gpui-fast'):
+        parser.error('Windows releases must include the peer Rust + GPUI Fast Git-Terminal application.')
     for folder,names in [('updater',('update.ps1','Update.Core.psm1','Scope.Core.ps1','Scope.Native.cs','Runtime.Configuration.ps1','messages.zh-CN.json')),
                          ('migration',('takeover.ps1','Takeover.Core.psm1')),
                          ('components',('install-tls-provider.ps1',))]:
@@ -158,6 +160,11 @@ def main():
             component = ET.SubElement(group,'Component',Id=ident,Guid=guid,Directory=directory_id)
             ET.SubElement(component,'RegistryValue',Root=registry_hive,Key='Software\\git-next\\MSI\\'+platform+'\\Files',Name=name,Type='string',Value=version,KeyPath='yes')
             attributes = dict(Id=ident+'_File',Source=str(path),Name=relative.name)
+            with path.open('rb') as stream:
+                executable = stream.read(2) == b'MZ'
+            if not executable:
+                # Rollback changes timestamps; immutable data follows the versioned core.
+                attributes['CompanionFile'] = 'Payload_'+hashlib.sha256(b'bin/git.exe').hexdigest()[:24]+'_File'
             if manifest['files'].get(name,{}).get('windows_attributes',0) & 4:
                 attributes['System'] = 'yes'
             element = ET.SubElement(component,'File',**attributes)
@@ -179,6 +186,8 @@ def main():
                        RegistryHive=registry_hive,PathSystem='yes' if args.scope == 'machine' else 'no',
                        TaskImpersonate='no' if args.scope == 'machine' else 'yes',
                        Platform=platform,TerminalRelativePath=terminal.replace('/','\\'),
+                       TerminalArguments='--cd-to-home' if terminal == 'bin/git-terminal.exe' else '',
+                       TerminalHasArguments='yes' if terminal == 'bin/git-terminal.exe' else 'no',
                        ProductDescription='git-next complete native runtime; '+('accepted release' if complete else 'unpublished candidate; takeover blocked'))
         command = [str(wix),'build',str(ROOT/'packaging/windows/Product.wxs'),str(stage/'Payload.wxs'),
                    '-arch','x64' if platform == 'windows-x64' else 'arm64','-pdbtype','none',

@@ -1,6 +1,8 @@
 # Native diff, show and history
 
-The current source implements the subset below directly with Gitoxide. These commands never dispatch to installed Git. The exact current optimized/installed checkpoint is recorded in [acceptance](ACCEPTANCE.md); earlier read/discovery checkpoints retain their own hashes and scope. Full Git replacement remains blocked.
+The primary product uses the complete source-built native Git compatibility core for diff, show, history and status. It does not dispatch these commands to installed official Git. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The Gitoxide implementation details below describe the separate historical Rust preview, not limitations of the primary native product.
+
+## Historical Rust preview
 
 ## Status
 

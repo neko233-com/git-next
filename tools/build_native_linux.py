@@ -49,7 +49,7 @@ def main():
     parser.add_argument('--jobs',type=int,default=4,choices=range(1,17))
     parser.add_argument('--reuse-dependencies',type=Path,help='owned source-built library cache; never a cached core')
     parser.add_argument('--dependency-producer',type=Path,help='matching cleaned-up Docker compilation receipt')
-    parser.add_argument('--reuse-core-build',type=Path,help='owned compiler object cache for identity/resource metadata changes')
+    parser.add_argument('--reuse-core-build',type=Path,help='verified compiler object cache; changed source must match declared patches/overlays')
     parser.add_argument('--core-producer',type=Path,help='matching compiler receipt with its frozen inputs/source sibling')
     args = parser.parse_args()
     if not args.base_image.startswith('debian@sha256:') or len(args.base_image.split(':')[-1]) != 64: parser.error('Use an official immutable Debian image reference')
@@ -81,18 +81,24 @@ def main():
                                            linux_recipe_ast_unchanged=True))
         previous_files = {path.relative_to(previous).as_posix(): path for path in previous.rglob('*') if path.is_file()}
         current_files = {path.relative_to(args.source).as_posix(): path for path in args.source.rglob('*') if path.is_file()}
-        if previous_files.keys() != current_files.keys(): parser.error('Identity-only cache cannot add/remove source files')
+        added = current_files.keys() - previous_files.keys()
+        removed = previous_files.keys() - current_files.keys()
+        if removed or any(not (ROOT/'native-core/overlay'/name).is_file() or current_files[name].read_bytes() != (ROOT/'native-core/overlay'/name).read_bytes() for name in added):
+            parser.error('Compiler cache source additions must match declared overlays; removals are refused')
         changes = [name for name in previous_files if previous_files[name].read_bytes() != current_files[name].read_bytes()]
-        if not changes or any(name not in ('git-next-identity.h','git-next-integration-receipt.json','git.rc.in') for name in changes):
-            parser.error('Core cache permits identity/resource metadata changes only')
-        if 'git.rc.in' in changes:
-            patches = [item for item in json.loads((ROOT/'native-core/patches/series.json').read_text()) if item['path']=='git.rc.in']
-            if (hashlib.sha256(previous_files['git.rc.in'].read_bytes()).hexdigest() != patches[-1]['before_sha256']
-                    or hashlib.sha256(current_files['git.rc.in'].read_bytes()).hexdigest() != patches[-1]['after_sha256']):
-                parser.error('Resource metadata change does not match the declared source patch')
+        patches = json.loads((ROOT/'native-core/patches/series.json').read_text())
+        for name in changes:
+            if name in ('git-next-identity.h','git-next-integration-receipt.json'): continue
+            declared = [entry for entry in patches if entry['path'] == name]
+            before_sha = hashlib.sha256(previous_files[name].read_bytes()).hexdigest()
+            after_sha = hashlib.sha256(current_files[name].read_bytes()).hexdigest()
+            if not any(entry['before_sha256'] == before_sha for entry in declared) or not any(entry['after_sha256'] == after_sha for entry in declared):
+                parser.error('Compiler cache source change has no matching declared patch chain: '+name)
+        if not changes and not added: parser.error('No source delta requires this incremental build')
         core_cache = dict(archive_sha256=producer['artifact']['sha256'],
                           producer_receipt_sha256=hashlib.sha256(args.core_producer.read_bytes()).hexdigest(),
-                          previous_source_tree_sha256=producer['source_tree_sha256'], changed_sources=changes,
+                          previous_source_tree_sha256=producer['source_tree_sha256'], changed_sources=changes, added_overlays=sorted(added),
+                          cache_kind='declared-patch-incremental-objects',
                           unrelated_platform_recipe_changes=recipe_changes,
                           final_executables_relinked=True)
     if bool(args.reuse_dependencies) != bool(args.dependency_producer): parser.error('Dependency cache requires its producer receipt')
@@ -139,6 +145,15 @@ def main():
             name = info.filename[len(pin['archive_prefix']):]
             if (inputs/'source'/name).is_file(): modes[name] = (info.external_attr >> 16) & 0o777 or 0o644
     (inputs/'source-modes.json').write_text(json.dumps(modes))
+    # One sequential transfer avoids QEMU small-file reads through Windows bind mounts.
+    source_transfer = inputs/'source-input.tar'
+    with tarfile.open(source_transfer,'w',dereference=True) as archive:
+        for path in sorted((inputs/'source').rglob('*')):
+            if path.is_file():
+                relative = path.relative_to(inputs/'source').as_posix()
+                archive.add(path,arcname='source/'+relative,recursive=False)
+    source_transfer_sha = hashlib.file_digest(source_transfer.open('rb'),'sha256').hexdigest()
+
     if reused:
         shutil.copyfile(args.reuse_dependencies,inputs/'cached-dependencies.tar.gz')
         if hashlib.file_digest((inputs/'cached-dependencies.tar.gz').open('rb'),'sha256').hexdigest() != reused['archive_sha256']: raise ValueError('Dependency cache changed during copy')
@@ -153,7 +168,7 @@ mkdir -p "$HOME" "$SSH_ROOT_PATH"
 apt-get update
 apt-get install -y --no-install-recommends ca-certificates build-essential cmake ninja-build python3 pkg-config libgnutls28-dev libpsl-dev libidn2-dev libkrb5-dev libsecret-1-dev binutils
 trap 'result=$?; if [ "$result" -ne 0 ] && [ -f /build/dependencies/receipt.json ] && [ -f /build/tls/receipt.json ]; then tar -C /build -czf /output/failed-build-dependencies.tar.gz dependencies tls; fi' EXIT
-cp -a /inputs/source /build/source
+tar -xf /inputs/source-input.tar -C /build
 python3 -c 'import json,pathlib; root=pathlib.Path("/build/source"); [(root/name).chmod(mode) for name,mode in json.load(open("/inputs/source-modes.json")).items()]'
 if [ -f /inputs/cached-core-build.tar.gz ]; then
     python3 /inputs/tools/extract_build_archive.py /inputs/cached-core-build.tar.gz /build
@@ -202,10 +217,10 @@ python3 -c 'import hashlib,json,pathlib; p=pathlib.Path("/output/native-build-pr
             run('docker','volume','rm',volume)
         cleanup['volume_absent'] = subprocess.run(['docker','volume','inspect',volume],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL).returncode != 0
         record = dict(schema_version=1,status=status,platform=args.platform,base_image=args.base_image,base_image_id=image['Id'],
-                      source_tree_sha256=before,scope=scope,cleanup=cleanup,product_executed=False,tests_executed=False,
+                      source_tree_sha256=before,source_transfer_archive_sha256=source_transfer_sha,scope=scope,cleanup=cleanup,product_executed=False,tests_executed=False,
                       copied_tool_inputs={path.name:hashlib.sha256(path.read_bytes()).hexdigest() for path in (inputs/'tools').glob('*.py')},
                       dependency_cache=reused,
-                      identity_only_core_cache=core_cache,
+                      verified_incremental_core_cache=core_cache,
                       installed=False,release_eligible=False)
         archive = outputs/'native-build-products.tar.gz'
         if archive.exists(): record['artifact'] = dict(name=archive.name,bytes=archive.stat().st_size,sha256=hashlib.file_digest(archive.open('rb'),'sha256').hexdigest())

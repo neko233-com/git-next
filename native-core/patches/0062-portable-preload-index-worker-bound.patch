@@ -1,0 +1,13 @@
+--- a/preload-index.c
++++ b/preload-index.c
+@@ -124,7 +124,9 @@
+ 	if (repo_config_get_index_threads(index->repo, &budget) || !budget)
+ 		budget = git_next_read_thread_budget();
+ 	trace2_data_intmax("git-next", index->repo, "preload-thread-budget", budget);
+-	threads = min(index->cache_nr / THREAD_COST, budget);
++	threads = index->cache_nr / THREAD_COST;
++	if (threads > budget)
++		threads = budget;
+ 	if ((index->cache_nr > 1) && (threads < 2) && git_env_bool("GIT_TEST_PRELOAD_INDEX", 0))
+ 		threads = 2;
+ 	if (threads < 2)

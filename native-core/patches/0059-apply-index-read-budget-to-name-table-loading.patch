@@ -1,0 +1,30 @@
+--- a/name-hash.c
++++ b/name-hash.c
+@@ -16,6 +16,8 @@
+ #include "object.h"
+ #include "read-cache-ll.h"
+ #include "thread-utils.h"
++#include "git-next-read-threads.h"
++#include "config.h"
+ #include "trace.h"
+ #include "trace2.h"
+ #include "sparse-index.h"
+@@ -210,7 +212,9 @@
+ 	if (!ignore_case)
+ 		return 0;
+ 
+-	nr_cpus = online_cpus();
++	if (repo_config_get_index_threads(istate->repo, &nr_cpus) || !nr_cpus)
++		nr_cpus = git_next_read_thread_budget();
++	trace2_data_intmax("git-next", istate->repo, "name-hash-thread-budget", nr_cpus);
+ 	if (nr_cpus < 2)
+ 		return 0;
+ 
+@@ -220,6 +224,7 @@
+ 	if (istate->cache_nr < nr_cpus * LAZY_THREAD_COST)
+ 		nr_cpus = istate->cache_nr / LAZY_THREAD_COST;
+ 	lazy_nr_dir_threads = nr_cpus;
++	trace2_data_intmax("git-next", istate->repo, "name-hash-workers", nr_cpus);
+ 	return lazy_nr_dir_threads;
+ }
+ 

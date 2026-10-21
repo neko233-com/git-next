@@ -1,0 +1,8 @@
+# Review and merge; never replace existing project policy blindly.
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Bb]uilds/
+/.vs/

@@ -1,0 +1,11 @@
+--- a/read-cache.c
++++ b/read-cache.c
+@@ -2297,7 +2297,7 @@
+ 		ieot = read_ieot_extension(mmap, mmap_size, extension_offset);
+ 
+ 	if (ieot) {
+-		trace2_data_intmax("git-next", the_repository, "index-entry-workers", min(nr_threads, ieot->nr));
++		trace2_data_intmax("git-next", the_repository, "index-entry-workers", nr_threads < ieot->nr ? nr_threads : ieot->nr);
+ 		src_offset += load_cache_entries_threaded(istate, mmap, mmap_size, nr_threads, ieot);
+ 		free(ieot);
+ 	} else {

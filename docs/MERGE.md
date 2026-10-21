@@ -1,6 +1,8 @@
 # Native two-parent merges
 
-The source implements the subset below. See [acceptance](ACCEPTANCE.md) for the exact optimized/installed checkpoint; source support alone does not establish an installed binary or complete Git parity. Full takeover remains blocked.
+The primary product uses the complete source-built native Git compatibility core, including merge and its ordinary conflict/recovery workflows. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The narrower implementation details below describe the separate historical Rust preview.
+
+## Historical Rust preview
 
 ## Supported workflow
 

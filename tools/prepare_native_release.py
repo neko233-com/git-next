@@ -27,7 +27,7 @@ def encoded(value):
 def documents():
     names = {'README.md','README.zh-CN.md','AGENTS.md','docs/DELIVERY_STATUS.json'}
     names.update(path.relative_to(ROOT).as_posix() for path in (ROOT/'docs').rglob('*')
-                 if path.is_file() and (path.suffix in ('.md','.html') or (path.suffix == '.json' and path.name.startswith('native-'))))
+                 if path.is_file() and (path.suffix in ('.md','.html','.gitignore','.gitattributes') or (path.suffix == '.json' and path.name.startswith('native-'))))
     result = {}
     for name in names:
         path = ROOT/name
@@ -51,7 +51,8 @@ def main():
         parser.error('Both local acceptance phases are required')
     expected = {'windows-core-contracts', 'windows-owned-integrations', 'windows-dpapi-migration',
                 'windows-update-contracts', 'linux-x64', 'linux-arm64', 'macos-arm64',
-                'docker-login-migration', 'posix-updater-race-contracts', 'msi-user', 'msi-machine', 'frozen-input-readback'}
+                'docker-login-migration', 'posix-updater-race-contracts', 'msi-user', 'msi-machine', 'frozen-input-readback',
+                'windows-read-thread-contracts','windows-bootstrap-contracts','windows-game-lfs-contracts','terminal-rust-contracts','terminal-native-desktop'}
     if {item['case'] for item in gates[0]['results']} != expected or any(item['status'] != 'pass' for gate in gates for item in gate['results']):
         parser.error('Required local acceptance cases are missing or failed')
     if {item['case'] for item in gates[1]['results']} != {'performance-1000','performance-10000','performance-100000','performance-network','frozen-input-readback'}:
@@ -176,7 +177,8 @@ def main():
     bundles = [Path(name) for name in matrix['files'] if Path(name).name.startswith('git-next-corresponding-sources-') and Path(name).suffix == '.zip']
     if len(bundles) != 4: parser.error('Four accepted corresponding-source bundles are required')
     for path in bundles: shutil.copyfile(path, output/path.name)
-    assets = sorted([path for path in output.iterdir() if path.suffix in ('.msi','.gz','.zip','.json') and not path.name.endswith('.receipt.json')])
+    shutil.copyfile(ROOT/'install.ps1', output/'install.ps1')
+    assets = sorted([path for path in output.iterdir() if path.suffix in ('.msi','.gz','.zip','.json','.ps1') and not path.name.endswith('.receipt.json')])
     (output/'SHA256SUMS').write_text(''.join(sha(path)+'  '+path.name+'\n' for path in assets), encoding='utf-8', newline='\n')
     print(json.dumps(dict(status='release-staged-not-published', source_commit=args.source_commit, platforms=len(platforms), assets=len(assets))))
 

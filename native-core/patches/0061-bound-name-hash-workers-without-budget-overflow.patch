@@ -1,0 +1,11 @@
+--- a/name-hash.c
++++ b/name-hash.c
+@@ -221,7 +221,7 @@
+ 	if (istate->cache_nr < 2 * LAZY_THREAD_COST)
+ 		return 0;
+ 
+-	if (istate->cache_nr < nr_cpus * LAZY_THREAD_COST)
++	if (istate->cache_nr / LAZY_THREAD_COST < nr_cpus)
+ 		nr_cpus = istate->cache_nr / LAZY_THREAD_COST;
+ 	lazy_nr_dir_threads = nr_cpus;
+ 	trace2_data_intmax("git-next", istate->repo, "name-hash-workers", nr_cpus);

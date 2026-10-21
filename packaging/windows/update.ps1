@@ -2,7 +2,7 @@
 param(
     [ValidateSet('Check','Apply','RequestApply','Legacy','Scheduled','Enable','Disable','Status','Register','Unregister','RollbackRegistration','GuardRemoval','InitializeRuntimeConfiguration','RollbackRuntimeConfiguration','CommitRuntimeConfiguration')]
     [string]$Mode = 'Check',
-    [AllowEmptyString()][ValidateSet('','Auto','Check','Apply')][string]$Request = 'Auto',
+    [AllowEmptyString()][ValidateSet('','Auto','Check','Apply','Enable','Disable')][string]$Request = 'Auto',
     [switch]$Yes,[switch]$Quiet,[switch]$Gui,[switch]$Json
 )
 Set-StrictMode -Version Latest

@@ -1,0 +1,70 @@
+--- a/preload-index.c
++++ b/preload-index.c
+@@ -15,6 +15,7 @@
+ #include "progress.h"
+ #include "read-cache.h"
+ #include "thread-utils.h"
++#include "git-next-read-threads.h"
+ #include "repository.h"
+ #include "symlinks.h"
+ #include "trace2.h"
+@@ -23,12 +24,9 @@
+ static struct fscache *fscache;
+ 
+ /*
+- * Mostly randomly chosen maximum thread counts: we
+- * cap the parallelism to 20 threads, and we want
+- * to have at least 500 lstat's per thread for it to
+- * be worth starting a thread.
++ * Keep meaningful lstat work per task. The default budget is twice the
++ * process-available logical CPU count; explicit index.threads takes priority.
+  */
+-#define MAX_PARALLEL (20)
+ #define THREAD_COST (500)
+ 
+ struct progress_data {
+@@ -111,8 +109,8 @@
+ 		   const struct pathspec *pathspec,
+ 		   unsigned int refresh_flags)
+ {
+-	int threads, i, work, offset;
+-	struct thread_data data[MAX_PARALLEL];
++	int threads, i, work, offset, budget;
++	struct thread_data *data;
+ 	struct progress_data pd;
+ 	int t2_sum_lstat = 0;
+ 	int core_preload_index = 1;
+@@ -123,7 +121,10 @@
+ 		return;
+ 
+ 	fscache = getcache_fscache();
+-	threads = index->cache_nr / THREAD_COST;
++	if (repo_config_get_index_threads(index->repo, &budget) || !budget)
++		budget = git_next_read_thread_budget();
++	trace2_data_intmax("git-next", index->repo, "preload-thread-budget", budget);
++	threads = min(index->cache_nr / THREAD_COST, budget);
+ 	if ((index->cache_nr > 1) && (threads < 2) && git_env_bool("GIT_TEST_PRELOAD_INDEX", 0))
+ 		threads = 2;
+ 	if (threads < 2)
+@@ -132,11 +133,10 @@
+ 	trace2_region_enter("index", "preload", NULL);
+ 
+ 	trace_performance_enter();
+-	if (threads > MAX_PARALLEL)
+-		threads = MAX_PARALLEL;
++	trace2_data_intmax("git-next", index->repo, "preload-workers", threads);
+ 	offset = 0;
+ 	work = DIV_ROUND_UP(index->cache_nr, threads);
+-	memset(&data, 0, sizeof(data));
++	CALLOC_ARRAY(data, threads);
+ 
+ 	memset(&pd, 0, sizeof(pd));
+ 	if (refresh_flags & REFRESH_PROGRESS && isatty(2)) {
+@@ -177,6 +177,7 @@
+ 			clear_pathspec(&data[i].pathspec);
+ 	}
+ 
++	free(data);
+ 	trace_performance_leave("preload index");
+ 
+ 	trace2_data_intmax("index", NULL, "preload/sum_lstat", t2_sum_lstat);

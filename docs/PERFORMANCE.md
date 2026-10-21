@@ -1,3 +1,49 @@
+# Final Windows measurements · 2026-10-21
+
+The [final paired batch](benchmarks/native-performance-final-20261021.json) passes all three file scales and loopback HTTPS workloads. Forty local pairs use the shipped Windows stability profile for the native client and the same five explicitly recorded reference overrides; twenty network pairs use the report's declared TLS settings. Every warm-up and sample must return the complete expected output. Primary-process peak memory is recorded separately; it excludes child processes. These measurements do not establish full Git compatibility or universal speed/memory superiority.
+
+Both the 1071.771-second correctness batch and 1388.824-second performance batch exceeded the 60-second target. Cases were not skipped or relabeled to meet that target. At 100000 files, complete status takes about 1.89 seconds and full worktree grep about 7.15 seconds; this is a current full-scan latency limitation. The stable profile prevents the reproduced incomplete reads; it is not a claim that the underlying Windows race is eliminated under explicit parallel-read overrides.
+
+| Files | Operation | Native median / p95 ms | Reference median / p95 ms |
+| --- | --- | --- | --- |
+| 1000 | version | 10.812 / 11.769 | 18.491 / 19.657 |
+| 1000 | status_clean | 34.778 / 36.592 | 42.195 / 44.25 |
+| 1000 | diff_clean | 26.278 / 27.629 | 34.03 / 35.714 |
+| 1000 | show_metadata | 15.443 / 17.002 | 22.594 / 23.952 |
+| 1000 | grep_files | 75.13 / 83.002 | 83.683 / 92.171 |
+| 10000 | version | 11.241 / 12.462 | 18.889 / 20.126 |
+| 10000 | status_clean | 214.638 / 228.737 | 224.052 / 236.867 |
+| 10000 | diff_clean | 147.799 / 161.302 | 155.066 / 176.385 |
+| 10000 | show_metadata | 19.95 / 22.875 | 26.489 / 28.842 |
+| 10000 | grep_files | 702.804 / 766.934 | 712.344 / 790.701 |
+| 100000 | version | 11.673 / 12.965 | 19.751 / 22.159 |
+| 100000 | status_clean | 1893.537 / 1950.727 | 1905.992 / 1990.433 |
+| 100000 | diff_clean | 1272.526 / 1332.905 | 1287.109 / 1338.518 |
+| 100000 | show_metadata | 61.536 / 66.172 | 51.684 / 54.532 |
+| 100000 | grep_files | 7148.149 / 7465.653 | 7190.098 / 7662.198 |
+
+Full local reports: [1000](benchmarks/native-performance-1000-20261021.json), [10000](benchmarks/native-performance-10000-20261021.json), [100000](benchmarks/native-performance-100000-20261021.json). The [read-stability diagnostic](benchmarks/native-windows-read-stability-20261021.json) retains both clients' failures under parallel defaults and successful stable-profile rounds.
+
+| Loopback HTTPS | Native median / p95 ms | Reference median / p95 ms |
+| --- | --- | --- |
+| clone | 888.9 / 927.696 | 585.136 / 618.876 |
+| fetch | 295.248 / 325.771 | 287.641 / 333.007 |
+| pull_ff_only | 382.529 / 403.871 | 366.613 / 397.414 |
+
+[Network report](benchmarks/native-performance-network-20261021.json). Native clone is slower in this fixture; this is not a WAN/provider or GitSSS server-throughput measurement. Earlier checkpoints below retain their original identities and are not reassigned to these defaults.
+
+# Native read thread defaults
+
+The core's unconfigured automatic budget is twice the current process-available logical CPU count. Windows and Linux honor inherited process affinity; macOS uses the OS online CPU count. Shipped Windows packages override read concurrency with the stability profile below; the automatic budget remains available through explicit configuration and on POSIX.
+
+Windows ships `core.fscache=false`, `core.fsmonitor=false`, `core.preloadIndex=false`, `index.threads=1` and `grep.threads=1`. Takeover applies the same system defaults after legacy system configuration while preserving higher-priority user/repository settings. A 10000-file/1000-directory diagnostic reproduced omitted grep results in both the native client and reference Git with parallel reads; the exact stable profile completed 30 rounds per client without omissions and with unchanged file bytes. Disabling fscache alone did not fix grep. These defaults prioritize complete reads over speculative throughput; they do not establish the internal root cause or universal correctness.
+
+The final paired Windows batch uses shipped native defaults and explicitly applies these same five settings to the reference with `--reference-read-safety`. Reports include `reference_read_safety_overrides`; this is a comparison under matching stable settings, not stock reference defaults. Every warm-up/sample must return complete expected results before its timing is accepted.
+
+Index entry decoding, worktree stat preloading and case-insensitive index name-table loading use this budget. `index.threads` retains explicit user/repository/command-line priority; `1` requests serial work and `0`/`true` selects the automatic budget. Index optional EOIE/IEOT offset metadata allows compatible parallel decoding; object, ref and pack bytes are unaffected. Work is bounded by useful index blocks/entries. The old fixed preload cap of 20 is removed, with worker state allocated by the actual worker count. Read-only `git grep` uses the same automatic CPU*2 default; `grep.threads` and `--threads` override it normally. Compression, pack construction, checkout and fetch worker policies are unchanged.
+
+`GIT_TRACE2_EVENT` reports the chosen read budget and actual index/preload/name-hash/grep workers. Acceptance checks default arithmetic, process affinity, explicit precedence, serial/parallel output equality and a very large explicit budget bounded by useful work. Paired benchmark runs include startup, index/status/read commands and full-file grep, reporting median, p95 and primary-process peak memory. Historical measurements below retain their original identities and must not be reassigned to the new defaults.
+
 # Performance measurement policy
 
 No blanket faster-than-Git, low-memory or low-latency claim is established for this experimental version. Correctness and compatibility precede replacement.

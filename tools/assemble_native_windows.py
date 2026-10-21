@@ -59,6 +59,8 @@ def main():
     parser.add_argument('--crt-dir', type=Path, help='licensed Microsoft CRT when required by the selected compiler')
     parser.add_argument('--psl', required=True, type=Path, help='verified owned libpsl runtime/import prefix')
     parser.add_argument('--bridge', required=True, type=Path, help='owned compiled legacy command bridge directory')
+    parser.add_argument('--terminal', type=Path, help='source-built peer Git-Terminal package directory')
+    parser.add_argument('--msi-worker',type=Path,required=True,help='source-built no-console Windows Installer worker')
     parser.add_argument('--destination', required=True, type=Path, help='new owned package root')
     args = parser.parse_args()
     source = args.source.resolve(strict=True)
@@ -78,6 +80,14 @@ def main():
     asset_receipt = json.loads((assets / 'git-next-runtime-assets.json').read_text())
     platform = asset_receipt['platform']
     expected_machine = 0x8664 if platform == 'windows-x64' else 0xaa64
+    worker=args.msi_worker.resolve(strict=True)
+    worker_receipt=json.loads((worker/'receipt.json').read_text())
+    if (worker_receipt['platform']!=platform or worker_receipt['version']!=receipt['product_version']
+            or worker_receipt['source_sha256']!=sha(ROOT/'native-core/launcher/windows-msi-worker.c')
+            or worker_receipt['resource_sha256']!=sha(ROOT/'native-core/launcher/windows-msi-worker.rc.in')
+            or worker_receipt['binary_sha256']!=sha(worker/'msi-worker.exe')
+            or machine(worker/'msi-worker.exe')!=expected_machine):
+        parser.error('Windows Installer worker does not match its owned source/build receipt')
     bridge_receipt = json.loads((bridge/'receipt.json').read_text())
     if (bridge_receipt['platform'] != platform or bridge_receipt['source_sha256'] != sha(ROOT/'native-core/launcher/windows-bridge.c')
             or bridge_receipt['resource_sha256'] != sha(ROOT/'native-core/launcher/windows-bridge.rc.in') or bridge_receipt['product_version'] != receipt['product_version']
@@ -123,6 +133,23 @@ def main():
         provenance[relative] = dict(sha256=sha(target), bytes=len(data), kind=kind, windows_attributes=0)
 
     copy(ROOT/'packaging/corresponding-sources.lock.json','LICENSES/corresponding-sources.lock.json','corresponding-source-manifest')
+    terminal_identity = None
+    if args.terminal:
+        terminal_root = args.terminal.resolve(strict=True)
+        terminal_identity = json.loads((terminal_root/'git-terminal-package.json').read_text())
+        if (terminal_identity.get('product') != 'git-terminal' or terminal_identity.get('platform') != platform
+                or terminal_identity.get('renderer') != 'gpui-fast' or not re.fullmatch('[a-f0-9]{40}',terminal_identity.get('source_commit',''))):
+            parser.error('The matching source-built GPUI Fast terminal package is required.')
+        for name, digest in terminal_identity['files'].items():
+            path = terminal_root/name
+            if path.is_symlink() or not path.resolve(strict=True).is_relative_to(terminal_root) or sha(path) != digest:
+                parser.error('Git-Terminal package input changed.')
+            relative = 'bin/'+name if name in ('git-terminal.exe','git-terminal-shell.exe','libunwind.dll') or name.startswith('shell-integration/') else 'LICENSES/git-terminal/'+name
+            kind = 'source-built-git-terminal' if name in ('git-terminal.exe','git-terminal-shell.exe') else ('pinned-git-terminal-runtime' if name == 'libunwind.dll' else 'git-terminal-notice')
+            copy(path,relative,kind)
+        copy(terminal_root/'git-terminal-package.json','LICENSES/git-terminal/git-terminal-package.json','git-terminal-source-identity')
+        if machine(destination/'bin/git-terminal.exe') != expected_machine:
+            parser.error('Git-Terminal architecture mismatch.')
 
     default_configurations = []
     for relative, record in asset_receipt['files'].items():
@@ -139,6 +166,10 @@ def main():
           version=receipt['product_version'],platform=platform,files=default_configurations),indent=2)+'\n').encode(),
           'product-runtime-configuration-manifest')
     native = 'runtime/' + asset_receipt['native_prefix']
+    for hook in ('pre-push','post-checkout','post-commit','post-merge'):
+        copy(ROOT/'packaging/lfs-hooks'/hook,native+'/share/git-core/templates/hooks/'+hook,'builtin-standard-lfs-hook')
+    copy(ROOT/'packaging/lfs-hooks/LICENSE.md','LICENSES/git-lfs-hook-templates/LICENSE.md','lfs-hook-license')
+    copy(ROOT/'packaging/lfs-hooks/source.json','LICENSES/git-lfs-hook-templates/source.json','lfs-hook-source-identity')
     helper = native + '/libexec/git-core'
     shell_i18n = (source/'git-sh-i18n.sh').read_text(encoding='utf-8')
     if 'GIT_INTERNAL_GETTEXT_SH_SCHEME=git-next' not in shell_i18n:
@@ -181,10 +212,11 @@ def main():
             copy(path, directory + '/' + path.name, 'microsoft-vc-redistributable')
     # The vendor default is software configuration, never a user's config file.
     config = (assets / 'etc/gitconfig').read_text(encoding='utf-8')
-    config, count = re.subn(r'(?m)^\s*autocrlf\s*=\s*true\s*$', '\tautocrlf = input\n\teol = lf\n\tfscache = true', config)
+    config, count = re.subn(r'(?m)^\s*autocrlf\s*=\s*true\s*$', '\tautocrlf = input\n\teol = lf\n\tfscache = false\n\tfsmonitor = false\n\tpreloadIndex = false\n\tlongpaths = true', config)
     if count != 1:
         raise ValueError('Pinned vendor LF configuration anchor differs')
     config += '\n[http]\n\tsslBackend = schannel\n'
+    config += '\n[index]\n\tthreads = 1\n[grep]\n\tthreads = 1\n'
     write('runtime/etc/gitconfig', config.encode('utf-8'), 'managed-product-lf-defaults')
     copy(ROOT / 'native-core/LICENSE.GPL-2.0', 'LICENSE', 'native-core-license')
     copy(ROOT / 'native-core/vendor/yyjson/LICENSE', 'LICENSES/yyjson/LICENSE', 'third-party-license')
@@ -211,6 +243,8 @@ def main():
         copy(ROOT/'packaging/windows'/name,'migration/'+name,'product-migration')
     for name in bridge_receipt['binaries']:
         copy(bridge/name,'migration/'+name,'source-built-git-next-migration-bridge')
+    copy(worker/'msi-worker.exe','updater/msi-worker.exe','source-built-no-console-msi-worker')
+    copy(worker/'receipt.json','LICENSES/git-next-msi-worker/source.json','msi-worker-source-identity')
     aliases = [name for name, record in provenance.items() if record['kind'] == 'source-built-git-next-core']
     if any(provenance[name]['sha256'] != receipt['binaries']['git.exe']['sha256'] for name in aliases):
         raise ValueError('A Git entrypoint differs from the owned primary core')
@@ -233,7 +267,7 @@ def main():
             inspect(sibling)
 
     for name, record in provenance.items():
-        if record['kind'].startswith('source-built-git-next'):
+        if record['kind'].startswith('source-built-git-next') or record['kind'] == 'source-built-git-terminal':
             inspect(destination/name)
     # Verify every copied byte once; no executable, DLL or installer is loaded.
     if any(sha(destination / name) != record['sha256'] for name,record in provenance.items()):
@@ -253,6 +287,8 @@ def main():
                   complete_git_parity=compatibility['complete_git_parity'],release_eligible=False,
                   remaining=['D08 consolidated acceptance','D09 paired performance acceptance',
                              'D10 single release and workstation takeover'])
+    if terminal_identity:
+        report['git_terminal'] = {key:terminal_identity[key] for key in ('product','version','source_commit','platform','renderer')}
     with (destination / 'git-next-distribution.json').open('x',encoding='utf-8',newline='\n') as output:
         output.write(json.dumps(report,indent=2)+'\n')
     print(json.dumps({key:value for key,value in report.items() if key != 'files'}))

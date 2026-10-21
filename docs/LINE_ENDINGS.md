@@ -1,6 +1,6 @@
 # Consistent LF text across platforms
 
-The final primary native core now integrates shared LF defaults, new-repository/clone configuration, policy-file creation, the eol command and canonical filtered-content comparison after stat/size mismatches. These inputs compile on Windows x64: [D03 implementation receipt](../native-core/receipts/implementation-owned-runtime-20261020.json). No final-core LF runtime test has run; the consolidated D08 matrix remains pending. Earlier Windows/Linux/emulated ARM results below refer only to the previous Rust preview. Full takeover stays blocked.
+The primary native core integrates shared LF defaults, new-repository/clone configuration, policy-file creation, the eol command and canonical filtered-content comparison after stat/size mismatches. Current Windows x64, Linux x64 and emulated Linux ARM64 native-core checks pass. macOS evidence covers compilation, Mach-O packaging and shell/static checks without executing the product. See [delivery status](DELIVERY_STATUS.md) for the final combined gate. Earlier preview checkpoints below retain their original identities.
 
 ## Defaults
 
