@@ -147,13 +147,14 @@
       "phase": "acceptance",
       "status": "complete",
       "name": "One consolidated correctness/platform/migration/install regression",
-      "current": "The 18-case dependency-bound acceptance passes. Complete official Git 2.54 independently reads 32 SHA-1/SHA-256 common CLI scenarios; current terminal passes all 15 actual desktop cases plus formatting/clippy/unit/real-PTY shell contracts. Core/runtime/POSIX bytes are unchanged from the actual preceding batch. Both full MSI lifecycles are retained only after exact installer/worker/configuration and unchanged-runtime checks; permitted current Windows deltas are the two compiled terminal executables, their bound provenance and manuals.",
-      "remaining": "No remaining functional acceptance failure. Windows ARM64 is cross-compiled; macOS product runtime is not executed. Final actual machine installation and takeover remain D10.",
+      "current": "The 18-case dependency-bound acceptance, 32 common CLI scenarios and 15 actual desktop cases passed. Unchanged core/runtime/GUI and MSI recipes retain their original exact-byte or contract evidence. Final Windows installer-only exceptions are explicitly bound: TLS child handles are released before directory rename, and inherited configuration ACEs become explicit rules before write filtering. Fresh machine TLS preparation/idempotence/17 pinned files and protected ACLs passed; 44 updater checks and 57 real configuration migration/recovery entries passed, followed by actual final machine takeover.",
+      "remaining": "No remaining failure in the declared platform scope. Windows ARM64 and macOS runtime boundaries remain explicit.",
       "completion_evidence": [
         "docs/benchmarks/native-integrated-correctness-20261021.json",
         "docs/benchmarks/native-common-cli-20261021.json",
         "docs/benchmarks/native-integrated-terminal-desktop-20261021.json",
-        "docs/benchmarks/native-integrated-terminal-rust-20261021.json"
+        "docs/benchmarks/native-integrated-terminal-rust-20261021.json",
+        "docs/benchmarks/native-workstation-release-20261021.json"
       ],
       "previous_core_evidence_preserved": true
     },
@@ -175,11 +176,14 @@
     {
       "id": "D10",
       "phase": "delivery",
-      "status": "partial",
+      "status": "complete",
       "name": "One release and actual Windows Git replacement",
-      "current": "Original Git remains the workstation default. The unsuccessful unpublished task MSI and its owned rollback records were retired before current acceptance. The final icon/titlebar MSI candidates are ready. No public tag/release exists.",
-      "remaining": "After the corrected local gates pass, install/activate once, verify fresh default Git and native terminal plus preserved profile fingerprints, then publish one consolidated version.",
-      "completion_evidence": []
+      "current": "v0.3.0 published once with 21 assets and verified remote sizes/SHA-256. Final accepted machine MSI is installed. Fresh CMD/PowerShell and legacy paths use git-next; original Git uninstalled. Native integrated-terminal window is active; 13 Git/SSH profile files are byte-identical.",
+      "remaining": "No remaining item in this fixed client delivery scope.",
+      "completion_evidence": [
+        "docs/benchmarks/native-workstation-release-20261021.json",
+        "https://github.com/neko233-com/git-next/releases/tag/v0.3.0"
+      ]
     }
   ],
   "scope_addenda": [
@@ -195,10 +199,10 @@
     }
   ],
   "progress": {
-    "complete_deliverables": 9,
+    "complete_deliverables": 10,
     "total_deliverables": 10,
-    "percent": 90,
+    "percent": 100,
     "implementation_complete": true,
-    "note": "All implementation, expanded correctness and current-byte performance measurements complete; final actual installation/takeover and one public release remain."
+    "note": "Fixed client delivery complete, including actual Windows takeover and one public release. GitSSS server throughput is a separate unfinished requirement."
   }
 }

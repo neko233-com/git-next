@@ -6,11 +6,11 @@ The Windows updater supports the built-in Windows PowerShell 5.1 even when launc
 
 The requested final delivery includes Windows x64/ARM64 MSI packages, background automatic updates, official GitHub release discovery and automatic selection of a usable download mirror. These are part of the one consolidated release gate. Source implementation and an MSI that compiles do not establish installation, update, rollback or complete Git compatibility.
 
-`packaging/build_msi.py` and `packaging/windows/` implement the Windows packaging/update path. Their runtime acceptance is pending the consolidated product batch. No MSI release has been published. The existing local preview remains installed through the earlier script installer.
+`packaging/native_msi.py` and `packaging/windows/` implement the Windows packaging/update path. The consolidated local acceptance has passed in its declared contract scope. v0.3.0 is published and the final native machine MSI has replaced the workstation default; see the final delivery receipt.
 
 The native MSI now defaults to `--scope machine`; `--scope user` retains the original user identities. Machine packages install under Program Files with HKLM/System PATH registration and use `%ProgramData%/git-next` for protected shared state. Their task runs as SYSTEM without a password, including after logout. User packages retain LocalAppData and an interactive user task. Update manifests select matching scope variants and reject scope changes. Machine assets use the ordinary platform filename; explicit user assets append `-user.msi`.
 
-The source CLI exposes `git update check|apply|status|enable|disable [--json]`. `apply` queues the registered worker and reports `queued`, not an installed version. The worker lets the requesting CLI exit before its ordinary busy check. Both scopes accept task requests; machine users can check/read status/request an update, while changing machine update policy requires an administrator. The legacy `git update-git-for-windows` entrypoint supports yes/quiet/GUI prompts and the existing 0/1/2 current/declined/started exit convention, but downloads git-next. The producer updater is excluded. These new paths compile; their runtime checks wait for D08. Linux/macOS updater source and three target binaries are now implemented; runtime acceptance remains pending.
+The source CLI exposes `git update check|apply|status|enable|disable [--json]`. `apply` queues the registered worker and reports `queued`, not an installed version. The worker lets the requesting CLI exit before its ordinary busy check. Both scopes accept task requests; machine users can check/read status/request an update, while changing machine update policy requires an administrator. The legacy `git update-git-for-windows` entrypoint supports yes/quiet/GUI prompts and the existing 0/1/2 current/declined/started exit convention, but downloads git-next. The producer updater is excluded. Windows updater contracts and Linux runtime/race checks passed locally. macOS retains its package/Mach-O/shell static acceptance boundary.
 
 ## Compatibility, storage and rollback report
 
@@ -49,7 +49,7 @@ $updater = "$env:LOCALAPPDATA/Programs/git-next-msi/windows-x64/updater/update.p
 & $updater -Mode Enable
 ```
 
-`Disable` persists across package upgrades. Scheduled attempts do not overlap. No network requests occur for `Status`, `Enable` or `Disable`. Users must review and trust downloaded installation material before invoking it. Linux/macOS update source and scheduling are implemented separately below; their final packaging and lifecycle acceptance remain pending.
+`Disable` persists across package upgrades. Scheduled attempts do not overlap. No network requests occur for `Status`, `Enable` or `Disable`. Users must review and trust downloaded installation material before invoking it. Linux/macOS update source and scheduling are described below; current local gates and platform boundaries are recorded in delivery status.
 
 ## Local packaging
 
@@ -57,11 +57,11 @@ WiX is a build dependency, not an installed runtime dependency. The build entry 
 
 ```powershell
 dotnet tool install wix --version 5.0.2 --tool-path .evidence/tools/wix5
-python packaging/build_msi.py --distribution .evidence/native-core-integration/distribution-owned-native-20261020 `
+python packaging/native_msi.py --distribution .evidence/native-core-integration/distribution-owned-native-20261020 `
   --wix .evidence/tools/wix5/wix.exe --allow-experimental-local
 ```
 
-The final native route uses `--distribution`: it verifies every manifest file, native entrypoint ISA, owned-core identity and source fingerprints, then generates stable MSI file/directory components for the full runtime tree. MSYS virtual-link System attributes are retained. The observed x64 candidate contains 9735 payload files and is unpublished/uninstalled. Packaging does not call `git --version` or any product command. The old `--binary-dir` Rust subset route is retained for historical preview fixtures and is not a final product package.
+The final native route uses `--distribution`: it verifies every manifest file, native entrypoint ISA, owned-core identity and source fingerprints, then generates stable MSI file/directory components for the full runtime tree. MSYS virtual-link System attributes are retained. Final x64 package receipts enumerate 10,600 payload files; the accepted machine package is installed and published in v0.3.0. Packaging does not call `git --version` or any product command. The old `--binary-dir` Rust subset route is retained for historical preview fixtures and is not a final product package.
 
 All installation, upgrade, injected-failure rollback, uninstall, scheduling, transport-corruption, offline, version-replay and busy-client checks belong to the consolidated local product matrix. Its MSI receipts, artifact verification and platform results must pass together before one tag/package release. No GitHub workflow is used.
 

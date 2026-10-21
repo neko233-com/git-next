@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "status": "delivered",
+  "date": "2026-10-21",
+  "scope": "git-next client and Windows Git-Terminal",
+  "version": "0.3.0",
+  "release": {
+    "status": "published",
+    "tag": "v0.3.0",
+    "url": "https://github.com/neko233-com/git-next/releases/tag/v0.3.0",
+    "source_commit": "9f3b4e35f907a8626f1b19fc63201238aa1dc968",
+    "release_tag_commit": "21d13cde0c68a5e020f2c091dc2a43c94c866662",
+    "assets": 21,
+    "remote_asset_sizes_and_sha256_match": true,
+    "release_id": 419446295
+  },
+  "package_acceptance_sha256": "e54ff85930700f4a5cef59b8ff6c743d4c2c2e3d42cddd406563b76d79a68b45",
+  "core_source_tree_sha256": "fb505db886d459b37060171c91db4ad24098c87ac786a92321e767230195cb7f",
+  "core_executable_sha256": "3bc2edf09efc3c2a67758725a8e7dc009f25b62ab6f9daf5512774be69a8c8be",
+  "terminal_executable_sha256": "e8d4a8f8692df27d49e527e17bc4db4e49fe355c3ce2858e6eb38a10ca7facca",
+  "workstation": {
+    "status": "pass",
+    "source_commit": "9f3b4e35f907a8626f1b19fc63201238aa1dc968",
+    "version_output": "git version 2.54.0.windows.1.git-next.0.3.0",
+    "fresh_cmd": true,
+    "fresh_powershell": true,
+    "legacy_path_forwards": true,
+    "original_git_unregistered": true,
+    "original_uninstaller_removed": true,
+    "bundled_lfs_version": "git-lfs/3.7.1 (GitHub; windows amd64; go 1.25.1; git b84b3384)",
+    "core_autocrlf": "input",
+    "core_eol": "lf",
+    "runtime_configuration_helper_sha256": "f08d563e7147775c7022bba52e7a7da24e06ae71cb9f6ccfa8d2a9350a408905",
+    "scheduled_update_worker_verified": true,
+    "installed_terminal_active": true,
+    "profile_files_preserved": 13,
+    "profile_bytes_unchanged": true
+  },
+  "tls_preparation": {
+    "status": "pass",
+    "platform": "windows-x64",
+    "scope": "machine",
+    "fresh_component_prepared": true,
+    "idempotent_preparation": true,
+    "verified_files": 17,
+    "script_sha256": "52da2614da5afbc6cb34471293115d0fe5127c24165d23f53a541bed739bb315",
+    "archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd",
+    "protected_machine_acl_verified": true
+  },
+  "standalone_bootstrap": {
+    "acceptance_sha256": "62fd41aaa8e61616e3f65a3b0553bebbc285181a2411a52a920c6fae207e0924",
+    "included_in_msi_payload": false,
+    "scope": "Explicit GUI process wait/capture and preflight before original removal; all previously accepted MSI and archive bytes unchanged",
+    "sha256": "3e56efb22c52271f5ce07045addb566992a80e626e0fa562d3b8f3c2486b7b8d",
+    "source_commit": "21d13cde0c68a5e020f2c091dc2a43c94c866662"
+  },
+  "bootstrap_acceptance": {
+    "status": "pass",
+    "scope": "bootstrap-planning-and-trust-contracts; actual MSI lifecycle and protected takeover are separate acceptance lanes",
+    "repositories_modified": false,
+    "personal_credentials_accessed": false,
+    "results": [
+      {
+        "status": "pass",
+        "case": "real-gui-terminal-version-is-awaited-and-captured",
+        "version": "git-terminal 0.1.0"
+      },
+      {
+        "status": "pass",
+        "case": "real-msi-version-is-exactly-one-scalar-string",
+        "version": "0.3.0"
+      },
+      {
+        "case": "native-architecture-from-32-bit-process",
+        "status": "pass"
+      },
+      {
+        "case": "registered-git-default-auto-replacement-and-scope-refusal",
+        "status": "pass"
+      },
+      {
+        "case": "bootstrap-user-prefix-matches-msi-layout",
+        "status": "pass"
+      },
+      {
+        "case": "official-stable-package-digest-required-before-mirror-download",
+        "status": "pass"
+      },
+      {
+        "case": "independent-tls-material-pinned-and-prepared-before-install",
+        "status": "pass"
+      },
+      {
+        "case": "target-version-and-immutable-payload-activation-required-before-takeover",
+        "status": "pass"
+      },
+      {
+        "case": "post-takeover-failure-restores-only-current-invocation",
+        "status": "pass"
+      },
+      {
+        "case": "rollback-conflict-reports-exact-protected-recovery-path",
+        "status": "pass"
+      }
+    ]
+  },
+  "updater_acceptance": {
+    "status": "pass",
+    "scope": "offline deterministic update transport/version/path/checksum contracts; no MSI lifecycle or real network/mirror performance acceptance",
+    "checks": [
+      "stable version ordering",
+      "literal wildcard executable names and owned busy-process detection",
+      "stable replaces same preview",
+      "equal version is unchanged",
+      "downgrade refused by ordering",
+      "invalid version v1.0.0",
+      "invalid version 1.02.0",
+      "invalid version 1.0",
+      "invalid version 1.0.0+build",
+      "invalid version 1.0.0/../../",
+      "automatic preview rejected",
+      "path traversal rejected",
+      "owned file path accepted",
+      "atomic state replacement and LF",
+      "UTF-8 Chinese updater message",
+      "unknown diagnostic preserved",
+      "official metadata identifies exact stable update",
+      "manifest downloaded without a mirror",
+      "reject release draft",
+      "reject release prerelease",
+      "reject release metadata-digest",
+      "reject release asset-digest",
+      "reject release asset-size",
+      "reject release asset-url",
+      "reject release duplicate-asset",
+      "official metadata refuses outside redirect",
+      "outside redirect was never requested",
+      "API rate limit uses official stable release metadata",
+      "metadata fallback never requested a mirror",
+      "corrupt fast mirror falls through to verified payload",
+      "existing download is never overwritten",
+      "existing download preserved",
+      "all corrupt transports reject before installation",
+      "all failed downloads removed",
+      "GitHub API limit fails closed",
+      "invalid MSI cannot execute",
+      "installed payload hashes accepted",
+      "modified installed files reject update",
+      "inherited user full control becomes read-only machine configuration",
+      "machine configuration ACL is protected after inherited ACE conversion",
+      "absent runtime configuration retains null destination state",
+      "concurrently edited runtime configuration is preserved",
+      "concurrent runtime edit bytes retained",
+      "complete runtime initialization and rollback use isolated state"
+    ]
+  },
+  "runtime_configuration_migration_entries": 57,
+  "no_personal_profile_contents_exported": true,
+  "owned_docker_resources_cleaned": true,
+  "boundaries": [
+    "Windows ARM64: cross-compilation and PE checks",
+    "macOS ARM64: native compilation and Dockerfile_mac package/Mach-O/shell static checks; no product runtime",
+    "Complete MSI lifecycle gates retain their original contract scope; final machine refresh/TLS/takeover actually ran",
+    "Full performance batch 596.63 seconds; whole-batch 60-second target not met",
+    "GitSSS server same-branch 100 pushes/second remains outside completed client scope"
+  ]
+}

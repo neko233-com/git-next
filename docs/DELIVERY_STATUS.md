@@ -1,31 +1,27 @@
 # git-next 固定交付清单与进度
 
-截至 2026-10-21，七项实现与扩展正确性验收已完成，当前为 **9/10（90%）**。最终字节的 10 对样本性能批次全部通过，耗时 596.63 秒；旧 40/20 对记录保留原身份。仅剩 D10：实际安装接管并发布一次正式版本。
+截至 2026-10-21，本轮客户端固定范围 **10/10（100%），剩余 0 项**。[v0.3.0](https://github.com/neko233-com/git-next/releases/tag/v0.3.0) 已一次性发布，21 个附件的远端字节数和 SHA-256 与本地产物一致。[最终本机与发布回执](benchmarks/native-workstation-release-20261021.json)记录实际完成层级。
 
-[组合正确性证据](benchmarks/native-integrated-correctness-20261021.json)共 18 项，通过源码、产物、MSI 配方与依赖指纹逐项绑定。常用命令为 16 组 × SHA-1/SHA-256，共 32 个独立场景，对完整官方 Git 2.54 的比较全部通过，耗时 31.482 秒。最终包中原生终端的 15 项真实桌面验收全部通过，耗时 25.287 秒，含专属图标、一体化标题栏、原生窗口按钮命中区、紧凑窗口、多 tab、高亮、PTY、剪贴板与退出。
+Windows 本机已安装正式机器级 MSI，卸载原版 Git for Windows；新 CMD、PowerShell 和旧绝对路径均返回 git-next。旧路径仅保留兼容入口，受保护的原安装恢复备份保留。13 个 Git/SSH 配置文件逐字节不变，默认采用 LF。Git-Terminal 正式窗口已打开，包含原创多尺寸图标、一体化标题栏、原生窗口按钮、多 tab、命令高亮和目录/分支提示。
 
-两种 MSI 的完整安装/修复/升级/注入失败回滚/降级拒绝/卸载来自实际前一批验收；当前 MSI 仅更新两项已编译终端 EXE、精确绑定的终端来源记录和说明文档。安装器、worker、配置、迁移脚本及其余运行库必须逐字节一致，复用范围明确记录，不能把框架验收说成新 MSI 的每个事务均重跑。最终机器级实际安装与接管仍单独验收。
+正确性组合共 18 项；常用命令为 16 组 × SHA-1/SHA-256，共 32 场景，31.482 秒通过；实际最终包桌面 15 项，25.287 秒通过。原 MSI 两种范围的完整生命周期证据保留其明确的安装契约范围；终端二进制和说明更新分别绑定。随后发现并修复机器 TLS 子文件句柄阻止目录重命名，实际机器刷新、首次安装、重复安装、17 文件哈希和受保护权限均通过。继承 ACL 转换修复另通过 44 项更新器检查及 57 项真实配置迁移/恢复。未改动的核心、运行时、GUI 和 MSI 配方不重复运行无关测试。
 
-真实 MSI COM 多余 null、进程名 `[` 的通配符误读、SHA-256 stash 缓冲区缺少结束符均已修复。桌面测试改为内存复制剪贴板格式，消除了远程 OLE 对象恢复崩溃。Mac 只编译和 Dockerfile_mac 静态包验收，未执行产品；构建缓存已清理。此构建快照中，本机仍以原 Git 为默认，尚未发布正式版本。实际安装/发布结果由后续交付记录和 GitHub Release 提供。
+最终性能批次为每项 10 对样本，覆盖 1k/10k/100k 文件和 HTTPS，596.63 秒全部通过。全批次没有达到 60 秒；HTTPS clone 和大型全量扫描不保证快于参考 Git。旧大样本结果保留原二进制身份。
 
-机器可读状态为 [DELIVERY_STATUS.json](DELIVERY_STATUS.json)。进度必须由其中的整项状态计算，不能另设一个乐观百分比。每项等权；只有 `status=complete` 且附有对应完成证据才计入分子。实现完成与验收通过是两个阶段：D01–D07 的关闭只说明全部实现已整合，不代表 D08–D10 已通过。
+Windows ARM64 为交叉编译/PE 检查；macOS ARM64 为本机编译及 Dockerfile_mac 包/Mach-O/shell 静态检查，未执行 Mac 产品。任务自有 Docker 资源及 Mac 构建缓存已清理；其他项目资源保留。GitSSS 同仓库同分支 100 push/秒属于服务端未完成要求，不计入此客户端 10 项。
 
-## 固定范围
+机器可读状态见 [DELIVERY_STATUS.json](DELIVERY_STATUS.json)，验收范围见 [TEST_COVERAGE.md](TEST_COVERAGE.md)。发行 tag 包含运行产物源码及独立 bootstrap 修复；MSI/运行时和 bootstrap 分别记录来源提交。本记录属于交付后文档提交，不改变已发布二进制或 tag。
 
-兼容基线为当前参考版本 Git `2.54.0.windows.1` 的用户接口和交互语义，平台范围固定为 Windows x64/ARM64、Linux x64/ARM64、macOS ARM64。身份、默认分支、LF 和语言命令属于用户明确要求的产品扩展；机器接口和现有仓库数据仍是兼容契约。后续版本新功能不自动加入本轮，不新增无关优化或实验。
+| 范围 | 状态 |
+| --- | --- |
+| D01–D07 核心、运行时、LF、身份/语言、MSI接管、自动更新、五平台包 | 完成 |
+| D08 批量正确性与声明的平台验收 | 完成 |
+| D09 独立成对性能批次 | 完成 |
+| D10 本机安装/接管、真实窗口、一次发布 | 完成 |
 
-| 编号 | 交付项 | 当前状态 | 剩余工作 |
-| --- | --- | --- | --- |
-| D01 | Complete Git command and repository semantics | 完成 | 限定平台验收通过，边界见 D08 |
-| D02 | Independent complete runtime and existing integrations | 完成 | 限定平台验收通过，边界见 D08 |
-| D03 | Cross-platform LF defaults and canonical content comparison | 完成 | 限定平台验收通过，边界见 D08 |
-| D04 | git-next identity and native English/Chinese language selection | 完成 | 限定平台验收通过，边界见 D08 |
-| D05 | MSI and reversible Windows takeover/removal | 完成 | 限定平台验收通过，边界见 D08 |
-| D06 | Automatic updates and verified mirror acceleration | 完成 | 限定平台验收通过，边界见 D08 |
-| D07 | Five platform packages and final consolidated regression inputs | 完成 | 限定平台验收通过，边界见 D08 |
-| D08 | One consolidated correctness/platform/migration/install regression | 完成 | 17 项证据通过；macOS 静态检查、Windows ARM64 编译边界见回执 |
-| D09 | One final paired latency/performance batch | 完成 | 三种文件规模及网络组通过；完整性优先，保留实际延迟 |
-| D10 | One release and actual Windows Git replacement | 待完成 | 一次正式发布、本机安装接管、受保护恢复和清理 |
+## 历史构建记录
+
+以下保留此前构建快照；其中百分比、未发布状态和性能数字只属于当时产物，不能覆盖上方最终记录。
 
 ## 单一路线与执行顺序
 

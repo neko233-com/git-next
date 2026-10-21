@@ -4,7 +4,7 @@
 
 git-next 是从固定源码构建的完整 Git 客户端，提供自身产品身份、跨平台 LF 默认和原生中英文。主要引擎采用完整的 Git 2.54.0 原生命令、仓库和协议实现，不依赖本机原 Git 或 OpenSSH 兜底。现有仓库、Git 配置和凭据助手保留原有契约。
 
-0.3.0 已通过最终 17 项本地正确性证据和成对批量性能门禁；本机接管和正式发布单独记录在[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
+0.3.0 已通过最终 18 项本地正确性证据和成对批量性能门禁；本机已卸载原版并接管默认 Git，正式发布及 10/10 完成记录见[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
 
 ## 原生安装包
 

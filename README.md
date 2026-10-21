@@ -4,7 +4,7 @@
 
 git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.
 
-Version 0.3.0 passed the final 17-case local correctness evidence and paired performance batch. Workstation takeover and publication are tracked separately in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
+Version 0.3.0 passed the final 18-case local correctness evidence and paired performance batch. Original Git has been uninstalled and the workstation default is git-next. Publication and the completed 10/10 scope are recorded in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
 
 ## Native packages
 
