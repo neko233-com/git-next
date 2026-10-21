@@ -62,7 +62,7 @@ def main():
         reached.add(identity)
         pending.extend(nodes[identity]['dependencies'])
     output.mkdir(parents=True)
-    for name in ('git-terminal.exe','git-terminal-shell.exe'):
+    for name in ('git-terminal.exe','git-terminal-shell.exe','git-terminal-askpass.exe'):
         shutil.copyfile(source/'target'/target/'release'/name,output/name)
     if runtime_pin:
         shutil.copyfile(sdk/runtime_pin['path'],output/'libunwind.dll')
@@ -90,7 +90,7 @@ def main():
             shutil.copyfile(path,destination)
             names.append(relative)
         dependencies.append(dict(name=item['name'],version=item['version'],license=item.get('license'),notices=names))
-    for name in ('README.md','AGENTS.md','LICENSE','docs/site/index.html','vendor/gpui-terminal/MODIFICATIONS.md'):
+    for name in ('README.md','AGENTS.md','LICENSE','docs/site/index.html','vendor/gpui-terminal/MODIFICATIONS.md','vendor/portable-pty/MODIFICATIONS.md'):
         destination = output/'manuals'/name
         destination.parent.mkdir(parents=True,exist_ok=True)
         shutil.copyfile(source/name,destination)

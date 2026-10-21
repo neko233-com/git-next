@@ -144,8 +144,8 @@ def main():
             path = terminal_root/name
             if path.is_symlink() or not path.resolve(strict=True).is_relative_to(terminal_root) or sha(path) != digest:
                 parser.error('Git-Terminal package input changed.')
-            relative = 'bin/'+name if name in ('git-terminal.exe','git-terminal-shell.exe','libunwind.dll') or name.startswith('shell-integration/') else 'LICENSES/git-terminal/'+name
-            kind = 'source-built-git-terminal' if name in ('git-terminal.exe','git-terminal-shell.exe') else ('pinned-git-terminal-runtime' if name == 'libunwind.dll' else 'git-terminal-notice')
+            relative = 'bin/'+name if name in ('git-terminal.exe','git-terminal-shell.exe','git-terminal-askpass.exe','libunwind.dll') or name.startswith('shell-integration/') else 'LICENSES/git-terminal/'+name
+            kind = 'source-built-git-terminal' if name in ('git-terminal.exe','git-terminal-shell.exe','git-terminal-askpass.exe') else ('pinned-git-terminal-runtime' if name == 'libunwind.dll' else 'git-terminal-notice')
             copy(path,relative,kind)
         copy(terminal_root/'git-terminal-package.json','LICENSES/git-terminal/git-terminal-package.json','git-terminal-source-identity')
         if machine(destination/'bin/git-terminal.exe') != expected_machine:

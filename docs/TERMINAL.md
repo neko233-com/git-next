@@ -1,5 +1,11 @@
 # Git-Terminal on Windows
 
+Git-Terminal 0.2.0 adds grouped SSH hosts/config import, real remote tabs, native authentication, SFTP browsing, Explorer file-drop upload, right-click download, bounded cancellable transfer queues and agentless read-only Linux monitoring. Passwords are not stored in host configuration. Monitoring is Linux-only; SSH/SFTP also work with other OpenSSH servers. See the [terminal manual](https://github.com/neko233-com/git-terminal/blob/main/README.md).
+
+The [Windows component update](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) retains accepted git-next 0.3.0 core bytes and MSI product identity. Existing installations require a matching architecture/scope MSI with `REINSTALL=ALL REINSTALLMODE=vomus`; new installations omit those properties. This recaches the complete repair/uninstall payload. The Git product updater is unchanged; install this separate terminal component update explicitly. No standalone terminal automatic update is claimed.
+
+The askpass helper is installed beside the terminal. Prompt root discovery avoids UNC lookups; PTY writes and resize run off the UI thread, hidden tabs answer protocol queries, and negotiated ConPTY input records preserve emoji. Git protocol implementations remain independent of terminal SSH sessions.
+
 Windows combines tabs and native window buttons in one title bar with an original terminal/branch icon. Nine icon sizes are embedded in the EXE for Explorer, taskbar, Alt+Tab and installed shortcuts; no icon download is needed. Native drag, minimize, maximize/restore, close and Snap hit areas remain available. Tabs scroll in compact windows while caption controls stay visible.
 
 The icon source is `git-terminal/assets/git-terminal.svg` in the peer repository. Desktop acceptance checks icon handles, native caption hit areas, a 560×340 compact window, tabs, highlighting, ConPTY, clipboard and exit. Clipboard formats are copied eagerly in memory and restored without retaining remote OLE proxies; contents are not logged.
