@@ -142,6 +142,22 @@ function Assert-GnBootstrapPayload($Selection,$Manifest,[string]$TargetVersion) 
     Import-Module (Join-Path $Selection.root 'updater\Update.Core.psm1') -Force -DisableNameChecking
     Assert-GnInstalledFiles $Selection.root $Manifest
 }
+function Get-GnBootstrapTerminalVersion([string]$Terminal) {
+    $start=[Diagnostics.ProcessStartInfo]::new()
+    $start.FileName=$Terminal;$start.Arguments='--version'
+    $start.UseShellExecute=$false;$start.CreateNoWindow=$true
+    $start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
+    $process=[Diagnostics.Process]::new();$process.StartInfo=$start
+    try {
+        if (-not $process.Start()) { throw 'Native Git-Terminal version probe did not start.' }
+        $output=$process.StandardOutput.ReadToEndAsync();$errorOutput=$process.StandardError.ReadToEndAsync()
+        if (-not $process.WaitForExit(10000)) { $process.Kill();throw 'Native Git-Terminal version probe timed out.' }
+        $identity=$output.GetAwaiter().GetResult().Trim()
+        [void]$errorOutput.GetAwaiter().GetResult()
+        if ($process.ExitCode -ne 0 -or $identity -notmatch '^git-terminal [0-9]+\.[0-9]+\.[0-9]+$') { throw 'Native Git-Terminal verification failed.' }
+        return $identity
+    } finally { $process.Dispose() }
+}
 function Test-GnBootstrapInstallation($Selection) {
     $machine=[Environment]::GetEnvironmentVariable('Path','Machine'); $user=[Environment]::GetEnvironmentVariable('Path','User')
     $env:Path=$machine+';'+$user
@@ -153,8 +169,7 @@ function Test-GnBootstrapInstallation($Selection) {
     $lfs=(& $command.Source lfs version) -join "`n"
     if ($LASTEXITCODE -ne 0 -or $lfs -notmatch '^git-lfs/') { throw 'Built-in Git LFS verification failed.' }
     $terminal=Join-Path $Selection.root 'bin\git-terminal.exe'
-    $terminalIdentity=(& $terminal --version) -join "`n"
-    if ($LASTEXITCODE -ne 0 -or $terminalIdentity -notmatch '^git-terminal ') { throw 'Native Git-Terminal verification failed.' }
+    [void](Get-GnBootstrapTerminalVersion $terminal)
     return $command
 }
 function Undo-GnBootstrapTakeover($Selection,[string]$Transaction) {
@@ -240,6 +255,7 @@ function Invoke-GnBootstrapMain {
         try { Assert-GnBootstrapPayload $selection $manifest $targetVersion }
         catch { if ($msiExit -eq 3010) { throw 'Windows Installer requires a restart and new payload activation is not verified. Restart Windows and rerun; original Git was not removed by this invocation.' };throw }
         if ($selection.original_root) {
+            [void](Get-GnBootstrapTerminalVersion (Join-Path $selection.root 'bin/git-terminal.exe'))
             $handoff=(& (Join-Path $selection.root 'migration\takeover.ps1') -Mode Apply -OriginalGitRoot $selection.original_root -TlsArchive $preparedTls | Out-String) | ConvertFrom-Json
             if ($handoff.status -cne 'active' -or -not $handoff.transaction) { throw 'Takeover did not return a recoverable transaction.' }
             $newTransaction=[string]$handoff.transaction

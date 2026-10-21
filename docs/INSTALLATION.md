@@ -42,6 +42,8 @@ Windows machine TLS preparation releases verified child-file handles before its 
 
 Machine configuration migration converts inherited ACL entries into explicit rules before removing non-administrator write permissions. Existing read and deny restrictions remain; the final protected configuration must pass the same machine-state checks. Updater regression covers inherited full-control input, and actual migration exercises the installed helper against existing system configuration.
 
+The standalone Windows bootstrap captures the GUI-subsystem terminal's version using an explicitly waited child process with redirected output. It checks the installed terminal before beginning original-Git removal. This bootstrap is a separate release asset, not an MSI payload file; a bootstrap-only correction retains already accepted MSI bytes and records its own source/hash alongside runtime provenance.
+
 ## Linux and macOS
 
 Extract the accepted architecture-matching tar.gz, enter `git-next-<version>-<platform>` and run `./install.sh --scope user`. Explicitly elevated `--scope machine` selects a machine installation; `--manual-updates` omits service registration. Owned installers verify the accepted package identity and all payload members before writing managed versioned files; unrelated commands are refused. See [updates and removal](UPDATES.md).

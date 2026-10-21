@@ -1,11 +1,17 @@
 # Copyright 2026 git-next contributors. MIT license.
-param([string]$Output,[string]$PackagePath)
+param([string]$Output,[string]$PackagePath,[string]$TerminalPath)
 $ErrorActionPreference='Stop'
 $bootstrapFixturePackage=$PackagePath
+$bootstrapFixtureTerminal=$TerminalPath
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 . (Join-Path $root 'install.ps1')
 $results=@()
 function Assert([bool]$Condition,[string]$Message){if(-not $Condition){throw $Message}}
+if ($bootstrapFixtureTerminal) {
+    $actual=@(Get-GnBootstrapTerminalVersion ([IO.Path]::GetFullPath($bootstrapFixtureTerminal)))
+    Assert ($actual.Count -eq 1 -and $actual[0] -cmatch '^git-terminal [0-9]+\.[0-9]+\.[0-9]+$') 'Real GUI-subsystem EXE identity was not awaited and captured'
+    $results+=@{case='real-gui-terminal-version-is-awaited-and-captured';status='pass';version=$actual[0]}
+}
 if ($bootstrapFixturePackage) {
     $actual=@(Get-GnBootstrapMsiVersion ([IO.Path]::GetFullPath($bootstrapFixturePackage)))
     Assert ($actual.Count -eq 1 -and $actual[0] -is [string] -and $actual[0] -cmatch '^[0-9]+\.[0-9]+\.[0-9]+$') 'Real MSI metadata emitted extra COM pipeline values'
