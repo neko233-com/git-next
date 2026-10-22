@@ -4,6 +4,7 @@ use std::{path::PathBuf, process::Command};
 
 #[derive(Parser)]
 #[command(
+    name = "git-terminal",
     version,
     about = "A repository terminal with an isolated git-next preview"
 )]

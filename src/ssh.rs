@@ -268,7 +268,7 @@ impl<R: Read, W: Write> TransportWithoutIO for Native<R, W> {
         Cow::Borrowed(self.url.as_bstr())
     }
     fn supported_protocol_versions(&self) -> &[Protocol] {
-        &[Protocol::V1, Protocol::V2]
+        &[Protocol::V0, Protocol::V1, Protocol::V2]
     }
     fn connection_persists_across_multiple_requests(&self) -> bool {
         true
@@ -310,6 +310,14 @@ fn quote_path(path: &str) -> Result<String> {
 }
 
 pub fn transport(url: &gix::Url, version: Protocol) -> Result<Box<dyn Transport + Send>> {
+    transport_for_service(url, version, Service::UploadPack)
+}
+
+pub(crate) fn transport_for_service(
+    url: &gix::Url,
+    version: Protocol,
+    service: Service,
+) -> Result<Box<dyn Transport + Send>> {
     let host = host(url)?;
     let rt = runtime()?;
     rt.block_on(async {
@@ -341,7 +349,7 @@ pub fn transport(url: &gix::Url, version: Protocol) -> Result<Box<dyn Transport 
         ensure!(authenticated,"SSH authentication failed; no external ssh process or repeated password attempts were used");
         let channel=session.channel_open_session().await?;
         if version==Protocol::V2 {channel.set_env(false,"GIT_PROTOCOL","version=2").await?;}
-        channel.exec(true,format!("git-upload-pack {}",quote_path(url.path.to_str()?)?)).await?;
+        channel.exec(true,format!("{} {}",service.as_str(),quote_path(url.path.to_str()?)?)).await?;
         let (reader,writer)=tokio::io::split(channel.into_stream());
         let read=BufReader::with_capacity(64*1024,SyncIoBridge::new_with_handle(reader,rt.handle().clone()));
         let write=SyncIoBridge::new_with_handle(writer,rt.handle().clone());

@@ -120,3 +120,28 @@ D08/D09 尚未开始；新核心未执行、安装、接管或发布。本机仍
 当前为 **9/10**。更新后的[正确性记录](benchmarks/native-correctness-consolidated-20261020.json)全通过：并行功能 **52.177 秒**，含串行 MSI 生命周期的完整批次 **641.437 秒**。旧 cmd 包装器映射和原更新器通知工具退役规则已整合。
 
 [性能批次](benchmarks/native-performance-consolidated-20261020.json)全部通过，耗时 **371.473 秒**，完整性能批次未达到一分钟目标。千/万/十万文件 status 中位数分别为 19.206/61.075/86.173ms，参考命令为 27.154/69.390/95.485ms。启动约 12ms，对照约 20ms。网络表现接近参考；主进程内存不等于包含参考包装器子进程的总内存。D10 安装、实际接管与唯一发布尚待完成。
+
+## git-default-v2 布局重构（2026-10-22）
+
+本节记录在 v0.3.0 发布之后发生的安装布局变更，不改写上面各批次的历史结论。
+
+MSI 目录树已合并到官方 Git 默认目录：机器级 `%ProgramFiles%\Git`，用户级
+`%LOCALAPPDATA%\Programs\Git`。主 IDE 入口 `cmd\git.exe` 由 git-next 载荷直接承担，
+不再是指向旧安装的桥接转发器，因此 IDE 的 `Cannot Run Git` 报错从根因上消失。
+`bin\git.exe` 与 Git-Terminal 属于同一受管安装。
+
+接管语义同步改为同址覆盖：`Get-GnTakeoverPlan` 不再要求新旧目录分离（仍拒绝嵌套），
+新增 `same_directory` 与 `stale` 状态；同址时不铺桥接转发器，而是按 sha256 精确删除
+官方卸载器遗留物，并把迁移后的 `system.gitconfig` include 改指 `runtime\etc\gitconfig`。
+回滚在 MSI 仍占用目录时会被拒绝，并提示先卸载 MSI。
+
+两处历史缺陷已修正。其一，`REPLACEGIT` 授权属性此前被标记为 `Secure="yes"`；Secure 属性在
+`InstallExecuteSequence` 期间不可由命令行改写，也不会从客户端传递给服务端，因此受管安装下
+该值会静默保持 `0`，官方 Git 已注册时安装会被 Launch Condition 恒定阻断。现已移除 `Secure`，
+并在 `install.ps1` 中从 verbose MSI 日志核验安装器确实记录了 `REPLACEGIT=1`，未记录则拒绝继续。
+其二，`Remove-GnBootstrapLegacyInstall` 此前在 32 位进程下使用空的 `$env:ProgramW6432`，
+使期望路径退化为 `\git-next`、前缀校验过宽；现改为从 64 位注册表视图解析原生 Program Files。
+
+MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCode 与 UpgradeCode 不变，
+升级链成立）。载荷结构直读验证 13/13 关键入口落位正确，缺失 0。`REPLACEGIT` 属性的 Secure 列
+已确认为空。实际安装验收仍受本机环境限制（`msiexec` 对任何包返回 1619），尚未执行。

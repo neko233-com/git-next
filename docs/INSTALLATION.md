@@ -36,6 +36,19 @@ Direct MSI installation is available for managed deployment:
 msiexec.exe /i .\git-next-0.3.0-windows-x64.msi
 ```
 
+The `git-default-v2` layout installs into `%ProgramFiles%\Git` (machine scope) and
+`%LOCALAPPDATA%\Programs\Git` (user scope), so the primary IDE entry point `cmd\git.exe`
+is the owned git-next payload rather than a bridge forwarder. See
+[the default layout](WINDOWS-DEFAULT-LAYOUT.md) for the full contract.
+
+When a registered official Git exists, the MSI refuses to install over it unless the
+verified bootstrap passes the explicit `REPLACEGIT=1` authorization on the command line.
+That property is deliberately not `Secure`, because a Secure property is neither settable
+from the command line during `InstallExecuteSequence` nor carried from the client to the
+server for a managed per-machine install. `install.ps1` therefore verifies from the verbose
+MSI log that the installer really recorded the authorization, and refuses the installation
+when it did not.
+
 A directly installed MSI preserves an existing default Git until the [protected takeover](TAKEOVER.md) is explicitly applied. The PowerShell bootstrap performs that step automatically. Windows Apps or `msiexec.exe /x <product-code>` removes the MSI. An active original-Git handoff must first be rolled back using its recorded transaction; the removal guard prevents breaking callers. Recovery backups, repositories and user credentials are retained. No blind deletion of unrelated Git installations occurs.
 
 Windows machine TLS preparation releases verified child-file handles before its atomic directory rename. The protected ACL and exclusive platform lock remain active. `tests/tls_provider_install_acceptance.ps1` verifies fresh preparation, repeat preparation, pinned component bytes and machine ACLs against an installed MSI; this targeted gate complements the previously exercised MSI lifecycle.

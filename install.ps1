@@ -39,20 +39,44 @@ function Get-GnBootstrapRegistrations {
         }
     }
 }
+function Get-GnBootstrapProgramFiles {
+    # The 64-bit Program Files path, resolved independently of the bitness of this process.
+    # `$env:ProgramW6432` is empty in a 32-bit process, which would silently collapse the
+    # path to the root drive and defeat every prefix check that relies on it.
+    $base=[Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine,[Microsoft.Win32.RegistryView]::Registry64)
+    try {
+        $key=$base.OpenSubKey('SOFTWARE\Microsoft\Windows\CurrentVersion')
+        if ($key) { try { $path=$key.GetValue('ProgramFilesDir',$null,[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames) } finally { $key.Dispose() } }
+    } finally { $base.Dispose() }
+    if ($path -and [IO.Path]::IsPathRooted($path)) { return [IO.Path]::GetFullPath($path) }
+    if ($env:ProgramW6432) { return [IO.Path]::GetFullPath($env:ProgramW6432) }
+    if ($env:ProgramFiles) { return [IO.Path]::GetFullPath($env:ProgramFiles) }
+    return [IO.Path]::GetFullPath((Join-Path $env:SystemDrive 'Program Files'))
+}
 function Get-GnBootstrapSelection([string]$RequestedScope) {
     $platform = Get-GnBootstrapArchitecture
-    $programFiles=if($env:ProgramW6432){$env:ProgramW6432}else{$env:ProgramFiles}
+    $programFiles=Get-GnBootstrapProgramFiles
     $registrations = @(Get-GnBootstrapRegistrations | Sort-Object scope,root -Unique)
     $selectedScope = $RequestedScope
     if ($selectedScope -eq 'auto') {
-        $machineInstalled = [IO.File]::Exists((Join-Path $programFiles ('git-next\'+$platform+'\package.json')))
+        $machineInstalled = [IO.File]::Exists((Join-Path $programFiles 'Git\package.json')) -or [IO.File]::Exists((Join-Path $programFiles ('git-next\'+$platform+'\package.json')))
         $selectedScope = if ($machineInstalled -or @($registrations | Where-Object scope -eq 'machine').Count) { 'machine' } else { 'user' }
     }
     $original = @($registrations | Where-Object scope -eq $selectedScope)
     if ($original.Count -gt 1) { throw 'More than one registered Git installation matches the selected scope.' }
     if (-not $original.Count -and $registrations.Count) { throw 'The requested scope differs from the registered Git installation. Use -Scope auto.' }
     $prefix = if ($selectedScope -eq 'machine') { $programFiles } else { Join-Path $env:LOCALAPPDATA 'Programs' }
-    [pscustomobject]@{platform=$platform;scope=$selectedScope;root=Join-Path $prefix ($(if($selectedScope -eq 'machine'){'git-next'}else{'git-next-msi'})+'\'+$platform);original_root=$(if($original.Count){$original[0].root}else{$null})}
+    # git-default-v2 always installs into the official Git default directory so the primary
+    # IDE entry point (cmd\git.exe) is the real git-next payload instead of a bridge forwarder.
+    $root = Join-Path $prefix 'Git'
+    $legacy = Join-Path $prefix ($(if($selectedScope -eq 'machine'){'git-next'}else{'git-next-msi'})+'\'+$platform)
+    [pscustomobject]@{
+        platform=$platform
+        scope=$selectedScope
+        root=$root
+        legacy_root=$(if([IO.File]::Exists((Join-Path $legacy 'package.json'))){$legacy}else{$null})
+        original_root=$(if($original.Count){$original[0].root}else{$null})
+    }
 }
 function Get-GnBootstrapRelease([string]$Platform,[string]$InstallScope,[string]$RequestedVersion) {
     if ($RequestedVersion -and $RequestedVersion -cnotmatch '^[0-9]+\.[0-9]+\.[0-9]+$') { throw 'Pass a stable version such as 0.3.0.' }
@@ -119,9 +143,23 @@ function Get-GnBootstrapTlsPin([string]$Platform) {
     $pins = '{"windows-x64":{"url":"https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.tar.bz2","sha256":"e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd","size":116824890,"name":"windows-x64-openssl.tar.bz2"},"windows-arm64":{"url":"https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-arm64.tar.bz2","sha256":"ce10b24c74ac9c724ab81e2ee30d06e7ee693977a552b8da4e434e909a641847","size":157085415,"name":"windows-arm64-openssl.tar.bz2"}}' | ConvertFrom-Json
     return $pins.PSObject.Properties[$Platform].Value
 }
-function Invoke-GnBootstrapMsi([string]$Package,[string]$Log) {
-    $process=Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\msiexec.exe') -ArgumentList ('/i "'+$Package+'" /qn /norestart /L*v "'+$Log+'"') -WindowStyle Hidden -Wait -PassThru
+function Invoke-GnBootstrapMsi([string]$Package,[string]$Log,[string]$InstallRoot) {
+    $process=Start-Process -FilePath (Join-Path $env:SystemRoot 'System32\msiexec.exe') -ArgumentList ('/i "'+$Package+'" INSTALLFOLDER="'+$InstallRoot+'" REPLACEGIT=1 /qn /norestart /L*v "'+$Log+'"') -WindowStyle Hidden -Wait -PassThru
     if ($process.ExitCode -notin @(0,3010)) { throw ('MSI installation failed ('+$process.ExitCode+'). Log: '+$Log) }
+    # The launch condition that guards an existing official Git installation only passes when
+    # REPLACEGIT really reached the installer. A property that the installer ignored would
+    # either block the install outright or, worse, let it proceed without the authorization
+    # the takeover depends on. The verbose log is the only trustworthy record of the value
+    # the installer actually saw, so it is checked instead of assumed.
+    #
+    # Windows Installer writes the client-side property table to the log as
+    # "Property(S): <name> = <value>", so the match is anchored on that prefix and on a
+    # complete value token; a bare substring search would also accept "REPLACEGIT = 10".
+    $replacementSeen=$false
+    foreach ($line in [IO.File]::ReadLines($Log)) {
+        if ($line -match 'Property\(S\):\s*REPLACEGIT\s*=\s*1\s*$') { $replacementSeen=$true; break }
+    }
+    if (-not $replacementSeen) { throw ('The MSI did not record the replacement authorization (REPLACEGIT). The official Git directory was left untouched. Log: '+$Log) }
     return $process.ExitCode
 }
 function Get-GnBootstrapMsiVersion([string]$Package) {
@@ -139,8 +177,23 @@ function Get-GnBootstrapMsiVersion([string]$Package) {
 }
 function Assert-GnBootstrapPayload($Selection,$Manifest,[string]$TargetVersion) {
     if ($Manifest.version -cne $TargetVersion) { throw 'The installed manifest does not match the selected MSI version.' }
+    if (-not $Manifest.PSObject.Properties['installation_layout'] -or $Manifest.installation_layout -cne 'git-default-v2') { throw 'The git-default-v2 layout is required so the official Git entry points resolve to the git-next payload.' }
     Import-Module (Join-Path $Selection.root 'updater\Update.Core.psm1') -Force -DisableNameChecking
     Assert-GnInstalledFiles $Selection.root $Manifest
+}
+function Remove-GnBootstrapLegacyInstall($Selection) {
+    # The legacy layout is superseded in place: its payload is redundant once the official
+    # directory carries git-next. Only a fully verified install may remove it.
+    $legacy=$Selection.legacy_root
+    if (-not $legacy) { return }
+    if ([IO.Path]::GetFullPath($legacy).TrimEnd('\') -ieq [IO.Path]::GetFullPath($Selection.root).TrimEnd('\')) { throw 'Refusing to remove the active installation root.' }
+    # The prefix has to be the real 64-bit Program Files path. A 32-bit process has no
+    # `ProgramW6432`, which would collapse the expected path to `\git-next` and make the
+    # prefix check accept almost any directory.
+    $prefix=if($Selection.scope -eq 'machine'){Get-GnBootstrapProgramFiles}else{$env:LOCALAPPDATA}
+    $expected=if($Selection.scope -eq 'machine'){Join-Path $prefix 'git-next'}else{Join-Path $prefix 'Programs\git-next-msi'}
+    if (-not ([IO.Path]::GetFullPath($legacy).TrimEnd('\')).StartsWith(([IO.Path]::GetFullPath($expected)).TrimEnd('\')+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'Refusing to remove a directory outside the git-next installation prefix.' }
+    Remove-Item -LiteralPath $legacy -Recurse -Force
 }
 function Get-GnBootstrapTerminalVersion([string]$Terminal) {
     $start=[Diagnostics.ProcessStartInfo]::new()
@@ -249,11 +302,14 @@ function Invoke-GnBootstrapMain {
             }
         }
         $targetVersion=Get-GnBootstrapMsiVersion $package
-        $msiExit=Invoke-GnBootstrapMsi $package (Join-Path $cache 'install.log')
+        $msiExit=Invoke-GnBootstrapMsi $package (Join-Path $cache 'install.log') $selection.root
         $manifest=Get-Content -LiteralPath (Join-Path $selection.root 'package.json') -Raw | ConvertFrom-Json
         if ($manifest.product -cne 'git-next' -or $manifest.platform -cne $selection.platform -or $manifest.install_scope -cne $selection.scope -or -not $manifest.release_eligible -or -not $manifest.complete_git_parity) { throw 'An accepted complete native MSI is required before Git takeover.' }
         try { Assert-GnBootstrapPayload $selection $manifest $targetVersion }
         catch { if ($msiExit -eq 3010) { throw 'Windows Installer requires a restart and new payload activation is not verified. Restart Windows and rerun; original Git was not removed by this invocation.' };throw }
+        # The verified payload now occupies the official Git directory, so the legacy layout and
+        # the superseded bridge forwarders must not survive it.
+        Remove-GnBootstrapLegacyInstall $selection
         if ($selection.original_root) {
             [void](Get-GnBootstrapTerminalVersion (Join-Path $selection.root 'bin/git-terminal.exe'))
             $handoff=(& (Join-Path $selection.root 'migration\takeover.ps1') -Mode Apply -OriginalGitRoot $selection.original_root -TlsArchive $preparedTls | Out-String) | ConvertFrom-Json

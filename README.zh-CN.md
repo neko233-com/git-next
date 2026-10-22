@@ -2,7 +2,7 @@
 
 Windows 请下载 [Git-Terminal 0.2.0 完整 MSI 包](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0)：包含已验收的 git-next 0.3.0 核心，以及新版 SSH / SFTP / 监控终端和提示符延迟修复。已有安装请使用随包的 `install_bundle.ps1`，参见[组件安装说明](docs/TERMINAL.md)。Linux/macOS 核心包保持不变。
 
-[English](README.md) · [HTML 手册](docs/site/index.html) · [交付进度](docs/DELIVERY_STATUS.md)
+[English](README.md) · [HTML 手册](docs/site/index.html) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
 git-next 是从固定源码构建的完整 Git 客户端，提供自身产品身份、跨平台 LF 默认和原生中英文。主要引擎采用完整的 Git 2.54.0 原生命令、仓库和协议实现，不依赖本机原 Git 或 OpenSSH 兜底。现有仓库、Git 配置和凭据助手保留原有契约。
 

@@ -1,6 +1,6 @@
 [package]
 name = "git-next"
-version = "0.1.0"
+version = "0.3.0-dev"
 edition = "2024"
 rust-version = "1.96"
 description = "An experimental self-contained Git-compatible client"
@@ -11,7 +11,7 @@ readme = "README.md"
 [dependencies]
 anyhow = "1"
 clap = { version = "4.6", features = ["derive"] }
-gix = { version = "0.89", default-features = false, features = ["max-performance-safe", "basic", "worktree-mutation", "blocking-http-transport-reqwest-rust-tls", "sha1", "sha256"] }
+gix = { version = "0.89", default-features = false, features = ["max-performance-safe", "basic", "merge", "worktree-mutation", "blocking-http-transport-reqwest-rust-tls", "sha1", "sha256"] }
 gix-transport = { version = "0.61", features = ["blocking-client"] }
 gix-worktree-state = "0.36"
 gix-worktree = "0.58"
@@ -21,14 +21,28 @@ tokio = { version = "1", features = ["rt-multi-thread", "net", "io-util", "time"
 tokio-util = { version = "0.7", features = ["io-util"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+sys-locale = "0.3.2"
 walkdir = "2"
 ignore = "0.4"
 tempfile = "3"
+flate2 = "1"
+regex = "1"
+reqwest = { version = "0.13", default-features = false, features = ["blocking", "json", "rustls"] }
 
 [profile.release]
 lto = "thin"
 codegen-units = 1
 strip = "symbols"
+
+[patch.crates-io]
+gix = { path = "vendor/gix" }
+gix-path = { path = "vendor/gix-path" }
+gix-status = { path = "vendor/gix-status" }
+gix-pathspec = { path = "vendor/gix-pathspec" }
+gix-ref = { path = "vendor/gix-ref" }
+gix-filter = { path = "vendor/gix-filter" }
+gix-credentials = { path = "vendor/gix-credentials" }
+gix-transport = { path = "vendor/gix-transport" }
 
 [lints.rust]
 unsafe_code = "forbid"

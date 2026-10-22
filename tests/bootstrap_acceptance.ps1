@@ -28,12 +28,14 @@ try {
 function Get-GnBootstrapRegistrations { [pscustomobject]@{product='Git';scope='machine';root='C:\Program Files\Git'} }
 $selection=Get-GnBootstrapSelection 'auto'
 Assert ($selection.scope -ceq 'machine' -and $selection.original_root -ceq 'C:\Program Files\Git') 'Registered machine Git was not selected'
+Assert ($selection.root -ceq 'C:\Program Files\Git') 'Machine bootstrap did not target the official Git default directory'
+Assert ($selection.root -ceq $selection.original_root) 'Registered official Git was not adopted in place'
 $rejected=$false;try{Get-GnBootstrapSelection 'user' | Out-Null}catch{$rejected=$true}
 Assert $rejected 'Scope mismatch was accepted'
 $results+=@{case='registered-git-default-auto-replacement-and-scope-refusal';status='pass'}
 function Get-GnBootstrapRegistrations { [pscustomobject]@{product='Git';scope='user';root=(Join-Path $env:LOCALAPPDATA 'Programs\Git')} }
 $userSelection=Get-GnBootstrapSelection 'user'
-Assert ($userSelection.root -ceq (Join-Path $env:LOCALAPPDATA ('Programs\git-next-msi\'+$userSelection.platform))) 'Bootstrap user prefix differs from the native user MSI'
+Assert ($userSelection.root -ceq (Join-Path $env:LOCALAPPDATA 'Programs\Git')) 'Bootstrap user root differs from the git-default-v2 user layout'
 $results+=@{case='bootstrap-user-prefix-matches-msi-layout';status='pass'}
 $script:assetDigest='sha256:'+('a'*64)
 function Invoke-RestMethod {
@@ -56,12 +58,16 @@ $results+=@{case='independent-tls-material-pinned-and-prepared-before-install';s
 $script:payloadVerified=$false
 function Import-Module { param($Name,[switch]$Force,[switch]$DisableNameChecking) }
 function Assert-GnInstalledFiles($Root,$Manifest) { $script:payloadVerified=$true }
-$fakeManifest=[pscustomobject]@{version='0.3.0'}
+$fakeManifest=[pscustomobject]@{version='0.3.0';installation_layout='git-default-v2'}
 $rejected=$false;try { Assert-GnBootstrapPayload $selection $fakeManifest '0.4.0' } catch { $rejected=$true }
 Assert ($rejected -and -not $script:payloadVerified) 'Old installed version was accepted after a pending upgrade'
 Assert-GnBootstrapPayload $selection $fakeManifest '0.3.0'
 Assert $script:payloadVerified 'Activated payload byte verification was not invoked'
 $results+=@{case='target-version-and-immutable-payload-activation-required-before-takeover';status='pass'}
+$legacyLayoutManifest=[pscustomobject]@{version='0.3.0';installation_layout='git-next-msi'}
+$rejected=$false;try { Assert-GnBootstrapPayload $selection $legacyLayoutManifest '0.3.0' } catch { $rejected=$true }
+Assert ($rejected -and -not $script:payloadVerified) 'A payload without the git-default-v2 layout was activated'
+$results+=@{case='git-default-v2-layout-is-mandatory-for-payload-activation';status='pass'}
 $script:rollbackTransactions=@()
 function Test-GnBootstrapInstallation($Selection) { throw 'injected final identity failure' }
 function Undo-GnBootstrapTakeover($Selection,[string]$Transaction) { $script:rollbackTransactions+=$Transaction }

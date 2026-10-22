@@ -95,16 +95,33 @@ function Initialize-GnRuntimeConfiguration([string]$InstallRoot,$Package) {
     if ($context.machine) { Initialize-GnMachineDirectory $context.config }
     else { [void][IO.Directory]::CreateDirectory($context.config) }
     $previous = @{}
+    $relocationRoot = $null
     if ([IO.File]::Exists($statePath)) {
         Assert-GnScopedFile $statePath
         $saved = Get-Content -LiteralPath $statePath -Raw -Encoding UTF8 | ConvertFrom-Json
-        if ($saved.schema_version -ne 1 -or $saved.product -cne 'git-next' -or $saved.platform -cne $Package.platform -or $saved.install_scope -cne $context.scope -or [IO.Path]::GetFullPath($saved.install_root).TrimEnd('\') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\')) { throw 'Runtime configuration state belongs to another installation.' }
+        if ($saved.schema_version -ne 1 -or $saved.product -cne 'git-next' -or $saved.platform -cne $Package.platform -or $saved.install_scope -cne $context.scope) { throw 'Runtime configuration state belongs to another installation.' }
+        if ([IO.Path]::GetFullPath($saved.install_root).TrimEnd('\') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\')) {
+            $prefix = if ($context.machine) { Get-GnNativeProgramFiles } else { Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'Programs' }
+            $legacy = Join-Path $prefix ($(if($context.machine){'git-next'}else{'git-next-msi'})+'\'+$Package.platform)
+            if (-not $Package.PSObject.Properties['installation_layout'] -or $Package.installation_layout -cne 'git-default-v2' -or [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\') -ine (Join-Path $prefix 'Git') -or [IO.Path]::GetFullPath($saved.install_root).TrimEnd('\') -ine $legacy) { throw 'Runtime configuration state belongs to another installation.' }
+            $relocationRoot = $legacy
+            if ($context.machine) { Assert-GnProtectedObject $legacy }
+        }
         foreach ($property in $saved.files.PSObject.Properties) { Assert-GnRuntimeConfigPath $property.Name; if ($property.Value -cnotmatch '^[a-f0-9]{64}$') { throw 'Runtime configuration state is invalid.' }; $previous[$property.Name] = $property.Value }
     }
     $next = @{}; $changes = @()
     foreach ($file in @($manifest.files)) {
         $target = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot $file.target)
         $current = Get-GnRuntimeConfigHash $target
+        if ($relocationRoot) {
+            $old = Assert-GnOwnedPath $relocationRoot (Join-Path $relocationRoot $file.target)
+            $oldHash = Get-GnRuntimeConfigHash $old
+            if ($oldHash -and (-not $previous.ContainsKey($file.target) -or $oldHash -cne $previous[$file.target])) {
+                $changes += [pscustomobject]@{target=$file.target;source=$old;sha256=$oldHash;attributes=[int][IO.File]::GetAttributes($old);access=(Get-Acl -LiteralPath $old).GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access);expected=$current}
+                $next[$file.target] = $file.sha256
+                continue
+            }
+        }
         if (-not $current -or ($previous.ContainsKey($file.target) -and $current -ceq $previous[$file.target])) {
             if ($current -cne $file.sha256) { $changes += [pscustomobject]@{target=$file.target;source=(Join-Path $InstallRoot $file.source);sha256=$file.sha256;attributes=$file.attributes;access='';expected=$current} }
         }

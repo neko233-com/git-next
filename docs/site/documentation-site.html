@@ -1,0 +1,120 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Documentation site</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Documentation site</h1>
+<p>The manual of git-next is published as a GitHub Pages site, so it can be read without cloning the repository. The site is rendered from the Markdown manuals in <code>docs/</code> and from the README, which means there is only one source for each page: a change to a manual is the change to the published page.</p>
+<h2>Pages</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Manual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview</td>
+<td><code>README.md</code></td>
+</tr>
+<tr>
+<td>Install</td>
+<td><code>docs/INSTALLATION.md</code></td>
+</tr>
+<tr>
+<td>Compatibility</td>
+<td><code>docs/COMPATIBILITY.md</code></td>
+</tr>
+<tr>
+<td>Build</td>
+<td><code>docs/BUILDING.md</code></td>
+</tr>
+<tr>
+<td>Performance</td>
+<td><code>docs/PERFORMANCE.md</code></td>
+</tr>
+<tr>
+<td>Acceptance</td>
+<td><code>docs/ACCEPTANCE.md</code></td>
+</tr>
+<tr>
+<td>Test coverage</td>
+<td><code>docs/TEST_COVERAGE.md</code></td>
+</tr>
+<tr>
+<td>Complete takeover</td>
+<td><code>docs/TAKEOVER.md</code></td>
+</tr>
+<tr>
+<td>Native LFS</td>
+<td><code>docs/LFS.md</code></td>
+</tr>
+<tr>
+<td>Git-Terminal</td>
+<td><code>docs/TERMINAL.md</code></td>
+</tr>
+<tr>
+<td>Game projects</td>
+<td><code>docs/GAME_PROJECTS.md</code></td>
+</tr>
+<tr>
+<td>Read commands</td>
+<td><code>docs/READ_COMMANDS.md</code></td>
+</tr>
+<tr>
+<td>Restore and reset</td>
+<td><code>docs/RESTORATION.md</code></td>
+</tr>
+<tr>
+<td>LF policy</td>
+<td><code>docs/LINE_ENDINGS.md</code></td>
+</tr>
+<tr>
+<td>Native discovery</td>
+<td><code>docs/NATIVE_DISCOVERY.md</code></td>
+</tr>
+<tr>
+<td>Credential support</td>
+<td><code>docs/CREDENTIALS.md</code></td>
+</tr>
+<tr>
+<td>Native merge</td>
+<td><code>docs/MERGE.md</code></td>
+</tr>
+<tr>
+<td>MSI and updates</td>
+<td><code>docs/UPDATES.md</code></td>
+</tr>
+<tr>
+<td>Interface languages</td>
+<td><code>docs/LANGUAGE.md</code></td>
+</tr>
+<tr>
+<td>Native core integration</td>
+<td><code>docs/NATIVE_CORE.md</code></td>
+</tr>
+<tr>
+<td>Engineering workflow</td>
+<td><code>docs/AGENT_WORKFLOW.md</code></td>
+</tr>
+<tr>
+<td>Delivery progress</td>
+<td><code>docs/DELIVERY_STATUS.md</code></td>
+</tr>
+<tr>
+<td>Runtime sources and licenses</td>
+<td><code>docs/CORRESPONDING_SOURCES.md</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Rendering</h2>
+<pre><code class="language-sh">python -m pip install markdown-it-py
+python tools/render_docs.py
+</code></pre>
+<p>The renderer writes every page into <code>docs/site/</code> and then verifies that every local link of every page resolves. A broken link fails the run, so a page that is published always points at pages that exist.</p>
+<h2>Publishing</h2>
+<pre><code class="language-sh">python tools/publish_docs.py            # render and publish
+python tools/publish_docs.py --dry-run  # render and report, push nothing
+</code></pre>
+<p>The site is published from the <code>gh-pages</code> branch. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release. The script renders the pages, replaces the contents of the branch with the rendered site, commits it and pushes it.</p>
+<p>The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the directory is rebuilt from scratch on every run.</p>
+<p>The first publication has to point the repository at the branch once, in the repository settings: <strong>Settings → Pages → Build and deployment → Source → Deploy from a branch → <code>gh-pages</code> / <code>root</code></strong>. After that the script keeps the branch up to date.</p>
+<h2>Languages</h2>
+<p>The published manual is written in English, and the Chinese manual is the translated <code>README.zh-CN.md</code> in the repository. The interface language of the program itself is chosen by the device, and every language is a locale document; see <a href="language.html">interface languages</a>.</p>
+</main></html>

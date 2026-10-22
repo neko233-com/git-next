@@ -7,7 +7,7 @@ use std::{
     sync::atomic::AtomicBool,
 };
 
-fn parsed(url: &str) -> Result<gix::Url> {
+pub(crate) fn parsed(url: &str) -> Result<gix::Url> {
     let parsed = if Path::new(url).is_absolute() && !url.contains("://") {
         let normalized = url.replace('\\', "/");
         let uri = if cfg!(windows) {
@@ -33,6 +33,11 @@ pub fn clone_repo(
     branch: Option<String>,
     depth: Option<u32>,
 ) -> Result<()> {
+    let context = crate::runtime::options();
+    ensure!(
+        context.git_dir.is_none() && context.work_tree.is_none() && !context.bare,
+        "global repository-location overrides are not supported for clone; use clone's own destination options"
+    );
     let parsed = parsed(url)?;
     let name = parsed
         .path
@@ -61,7 +66,7 @@ pub fn clone_repo(
         return local_clone(&parsed, &destination, bare, branch.as_deref(), depth)
             .context("native local clone");
     }
-    let options = gix::open::Options::default();
+    let options = crate::runtime::open_options();
     let kind = if bare {
         gix::create::Kind::Bare
     } else {
@@ -87,35 +92,51 @@ pub fn clone_repo(
             depth.try_into().context("depth must be positive")?,
         ));
     }
-    if parsed.scheme == gix::url::Scheme::Ssh {
-        prepare = prepare.configure_connection(move |connection| {
+    let credentials_path = destination.clone();
+    prepare = prepare.configure_connection(move |connection| {
+        connection.set_credentials(crate::credentials::read_existing(&gix::open_opts(
+            &credentials_path,
+            crate::runtime::open_options(),
+        )?));
+        if parsed.scheme == gix::url::Scheme::Ssh {
             let transport = crate::ssh::transport(&parsed, gix_transport::Protocol::V2)
                 .map_err(|e| gix::Error::from_error(std::io::Error::other(e.to_string())))?;
             *connection.transport_mut() = transport;
-            Ok(())
-        });
-    }
+        }
+        Ok(())
+    });
     let interrupt = AtomicBool::new(false);
-    if bare {
-        prepare.fetch_only(gix::progress::Discard, &interrupt)?;
-    } else {
-        let (mut checkout, _) = prepare.fetch_then_checkout(gix::progress::Discard, &interrupt)?;
-        checkout.main_worktree(gix::progress::Discard, &interrupt)?;
+    let (repo, _) = prepare.fetch_only(gix::progress::Discard, &interrupt)?;
+    if !bare {
+        crate::eol::configure_new(&repo)?;
+        let checkout = gix::open_opts(&destination, crate::runtime::open_options())?;
+        crate::repository::checkout_initial(&crate::eol::defaults(checkout)?)?;
     }
-    println!("Cloned into {}", destination.display());
+    println!(
+        "{}",
+        crate::language::format(
+            "Cloned into {path}",
+            &[("path", destination.display().to_string())]
+        )
+    );
     Ok(())
 }
 
 fn connection<'a, 'repo>(
     remote: &'a gix::Remote<'repo>,
+    repo: &gix::Repository,
 ) -> Result<gix::remote::Connection<'a, 'static, 'repo, Box<dyn Transport + Send>>> {
     let (url, version) = remote.sanitized_url_and_version(gix::remote::Direction::Fetch)?;
     if url.scheme == gix::url::Scheme::Ssh {
-        Ok(remote.to_connection_with_transport(crate::ssh::transport(&url, version)?))
+        Ok(remote
+            .to_connection_with_transport(crate::ssh::transport(&url, version)?)
+            .with_credentials(crate::credentials::read_existing(repo)))
     } else if url.scheme == gix::url::Scheme::File {
         bail!("internal error: local remotes must use the native local object transfer")
     } else {
-        Ok(remote.connect(gix::remote::Direction::Fetch)?)
+        Ok(remote
+            .connect(gix::remote::Direction::Fetch)?
+            .with_credentials(crate::credentials::read_existing(repo)))
     }
 }
 
@@ -128,7 +149,7 @@ pub fn fetch(name: &str) -> Result<()> {
     if url.scheme == gix::url::Scheme::File {
         return local_fetch(&repo, name, url);
     }
-    let outcome = connection(&remote)?
+    let outcome = connection(&remote, &repo)?
         .prepare_fetch(gix::progress::Discard, Default::default())?
         .receive(gix::progress::Discard, &AtomicBool::new(false))?;
     let mut fetched = String::new();
@@ -140,48 +161,42 @@ pub fn fetch(name: &str) -> Result<()> {
     }
     crate::repository::atomic_write(&repo.git_dir().join("FETCH_HEAD"), fetched.as_bytes())?;
     eprintln!(
-        "Fetched {} advertised refs",
-        outcome.ref_map.remote_refs.len()
+        "{}",
+        crate::language::format(
+            "Fetched {count} advertised refs",
+            &[("count", outcome.ref_map.remote_refs.len().to_string())]
+        )
     );
     Ok(())
 }
 
-pub fn pull(name: &str) -> Result<()> {
+pub fn pull(name: Option<&str>) -> Result<()> {
     let repo = crate::repository::open()?;
     ensure!(repo.workdir().is_some(), "pull requires a working tree");
     let head = repo
         .head_name()?
         .context("detached HEAD; choose a branch before pulling")?;
+    crate::write::safe_state(&repo)?;
     let branch = head.shorten().to_string();
-    let old = repo.head_id()?.detach();
+    let config = repo.config_snapshot();
+    let configured_remote = config.string(&format!("branch.{branch}.remote"));
+    let name = name
+        .or_else(|| {
+            configured_remote
+                .as_ref()
+                .and_then(|value| value.to_str().ok())
+        })
+        .context("no upstream remote configured; specify a remote")?;
+    let merge = config.string(&format!("branch.{branch}.merge"));
+    let branch = merge
+        .as_ref()
+        .map(|value| value.to_str())
+        .transpose()?
+        .and_then(|value| value.strip_prefix("refs/heads/"))
+        .unwrap_or(&branch);
+    let revision = format!("refs/remotes/{name}/{branch}");
     fetch(name)?;
-    let repo = crate::repository::open()?;
-    let next = repo
-        .rev_parse_single(format!("refs/remotes/{name}/{branch}").as_bytes().as_bstr())?
-        .detach();
-    if old == next {
-        println!("Already up to date.");
-        return Ok(());
-    }
-    let is_ancestor = repo
-        .find_object(next)?
-        .id()
-        .ancestors()
-        .all()?
-        .any(|entry| entry.is_ok_and(|e| e.id == old));
-    ensure!(
-        is_ancestor,
-        "branches diverged; git-next currently supports fast-forward pulls only"
-    );
-    crate::repository::checkout_clean(&repo, next)?;
-    repo.reference(
-        head,
-        next,
-        gix::refs::transaction::PreviousValue::MustExistAndMatch(old.into()),
-        "pull: fast-forward by git-next",
-    )?;
-    println!("Updated {old}..{next}");
-    Ok(())
+    crate::worktree::merge_ff(&revision)
 }
 
 pub fn ls_remote(url: &str) -> Result<()> {
@@ -204,11 +219,18 @@ pub fn ls_remote(url: &str) -> Result<()> {
         return Ok(());
     }
     let tmp = temp_repository()?;
-    let repo = gix::init_bare(tmp.path())?;
+    gix::init_bare(tmp.path())?;
+    let repo = gix::open_opts(tmp.path(), crate::runtime::open_options())?;
     let remote = repo
         .remote_at(url)?
         .with_refspecs(["+refs/*:refs/*"], gix::remote::Direction::Fetch)?;
-    let (map, _) = connection(&remote)?.ref_map(gix::progress::Discard, Default::default())?;
+    let (map, _) = connection(&remote, &repo)?.ref_map(
+        gix::progress::Discard,
+        gix::remote::ref_map::Options {
+            prefix_from_spec_as_filter_on_remote: false, // ls-remote includes HEAD and every advertised namespace.
+            ..Default::default()
+        },
+    )?;
     for reference in map.remote_refs {
         let (name, id, peeled) = reference.unpack();
         if let Some(id) = id {
@@ -325,7 +347,10 @@ fn local_clone(
     if !bare {
         crate::repository::config_set(&repo, &format!("branch.{branch}.remote"), "origin")?;
         crate::repository::config_set(&repo, &format!("branch.{branch}.merge"), &full)?;
-        crate::repository::checkout_initial(&repo).context("checkout local clone")?;
+        crate::eol::configure_new(&repo)?;
+        let checkout = gix::open_opts(&path, crate::runtime::open_options())?;
+        crate::repository::checkout_initial(&crate::eol::defaults(checkout)?)
+            .context("checkout local clone")?;
     }
     drop(repo);
     drop(source);
@@ -334,7 +359,13 @@ fn local_clone(
         "clone destination appeared during transfer"
     );
     fs::rename(&path, destination)?;
-    println!("Cloned into {}", destination.display());
+    println!(
+        "{}",
+        crate::language::format(
+            "Cloned into {path}",
+            &[("path", destination.display().to_string())]
+        )
+    );
     Ok(())
 }
 

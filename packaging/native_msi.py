@@ -113,13 +113,14 @@ def main():
     destination = output/asset
     if destination.exists() or destination.with_suffix('.receipt.json').exists():
         parser.error('Refusing to overwrite a package or its receipt.')
-    identity_suffix = '/machine' if args.scope == 'machine' else ''
+    identity_suffix = ('/machine' if args.scope == 'machine' else '') + '/git-default-v2'
     upgrade_code = UPGRADES[platform] if args.scope == 'user' else '{'+str(uuid.uuid5(NAMESPACE,'upgrade/'+platform+'/machine')).upper()+'}'
     product_code = '{'+str(uuid.uuid5(NAMESPACE,version+'/'+platform+identity_suffix)).upper()+'}'
     registry_hive = 'HKLM' if args.scope == 'machine' else 'HKCU'
     package = dict(schema_version=1,product='git-next',install_kind='msi',install_scope=args.scope,engine=manifest['engine'],
                    version=version,platform=platform,msi_version='.'.join(map(str,numbers)),
                    product_code=product_code,upgrade_code=upgrade_code,source_commit=args.source_commit,
+                   installation_layout='git-default-v2',
                    source_tree_sha256=manifest['source_tree_sha256'],complete_git_parity=complete,
                    builtins=manifest['builtins'],
                    system_git_replaced=False,release_eligible=not args.allow_experimental_local,

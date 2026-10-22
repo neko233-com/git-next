@@ -1117,19 +1117,23 @@ dependencies = [
 
 [[package]]
 name = "git-next"
-version = "0.1.0"
+version = "0.3.0-dev"
 dependencies = [
  "anyhow",
  "clap",
+ "flate2",
  "gix",
  "gix-transport",
  "gix-worktree",
  "gix-worktree-state",
  "glob",
  "ignore",
+ "regex",
+ "reqwest",
  "russh",
  "serde",
  "serde_json",
+ "sys-locale",
  "tempfile",
  "tokio",
  "tokio-util",
@@ -1139,8 +1143,6 @@ dependencies = [
 [[package]]
 name = "gix"
 version = "0.89.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2156d2e07fc3afa7632a82bf3cb0db91f995645a2852f642105c9ac9b52e1cb2"
 dependencies = [
  "gix-actor",
  "gix-attributes",
@@ -1161,6 +1163,7 @@ dependencies = [
  "gix-ignore",
  "gix-index",
  "gix-lock",
+ "gix-merge",
  "gix-negotiate",
  "gix-note",
  "gix-object",
@@ -1305,8 +1308,6 @@ dependencies = [
 [[package]]
 name = "gix-credentials"
 version = "0.42.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba790d296ded4bcfe485f761a65b8659fcccad825ff59a3acc38578a86f812de"
 dependencies = [
  "bstr",
  "gix-command",
@@ -1405,8 +1406,6 @@ dependencies = [
 [[package]]
 name = "gix-filter"
 version = "0.36.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d8d932ee4043f7d77d15ee58d2be2bc95accea5dd1d77fd145de1b7c504551b"
 dependencies = [
  "bstr",
  "encoding_rs",
@@ -1552,6 +1551,32 @@ dependencies = [
 ]
 
 [[package]]
+name = "gix-merge"
+version = "0.22.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a7a5f4512be6c13e4e95142321dfea27ba62c128945bd172d308bb93f04a445"
+dependencies = [
+ "bstr",
+ "gix-command",
+ "gix-diff",
+ "gix-error",
+ "gix-filter",
+ "gix-fs",
+ "gix-hash",
+ "gix-imara-diff",
+ "gix-index",
+ "gix-object",
+ "gix-path",
+ "gix-quote",
+ "gix-revision",
+ "gix-revwalk",
+ "gix-tempfile",
+ "gix-trace",
+ "gix-worktree",
+ "nonempty",
+]
+
+[[package]]
 name = "gix-negotiate"
 version = "0.37.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1676,8 +1701,6 @@ dependencies = [
 [[package]]
 name = "gix-path"
 version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6d563d4d0c975ed0df4e853f9ec962a2ba46633b1d324e1a5582541fcae0c6b"
 dependencies = [
  "bstr",
  "gix-error",
@@ -1688,8 +1711,6 @@ dependencies = [
 [[package]]
 name = "gix-pathspec"
 version = "0.22.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e3b7f03e516a8435d18c3cc2d446925940c81d409145ac21edb5a576f0625e4"
 dependencies = [
  "bitflags 2.13.2",
  "bstr",
@@ -1752,8 +1773,6 @@ dependencies = [
 [[package]]
 name = "gix-ref"
 version = "0.69.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "073bc0928e1f747823b1eaed94918119dacef4c616532bc3d17e5b7457863471"
 dependencies = [
  "gix-actor",
  "gix-error",
@@ -1844,8 +1863,6 @@ dependencies = [
 [[package]]
 name = "gix-status"
 version = "0.36.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42d3174a9f3fb991cf25a7a609ab6c50f19baa7d5f8ce05a48c202f7db4ce3ba"
 dependencies = [
  "bstr",
  "filetime",
@@ -1906,8 +1923,6 @@ checksum = "133f2de116104d637541831b6acb157898556d5eeec363ab2eb1c583adc6bb56"
 [[package]]
 name = "gix-transport"
 version = "0.61.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e43d6b0097ea9f2f266d5d6c43b8f615ed3da7c686ec8771cd17c1cb33cb0de"
 dependencies = [
  "base64 0.22.1",
  "bstr",
@@ -3195,6 +3210,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "regex"
+version = "1.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f020237b6c8eed93db2e2cb53c00c60a8e1bc73da7d073199a1180401450218d"
+dependencies = [
+ "aho-corasick",
+ "memchr",
+ "regex-automata",
+ "regex-syntax",
+]
+
+[[package]]
 name = "regex-automata"
 version = "0.4.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3239,6 +3266,8 @@ dependencies = [
  "rustls",
  "rustls-pki-types",
  "rustls-platform-verifier",
+ "serde",
+ "serde_json",
  "sync_wrapper",
  "tokio",
  "tokio-rustls",
@@ -3883,6 +3912,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 3.0.9",
+]
+
+[[package]]
+name = "sys-locale"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8eab9a99a024a169fe8a903cf9d4a3b3601109bcc13bd9e3c6fff259138626c4"
+dependencies = [
+ "libc",
 ]
 
 [[package]]

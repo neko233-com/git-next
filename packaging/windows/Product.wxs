@@ -4,31 +4,50 @@
   <Package Name="git-next" Manufacturer="neko233-com" Language="1033"
            Version="$(MsiVersion)" ProductCode="$(ProductCode)" UpgradeCode="$(UpgradeCode)"
            Scope="$(PackageScope)" InstallerVersion="500" Compressed="yes">
-    <MajorUpgrade Schedule="afterInstallExecute" AllowSameVersionUpgrades="yes"
+    <MajorUpgrade Schedule="afterInstallInitialize" AllowSameVersionUpgrades="yes"
                   DowngradeErrorMessage="A newer git-next version is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
     <Property Id="ARPNOMODIFY" Value="1" />
     <Property Id="ARPCOMMENTS" Value="$(ProductDescription)" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/neko233-com/git-next" />
+    <Property Id="GITNEXTLAYOUT" Value="git-default-v2" />
+    <Property Id="OFFICIALGIT">
+      <RegistrySearch Id="OfficialGitInstallation" Root="$(RegistryHive)" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1"
+                      Name="InstallLocation" Type="raw" Bitness="always64" />
+    </Property>
+    <!-- The replacement authorization is passed on the msiexec command line by the verified
+         bootstrap (`install.ps1`). It must NOT be marked Secure: a Secure property cannot be
+         set from the command line during InstallExecuteSequence, and it is not carried from
+         the client to the server for a managed per-machine install either, so the value would
+         silently stay "0" and the launch condition below would block every install that has
+         an official Git registered. A registry credential was rejected instead: the MSI
+         installs before the takeover runs, so no credential could exist yet, and a leftover
+         credential would keep authorizing later, unrelated installs. The bootstrap verifies
+         from the verbose MSI log that the property really reached the installer. -->
+    <Property Id="REPLACEGIT" Value="0" />
+    <!-- git-default-v2 installs over the official Git directory. A registered official Git
+         elsewhere must be migrated by the verified takeover first; the same directory is the
+         intended target and is only accepted with an explicit replacement authorization. -->
+    <Launch Condition="Installed OR NOT OFFICIALGIT OR REPLACEGIT = &quot;1&quot;"
+            Message="A registered official Git installation exists. git-next replaces it only from the verified bootstrap that migrates and backs it up first." />
     <Property Id="PREVIOUSINSTALLFOLDER">
       <RegistrySearch Id="PreviousUserInstallRoot" Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)"
                       Name="InstallRoot" Type="raw" Bitness="always64" />
     </Property>
+    <Property Id="PREVIOUSLAYOUT">
+      <RegistrySearch Id="PreviousInstallLayout" Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)"
+                      Name="InstallationLayout" Type="raw" Bitness="always64" />
+    </Property>
     <SetProperty Id="INSTALLFOLDER" Value="[PREVIOUSINSTALLFOLDER]" Before="CostFinalize"
-                 Condition="PREVIOUSINSTALLFOLDER AND NOT INSTALLFOLDER" Sequence="both" />
-    <Property Id="REPLACEGIT" Value="0" Secure="yes" />
-    <Launch Condition="Installed OR REPLACEGIT &lt;&gt; &quot;1&quot;"
-            Message="This package installs git-next separately. Git takeover requires the separately verified migration procedure." />
+                 Condition="PREVIOUSINSTALLFOLDER AND PREVIOUSLAYOUT = &quot;git-default-v2&quot; AND NOT INSTALLFOLDER" Sequence="both" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
     <Property Id="REBOOT" Value="ReallySuppress" />
     <?if $(InstallScope) = machine ?>
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="MsiRootDirectory" Name="git-next">
-        <Directory Id="INSTALLFOLDER" Name="$(Platform)">
-          <Directory Id="BINDIR" Name="bin" />
-          <Directory Id="UPDATERDIR" Name="updater" />
-          <Directory Id="PREVIEWDIR" Name="preview"><Directory Id="PREVIEWBINDIR" Name="bin" /></Directory>
-        </Directory>
+      <Directory Id="INSTALLFOLDER" Name="Git">
+        <Directory Id="BINDIR" Name="bin" />
+        <Directory Id="UPDATERDIR" Name="updater" />
+        <Directory Id="PREVIEWDIR" Name="preview"><Directory Id="PREVIEWBINDIR" Name="bin" /></Directory>
       </Directory>
     </StandardDirectory>
     <StandardDirectory Id="CommonAppDataFolder">
@@ -42,15 +61,13 @@
     <?else?>
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsDirectory" Name="Programs">
-        <Directory Id="MsiRootDirectory" Name="git-next-msi">
-        <Directory Id="INSTALLFOLDER" Name="$(Platform)">
-          <Directory Id="BINDIR" Name="bin" />
-          <Directory Id="UPDATERDIR" Name="updater" />
-          <Directory Id="PREVIEWDIR" Name="preview">
-            <Directory Id="PREVIEWBINDIR" Name="bin" />
-          </Directory>
+<Directory Id="INSTALLFOLDER" Name="Git">
+        <Directory Id="BINDIR" Name="bin" />
+        <Directory Id="UPDATERDIR" Name="updater" />
+        <Directory Id="PREVIEWDIR" Name="preview">
+          <Directory Id="PREVIEWBINDIR" Name="bin" />
         </Directory>
-        </Directory>
+      </Directory>
       </Directory>
     </StandardDirectory>
     <?endif?>
@@ -60,6 +77,8 @@
     <Component Id="UserIntegration" Directory="BINDIR" Guid="*">
       <RegistryValue Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)" Name="InstallRoot"
                      Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
+      <RegistryValue Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)" Name="InstallationLayout"
+                     Value="git-default-v2" Type="string" />
       <Environment Id="UserPath" Name="PATH" Value="[BINDIR]" Action="set"
                    Part="last" System="$(PathSystem)" Permanent="no" />
       <Shortcut Id="UpdateShortcut" Directory="StartMenuDirectory" Name="Update git-next"
@@ -72,7 +91,6 @@
       <RemoveFolder Id="RemovePreviewBinDirectory" Directory="PREVIEWBINDIR" On="uninstall" />
       <RemoveFolder Id="RemovePreviewDirectory" Directory="PREVIEWDIR" On="uninstall" />
       <RemoveFolder Id="RemoveInstallDirectory" Directory="INSTALLFOLDER" On="uninstall" />
-      <RemoveFolder Id="RemoveMsiRootDirectory" Directory="MsiRootDirectory" On="uninstall" />
     </Component>
     <Component Id="TerminalIntegrationV2" Directory="BINDIR" Guid="*">
       <RegistryValue Root="$(RegistryHive)" Key="Software\git-next\MSI\$(Platform)" Name="GpuiTerminalIntegration"
@@ -90,12 +108,9 @@
       <RegistryValue Root="$(RegistryHive)" Key="Software\Classes\Directory\Background\shell\git-next-terminal\command" Value="&quot;[INSTALLFOLDER]$(TerminalRelativePath)&quot; --cwd &quot;%V&quot;" Type="string" />
     </Component>
     <?if $(InstallScope) = machine ?>
-    <Component Id="MachineParentSecurity" Directory="MsiRootDirectory" Guid="*">
-      <RegistryValue Root="HKLM" Key="Software\git-next\MSI\$(Platform)" Name="ParentRoot" Value="[MsiRootDirectory]" Type="string" KeyPath="yes" />
-      <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
-    </Component>
     <Component Id="MachineRootSecurity" Directory="INSTALLFOLDER" Guid="*">
       <RegistryValue Root="HKLM" Key="Software\git-next\MSI\$(Platform)" Name="Scope" Value="machine" Type="string" KeyPath="yes" />
+      <RegistryValue Root="HKLM" Key="Software\git-next\MSI\$(Platform)" Name="ParentRoot" Value="[INSTALLFOLDER]" Type="string" />
       <CreateFolder><PermissionEx Sddl="O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;0x1200a9;;;BU)" /></CreateFolder>
     </Component>
     <Component Id="MachineDataSecurity" Directory="DATAROOT" Guid="*" Permanent="yes">
@@ -149,7 +164,6 @@
       <ComponentRef Id="UserIntegration" />
       <ComponentRef Id="TerminalIntegrationV2" />
       <?if $(InstallScope) = machine ?>
-      <ComponentRef Id="MachineParentSecurity" />
       <ComponentRef Id="MachineRootSecurity" /><ComponentRef Id="MachineDataSecurity" />
       <ComponentRef Id="MachineMigrationSecurity" /><ComponentRef Id="MachineUpdateState" />
       <ComponentRef Id="MachineConfigState" /><ComponentRef Id="MachineComponentState" />

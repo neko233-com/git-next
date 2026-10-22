@@ -247,7 +247,10 @@ function Get-GnRegisteredUninstaller([string]$Root,[string]$Command) {
 function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $InstallRoot = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')
     $OriginalGitRoot = [IO.Path]::GetFullPath($OriginalGitRoot).TrimEnd('\','/')
-    if ($InstallRoot.StartsWith($OriginalGitRoot+'\',[StringComparison]::OrdinalIgnoreCase) -or $OriginalGitRoot.StartsWith($InstallRoot+'\',[StringComparison]::OrdinalIgnoreCase) -or $InstallRoot -ieq $OriginalGitRoot) { throw 'The new and old installations must be separate.' }
+    # git-default-v2 installs into the official Git directory itself. Nesting is still rejected
+    # because the protected backup must be reproducible; identity is the intended overlay case.
+    if ($InstallRoot.StartsWith($OriginalGitRoot+'\',[StringComparison]::OrdinalIgnoreCase) -or $OriginalGitRoot.StartsWith($InstallRoot+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'The new and old installations must be separate.' }
+    $SameDirectory = $InstallRoot -ieq $OriginalGitRoot
     $packagePath = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot 'package.json')
     $package = Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json
     Assert-GnInstalledFiles $InstallRoot $package
@@ -273,28 +276,40 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $nativePrefix = if ($package.platform -eq 'windows-arm64') { 'clangarm64' } else { 'mingw64' }
     $coreHashes = @($files | Where-Object { $_.relative -in @('cmd/git.exe','bin/git.exe',($nativePrefix+'/bin/git.exe'),($nativePrefix+'/libexec/git-core/git.exe')) } | ForEach-Object sha256)
     $builtins = if ($package.PSObject.Properties['builtins']) { @($package.builtins) } else { @() }
-    $bridges = @(); $retained = @(); $unmapped = @()
-    foreach ($file in $files) {
-        if ($file.relative -match '(^|/)unins[0-9]+\.' -or $file.relative -match 'git-update-git-for-windows|git-for-windows-updater' -or $file.relative -in @('mingw64/bin/wintoast.exe','clangarm64/bin/wintoast.exe')) { continue }
-        if (-not $file.pe) { $retained += $file; continue }
-        if (-not $file.relative.EndsWith('.exe',[StringComparison]::OrdinalIgnoreCase)) { continue }
-        $target = 'runtime/' + $file.relative
-        if ($file.relative -eq 'git-bash.exe' -and $package.files.PSObject.Properties['bin/git-terminal.exe']) { $target = 'bin/git-terminal.exe' }
-        if ($file.relative -in @('cmd/git.exe','bin/git.exe')) { $target = $file.relative }
-        if (-not $package.files.PSObject.Properties[$target] -and $file.relative -match '^cmd/(git-(?:receive-pack|upload-pack|upload-archive)|scalar)\.exe$') {
-            $command = $Matches[1]
-            $target = if ($command -eq 'scalar') { 'runtime/'+$nativePrefix+'/bin/scalar.exe' } else { 'runtime/'+$nativePrefix+'/libexec/git-core/'+$command+'.exe' }
+    $bridges = @(); $retained = @(); $unmapped = @(); $stale = @()
+    if ($SameDirectory) {
+        # The MSI already placed the real payload in the official directory, so no bridge
+        # forwarder is produced. Everything still owned by the official uninstaller is stale
+        # and must be gone once its uninstaller has run.
+        $owned = @{}
+        foreach ($property in $package.files.PSObject.Properties) { $owned[$property.Name.Replace('\','/')] = $property.Value }
+        foreach ($file in $files) {
+            $relative = $file.relative.Replace('\','/')
+            if (-not $owned.ContainsKey($relative)) { $stale += $file }
         }
-        if (-not $package.files.PSObject.Properties[$target] -and $file.relative -in @('cmd/git-lfs.exe','cmd/git-credential-manager.exe')) { $target = 'runtime/'+$nativePrefix+'/bin/'+[IO.Path]::GetFileName($file.relative) }
-        if (-not $package.files.PSObject.Properties[$target] -and $coreHashes -contains $file.sha256 -and $file.relative -match '^(cmd|mingw64/bin|clangarm64/bin|mingw64/libexec/git-core|clangarm64/libexec/git-core)/git-([a-z][a-z0-9-]*)\.exe$' -and $builtins -contains $Matches[2]) {
-            $target = 'runtime/'+$nativePrefix+'/libexec/git-core/git-'+$Matches[2]+'.exe'
+    } else {
+        foreach ($file in $files) {
+            if ($file.relative -match '(^|/)unins[0-9]+\.' -or $file.relative -match 'git-update-git-for-windows|git-for-windows-updater' -or $file.relative -in @('mingw64/bin/wintoast.exe','clangarm64/bin/wintoast.exe')) { continue }
+            if (-not $file.pe) { $retained += $file; continue }
+            if (-not $file.relative.EndsWith('.exe',[StringComparison]::OrdinalIgnoreCase)) { continue }
+            $target = 'runtime/' + $file.relative
+            if ($file.relative -eq 'git-bash.exe' -and $package.files.PSObject.Properties['bin/git-terminal.exe']) { $target = 'bin/git-terminal.exe' }
+            if ($file.relative -in @('cmd/git.exe','bin/git.exe')) { $target = $file.relative }
+            if (-not $package.files.PSObject.Properties[$target] -and $file.relative -match '^cmd/(git-(?:receive-pack|upload-pack|upload-archive)|scalar)\.exe$') {
+                $command = $Matches[1]
+                $target = if ($command -eq 'scalar') { 'runtime/'+$nativePrefix+'/bin/scalar.exe' } else { 'runtime/'+$nativePrefix+'/libexec/git-core/'+$command+'.exe' }
+            }
+            if (-not $package.files.PSObject.Properties[$target] -and $file.relative -in @('cmd/git-lfs.exe','cmd/git-credential-manager.exe')) { $target = 'runtime/'+$nativePrefix+'/bin/'+[IO.Path]::GetFileName($file.relative) }
+            if (-not $package.files.PSObject.Properties[$target] -and $coreHashes -contains $file.sha256 -and $file.relative -match '^(cmd|mingw64/bin|clangarm64/bin|mingw64/libexec/git-core|clangarm64/libexec/git-core)/git-([a-z][a-z0-9-]*)\.exe$' -and $builtins -contains $Matches[2]) {
+                $target = 'runtime/'+$nativePrefix+'/libexec/git-core/git-'+$Matches[2]+'.exe'
+            }
+            if (-not $package.files.PSObject.Properties[$target]) { $unmapped += $file.relative; continue }
+            if ($file.subsystem -notin @(2,3)) { throw 'A legacy executable has an unsupported subsystem.' }
+            $bridgeName = if ($file.subsystem -eq 2) { 'migration/git-next-bridge-gui.exe' } else { 'migration/git-next-bridge.exe' }
+            $bridges += [pscustomobject]@{relative=$file.relative;target=$target;bridge=$bridgeName;sha256=$package.files.PSObject.Properties[$bridgeName].Value}
         }
-        if (-not $package.files.PSObject.Properties[$target]) { $unmapped += $file.relative; continue }
-        if ($file.subsystem -notin @(2,3)) { throw 'A legacy executable has an unsupported subsystem.' }
-        $bridgeName = if ($file.subsystem -eq 2) { 'migration/git-next-bridge-gui.exe' } else { 'migration/git-next-bridge.exe' }
-        $bridges += [pscustomobject]@{relative=$file.relative;target=$target;bridge=$bridgeName;sha256=$package.files.PSObject.Properties[$bridgeName].Value}
+        if (-not @($bridges | Where-Object { $_.relative -ceq 'cmd/git.exe' }).Count) { throw 'The default legacy Git command has no owned mapping.' }
     }
-    if (-not @($bridges | Where-Object { $_.relative -ceq 'cmd/git.exe' }).Count) { throw 'The default legacy Git command has no owned mapping.' }
     $scopeContext = Get-GnScopeContext $InstallRoot $package
     $configDirectory = if ($scopeContext.machine) { $scopeContext.config } else { Get-GnConfigDirectory }
     $installScope = $scopeContext.scope
@@ -302,7 +317,7 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $pointer = Assert-GnOwnedPath $configDirectory (Join-Path $configDirectory 'migration.json')
     if ([IO.File]::Exists($pointer)) { throw 'A prior migration transaction exists; resume or roll it back first.' }
     if ([IO.File]::Exists($systemConfig)) { throw 'A prior system-config migration exists; resume or roll it back first.' }
-    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=(Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant();release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_relative=[IO.Path]::GetFileName($uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
+    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';same_directory=$SameDirectory;install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=(Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant();release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_relative=[IO.Path]::GetFileName($uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;stale=$stale;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
 }
 
 function Copy-GnMigrationFile([string]$SourceRoot,[string]$TargetRoot,$Record,[string]$AllowedTargetSha256 = '',[switch]$RestoreAccess) {
@@ -521,21 +536,32 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         if ($process.ExitCode -ne 0) { throw 'The original uninstaller failed; the protected backup is retained.' }
         [void][IO.Directory]::CreateDirectory($Plan.original_root)
         $acl = [Security.AccessControl.DirectorySecurity]::new(); $acl.SetSecurityDescriptorSddlForm($Plan.root_acl); Set-Acl -LiteralPath $Plan.original_root -AclObject $acl
-        foreach ($file in @(Get-GnTree $Plan.original_root)) {
-            if (-not $file.pe) { continue }
-            $original = @($Plan.files | Where-Object { $_.relative -ceq $file.relative })
-            if ($original.Count -ne 1 -or $original[0].sha256 -cne $file.sha256) { throw 'A new executable appeared in the old directory; removal was stopped.' }
-            $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)
-            Remove-Item -LiteralPath $target -Force
-        }
-        foreach ($file in $Plan.retained) { Copy-GnMigrationFile $backup $Plan.original_root $file -RestoreAccess }
-        foreach ($record in $Plan.bridges) {
-            $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $record.relative)
-            [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))
-            $source = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root $record.bridge)
-            if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'An owned bridge changed during migration.' }
-            Set-GnBridgeRegistration $Plan $record $false
-            [IO.File]::Copy($source,$target,$true)
+        if ($Plan.same_directory) {
+            # git-default-v2: the payload already owns the official directory, so the official
+            # uninstaller's leftovers are removed outright instead of being replaced by bridges.
+            foreach ($file in @(Get-GnTree $Plan.original_root)) {
+                $relative = $file.relative.Replace('\','/')
+                $owned = @($Plan.stale | Where-Object { $_.relative.Replace('\','/') -ceq $relative })
+                if ($owned.Count -ne 1 -or $owned[0].sha256 -cne $file.sha256) { continue }
+                Remove-Item -LiteralPath (Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)) -Force
+            }
+        } else {
+            foreach ($file in @(Get-GnTree $Plan.original_root)) {
+                if (-not $file.pe) { continue }
+                $original = @($Plan.files | Where-Object { $_.relative -ceq $file.relative })
+                if ($original.Count -ne 1 -or $original[0].sha256 -cne $file.sha256) { throw 'A new executable appeared in the old directory; removal was stopped.' }
+                $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)
+                Remove-Item -LiteralPath $target -Force
+            }
+            foreach ($file in $Plan.retained) { Copy-GnMigrationFile $backup $Plan.original_root $file -RestoreAccess }
+            foreach ($record in $Plan.bridges) {
+                $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $record.relative)
+                [void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target))
+                $source = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root $record.bridge)
+                if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $record.sha256) { throw 'An owned bridge changed during migration.' }
+                Set-GnBridgeRegistration $Plan $record $false
+                [IO.File]::Copy($source,$target,$true)
+            }
         }
         foreach ($record in $Plan.registry) {
             if ($record.path -ceq 'Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1') { continue }
@@ -563,7 +589,9 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         $legacyConfig = & $escape (Join-Path $Plan.original_root 'etc/gitconfig')
         $text = "# git-next migration $transactionId`n[include]`n"
         # Preserve ordered multivars such as credential.helper without prepending new helpers.
-        $selectedConfig = if ([IO.File]::Exists((Join-Path $Plan.original_root 'etc/gitconfig'))) { $legacyConfig } else { $baseConfig }
+        # In git-default-v2 the legacy etc\ location disappears with the official layout, so the
+        # include must always point at the payload's own runtime configuration.
+        $selectedConfig = if ($Plan.same_directory -or -not [IO.File]::Exists((Join-Path $Plan.original_root 'etc/gitconfig'))) { $baseConfig } else { $legacyConfig }
         $text += "`tpath = `"$selectedConfig`"`n"
         $text += "[core]`n`tautocrlf = input`n`teol = lf`n`tfscache = false`n`tfsmonitor = false`n`tpreloadIndex = false`n[index]`n`tthreads = 1`n[grep]`n`tthreads = 1`n"
         $stream = Open-GnNewFile $Plan.system_config
@@ -602,6 +630,11 @@ function Restore-GnTakeover([string]$Transaction) {
         if ($pending -and ('ticks:' + $pending.StartTime.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)) -ceq $plan.uninstaller_start_identity) { throw 'The original uninstaller is still running; rollback was deferred.' }
     }
     if ((Test-GnBusy $plan.install_root) -or (Test-GnBusy $plan.original_root)) { throw 'A Git/runtime process is active; rollback was deferred.' }
+    if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory) {
+        # git-default-v2 owns the official directory itself, so the payload must be gone before
+        # the original Git can be restored into it. The protected backup is retained meanwhile.
+        if ([IO.File]::Exists((Join-Path $plan.install_root 'package.json'))) { throw 'The git-default-v2 installation still occupies the official Git directory. Remove its MSI first, then replay this protected backup to restore the original Git.' }
+    }
     $backup = Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'original')
     if ($plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration) {
         $package = Get-Content -LiteralPath (Join-Path $plan.install_root 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
@@ -621,7 +654,8 @@ function Restore-GnTakeover([string]$Transaction) {
         [IO.File]::Delete($plan.system_config)
     }
     [void][IO.Directory]::CreateDirectory($plan.original_root)
-    foreach ($file in $plan.files) {
+    $restoreFiles = if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory) { @($plan.files | Where-Object { $relative = $_.relative.Replace('\','/'); @($plan.stale | Where-Object { $_.relative.Replace('\','/') -ceq $relative }).Count -eq 1 }) } else { @($plan.files) }
+    foreach ($file in $restoreFiles) {
         $path = Assert-GnOwnedPath $plan.original_root (Join-Path $plan.original_root $file.relative)
         if ([IO.File]::Exists($path)) {
             $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()

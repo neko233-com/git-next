@@ -1,0 +1,9 @@
+# git-next native discovery patch
+
+Upstream: gix-path 0.14.0, MIT OR Apache-2.0. Retain the original licenses.
+
+Replace Git subprocess queries for configuration origins and `--exec-path` with filesystem/environment discovery in `env/layout.rs`. Native init, open, config loading, attributes and explicit helper lookup must never invoke Git as a discovery fallback. `GIT_EXEC_PATH` remains an explicit override; conventional Windows/MSYS and Unix directories remain recognizable. Configuration overrides and includes remain the configuration loader's responsibility.
+
+The upstream Git-origin parser and Git-executing discovery tests apply to the removed implementation and are retained as upstream source history only; they are no longer compiled by this fork. Root acceptance uses an executable tripwire, isolated profiles, actual configuration values, relative includes and enabled/disabled system configuration. See `docs/NATIVE_DISCOVERY.md` for compatibility, migration, rollout and rollback limits. No repository format or object/ref/LFS layout changes.
+
+Recognize the active Unix Git executable's Homebrew `Cellar/git/<version>/bin` or `opt/git/bin` layout after resolving symlinks. Homebrew configures `sysconfdir` as the shared brew-prefix `etc`, outside Cellar; use that file as system scope, including `config --system`, overrides, relative includes and writes. Do not merge an inactive distribution's configuration or load the versioned Cellar `etc/gitconfig`. Other Unix prefix and `/etc` behavior is retained. The synthetic Unix fixture reproduces the missed/mis-scoped file before the fix; Linux execution is not native Mac installation acceptance. No files are copied, renamed or migrated; rollback is the prior binary and original settings. Removing the old installation still requires independent helper/CA/config preservation and full takeover acceptance.

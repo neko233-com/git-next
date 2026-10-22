@@ -1,4 +1,4 @@
-# Copyright 2026 git-next contributors. MIT license.
+﻿# Copyright 2026 git-next contributors. MIT license.
 param([Parameter(Mandatory)][string]$Package, [string]$UpgradePackage)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
@@ -96,7 +96,7 @@ try {
     $env:USERPROFILE=$profileRoot
     $env:SSH_ROOT_PATH=(Join-Path $profileRoot '.ssh')
     $attempted = $true
-    [void](Msi ('/i "' + $basePath + '" INSTALLFOLDER="' + $installRoot + '"') 'install.log')
+    [void](Msi ('/i "' + $basePath + '" INSTALLFOLDER="' + $installRoot + '" REPLACEGIT=1') 'install.log')
     Check 'base product registered' ($installer.ProductState($base.product_code) -eq 5)
     Assert-GnInstalledFiles $installRoot (Get-Content -LiteralPath (Join-Path $installRoot 'package.json') -Raw | ConvertFrom-Json)
     $task = $tasks.GetTask($taskName)
@@ -143,7 +143,7 @@ try {
         [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($database)
         [GC]::Collect(); [GC]::WaitForPendingFinalizers()
         $failureProduct = $upgrade.product_code
-        [void](Msi ('/i "' + $failing + '" INSTALLFOLDER="' + $installRoot + '"') 'rollback.log' $false 'GitNextInjectedFailure returned actual error code 42')
+        [void](Msi ('/i "' + $failing + '" INSTALLFOLDER="' + $installRoot + '" REPLACEGIT=1') 'rollback.log' $false 'GitNextInjectedFailure returned actual error code 42')
         $oldState = $installer.ProductState($base.product_code)
         $newState = $installer.ProductState($upgrade.product_code)
         $taskAfter = $tasks.GetTask($taskName).Xml
@@ -159,7 +159,7 @@ try {
         Check 'failed upgrade restores actual old bytes' ((Snapshot) -ceq $before)
         CheckTerminalShortcut
         Check 'failed upgrade restores updater task' ($taskAfter -ceq $taskBefore)
-        [void](Msi ('/i "' + $upgradePath + '" INSTALLFOLDER="' + $installRoot + '"') 'upgrade.log')
+        [void](Msi ('/i "' + $upgradePath + '" INSTALLFOLDER="' + $installRoot + '" REPLACEGIT=1') 'upgrade.log')
         $task = $tasks.GetTask($taskName); $task.Enabled=$false
         Check 'newer product replaces old registration' ($installer.ProductState($upgrade.product_code) -eq 5 -and $installer.ProductState($base.product_code) -eq -1)
         [void](Snapshot)
@@ -167,7 +167,7 @@ try {
         $version = & $native version --json | ConvertFrom-Json
         Check 'upgraded native bytes identify requested version' ($LASTEXITCODE -eq 0 -and $version.version -ceq $upgrade.version)
         CheckTerminalShortcut
-        [void](Msi ('/i "' + $basePath + '" INSTALLFOLDER="' + $installRoot + '"') 'downgrade.log' $false 'A newer git-next version is already installed.')
+        [void](Msi ('/i "' + $basePath + '" INSTALLFOLDER="' + $installRoot + '" REPLACEGIT=1') 'downgrade.log' $false 'A newer git-next version is already installed.')
         Check 'downgrade leaves newer product registered' ($installer.ProductState($upgrade.product_code) -eq 5)
     }
     $active = if ($upgrade) { $upgrade.product_code } else { $base.product_code }

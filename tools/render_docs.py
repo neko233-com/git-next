@@ -32,6 +32,7 @@ sources = {
     root / 'docs/AGENT_WORKFLOW.md': 'agents.html',
     root / 'docs/DELIVERY_STATUS.md': 'delivery-status.html',
     root / 'docs/CORRESPONDING_SOURCES.md': 'corresponding-sources.html',
+    root / 'docs/DOCUMENTATION_SITE.md': 'documentation-site.html',
 }
 parser = MarkdownIt('commonmark').enable('table')
 for source, name in sources.items():
@@ -54,7 +55,7 @@ for source, name in sources.items():
         prefix = re.sub(r'<title>.*?</title>', '<title>git-next · Read commands</title>', prefix)
     if 'href="read-commands.html"' not in prefix:
         prefix = prefix.replace('</nav>', '<a href="read-commands.html">Read commands</a></nav>')
-    for page, title in [('restoration.html', 'Restore and reset'), ('line-endings.html', 'LF policy'), ('native-discovery.html', 'Native discovery'), ('credentials.html', 'Credential support'), ('merge.html', 'Native merge'), ('updates.html', 'MSI and updates'), ('language.html', 'Interface languages'), ('native-core.html', 'Native core integration'), ('agents.html', 'Engineering workflow'), ('delivery-status.html', 'Delivery progress'), ('corresponding-sources.html', 'Runtime sources and licenses'), ('terminal.html', 'Git-Terminal'), ('game-projects.html', 'Game projects')]:
+    for page, title in [('restoration.html', 'Restore and reset'), ('line-endings.html', 'LF policy'), ('native-discovery.html', 'Native discovery'), ('credentials.html', 'Credential support'), ('merge.html', 'Native merge'), ('updates.html', 'MSI and updates'), ('language.html', 'Interface languages'), ('native-core.html', 'Native core integration'), ('agents.html', 'Engineering workflow'), ('delivery-status.html', 'Delivery progress'), ('corresponding-sources.html', 'Runtime sources and licenses'), ('terminal.html', 'Git-Terminal'), ('game-projects.html', 'Game projects'), ('documentation-site.html', 'Documentation site')]:
         if name == page:
             prefix = re.sub(r'<title>.*?</title>', f'<title>git-next · {title}</title>', prefix)
         if f'href="{page}"' not in prefix:

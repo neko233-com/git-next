@@ -14,7 +14,7 @@ The source CLI exposes `git update check|apply|status|enable|disable [--json]`. 
 
 ## Compatibility, storage and rollback report
 
-The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. Machine installation uses `%ProgramFiles%/git-next/<platform>`; the unchanged user flavor uses `%LOCALAPPDATA%/Programs/git-next-msi/<platform>`. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.
+The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. The `git-default-v2` layout installs into `%ProgramFiles%/Git` for machine scope and `%LOCALAPPDATA%/Programs/Git` for user scope, so the primary IDE entry point `cmd\git.exe` is the owned git-next payload rather than a bridge forwarder. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.
 
 The package adds client binaries, an updater and a checksummed `package.json`. It does not move, rewrite, repack or renormalize existing repositories, refs, indexes, objects or LFS bytes. It does not rewrite `.gitconfig`, SSH files, known_hosts, credential helpers or credential-vault data. Explicit LF exceptions remain authoritative. Installing an MSI does not remove the original Git.
 
@@ -41,7 +41,7 @@ The user MSI registers a task for its existing interactive session; the machine 
 The installed updater supports these modes:
 
 ```powershell
-$updater = "$env:LOCALAPPDATA/Programs/git-next-msi/windows-x64/updater/update.ps1"
+$updater = "$env:LOCALAPPDATA/Programs/Git/updater/update.ps1"
 & $updater -Mode Check
 & $updater -Mode Apply
 & $updater -Mode Status
