@@ -170,11 +170,14 @@ impl Selection {
         if let Some(code) = legacy_alias(trimmed) {
             return Ok(Self::Fixed(code.to_owned()));
         }
-        ensure!(
-            find(trimmed).is_some(),
-            "unsupported language; use one of the listed languages or auto"
-        );
-        Ok(Self::Fixed(normalize_code(trimmed)))
+        // A full locale name is accepted as well, and is resolved the same way a
+        // device locale is: `zh-TW` selects the traditional document and
+        // `ja-JP` the Japanese one, because a user who names the locale of their
+        // system should not have to know which code this build ships.
+        if let Some(language) = match_locale(trimmed) {
+            return Ok(Self::Fixed(language.code().to_owned()));
+        }
+        bail!("unsupported language; use one of the listed languages or auto")
     }
 
     /// The name this selection is stored under.

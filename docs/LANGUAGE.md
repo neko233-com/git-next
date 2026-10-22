@@ -60,6 +60,48 @@ Rebuilding is the whole procedure: the build picks the file up, and the language
 
 Only the messages that a locale overrides are listed, so a partial translation is a valid document. The English source message is the key, which means a message that is reworded in the code is simply not translated until the document catches up - the interface then shows the new English text.
 
+## Shipped languages
+
+| Code | Language | Coverage |
+| --- | --- | --- |
+| `en` | English | source language, no document |
+| `zh-Hans` | 简体中文 | complete: 140 messages and all 32 command summaries |
+| `zh-Hant` | 繁體中文 | 60 core messages and all 32 command summaries |
+| `ja` | 日本語 | 60 core messages and all 32 command summaries |
+| `ko` | 한국어 | 60 core messages and all 32 command summaries |
+| `de` | Deutsch | 60 core messages and all 32 command summaries |
+| `fr` | Français | 60 core messages and all 32 command summaries |
+| `es` | Español | 60 core messages and all 32 command summaries |
+| `pt-BR` | Português do Brasil | 60 core messages and all 32 command summaries |
+| `ru` | Русский | 60 core messages and all 32 command summaries |
+
+The core set is the output of everyday work: `status`, `add`, `commit`, `merge`,
+branch state, conflicts and the help headings. The long tail - rebase and bisect
+state lines, the settings errors, the internal object commands - falls back to
+English per message until someone extends the document. That is the intended
+behaviour, not an oversight: a document that translates what its readers actually
+see is worth more than one that translates everything badly.
+
+## Checking a document
+
+```sh
+python tools/check_locales.py            # check every document
+python tools/check_locales.py --coverage # and report what each language leaves to English
+python tools/check_locales.py --fix      # sort the keys, then check
+```
+
+The checker fails on a document that is unreadable, a duplicated key, a key the
+source no longer produces, a named placeholder that does not survive translation, a
+translation that disagrees with the source on a trailing newline or a blank line, and
+an unsorted key order. Those are the defects that would otherwise appear as wrong
+output in one language only, which is exactly what no test matrix would catch.
+
+It does not review wording. A language is accepted once, when its document is added;
+a wrong or awkward string is a defect of that document and is fixed by editing the
+JSON. Multi-language regression cases are not part of the acceptance matrix, because
+the matrix verifies behaviour, not prose. A locale file is configuration, and
+configuration is checked by the checker above.
+
 ## Settings and compatibility report
 
 The new additive user setting is `~/.config/git-next/settings.json`, or `$XDG_CONFIG_HOME/git-next/settings.json`. `GIT_NEXT_CONFIG_HOME` overrides the git-next configuration directory directly for isolated tests or managed installation. An explicit override must be absolute. Settings contain `schema_version: 1` and `language`, use UTF-8 without BOM and LF, preserve unknown fields, and publish under an exclusive sibling lock. Invalid, oversized or unknown-version settings reject without replacement. Repository-local files, Git configuration, credentials and SSH settings are not modified by language selection.
@@ -74,7 +116,12 @@ The native core compiles a catalog generated from the pinned upstream `po/zh_CN.
 
 The consolidated matrix must exercise native automatic selection, the legacy aliases, persistence across processes, single-command/environment overrides, reset to auto, help/errors, common human messages, operation status, conflicts and filenames containing translation/template tokens. It must compare all machine formats between languages and verify no repository/config/login changes from language operations. Malformed/oversized settings, unknown schema/language, lock contention, read-only configuration and failed writes must preserve prior bytes. Supported platform compilation and actual runtime results remain separate evidence.
 
-A new locale document is accepted on the strength of the build and the interface: the messages of a new language are not machine-verified against a reference, because the reference for a translation is the language itself.
+A new locale document is accepted on the strength of the build, the checker and the
+interface: the messages of a new language are not machine-verified against a
+reference, because the reference for a translation is the language itself. The
+behaviour that has to keep working across languages is the machine output, and that
+is compared byte for byte between languages rather than per language against a
+fixture.
 
 ## Shell and Perl messages
 
