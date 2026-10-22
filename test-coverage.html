@@ -1,0 +1,138 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Test coverage</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>常用 Git 功能与交付验收范围</h1>
+<p>当前原生产品采用 SHA-1、SHA-256 双格式仓库验收。测试只创建临时仓库并隔离 HOME、USERPROFILE、SSH_ROOT_PATH 和配置目录；参考 Git 仅用于独立读取对象、索引和输出，不作为 git-next 的运行时回退。</p>
+<h2>常用命令与恢复</h2>
+<p><code>tests/native_common_cli_acceptance.py</code> 将以下 16 组场景分别在两种对象格式运行，共 32 个独立场景。默认 4 路并发；收集全部失败，失败命令还必须是正常 Git 错误码，不能以崩溃冒充拒绝。每组结束用独立 Git 比较索引和历史，并运行双方 <code>fsck --full</code>。</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>实际校验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>日常提交与读取</td>
+<td>init、add、commit、status、diff、show、log/rev-list；中文路径、对象与索引</td>
+</tr>
+<tr>
+<td>分支与检出</td>
+<td>branch 创建/列出/改名/删除，checkout 分支/路径/-b/分离 HEAD，返回 main</td>
+</tr>
+<tr>
+<td>合并与撤销</td>
+<td>merge --no-ff 两父提交，cherry-pick，revert 后再 revert 的树恢复</td>
+</tr>
+<tr>
+<td>变基</td>
+<td>rebase 成功后共同祖先与双方文件内容保留</td>
+</tr>
+<tr>
+<td>恢复与重置</td>
+<td>restore --staged/--worktree，reset --soft/--mixed/--hard 的索引和内容</td>
+</tr>
+<tr>
+<td>暂存现场</td>
+<td>stash push -u、pop --index，暂存内容及未跟踪文件恢复</td>
+</tr>
+<tr>
+<td>覆盖保护</td>
+<td>脏文件/未跟踪文件拒绝切换分支，保持当前分支、索引和用户内容</td>
+</tr>
+<tr>
+<td>冲突继续与撤销</td>
+<td>cherry-pick/rebase 解决后 --continue，revert 冲突后 --abort</td>
+</tr>
+<tr>
+<td>推送保护</td>
+<td>非快进、过期 force-with-lease 拒绝后远端 refs 不变；fetch/rebase 后正常恢复 push</td>
+</tr>
+<tr>
+<td>无效操作</td>
+<td>不存在的 checkout/revert，删除当前分支；HEAD 和索引逐字节不变</td>
+</tr>
+<tr>
+<td>多工作树</td>
+<td>worktree add/list、独立索引提交、lock/unlock、move、脏目录拒绝、强制删除/prune</td>
+</tr>
+<tr>
+<td>本地传输</td>
+<td>bare clone、clone --no-local、remote、upstream、push/fetch/pull --ff-only、跟踪分支</td>
+</tr>
+<tr>
+<td>冲突恢复</td>
+<td>merge/cherry-pick 冲突索引阶段，--abort；rebase --abort 恢复原 HEAD</td>
+</tr>
+<tr>
+<td>导出与标签</td>
+<td>轻量/附注 tag、解引用/删除、archive ZIP 内容、bundle verify/clone、reflog</td>
+</tr>
+<tr>
+<td>忽略与换行</td>
+<td>check-ignore、clean 预览/执行/-x、attributes、LF/CRLF 无效变更、二进制原样</td>
+</tr>
+<tr>
+<td>锁与文件操作</td>
+<td>外部 index.lock 拒绝写入并保留锁/索引，中文 mv/rm 后对象内容与提交</td>
+</tr>
+</tbody>
+</table>
+<p>SHA-256 的 stash 存储曾因十六进制缓冲区缺少 NUL 结束符空间触发 Windows 栈保护。补丁 <code>0056-stash-sha256-hex-terminator.patch</code> 分配 <code>GIT_MAX_HEXSZ + 1</code>，保留编译器栈保护；双格式 stash 往返为直接回归。</p>
+<h2>配套验收</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>用例/工具与边界</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>核心契约</td>
+<td>native_contract_acceptance.py：对象/pack/gc、子模块递归、hooks、稀疏检出、split index、错误参数与锁保护</td>
+</tr>
+<tr>
+<td>Windows 读取稳定性</td>
+<td>native_read_threads_acceptance.py：索引/grep 默认与覆盖、宽目录多轮完整输出、仓库文件不变</td>
+</tr>
+<tr>
+<td>游戏资产/LFS</td>
+<td>native_game_project_acceptance.py 与 native_integrations_acceptance.py：自带过滤器、模板、游戏配置、失败路径与签名</td>
+</tr>
+<tr>
+<td>登录迁移</td>
+<td>隔离 DPAPI fixture；Docker 生成 HTTPS/SSH 私有仓库账号，校验旧数据/认证失败保护；不读取个人密码</td>
+</tr>
+<tr>
+<td>安装与更新</td>
+<td>两种 MSI 范围的安装/修复/升级/注入失败回滚/拒绝降级/卸载，包身份/哈希、并发配置保护、镜像损坏回退</td>
+</tr>
+<tr>
+<td>Bootstrap</td>
+<td>bootstrap_acceptance.ps1 对真实 MSI 的版本读取只允许一个字符串；特殊进程名 <code>[</code>、<code>?</code> 必须按字面量检测</td>
+</tr>
+<tr>
+<td>原生终端</td>
+<td>peer Git-Terminal 的 Rust/ConPTY 与桌面键盘测试，多 tab、目录继承、分支、配色、剪贴板、中文输入</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>Windows x64 和 Linux x64/ARM64 运行契约；Windows ARM64 为交叉编译/PE 检查；macOS 为本机编译加 Dockerfile_mac 包/Mach-O/shell 静态检查，不执行 Mac 产品</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>独立批次覆盖 1k/10k/100k 文件和本地 HTTPS；配对次数、实际耗时和每轮输出校验写入报告。不得并发基准造成资源争抢后宣称性能提升</td>
+</tr>
+<tr>
+<td>实际接管</td>
+<td>新进程 PATH 默认 git、所有入口身份与哈希、原配置/SSH 文件指纹、安装快捷方式和真实新版窗口</td>
+</tr>
+</tbody>
+</table>
+<p>通过上述范围不表示验证 Git 所有参数组合、所有 IDE/服务商或物理 ARM64/Mac 产品运行。每份证据绑定实际二进制、源码和测试指纹；修改后只复验受影响范围，保留旧证据原身份。功能测试并行，Windows Installer 事务串行。完整 MSI 和大型性能验收不承诺一分钟完成。</p>
+<h2>复现</h2>
+<pre><code class="language-powershell">python tests/native_common_cli_acceptance.py &lt;git-next/bin/git.exe&gt; --reference &lt;reference-git.exe&gt; --output &lt;new-result.json&gt;
+# 定位修复时只运行受影响场景；完整发布仍使用组合验收清单。
+python tests/native_common_cli_acceptance.py &lt;git-next/bin/git.exe&gt; --reference &lt;reference-git.exe&gt; --case stash_untracked --output &lt;new-result.json&gt;
+</code></pre>
+<p>当前状态见 <a href="delivery-status.html">交付清单</a>，历史大样本性能见 <a href="performance.html">性能说明</a>。正式发布必须全部本地门禁通过，且只有一次综合版本发布。</p>
+</main></html>

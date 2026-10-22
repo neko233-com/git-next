@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Delivery progress</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>git-next 固定交付清单与进度</h1>
+<p>截至 2026-10-21，本轮客户端固定范围 <strong>10/10（100%），剩余 0 项</strong>。<a href="https://github.com/neko233-com/git-next/releases/tag/v0.3.0">v0.3.0</a> 已一次性发布，21 个附件的远端字节数和 SHA-256 与本地产物一致。<a href="../benchmarks/native-workstation-release-20261021.json">最终本机与发布回执</a>记录实际完成层级。</p>
+<p>Windows 本机已安装正式机器级 MSI，卸载原版 Git for Windows；新 CMD、PowerShell 和旧绝对路径均返回 git-next。旧路径仅保留兼容入口，受保护的原安装恢复备份保留。13 个 Git/SSH 配置文件逐字节不变，默认采用 LF。Git-Terminal 正式窗口已打开，包含原创多尺寸图标、一体化标题栏、原生窗口按钮、多 tab、命令高亮和目录/分支提示。</p>
+<p>正确性组合共 18 项；常用命令为 16 组 × SHA-1/SHA-256，共 32 场景，31.482 秒通过；实际最终包桌面 15 项，25.287 秒通过。原 MSI 两种范围的完整生命周期证据保留其明确的安装契约范围；终端二进制和说明更新分别绑定。随后发现并修复机器 TLS 子文件句柄阻止目录重命名，实际机器刷新、首次安装、重复安装、17 文件哈希和受保护权限均通过。继承 ACL 转换修复另通过 44 项更新器检查及 57 项真实配置迁移/恢复。未改动的核心、运行时、GUI 和 MSI 配方不重复运行无关测试。</p>
+<p>最终性能批次为每项 10 对样本，覆盖 1k/10k/100k 文件和 HTTPS，596.63 秒全部通过。全批次没有达到 60 秒；HTTPS clone 和大型全量扫描不保证快于参考 Git。旧大样本结果保留原二进制身份。</p>
+<p>Windows ARM64 为交叉编译/PE 检查；macOS ARM64 为本机编译及 Dockerfile_mac 包/Mach-O/shell 静态检查，未执行 Mac 产品。任务自有 Docker 资源及 Mac 构建缓存已清理；其他项目资源保留。GitSSS 同仓库同分支 100 push/秒属于服务端未完成要求，不计入此客户端 10 项。</p>
+<p>机器可读状态见 <a href="../DELIVERY_STATUS.json">DELIVERY_STATUS.json</a>，验收范围见 <a href="test-coverage.html">TEST_COVERAGE.md</a>。发行 tag 包含运行产物源码及独立 bootstrap 修复；MSI/运行时和 bootstrap 分别记录来源提交。本记录属于交付后文档提交，不改变已发布二进制或 tag。</p>
+<table>
+<thead>
+<tr>
+<th>范围</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D01–D07 核心、运行时、LF、身份/语言、MSI接管、自动更新、五平台包</td>
+<td>完成</td>
+</tr>
+<tr>
+<td>D08 批量正确性与声明的平台验收</td>
+<td>完成</td>
+</tr>
+<tr>
+<td>D09 独立成对性能批次</td>
+<td>完成</td>
+</tr>
+<tr>
+<td>D10 本机安装/接管、真实窗口、一次发布</td>
+<td>完成</td>
+</tr>
+</tbody>
+</table>
+<h2>历史构建记录</h2>
+<p>以下保留此前构建快照；其中百分比、未发布状态和性能数字只属于当时产物，不能覆盖上方最终记录。</p>
+<h2>单一路线与执行顺序</h2>
+<p>2026-10-21 当前进度：实现项 7/7，完整交付项 7/10。新终端已通过 14 项真实桌面检查，耗时 23.184 秒；标签页、目录/分支、命令高亮和中文文本均有截图与记录。组合验收发现用户 MSI 内 PowerShell 初始化失败，现已实现独立无控制台启动器并通过针对性检查，等待重建后的 MSI 生命周期验收。此前未发布的 MSI 已卸载，本机仍由官方 Git 提供命令；正式发布和本机接管尚未完成。</p>
+<p>主路线固定为<strong>从已固定的上游源码构建并维护 git-next 原生兼容核心</strong>，整合本产品的身份、LF、语言和安装更新行为。停止逐个重写 Rust Git 子集来追赶完整 Git，也停止新的目录扫描性能分支。Rust 既有代码只在明确需要的独立配套边界使用；GPL 核心和其他组件的许可、运行时边界、源码交付仍须在 D02/D07 解决。不得调用本机已安装的 Git/OpenSSH 充当运行时兜底。</p>
+<ol>
+<li>完成 D01–D04 的核心、运行时、LF 和语言整合。</li>
+<li>完成 D05–D07 的 MSI、自动更新、五平台完整包及最终统一回归输入。期间允许必要的编译、静态语法检查和文档生成，不运行功能回归、安装试验或性能测试。</li>
+<li>D01–D07 全部关闭后才启动 D08。独立临时仓库检查可批量并行，MSI/系统集成串行执行；Docker 使用生成账号并清理本任务资源。禁止再要求个人私有仓库或重复探测真实账号。</li>
+<li>收集本批失败后统一修复，再核验受影响检查和最终候选产物。不承诺测试只运行一次就必然无错，也不回到每完成一个小功能就执行多轮测试的方式。</li>
+<li>正确性通过后执行 D09，所有性能场景作为同一批处理，不与构建、回归或模拟器并发。慢于参考 Git 的结果必须列为待修复或明确未达标，不能宣称普遍更快。</li>
+<li>D08/D09 通过后才完成 D10；仅发布一个汇总版本。最终交付前的接管演练必须可回滚，最终默认命令安装以实际 Windows 调用结果为准。</li>
+</ol>
+<p><code>tools/product_batch.py</code> 增加实现阶段前置检查；D01–D07 未全部关闭时拒绝进入测试阶段。现有脚本仍是子集脚手架，D07 必须先适配完整核心，不能通过修改状态文件把子集测试冒充完整回归。其他单项脚本也不得绕过本轮执行顺序。</p>
+<h2>每批进展必须报告</h2>
+<ul>
+<li>本批关闭了哪个编号，以及源码、产物或验收证据；没有整项关闭就明确写“本批未关闭整项”。</li>
+<li>完整交付 <code>完成数/10</code>、实现 <code>完成数/7</code>、剩余编号；百分比只由整项关闭数计算。</li>
+<li>当前阶段、下一批的明确退出条件、尚缺的真实运行环境。没有可靠依据不报小时数或“即将完成”。</li>
+<li>已知阻塞仍留在原编号，不拆出更多完成项抬高进度，不增加与用户目标无关的功能。</li>
+</ul>
+<p>本轮状态核对没有启动产品测试或性能测试。历史接受记录保留其原始源码与二进制范围；它们不会被重标为最终产品验收。</p>
+<h2>本批实现证据 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-complete-core-20261020.json">完整主核心实现记录</a>固定本批十个生产目标、上游源码指纹、补丁、6256 条翻译目录、PSL 导入依赖、完整发行树和 MSI 哈希。D01 按实现完整性关闭；D03/D04 的先前记录保留原始字节范围。首个 Windows x64 完整发行树含 9733 个文件，MSI 含 9735 个文件，大小为 117351292 字节；这些数字仅描述产物，不换算进度或性能。</p>
+<p>发行树的七个 Git 入口均使用本项目编译的核心，没有部署上游 Git 核心。配套包含独立 SSH、GCM、Git LFS、shell/脚本解释器、签名工具、模板/文档、软件 LF 默认和证书。默认 Schannel curl 已接入公共后缀校验；显式 OpenSSL 配置走独立获取的固定 provider，发布包不包含该 provider DLL。MSI 编译仅进行输入哈希、架构、语法和打包检查，没有执行产品或安装器。</p>
+<p>D08/D09 尚未开始；新核心未执行、安装、接管或发布。本机仍为原 Git 和独立旧预览。剩余编号为 D02、D05、D06、D07、D08、D09、D10。下一阶段退出条件为：四项剩余实现全部关闭，五平台包及完整回归输入已备齐；达成前不进入测试。</p>
+<p><a href="../../native-core/receipts/implementation-static-runtime-20261020.json">静态依赖收口记录</a>保留后续 nghttp2 静态链接修正、48 个自编译入口/依赖 PE 的归属检查和两个 Windows 架构 provider 的 25 个 API 导出检查。最新未安装 MSI 为 117732475 字节，含 9736 个文件。检查只读取 PE/哈希，没有加载 DLL 或执行产品；不计为 D08 验收。生成脚本同时改为内容相同时不重写头文件，避免无效全量重编译。</p>
+<h2>Windows 迁移实现批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-windows-migration-20261020.json">迁移实现记录</a>记录自有控制台/GUI 转发入口、版本资源、系统配置承接、备份/访问控制/注册表/快捷方式/Terminal 保留、旧版卸载、自动与显式回滚、MSI 卸载保护及共享更新锁的源码和编译产物。用户级完整 MSI 已编译；没有执行迁移脚本、产品、安装器或测试。随后源码补入明确的安装范围字段与机器级到用户级接管阻断，编译记录保留包内和当前脚本各自哈希，不能把较早字节当成后续改动的验收。</p>
+<p>本机安装元数据确认原 Git 位于 LocalMachine，因此 D05 仍须完成机器级 MSI、受保护更新、全机调用路径与恢复范围；不能以用户级安装替代本项。直接引用 Git 安装目录的服务数量为零只说明该条静态查询，没有证明不存在间接调用者。本批未关闭整项：仍为 <strong>3/10（30%）</strong>，实现 <strong>3/7</strong>。下一批明确退出条件是机器级安装/更新/迁移所需源码和完整 MSI 均已生成，原用户级标识保持兼容；功能与性能回归仍等待 D01-D07 全部关闭。</p>
+<h2>Windows 双范围安装与更新入口批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-windows-scopes-20261020.json">本批记录</a>关闭 D05 的实现工作，当前为 <strong>4/10（40%）</strong>，实现 <strong>4/7</strong>。机器/用户两个 MSI 各含 9896 个文件，压缩包约 124 MB，均未安装。原生版本依赖、更新 CLI 和后续 PATH 修复的当前源码指纹与较早包内指纹分别保存；不会把旧包当成这些改动的运行验收。</p>
+<p>固定剩余编号为 D02、D06、D07、D08、D09、D10。下一批先完成 D02 的既有系统运行时配置承接，再收齐跨平台更新和五平台包、许可证/对应源码与完整回归输入；不增加交付项，不重复按功能打包测试。D01–D07 全部关闭前，D08 功能回归和 D09 性能批次均不启动。原 Git、本机登录和仓库数据未改动。</p>
+<h2>运行时配置承接批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-runtime-configuration-20261020.json">源码和编译记录</a>保存不可变默认配置、活动配置、升级保留、迁移快照和 MSI 初始化/回滚/提交的实现指纹。Windows 原生 TLS 配置选择已编译；后续 POSIX 自有 SSH/shell/路径补丁已整合，尚待目标编译。没有运行产品、安装器、初始化或迁移，也没有为本功能重复打包 MSI。</p>
+<p>本批未关闭新的整项：仍为 <strong>4/10（40%）</strong>，实现 <strong>4/7</strong>。D02 还差其余平台运行时构建/装配输入；D06 还差跨平台更新和最终清单；D07 还差五平台最终包、对应源码/许可证及完整回归输入。三项实现全部关闭后才启动 D08，随后批量完成 D09，最终 D10 发布一次并安装接管。</p>
+<h2>POSIX 核心构建与主配套输入批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-posix-core-20261020.json">本批编译记录</a>记录 Linux x64 十个生产目标、243 个核心装配文件、62,420,246 字节构建归档及原生镜像/完整 Perl 头文件的静态核对。修复了上游 CMake Perl 安装文件名和头文件换行问题。两个构建的临时容器/卷均已清理；没有执行新核心或功能测试。</p>
+<p>已批量固定并准备 Linux x64/ARM64、macOS ARM64 的 Git LFS 3.7.1 和 GCM 2.7.3，逐份记录官方资产摘要及实际原生架构；没有运行或注册这些配套。Windows 系统配置迁移也补入有序 credential.helper 保留逻辑。</p>
+<p>本批未关闭新的整项，仍为 <strong>4/10（40%）</strong>、实现 <strong>4/7</strong>。D02 还差 POSIX SSH/shell/签名配套、动态库闭包及完整装配；D06 还差跨平台更新；D07 还差五平台最终包、对应源码/许可证和统一回归输入。macOS 原生构建环境仍待提供。D08/D09 未开始，原 Git 和本机登录/仓库数据未改动。</p>
+<h2>POSIX 运行时与语言桥实现批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-posix-runtime-language-20261020.json">本批记录</a>保存 Linux x64 自有运行时材料、共享 GUI/手册/HTML 输入和 Windows 十个语言桥生产目标的编译指纹。临时 Docker 容器和卷已清理。通用 POSIX 装配器要求真实更新器和源码匹配的核心；没有执行装配、产品、安装、接管或测试。后续 IDN/GSS/HTTP2 和许可证采集改动仍是源码，等待 D07 最终重建。</p>
+<p>本批未关闭新的整项，仍为 <strong>4/10（40%）</strong>、实现 <strong>4/7</strong>。剩余编号固定为 D02、D06、D07、D08、D09、D10。下一批退出条件是跨平台更新器与安装事务实现完备，再收齐五平台最终构建/包和完整回归输入；D01–D07 全部关闭前不运行 D08/D09。</p>
+<h2>跨平台自动更新实现批次 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-cross-platform-updates-20261020.json">本批实现记录</a>关闭 D06：Windows 更新入口和三个 POSIX 原生更新器已实现；Go 1.27.2 编译 Linux x64/ARM64、macOS ARM64，Windows x64 十个原生核心目标也已消费新的 IDN/HTTP2 依赖重建。POSIX 使用受保护状态/独占锁、独立版本目录、原子 current 链接及事务恢复，Linux systemd 和 macOS launchd 承接后台更新。没有执行更新器、服务、安装器或产品。</p>
+<p>当前 <strong>9/10（90%）</strong>，实现 <strong>5/7</strong>；剩余 D02、D07、D08、D09、D10。D02 还差其余目标运行时闭包/装配；D07 还差五平台最终包、对应源码/许可证和完整批次输入。Windows ARM64 构建工具正在补齐，Mac 构建连接已可用。按最新用户要求，Mac 宿主不运行产品测试；<code>tests/containers/Dockerfile_mac</code> 负责最终包、Mach-O 与 shell 语法隔离检查，不冒充 macOS 内核/Keychain 验收。该容器尚未构建或执行。</p>
+<p>本机默认 Git 尚未接管，也没有发布。旧开发构建缓存通过 Cargo 的限定 dev profile 清理命令释放 23.6 GiB；本批临时 Docker 容器/卷已清理，其他项目镜像/数据卷保留。</p>
+<h2>五平台运行时实现收口 · 2026-10-20</h2>
+<p><a href="../../native-core/receipts/implementation-five-platform-runtimes-20261020.json">实现记录</a>关闭 D02。五平台核心均消费同一集成源码；Mac ARM64 已完成原生编译、11,693 文件的运行时装配和产物取回，没有在 Mac 上运行产品测试。Windows ARM64 使用隔离的 LLVM-MinGW 工具链，未终止用户已有 MSBuild 进程。Linux x64/ARM64 配套分别收集 2,905 / 2,912 文件，所有临时构建容器/卷已按本任务标签清理。</p>
+<p>当前 <strong>6/10（60%）</strong>、实现 <strong>6/7</strong>；只剩 D07 实现收口，之后统一进行 D08、D09、D10。原生候选版本由 <code>packaging/product.json</code> 独立声明为 0.3.0；这不是已发布或已安装的版本。<code>complete_git_parity</code> 仍为 false，本机默认 Git 还未接管。</p>
+<h2>完整候选包与并行回归输入</h2>
+<p><a href="../../native-core/receipts/implementation-final-packages-20261020.json">本批记录</a>关闭 D07：当前为 <strong>7/10（70%），实现 7/7</strong>，剩余 D08、D09、D10。默认 8 路并行执行独立检查，两个 MSI 范围保留一个串行安装通道。报告记录整批实际耗时及是否低于 60 秒；不删减检查，不将超时改写为通过。性能采样单独成批执行，避免并行负载污染结果。源码材料详情见 <a href="corresponding-sources.html">对应源码</a>。</p>
+<h2>最终统一候选回归（2026-10-20）</h2>
+<p><a href="../benchmarks/native-correctness-consolidated-20261020.json">统一回归记录</a>的 12 项报告全部通过。独立功能验证耗时 <strong>45.725 秒</strong>，达到 <code>&lt;1min</code>；完整批次含用户/机器两套 MSI 安装、修复、失败注入回滚、升级、降级拒绝和卸载，耗时 <strong>652.943 秒</strong>，完整批次未达到一分钟目标。没有为达标跳过检查。Mac 只进行了包、Mach-O 和 shell 静态检查，未在 Mac 执行产品。</p>
+<p>进度为 <strong>7/10</strong>：D08 完成，D09 同一候选的成对性能批次正在执行，D10 发布和实际接管尚未完成。接管前只读预检发现三处旧 cmd 启动器映射和原更新器通知工具退役规则需要补齐；原 Git 尚未移除。</p>
+<h2>修复后验收与发布前进度</h2>
+<p>当前为 <strong>9/10</strong>。更新后的<a href="../benchmarks/native-correctness-consolidated-20261020.json">正确性记录</a>全通过：并行功能 <strong>52.177 秒</strong>，含串行 MSI 生命周期的完整批次 <strong>641.437 秒</strong>。旧 cmd 包装器映射和原更新器通知工具退役规则已整合。</p>
+<p><a href="../benchmarks/native-performance-consolidated-20261020.json">性能批次</a>全部通过，耗时 <strong>371.473 秒</strong>，完整性能批次未达到一分钟目标。千/万/十万文件 status 中位数分别为 19.206/61.075/86.173ms，参考命令为 27.154/69.390/95.485ms。启动约 12ms，对照约 20ms。网络表现接近参考；主进程内存不等于包含参考包装器子进程的总内存。D10 安装、实际接管与唯一发布尚待完成。</p>
+<h2>git-default-v2 布局重构（2026-10-22）</h2>
+<p>本节记录在 v0.3.0 发布之后发生的安装布局变更，不改写上面各批次的历史结论。</p>
+<p>MSI 目录树已合并到官方 Git 默认目录：机器级 <code>%ProgramFiles%\Git</code>，用户级
+<code>%LOCALAPPDATA%\Programs\Git</code>。主 IDE 入口 <code>cmd\git.exe</code> 由 git-next 载荷直接承担，
+不再是指向旧安装的桥接转发器，因此 IDE 的 <code>Cannot Run Git</code> 报错从根因上消失。
+<code>bin\git.exe</code> 与 Git-Terminal 属于同一受管安装。</p>
+<p>接管语义同步改为同址覆盖：<code>Get-GnTakeoverPlan</code> 不再要求新旧目录分离（仍拒绝嵌套），
+新增 <code>same_directory</code> 与 <code>stale</code> 状态；同址时不铺桥接转发器，而是按 sha256 精确删除
+官方卸载器遗留物，并把迁移后的 <code>system.gitconfig</code> include 改指 <code>runtime\etc\gitconfig</code>。
+回滚在 MSI 仍占用目录时会被拒绝，并提示先卸载 MSI。</p>
+<p>两处历史缺陷已修正。其一，<code>REPLACEGIT</code> 授权属性此前被标记为 <code>Secure=&quot;yes&quot;</code>；Secure 属性在
+<code>InstallExecuteSequence</code> 期间不可由命令行改写，也不会从客户端传递给服务端，因此受管安装下
+该值会静默保持 <code>0</code>，官方 Git 已注册时安装会被 Launch Condition 恒定阻断。现已移除 <code>Secure</code>，
+并在 <code>install.ps1</code> 中从 verbose MSI 日志核验安装器确实记录了 <code>REPLACEGIT=1</code>，未记录则拒绝继续。
+其二，<code>Remove-GnBootstrapLegacyInstall</code> 此前在 32 位进程下使用空的 <code>$env:ProgramW6432</code>，
+使期望路径退化为 <code>\git-next</code>、前缀校验过宽；现改为从 64 位注册表视图解析原生 Program Files。</p>
+<p>MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCode 与 UpgradeCode 不变，
+升级链成立）。载荷结构直读验证 13/13 关键入口落位正确，缺失 0。<code>REPLACEGIT</code> 属性的 Secure 列
+已确认为空。实际安装验收仍受本机环境限制（<code>msiexec</code> 对任何包返回 1619），尚未执行。</p>
+</main></html>

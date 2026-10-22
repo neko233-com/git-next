@@ -1,0 +1,56 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Overview</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>git-next</h1>
+<p>Windows: the <a href="https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0">Git-Terminal 0.2.0 complete MSI bundle</a> includes the accepted git-next 0.3.0 engine with the updated SSH/SFTP/monitoring terminal and prompt latency fixes. Existing installations should use its <code>install_bundle.ps1</code> helper; see the <a href="terminal.html">component installation guide</a>. Linux/macOS core packages are unchanged.</p>
+<p><a href="../../README.zh-CN.md">简体中文</a> · <a href="index.html">Manual</a> · <a href="delivery-status.html">Delivery status</a> · <a href="https://neko233-com.github.io/git-next/">Documentation site</a></p>
+<p>git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.</p>
+<p>Version 0.3.0 passed the final 18-case local correctness evidence and paired performance batch. Original Git has been uninstalled and the workstation default is git-next. Publication and the completed 10/10 scope are recorded in <a href="delivery-status.html">delivery status</a>. Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in <a href="performance.html">performance</a>.</p>
+<h2>Native packages</h2>
+<p>Download accepted packages from <a href="https://github.com/neko233-com/git-next/releases">GitHub Releases</a>. Candidate build output is not an installation recommendation. Released Windows packages include the owned runtime and require no Rust compiler.</p>
+<table>
+<thead>
+<tr>
+<th>Platform</th>
+<th>Package</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows x64 / ARM64</td>
+<td>Machine MSI or user MSI</td>
+<td>Machine installation requires administrator rights</td>
+</tr>
+<tr>
+<td>Linux x64 / ARM64</td>
+<td>Complete tar.gz with install.sh</td>
+<td>Debian 12 / glibc 2.36 or compatible system</td>
+</tr>
+<tr>
+<td>macOS Apple Silicon</td>
+<td>Complete tar.gz with install.sh</td>
+<td>macOS 15.5+; package/Mach-O/shell validation uses Dockerfile_mac</td>
+</tr>
+</tbody>
+</table>
+<p>Use the <a href="installation.html">native installation and removal guide</a>. The root <code>install.ps1</code> installs the accepted native MSI and automatically takes over registered Git for Windows (with UAC for machine installations); it preserves repository/profile data and provides a verified recovery backup. <a href="takeover.html">Takeover procedure</a>.</p>
+<h2>Commands and defaults</h2>
+<pre><code class="language-sh">git --version
+git version --json
+git language get
+git language set chinese
+git language set english
+git language set auto
+git --language english status
+git update check
+</code></pre>
+<p><code>git --version</code> identifies git-next and its compatibility baseline. Normal Git commands, plumbing, hooks, signing, LFS, credential helpers, submodules and linked worktrees use the full native engine. User-configured hooks, filters and helper programs retain their normal Git behavior.</p>
+<p>Unconfigured text uses LF consistently across platforms. Explicit repository attributes, binary/LFS rules and configuration retain their priority. New repositories remain empty after init. <code>git eol --apply</code> explicitly installs missing shared LF/editor policy; it does not silently rewrite every existing project. Pure line-ending changes are compared canonically, while content/serialization changes remain visible. <a href="line-endings.html">LF policy</a>.</p>
+<p>Language follows system preferences and supports persistent and per-command overrides. Machine formats remain stable. Automatic updates select official GitHub metadata, probe official/mirror download routes concurrently and verify downloaded bytes; mirrors cannot choose the release or provide its trusted identity. <a href="language.html">Languages</a> · <a href="updates.html">Updates</a>.</p>
+<h2>Evidence and source</h2>
+<p>Validation runs locally, with independent correctness lanes in parallel and Windows Installer transactions serialized. Reports retain actual elapsed time and failures. Performance uses a separate paired batch; measured medians, p95 and primary-process memory determine claims. No universal speedup is promised. <a href="building.html">Builds</a> · <a href="performance.html">Performance</a> · <a href="compatibility.html">Compatibility</a>.</p>
+<p>The native core is GPL-2.0-only with the declared dependency licenses and corresponding source bundles. <a href="corresponding-sources.html">Source/license delivery</a>. No GitHub Actions are used.</p>
+<h2>Windows one-click installation</h2>
+<p>After obtaining the official release's <code>install.ps1</code>, run <code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1</code>. <strong>This automatically replaces registered Git for Windows</strong>, preserves configuration/login/repositories and records a protected rollback transaction. <code>-Plan</code> inspects the selection without changes. Offline MSI/TLS material and checksum requirements are documented in <a href="installation.html">installation</a>.</p>
+<p>Windows MSI installs the independent Rust + GPUI Fast <a href="terminal.html">Git-Terminal</a> beside Git-next, with tabs, Unicode/IME, copy/paste, scrollback and owned Bash plus PowerShell/CMD profiles. It replaces the Git Bash desktop entry and adds no Git GUI menu. <a href="game-projects.html">Built-in LFS and game profiles</a> cover Unity/Tuanjie and Unreal; no separate LFS installer is needed.</p>
+<h2>Source and historical preview</h2>
+<p>The native C core is GPL-2.0-only; owned packaging/extensions and the terminal carry their declared licenses. Pinned dependencies, notices and corresponding-source bundles accompany the release. No GitHub Actions are used. The independent Gitoxide/Russh Rust preview remains historical source; <a href="https://github.com/neko233-com/git-next/blob/ecee4ad91367327957d77ff4bdcb9349d8ee0511/README.md">the old entrypoint at its fixed revision</a> does not describe the current installer. Follow the native installation guide above.</p>
+</main></html>
