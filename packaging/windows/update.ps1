@@ -7,6 +7,29 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+# A custom action run by the installer has no console: its output is discarded, so a
+# failure reaches the user as a bare `Error 1722` with no reason. Every unhandled error
+# is recorded here, next to the other product state, before the failure is signalled.
+trap {
+    try {
+        # A machine installation writes to the protected program data root; a user
+        # installation has no access there and uses the local application data root.
+        # Both are tried, so a failure is recorded whichever scope is being installed.
+        $candidates = @(
+            (Join-Path $env:ProgramData 'git-next\logs'),
+            (Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'git-next\logs')
+        )
+        $entry = '{0} mode={1} scope-hint={2} {3}{4}{5}' -f (Get-Date).ToString('o'), $Mode, $env:GITNEXT_LOG_SCOPE, $_.Exception.Message, [Environment]::NewLine, $_.ScriptStackTrace
+        foreach ($directory in $candidates) {
+            try {
+                [void][IO.Directory]::CreateDirectory($directory)
+                [IO.File]::AppendAllText((Join-Path $directory ('msi-action-' + $Mode + '.log')), $entry + [Environment]::NewLine)
+                break
+            } catch {}
+        }
+    } catch {}
+    exit 1
+}
 Import-Module (Join-Path $PSScriptRoot 'Update.Core.psm1') -Force
 $installRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $packagePath = Assert-GnOwnedPath $installRoot (Join-Path $installRoot 'package.json')
@@ -105,7 +128,23 @@ if ($context.machine) { Initialize-GnMachineDirectory $stateRoot }
 else { [void][IO.Directory]::CreateDirectory($stateRoot) }
 $statePath = Assert-GnOwnedPath $stateRoot (Join-Path $stateRoot 'state.json')
 if ($Mode -in @('Register','Unregister','RollbackRegistration')) {
-    Set-GnUpdateTask $installRoot $stateRoot $installed.platform $Mode $context
+    # Registering the update task is an optional integration, not part of the file
+    # installation. Failing the whole install because a scheduled task could not be
+    # created destroys five minutes of correctly copied files and reports a bare
+    # installer error; the failure is recorded instead, and `git install verify`
+    # reports the missing task with the command that repairs it.
+    try {
+        Set-GnUpdateTask $installRoot $stateRoot $installed.platform $Mode $context
+    } catch {
+        if ($Mode -eq 'Unregister') { return }
+        $directory = if ($context.machine) { $context.root } else { $context.root }
+        try {
+            [void][IO.Directory]::CreateDirectory((Join-Path $directory 'logs'))
+            $entry = '{0} mode={1} registration failed: {2}{3}{4}' -f (Get-Date).ToString('o'), $Mode, $_.Exception.Message, [Environment]::NewLine, $_.ScriptStackTrace
+            [IO.File]::AppendAllText((Join-Path $directory 'logs\updater-registration.log'), $entry + [Environment]::NewLine)
+        } catch {}
+        Write-Output ('git-next: the update task could not be registered: ' + $_.Exception.Message)
+    }
     return
 }
 $lockPath = Assert-GnOwnedPath $stateRoot (Join-Path $stateRoot 'updater.lock')

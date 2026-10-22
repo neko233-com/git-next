@@ -20,6 +20,15 @@
 - The checker validates configuration, not prose. Do not add a translation service, a network lookup or a golden-text comparison.
 - Never translate product identity, command and option names, machine-readable output, or user data (paths, refs, hashes, commit messages).
 
+## Windows installer
+
+- The package's job is declarative: files, registry values, shortcuts. Anything stateful - runtime configuration, update registration, takeover - is an *integration* that must be idempotent and must never abort a file installation. A custom action that fails after five minutes of copying destroys a correct installation to report an unrelated problem.
+- Every custom action records its own failure before signalling it (`%ProgramData%\git-next\logs\msi-action-<mode>.log`, falling back to the local application data root). A bare `Error 1722` is not an acceptable failure mode.
+- Stateful integrations report through `git install verify`, not through the installer's exit code alone. The verifier is read-only and takes no locks, so it works while the product is in use and while something else is broken.
+- `/x` on a taken-over installation is refused on purpose: roll back the takeover first. Do not weaken that guard to make a test pass.
+- Test the lifecycle with `tools/msi_lifecycle.py`, never by installing over a working toolchain. The machine scope only accepts a root inside Program Files, so the isolated root lives there.
+
+
 ## Documentation
 
 - `docs/GIT-GUIDE.md` is the plain-language manual that replaces the official Git documentation for our users. It is task-first: a reader who has never used Git must be able to follow it end to end. Keep every command it shows one the binary actually accepts, and check `--help` when in doubt.

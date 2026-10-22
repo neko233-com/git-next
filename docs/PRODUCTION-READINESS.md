@@ -78,12 +78,20 @@ matrix over dirty/staged/conflicted states and an interrupted-checkout test.
 
 ## Beyond the blockers
 
-**Installation has never been executed end to end in this environment.** The MSI is
-built and its payload is verified file by file, but `msiexec` returns 1619 for every
-package here, so install, upgrade, repair and uninstall are unproven. This is the
-single largest unknown: everything else is a feature gap, this one is "we do not know
-if it installs". *Done means:* install / upgrade / repair / uninstall on a clean
-Windows VM, and the IDE finding `cmd\git.exe` afterwards.
+**The installer now installs, and it took four defects to get there.** `msiexec`
+returns 1619 from a non-elevated shell here, but from an elevated one the package
+installs, repairs, upgrades over an existing product and uninstalls, with receipts in
+[the installer proof](MSI-PROOF.md). Getting to that state found four real defects: a
+custom action could roll back a correct installation over an optional integration;
+custom action failures produced a bare `Error 1722` with no reason; the entry points
+silently stayed as 8 KB forwarders because Windows Installer keeps a same-version file;
+and the uninstall guard refused a taken-over installation without saying so.
+
+What is still unproven: a first install on a **clean** machine, the uninstall of a
+**taken-over** installation (it requires a PowerShell session, which this environment
+cannot provide), and an upgrade from a **real previous release** artifact rather than
+from a second build of the same generator. *Done means:* those three on a clean Windows
+VM, plus the IDE finding `cmd\git.exe` as the 5.2 MB payload afterwards.
 
 **Two platforms have no runtime evidence.** Linux x64/ARM64 and macOS Apple Silicon
 build and pass static checks; runtime acceptance on real hardware or a container that

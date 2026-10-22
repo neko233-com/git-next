@@ -1,0 +1,196 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Installer proof</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Windows installer proof</h1>
+<p>This page records what the Windows package has actually been made to do, on a real
+machine, with the evidence each claim rests on. It exists because &quot;the MSI builds&quot;
+and &quot;the MSI installs&quot; are different statements, and only the second one matters.</p>
+<h2>What is proven</h2>
+<h3>Full lifecycle, user scope, at the package's own path</h3>
+<p><code>msi_lifecycle.py</code> installed, repaired and removed the package at
+<code>%LOCALAPPDATA%\Programs\Git</code>, which is where a user-scope installation belongs:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Result</th>
+<th>Time</th>
+<th>What was checked</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>install</td>
+<td>0</td>
+<td>45.1 s</td>
+<td>10,658 files; <code>cmd\git.exe</code> 5,248,000 bytes; <code>bin\git.exe</code> present; <code>updater\msi-worker.exe</code> present; product code registered</td>
+</tr>
+<tr>
+<td>the installed binary</td>
+<td>—</td>
+<td>—</td>
+<td><code>git --version</code> prints <code>2.54.0.windows.1.git-next.0.3.0</code> from the installed tree</td>
+</tr>
+<tr>
+<td>repair</td>
+<td>0</td>
+<td>61.8 s</td>
+<td>entry points intact, file count unchanged</td>
+</tr>
+<tr>
+<td>uninstall</td>
+<td>0</td>
+<td>50.6 s</td>
+<td>entry points gone, product code removed from the uninstall registry</td>
+</tr>
+</tbody>
+</table>
+<p>Receipt: <code>docs/benchmarks/msi-user-lifecycle-20261022.json</code>.</p>
+<p>The <code>cmd\git.exe</code> size check is the point of the whole exercise: a bridge forwarder
+is a few kilobytes, the payload is 5.2 MB, and an IDE that starts a forwarder cannot
+work. The installer is verified on the file the IDE will call, not on a file count.</p>
+<h3>Machine scope, major upgrade over an existing installation</h3>
+<p>Installing the machine package over an existing git-next installation:</p>
+<table>
+<thead>
+<tr>
+<th>Fact</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exit code</td>
+<td>0 (279.3 s)</td>
+</tr>
+<tr>
+<td>previous product</td>
+<td><code>{35F9C1DD-2B81-5F01-8735-064BAC6BC396}</code> removed</td>
+</tr>
+<tr>
+<td>resulting product</td>
+<td><code>{36A02B2C-3A80-508B-B2C4-73A84FE31A69}</code></td>
+</tr>
+<tr>
+<td>products named git-next afterwards</td>
+<td>one</td>
+</tr>
+</tbody>
+</table>
+<p>The major upgrade path is real: <code>RemoveExistingProducts</code> runs after the new product's
+files land, and the old registration is gone afterwards.</p>
+<h2>What this work fixed</h2>
+<p>Every item below was found by trying to install, and each one is a defect that would
+have reached a user.</p>
+<p><strong>1. A custom action could destroy a correct installation.</strong> Making the update task
+registration fail the install meant a five-minute file copy was rolled back because a
+scheduled task could not be created. Registration is an integration, not part of the
+file installation: it is now attempted, recorded if it fails, and reported by
+<code>git install verify</code> with the command that repairs it. An install cannot be broken by
+an optional integration any more.</p>
+<p><strong>2. Custom action failures were invisible.</strong> A Windows Installer custom action has no
+console, so <code>msiexec</code> reported <code>Error 1722</code> and nothing else - no reason, no scope, no
+stack. Every action now writes its failure to <code>%ProgramData%\git-next\logs\msi-action-&lt;mode&gt;.log</code>
+(falling back to the local application data root for user installations). The
+investigation in this session used that log to find each root cause within one install
+attempt instead of guessing.</p>
+<p><strong>3. The entry points were silently inherited.</strong> This is the most damaging one. An
+earlier layout leaves a forwarder at <code>cmd\git.exe</code> and <code>bin\git.exe</code> with the same
+version stamp, and Windows Installer keeps a file it considers current. The result
+observed here: 10,600 files installed, and an 8,192-byte stub left exactly where the
+IDE looks - the failure the whole layout change was meant to remove. The package now
+declares <code>RemoveFile On=&quot;install&quot;</code> for those two paths, so they are removed before they
+are written; the rows are present in the built database (<code>RemoveFile</code> table, components
+<code>ReplaceEntry_*</code>). End-to-end confirmation is pending: the last install attempt could
+not complete because the running shell holds an open handle on the installed
+<code>cmd\git.exe</code>, which is also why the file could not be replaced by hand.</p>
+<p><strong>4. The uninstall guard was correct but unexplained.</strong> Uninstalling while a Git
+takeover is active is refused on purpose, because removing the files would strand the
+machine's Git. The refusal surfaced as a bare <code>Error 1722</code>; the reason is now recorded,
+and the supported order is documented: roll the takeover back, then uninstall.</p>
+<p><strong>5. A TLS setting could disable every remote.</strong> Unrelated to the installer, found while
+building the clone benchmark: an <code>http.sslCAInfo</code> that rustls cannot parse (curl's
+<code>ca-bundle.trust.crt</code> is the common Windows case) made all HTTP and HTTPS remotes fail.
+TLS configuration now applies only to <code>https://</code>, and an unparsable bundle falls back to
+the default trust store. See <a href="../../vendor/gix-transport/PATCHES.md">vendor/gix-transport/PATCHES.md</a>.</p>
+<h2>The agent path</h2>
+<p>An installation is something an automated agent has to drive: install, verify, decide,
+repair. That path must not require a shell with the right language, a GUI, or an
+elevated desktop session.</p>
+<pre><code class="language-sh">msiexec /i git-next.msi /qn /norestart REPLACEGIT=1     # install, no interaction
+git install verify --json                                # verify, machine readable
+</code></pre>
+<p><code>git install verify</code> is the verification half. It takes no locks and opens every file
+read-only, so it runs while Git is in use and while the thing being diagnosed is
+broken. It reads the manifest the installation itself carries, so it does not trust the
+installer that wrote it:</p>
+<pre><code class="language-json">{
+  &quot;schema_version&quot;: 1,
+  &quot;ok&quot;: false,
+  &quot;version&quot;: &quot;0.3.0&quot;,
+  &quot;install_root&quot;: &quot;C:\\Program Files\\Git&quot;,
+  &quot;checks&quot;: [
+    {&quot;check&quot;: &quot;manifest_identity&quot;, &quot;ok&quot;: true},
+    {&quot;check&quot;: &quot;entry_point:cmd/git.exe&quot;, &quot;ok&quot;: false, &quot;detail&quot;: &quot;8192 bytes&quot;},
+    {&quot;check&quot;: &quot;files&quot;, &quot;ok&quot;: false, &quot;detail&quot;: {&quot;missing&quot;: 0, &quot;wrong_hash&quot;: 2}}
+  ],
+  &quot;problems&quot;: [&quot;cmd/git.exe is missing or not the real payload&quot;],
+  &quot;next_steps&quot;: [&quot;repair the installation: msiexec /famus {36A02B2C-...}&quot;]
+}
+</code></pre>
+<ul>
+<li>Exit code 0 means verified, 1 means a named problem. Nothing is reported as a bare
+number.</li>
+<li><code>problems</code> is what is wrong; <code>next_steps</code> is what to do about it. Both are prose an
+agent can read and a human can act on.</li>
+<li><code>--hash-all</code> hashes every file; by default a deterministic sample is hashed plus
+every entry point, because hashing 1.3 GB takes longer than most callers want to wait.</li>
+<li>The check is deliberately independent of the runtime: it does not start <code>git</code>, does
+not use PowerShell, and does not need the update task, which is what makes it usable
+when the runtime is the thing that is broken.</li>
+</ul>
+<h2>What is not proven here</h2>
+<ul>
+<li><strong>A clean machine.</strong> This machine already had a git-next installation and an active
+takeover, so the machine-scope test exercised the upgrade and over-install paths, not
+a first install on an empty machine. The user-scope test did start from nothing.</li>
+<li><strong>Uninstalling a taken-over installation.</strong> Refused by design; exercising the
+rollback needs PowerShell, and this session cannot start it (the PowerShell tool
+fails with a sandbox injection error, and the shell refuses to launch it). The
+documented order is rollback, then uninstall; that whole sequence needs a session
+with a working PowerShell.</li>
+<li><strong>Upgrade from a real previous release.</strong> The archived <code>0.2.999</code> fixture predates the
+current launch conditions and refuses to install beside an official Git. A synthetic
+0.3.1 built by bumping the version was rejected by the runtime manifest check - which
+is the correct behaviour, since the payload really was 0.3.0. The upgrade path is
+proven only between two builds made by the same generator.</li>
+<li><strong>Stale files after over-install.</strong> Installing the new layout over a takeover-era
+directory left files from both layouts (19,813 files on disk against a 10,600-file
+table). <code>install.ps1</code> owns the stale-file removal; the MSI alone does not clean a
+directory it did not create.</li>
+</ul>
+<h2>Reproduce</h2>
+<pre><code class="language-sh"># build the package from a distribution tree
+python packaging/native_msi.py --distribution &lt;tree&gt; --wix .evidence/tools/wix5/wix.exe \
+    --output-dir &lt;out&gt; --scope user --allow-experimental-local
+
+# prove install, repair and uninstall at the package's own path
+python tools/msi_lifecycle.py \
+    --package &lt;out&gt;/git-next-0.3.0-windows-x64-user.msi \
+    --work &quot;$LOCALAPPDATA/Temp/gn-lifecycle&quot; \
+    --natural-folder --install-dir &quot;$LOCALAPPDATA/Programs/Git&quot; \
+    --receipt docs/benchmarks/msi-user-lifecycle-20261022.json --skip-upgrade
+
+# verify any installation, including a broken one
+git install verify --root &quot;C:/Program Files/Git&quot; --json
+</code></pre>
+<h2>The checklist this leaves</h2>
+<ul>
+<li>[x] install, repair, uninstall at a real path, with a receipt</li>
+<li>[x] major upgrade over an existing product, old registration removed</li>
+<li>[x] entry points verified as the real payload, not a forwarder</li>
+<li>[x] custom action failures produce a named reason</li>
+<li>[x] machine-readable verification that needs no PowerShell</li>
+<li>[ ] first install on a clean VM</li>
+<li>[ ] uninstall of a taken-over installation, after a real rollback</li>
+<li>[ ] upgrade from the previous release artifact</li>
+<li>[ ] stale-file cleanup proven on a takeover-era directory</li>
+</ul>
+</main></html>

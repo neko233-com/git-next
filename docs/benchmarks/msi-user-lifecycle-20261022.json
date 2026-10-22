@@ -1,0 +1,95 @@
+{
+  "action_logs": {
+    "msi-action-InitializeRuntimeConfiguration.log": "2026-10-22T19:04:34.2057177+08:00 mode=InitializeRuntimeConfiguration Path escapes the git-next installation state.\nat Assert-GnOwnedPath, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Update.Core.psm1: line 44\nat Assert-GnMachineInstall, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Scope.Core.ps1: line 64\nat Get-GnScopeContext, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Scope.Core.ps1: line 78\nat <ScriptBlock>, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\update.ps1: line 27\n2026-10-22T19:46:40.8217240+08:00 mode=InitializeRuntimeConfiguration Runtime default configuration manifest is invalid.\nat Get-GnRuntimeDefaults, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\Runtime.Configuration.ps1: line 77\nat Initialize-GnRuntimeConfiguration, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\Runtime.Configuration.ps1: line 93\nat <ScriptBlock>, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\update.ps1: line 44\n2026-10-22T19:48:38.7466110+08:00 mode=InitializeRuntimeConfiguration Runtime default configuration manifest is invalid.\nat Get-GnRuntimeDefaults, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\Runtime.Configuration.ps1: line 77\nat Initialize-GnRuntimeConfiguration, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\Runtime.Configuration.ps1: line 93\nat <ScriptBlock>, C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git\\updater\\update.ps1: line 44\n",
+    "msi-action-RollbackRuntimeConfiguration.log": "2026-10-22T19:04:34.6961021+08:00 mode=RollbackRuntimeConfiguration Path escapes the git-next installation state.\nat Assert-GnOwnedPath, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Update.Core.psm1: line 44\nat Assert-GnMachineInstall, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Scope.Core.ps1: line 64\nat Get-GnScopeContext, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\Scope.Core.ps1: line 78\nat <ScriptBlock>, D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-install-proof-20261022\\probe\\install\\updater\\update.ps1: line 27\n"
+  },
+  "after_uninstall": {
+    "arp_entries": {
+      "{35F9C1DD-2B81-5F01-8735-064BAC6BC396}": {
+        "display_name": "git-next",
+        "location": "",
+        "version": "0.3.0"
+      }
+    },
+    "files_left": 58,
+    "install_dir_exists": true
+  },
+  "install_dir": "C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git",
+  "installed": {
+    "arp_count": 2,
+    "arp_entries": {
+      "{35F9C1DD-2B81-5F01-8735-064BAC6BC396}": {
+        "display_name": "git-next",
+        "location": "",
+        "version": "0.3.0"
+      },
+      "{8BB0FD24-FB8F-5FFE-96A4-B0760516791E}": {
+        "display_name": "git-next",
+        "location": "",
+        "version": "0.3.0"
+      }
+    },
+    "bin_git_exists": true,
+    "cmd_git_bytes": 5248000,
+    "cmd_git_exists": true,
+    "cmd_git_is_payload": true,
+    "files": 10658,
+    "install_dir": "C:\\Users\\luohaojun\\AppData\\Local\\Programs\\Git",
+    "msi_worker_exists": true,
+    "reported_version": "git version 2.54.0.windows.1.git-next.0.3.0"
+  },
+  "isolated": true,
+  "isolated_note": "INSTALLFOLDER points at a directory inside Program Files that is not the Git directory, so the product tables and custom actions run unchanged while the machine toolchain stays untouched.",
+  "ok": true,
+  "package": "D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-final-user-20261022\\git-next-0.3.0-windows-x64-user.msi",
+  "package_bytes": 133977184,
+  "product": "git-next",
+  "product_code": "{8BB0FD24-FB8F-5FFE-96A4-B0760516791E}",
+  "steps": [
+    {
+      "checks": {
+        "bin_git_exists": true,
+        "cmd_git_is_payload": true,
+        "msi_worker_exists": true,
+        "package_product_registered": true,
+        "reported_version_matches": true
+      },
+      "result": {
+        "command": "msiexec /i D:\\Code\\neko233-Projects\\gitsss\\git-next\\.evidence\\msi-final-user-20261022\\git-next-0.3.0-windows-x64-user.msi REPLACEGIT=1 /qn /norestart /l*v C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\1-install.log",
+        "exit_code": 0,
+        "log": "C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\1-install.log",
+        "log_bytes": 36890734,
+        "seconds": 45.1
+      },
+      "step": "install"
+    },
+    {
+      "checks": {
+        "cmd_git_is_payload": true,
+        "files_unchanged": true
+      },
+      "result": {
+        "command": "msiexec /famus {8BB0FD24-FB8F-5FFE-96A4-B0760516791E} /qn /norestart /l*v C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\2-repair.log",
+        "exit_code": 0,
+        "log": "C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\2-repair.log",
+        "log_bytes": 36335834,
+        "seconds": 61.8
+      },
+      "step": "repair"
+    },
+    {
+      "checks": {
+        "arp_entry_removed": true,
+        "entry_points_removed": true
+      },
+      "result": {
+        "command": "msiexec /x {8BB0FD24-FB8F-5FFE-96A4-B0760516791E} /qn /norestart /l*v C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\4-uninstall.log",
+        "exit_code": 0,
+        "log": "C:\\Users\\luohaojun\\AppData\\Local\\Temp\\gn-lifecycle\\logs\\4-uninstall.log",
+        "log_bytes": 26732140,
+        "seconds": 50.6
+      },
+      "step": "uninstall"
+    }
+  ]
+}

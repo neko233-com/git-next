@@ -183,6 +183,7 @@ enum Commands {
         #[arg(long)]
         json: bool,
     },
+    Install(crate::installation::Options),
     Doctor {
         #[arg(long)]
         json: bool,
@@ -333,6 +334,7 @@ pub fn run() -> Result<()> {
             build_options,
             json,
         } => crate::identity::version(build_options, json),
+        Commands::Install(options) => crate::installation::run(options),
         Commands::Doctor { json } => crate::identity::doctor(json),
     }
 }

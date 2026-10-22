@@ -14,6 +14,10 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 NAMESPACE = uuid.UUID('57e363d4-5f82-4cd9-bd55-b37566f07458')
+# The files tools and IDEs invoke. A previous installation layout can leave a forwarder
+# at the same path with the same version stamp, and Windows Installer keeps a file it
+# considers current, so these are removed before they are written.
+ENTRY_POINTS = frozenset({'cmd/git.exe', 'bin/git.exe', 'mingw64/bin/git.exe'})
 WIX = 'http://wixtoolset.org/schemas/v4/wxs'
 ET.register_namespace('', WIX)
 UPGRADES = {
@@ -171,6 +175,20 @@ def main():
             element = ET.SubElement(component,'File',**attributes)
             if args.scope == 'machine':
                 ET.SubElement(element,'PermissionEx',Sddl='O:BAG:BAD:P(A;;FA;;;SY)(A;;FA;;;BA)(A;;FRFX;;;BU)')
+            if name in ENTRY_POINTS:
+                # The entry points are the files tools actually call, and a previous
+                # layout can leave a same-named forwarder at the same path with the same
+                # version stamp. Windows Installer keeps a file it considers up to date,
+                # so the package would install 10,600 files and leave an 8 KB stub
+                # behind, exactly where the IDE looks. Removing the existing file first
+                # makes the write unconditional without forcing every other file to be
+                # rewritten.
+                replace = ET.SubElement(group,'Component',
+                                        Id='ReplaceEntry_'+hashlib.sha256(name.encode()).hexdigest()[:24],
+                                        Guid='{'+str(uuid.uuid5(NAMESPACE,'replace/'+platform+'/'+name+identity_suffix)).upper()+'}',
+                                        Directory=directory_id)
+                ET.SubElement(replace,'RegistryValue',Root=registry_hive,Key='Software\\git-next\\MSI\\'+platform+'\\Replace',Name=name,Type='string',Value=version,KeyPath='yes')
+                ET.SubElement(replace,'RemoveFile',Id='Remove_'+hashlib.sha256(name.encode()).hexdigest()[:24],Name=relative.name,On='install')
         for name,(ident,_) in directories.items():
             if name == '.':
                 continue

@@ -4,6 +4,7 @@ mod credentials;
 mod difference;
 mod eol;
 mod identity;
+mod installation;
 mod language;
 mod lfs;
 mod merging;
