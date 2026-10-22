@@ -145,3 +145,25 @@ MSI 目录树已合并到官方 Git 默认目录：机器级 `%ProgramFiles%\Git
 MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCode 与 UpgradeCode 不变，
 升级链成立）。载荷结构直读验证 13/13 关键入口落位正确，缺失 0。`REPLACEGIT` 属性的 Secure 列
 已确认为空。实际安装验收仍受本机环境限制（`msiexec` 对任何包返回 1619），尚未执行。
+
+## 多语言与文档站（2026-10-22）
+
+本节记录在 v0.3.0 之后的接口语言与文档发布变更，不改写上面各批次的历史结论。
+
+接口语言由硬编码的英/中二选一改为数据驱动。`locales/` 下每个 JSON 文件即一种语言，
+`build.rs` 自行发现并内嵌全部文件，因此新增语言只需增加一个文件，不需要改动 Rust 代码、
+注册表、别名表或帮助文本。英文为源语言：代码中的消息模板是英文，语言文件只列出它覆盖的条目，
+未翻译的消息回退英文而不是消失，部分翻译可以正常降级。
+
+设备语言改为以系统原生 preferred-UI-language API 为准（Windows 与 Apple 平台），环境变量
+`LC_ALL`/`LC_MESSAGES`/`LANGUAGE`/`LANG` 仅在无原生 API 时参考；区域会先解析为书写系统再退化，
+因此 `zh-CN` 命中 `zh-Hans`，`zh-TW` 在提供 `zh-Hant` 时命中繁体。早前版本接受的
+`chinese`/`english`/`auto` 等名称保持可用，既有配置文件不会被破坏。
+
+文档站已发布为 GitHub Pages（`gh-pages` 分支根目录，`.nojekyll` 已随分支发布），
+`https://neko233-com.github.io/git-next/` 线上可访问，共 24 页。本仓库的工程约定禁止
+`.github/workflows/`，因此发布由 `tools/publish_docs.py` 在本地完成：用 Git 底层命令在临时
+索引中构建仅含渲染结果的分支提交，不触碰工作区与当前分支；推送为快进，不强制覆盖。
+
+Git-Terminal 同步采用同一套语言文件与自动检测，`git-terminal language list` 可列出内置语言，
+`set` 在写入前校验语言名称。

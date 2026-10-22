@@ -159,9 +159,12 @@ def main() -> int:
         workspace = stage(Path(temporary) / 'site')
         commit = build_commit(workspace)
         if not commit:
-            print('the published site is already up to date')
-            return 0
-        print(f'built the publication commit {commit[:12]}')
+            # The pages are unchanged. The branch may still never have been
+            # published - a render that was only committed locally leaves the
+            # remote behind - so the push below still runs.
+            print('the rendered pages are unchanged')
+        else:
+            print(f'built the publication commit {commit[:12]}')
         if arguments.dry_run:
             print(f'dry run: {BRANCH} was updated locally but not pushed')
             return 0

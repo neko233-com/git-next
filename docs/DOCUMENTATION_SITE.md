@@ -46,11 +46,19 @@ python tools/publish_docs.py            # render and publish
 python tools/publish_docs.py --dry-run  # render and report, push nothing
 ```
 
-The site is published from the `gh-pages` branch. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release. The script renders the pages, replaces the contents of the branch with the rendered site, commits it and pushes it.
+The site is published from the `gh-pages` branch, which Pages serves from the branch root. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release.
 
-The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the directory is rebuilt from scratch on every run.
+The script renders the pages, builds a commit that contains only the rendered site, and pushes it. The commit is assembled in a temporary index with git's plumbing commands, so the repository's index, work tree and current branch are never touched: a publication can run at any time, including with uncommitted work in the tree.
 
-The first publication has to point the repository at the branch once, in the repository settings: **Settings → Pages → Build and deployment → Source → Deploy from a branch → `gh-pages` / `root`**. After that the script keeps the branch up to date.
+The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the branch is rebuilt from scratch on every run. An empty `.nojekyll` marker is published with the pages, because they are already rendered and Jekyll would otherwise rewrite them.
+
+The push is a fast-forward. The publication commit always descends from the published tip, and a divergence is reported instead of being overwritten.
+
+## Published site
+
+<https://neko233-com.github.io/git-next/>
+
+Pages is configured to build from the `gh-pages` branch root. A publication becomes visible once the Pages build of the new commit finishes, which usually takes a few seconds; the build status is reported by `gh api repos/neko233-com/git-next/pages --jq .status`.
 
 ## Languages
 

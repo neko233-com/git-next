@@ -108,4 +108,20 @@
 <p>MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCode 与 UpgradeCode 不变，
 升级链成立）。载荷结构直读验证 13/13 关键入口落位正确，缺失 0。<code>REPLACEGIT</code> 属性的 Secure 列
 已确认为空。实际安装验收仍受本机环境限制（<code>msiexec</code> 对任何包返回 1619），尚未执行。</p>
+<h2>多语言与文档站（2026-10-22）</h2>
+<p>本节记录在 v0.3.0 之后的接口语言与文档发布变更，不改写上面各批次的历史结论。</p>
+<p>接口语言由硬编码的英/中二选一改为数据驱动。<code>locales/</code> 下每个 JSON 文件即一种语言，
+<code>build.rs</code> 自行发现并内嵌全部文件，因此新增语言只需增加一个文件，不需要改动 Rust 代码、
+注册表、别名表或帮助文本。英文为源语言：代码中的消息模板是英文，语言文件只列出它覆盖的条目，
+未翻译的消息回退英文而不是消失，部分翻译可以正常降级。</p>
+<p>设备语言改为以系统原生 preferred-UI-language API 为准（Windows 与 Apple 平台），环境变量
+<code>LC_ALL</code>/<code>LC_MESSAGES</code>/<code>LANGUAGE</code>/<code>LANG</code> 仅在无原生 API 时参考；区域会先解析为书写系统再退化，
+因此 <code>zh-CN</code> 命中 <code>zh-Hans</code>，<code>zh-TW</code> 在提供 <code>zh-Hant</code> 时命中繁体。早前版本接受的
+<code>chinese</code>/<code>english</code>/<code>auto</code> 等名称保持可用，既有配置文件不会被破坏。</p>
+<p>文档站已发布为 GitHub Pages（<code>gh-pages</code> 分支根目录，<code>.nojekyll</code> 已随分支发布），
+<code>https://neko233-com.github.io/git-next/</code> 线上可访问，共 24 页。本仓库的工程约定禁止
+<code>.github/workflows/</code>，因此发布由 <code>tools/publish_docs.py</code> 在本地完成：用 Git 底层命令在临时
+索引中构建仅含渲染结果的分支提交，不触碰工作区与当前分支；推送为快进，不强制覆盖。</p>
+<p>Git-Terminal 同步采用同一套语言文件与自动检测，<code>git-terminal language list</code> 可列出内置语言，
+<code>set</code> 在写入前校验语言名称。</p>
 </main></html>

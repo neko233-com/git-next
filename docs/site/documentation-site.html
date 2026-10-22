@@ -112,9 +112,13 @@ python tools/render_docs.py
 <pre><code class="language-sh">python tools/publish_docs.py            # render and publish
 python tools/publish_docs.py --dry-run  # render and report, push nothing
 </code></pre>
-<p>The site is published from the <code>gh-pages</code> branch. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release. The script renders the pages, replaces the contents of the branch with the rendered site, commits it and pushes it.</p>
-<p>The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the directory is rebuilt from scratch on every run.</p>
-<p>The first publication has to point the repository at the branch once, in the repository settings: <strong>Settings → Pages → Build and deployment → Source → Deploy from a branch → <code>gh-pages</code> / <code>root</code></strong>. After that the script keeps the branch up to date.</p>
+<p>The site is published from the <code>gh-pages</code> branch, which Pages serves from the branch root. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release.</p>
+<p>The script renders the pages, builds a commit that contains only the rendered site, and pushes it. The commit is assembled in a temporary index with git's plumbing commands, so the repository's index, work tree and current branch are never touched: a publication can run at any time, including with uncommitted work in the tree.</p>
+<p>The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the branch is rebuilt from scratch on every run. An empty <code>.nojekyll</code> marker is published with the pages, because they are already rendered and Jekyll would otherwise rewrite them.</p>
+<p>The push is a fast-forward. The publication commit always descends from the published tip, and a divergence is reported instead of being overwritten.</p>
+<h2>Published site</h2>
+<p><a href="https://neko233-com.github.io/git-next/">https://neko233-com.github.io/git-next/</a></p>
+<p>Pages is configured to build from the <code>gh-pages</code> branch root. A publication becomes visible once the Pages build of the new commit finishes, which usually takes a few seconds; the build status is reported by <code>gh api repos/neko233-com/git-next/pages --jq .status</code>.</p>
 <h2>Languages</h2>
 <p>The published manual is written in English, and the Chinese manual is the translated <code>README.zh-CN.md</code> in the repository. The interface language of the program itself is chosen by the device, and every language is a locale document; see <a href="language.html">interface languages</a>.</p>
 </main></html>
