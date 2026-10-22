@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Interface languages</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Interface languages</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Interface languages</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a></nav><main><h1>Interface languages</h1>
 <p>Every interface message of git-next comes from a locale document. A locale document is a JSON file in <code>locales/</code>; the build discovers the directory on its own and embeds every document it finds. Adding a language therefore means dropping in one file - there is no enumeration of supported languages anywhere in the code that could fall out of date, and no Rust change is required.</p>
 <p>English is the source language. The message templates in the code are English, and a locale document only lists the messages it overrides. A message that a locale does not translate is shown in English rather than disappearing, so a partial translation degrades gracefully instead of breaking the interface.</p>
 <p>See <a href="delivery-status.html">delivery status</a> for final package and workstation acceptance.</p>
@@ -41,6 +41,89 @@ git --language zh-Hans status
 </ul>
 <p>Rebuilding is the whole procedure: the build picks the file up, and the language appears in <code>git language list</code> and in the automatic device match. No registration list, no help text, no alias table and no test fixture has to be edited.</p>
 <p>Only the messages that a locale overrides are listed, so a partial translation is a valid document. The English source message is the key, which means a message that is reworded in the code is simply not translated until the document catches up - the interface then shows the new English text.</p>
+<h2>Shipped languages</h2>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Language</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>en</code></td>
+<td>English</td>
+<td>source language, no document</td>
+</tr>
+<tr>
+<td><code>zh-Hans</code></td>
+<td>简体中文</td>
+<td>complete: 140 messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>zh-Hant</code></td>
+<td>繁體中文</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>ja</code></td>
+<td>日本語</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>ko</code></td>
+<td>한국어</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>de</code></td>
+<td>Deutsch</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>fr</code></td>
+<td>Français</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>es</code></td>
+<td>Español</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>pt-BR</code></td>
+<td>Português do Brasil</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+<tr>
+<td><code>ru</code></td>
+<td>Русский</td>
+<td>60 core messages and all 32 command summaries</td>
+</tr>
+</tbody>
+</table>
+<p>The core set is the output of everyday work: <code>status</code>, <code>add</code>, <code>commit</code>, <code>merge</code>,
+branch state, conflicts and the help headings. The long tail - rebase and bisect
+state lines, the settings errors, the internal object commands - falls back to
+English per message until someone extends the document. That is the intended
+behaviour, not an oversight: a document that translates what its readers actually
+see is worth more than one that translates everything badly.</p>
+<h2>Checking a document</h2>
+<pre><code class="language-sh">python tools/check_locales.py            # check every document
+python tools/check_locales.py --coverage # and report what each language leaves to English
+python tools/check_locales.py --fix      # sort the keys, then check
+</code></pre>
+<p>The checker fails on a document that is unreadable, a duplicated key, a key the
+source no longer produces, a named placeholder that does not survive translation, a
+translation that disagrees with the source on a trailing newline or a blank line, and
+an unsorted key order. Those are the defects that would otherwise appear as wrong
+output in one language only, which is exactly what no test matrix would catch.</p>
+<p>It does not review wording. A language is accepted once, when its document is added;
+a wrong or awkward string is a defect of that document and is fixed by editing the
+JSON. Multi-language regression cases are not part of the acceptance matrix, because
+the matrix verifies behaviour, not prose. A locale file is configuration, and
+configuration is checked by the checker above.</p>
 <h2>Settings and compatibility report</h2>
 <p>The new additive user setting is <code>~/.config/git-next/settings.json</code>, or <code>$XDG_CONFIG_HOME/git-next/settings.json</code>. <code>GIT_NEXT_CONFIG_HOME</code> overrides the git-next configuration directory directly for isolated tests or managed installation. An explicit override must be absolute. Settings contain <code>schema_version: 1</code> and <code>language</code>, use UTF-8 without BOM and LF, preserve unknown fields, and publish under an exclusive sibling lock. Invalid, oversized or unknown-version settings reject without replacement. Repository-local files, Git configuration, credentials and SSH settings are not modified by language selection.</p>
 <p>Rollback to the previous executable leaves this additive configuration file in place; older binaries ignore it. No Git object/ref/index/LFS layout changes or migrations occur. Uninstall retains language preference so a later reinstall can reuse it.</p>
@@ -48,7 +131,12 @@ git --language zh-Hans status
 <p>The native core compiles a catalog generated from the pinned upstream <code>po/zh_CN.po</code> and the product extension messages; no online language pack is required. The interface language of the native core and the language of the Rust interface are selected independently, because the native core has its own message set.</p>
 <h2>Batch acceptance</h2>
 <p>The consolidated matrix must exercise native automatic selection, the legacy aliases, persistence across processes, single-command/environment overrides, reset to auto, help/errors, common human messages, operation status, conflicts and filenames containing translation/template tokens. It must compare all machine formats between languages and verify no repository/config/login changes from language operations. Malformed/oversized settings, unknown schema/language, lock contention, read-only configuration and failed writes must preserve prior bytes. Supported platform compilation and actual runtime results remain separate evidence.</p>
-<p>A new locale document is accepted on the strength of the build and the interface: the messages of a new language are not machine-verified against a reference, because the reference for a translation is the language itself.</p>
+<p>A new locale document is accepted on the strength of the build, the checker and the
+interface: the messages of a new language are not machine-verified against a
+reference, because the reference for a translation is the language itself. The
+behaviour that has to keep working across languages is the machine output, and that
+is compared byte for byte between languages rather than per language against a
+fixture.</p>
 <h2>Shell and Perl messages</h2>
 <p>Owned shell scripts and <code>Git::I18N</code> use the same compiled native catalog through the internal <code>i18n--gettext</code> builtin. The shell variable whitelist remains in the owned envsubst helper. Perl preserves input encoding and plural selection and resolves the owned core relative to its module, without searching for an installed Git. MSYS argument conversion is disabled only around translation calls so message templates remain literal. This bridge compiles; actual shell/Perl translation and byte-preservation acceptance belongs to D08.</p>
 </main></html>
