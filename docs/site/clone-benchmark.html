@@ -1,0 +1,172 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Clone measurement</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Clone measurement</h1>
+<p>The question this page answers is narrow: when a user runs <code>clone</code> against a real
+remote, is this client faster than the Git it replaces, and where does the time
+actually go. It is measured, not argued.</p>
+<h2>Method</h2>
+<p>Everything is reproducible with the tools in this repository.</p>
+<pre><code class="language-sh"># a remote that behaves like a real host, served by the reference implementation
+python tools/git_http_fixture.py --root &lt;dir-of-bare-repos&gt; --port 8123
+
+# the comparison, alternating clients round by round
+python tools/benchmark_clone.py --reps 9 \
+    --target gitsss=http://127.0.0.1:3000/root/bench-big.git \
+    --json docs/benchmarks/clone-gitsss-20261022.json
+</code></pre>
+<ul>
+<li><strong>Same remote, same content, same machine.</strong> Both clients clone the same URL, into
+the same destination path, with the destination removed before each run.</li>
+<li><strong>Interleaved rounds.</strong> Running one client to completion and then the other lets the
+machine and the remote warm up for whoever goes second; that effect is larger than
+the difference being measured. Each round runs both clients and the order is swapped
+every round.</li>
+<li><strong>The first round is discarded.</strong> It pays for the file-system cache and the first
+connection.</li>
+<li><strong>Median, not mean.</strong> A single stalled run should not decide the result; the minimum
+and maximum are reported so the spread is visible.</li>
+<li><strong>Identical configuration.</strong> Configuration is exported through <code>GIT_CONFIG_*</code> so both
+clients receive exactly the same settings.</li>
+</ul>
+<p>Fixture: 3,000 files, ~100 MB of text, one commit, 12.7 MiB pack. Server: <code>gitsss</code>
+running on the same machine, serving the repository over HTTP.</p>
+<h2>Result</h2>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Client</th>
+<th>Median</th>
+<th>Min</th>
+<th>Max</th>
+<th>Against the reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gitsss (local HTTP)</td>
+<td>Git 2.55.0</td>
+<td>3379 ms</td>
+<td>3182</td>
+<td>3667</td>
+<td>—</td>
+</tr>
+<tr>
+<td>gitsss (local HTTP)</td>
+<td>git-next</td>
+<td><strong>2726 ms</strong></td>
+<td>2179</td>
+<td>3364</td>
+<td><strong>1.24x faster (-19.3%)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Raw report: <a href="../benchmarks/clone-gitsss-20261022.json">clone-gitsss-20261022.json</a>.</p>
+<p>The same comparison before the pack on the server was rebuilt measured 1.23x, so the
+result does not depend on that repack.</p>
+<h2>Where the time goes</h2>
+<p>The interesting part is not the ratio, it is the split. The server's own access log
+records every request, and for one clone of this repository it shows:</p>
+<table>
+<thead>
+<tr>
+<th>Request</th>
+<th>Server time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /info/refs?service=git-upload-pack</code></td>
+<td>370-720 ms</td>
+</tr>
+<tr>
+<td><code>POST /git-upload-pack</code> (ref advertisement / negotiation)</td>
+<td>370-640 ms</td>
+</tr>
+<tr>
+<td><code>POST /git-upload-pack</code> (pack transfer)</td>
+<td>1000-2000 ms</td>
+</tr>
+</tbody>
+</table>
+<p>That is <strong>2.0-2.9 s of the 2.7-3.4 s wall time spent inside the server</strong>, before the
+client does anything with the bytes. Two things are being paid for:</p>
+<ol>
+<li><strong>Process startup.</strong> <code>gitsss</code> serves each request by starting a <code>git upload-pack</code>
+process. On this Windows machine a bare <code>git --version</code> costs about 360 ms, so three
+requests cost more than a second before any work happens.</li>
+<li><strong>Pack generation.</strong> Building a 12.7 MiB pack from 100 MB of content is real CPU
+work, and it is identical for both clients.</li>
+</ol>
+<p>The client side of the same clone is the remainder: about 0.5-1.0 s end to end,
+including the pack index and the checkout, of which the checkout is ~130 ms by this
+client's own trace.</p>
+<p>Two conclusions follow, and both matter more than the headline ratio:</p>
+<ul>
+<li><strong>On a Windows host, clone speed is dominated by the server's process startup.</strong> The
+same server on Linux starts a process in single-digit milliseconds, so the server
+share collapses and the client share becomes the whole number. A comparison run on a
+Windows workstation therefore <em>understates</em> the client's contribution.</li>
+<li><strong>No client can beat the server's pack generation.</strong> Claims about clone speed that do
+not separate the two are measuring the server.</li>
+</ul>
+<h2>GitHub</h2>
+<p>The intention was a second target: the same repository cloned from
+<code>https://github.com/neko233-com/git-next</code>, to compare a public host with a self-hosted
+one. <strong>It could not be measured reliably in this environment.</strong> The sandbox routes
+HTTPS through an intercepting proxy that intermittently fails TLS with
+<code>unexpected eof while reading</code> / <code>tls handshake eof</code>, and the reference client needs a
+different TLS backend to reach GitHub at all. Runs that did complete produced medians
+that moved by more than the difference between the clients.</p>
+<p>What was measurable under the same conditions is the single-request path, which is the
+one that is not dominated by the server:</p>
+<table>
+<thead>
+<tr>
+<th>Operation against <code>https://github.com/neko233-com/git-next</code></th>
+<th>Git 2.55.0</th>
+<th>git-next</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ls-remote</code> (one request, one TLS handshake)</td>
+<td>~1990 ms</td>
+<td><strong>~1020 ms</strong></td>
+</tr>
+</tbody>
+</table>
+<p>That is exploratory: three runs per client, taken while the proxy was stable. It is
+consistent with the architecture - one process instead of a launcher chain - and it is
+<em>not</em> a clone result. To produce a real one, run the command above from a normal
+network:</p>
+<pre><code class="language-sh">python tools/benchmark_clone.py --reps 9 \
+    --target github=https://github.com/neko233-com/git-next \
+    --json docs/benchmarks/clone-github-&lt;date&gt;.json
+</code></pre>
+<h2>What changed in this batch</h2>
+<p>The comparison exposed a defect that mattered more than any optimisation:</p>
+<ul>
+<li><strong>A TLS setting could disable every remote.</strong> <code>http.sslcaInfo</code> pointing at a bundle
+rustls cannot parse - curl's <code>ca-bundle.trust.crt</code> is the common Windows case - made
+<strong>all</strong> HTTP and HTTPS remotes fail, plain <code>http://</code> included, because the HTTP client
+was built with the TLS configuration before the URL scheme was considered. TLS
+settings now apply only to <code>https://</code>, and an unparsable bundle falls back to the
+default trust store instead of aborting the connection.</li>
+<li><strong>The repository was opened twice.</strong> After the fetch, the code reopened the freshly
+cloned repository just to check it out. The fetch already returns an open repository;
+the second open re-read configuration and re-scanned the pack directory for nothing.</li>
+<li><strong>A phase trace was added</strong>, behind <code>GIT_NEXT_TRACE_TIMING=1</code>, so a slow clone can be
+attributed to transfer+index or to checkout instead of guessed at.</li>
+</ul>
+<h2>Limits</h2>
+<ul>
+<li>This measures one machine, one server, one repository shape. A repository with deep
+history and heavy deltas shifts cost from transfer to index; a repository with many
+small files shifts it to checkout.</li>
+<li>The Windows process-startup cost described above is specific to this host.</li>
+<li>The GitHub target is unmeasured here, as described.</li>
+<li>The <code>gitsss</code> server was run as-is from the parent repository's configuration; its
+pre-receive hook could not be used for the fixture repository in this environment, so
+the repository was populated on disk and cloned over HTTP. The clone path is the one
+measured and it is the unmodified server path.</li>
+</ul>
+</main></html>

@@ -60,16 +60,19 @@ because there the work is real file-system traversal rather than startup.
 
 ### What this does not prove
 
-- **HTTPS clone is slower**: 1025 ms against 689 ms in the same batch. Cloning is
-  dominated by pack transfer and checkout, and the reference implementation is
-  better optimised there today.
+- **Clone is not a client-only number.** A clone includes the server building the pack.
+  On a local `gitsss` server this client is 1.24x faster end to end (3379 ms against
+  2726 ms), but more than half of both figures is the server: see
+  [clone measurement](CLONE-BENCHMARK.md) for the request-by-request split. The earlier
+  HTTPS-fixture figure of 1025 ms against 689 ms is historical and is not restated as a
+  current clone result.
 - **Large full scans are a latency limit, not a win.** A complete `status` over
   100,000 files takes about 1.9 s and a full worktree `grep` about 7.7 s.
 - **Memory is reported for the primary process only.** It excludes child processes,
   so it is not comparable to a total for a wrapper that spawns children.
 - **These are local fixtures, not your network.** The HTTPS numbers come from a
-  loopback TLS fixture, not from a remote provider, and they say nothing about
-  throughput to a specific host.
+  loopback fixture, not from a remote provider, and they say nothing about throughput to
+  a specific host.
 
 The batch itself took 597 s, over the 60 s target that was set for it. No case was
 skipped or relabelled to meet that target; the report keeps the original identity and

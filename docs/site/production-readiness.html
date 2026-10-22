@@ -1,0 +1,168 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Production readiness</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Production readiness</h1>
+<p>This page answers one question: what is still missing before git-next can be the
+default <code>git</code> on a machine that matters. It is a gap list, not a roadmap of wishes.
+Every item names what is missing, what it costs the user today, what &quot;done&quot; means,
+and what evidence would close it.</p>
+<p>The state today, in one line: <strong>it runs, it is fast, and it refuses to be the
+default.</strong> <code>git doctor</code> reports <code>complete_git_parity: false</code> and
+<code>system Git replacement: blocked</code>, and the guard refuses takeover while that is
+true. That refusal is the honest summary of the list below.</p>
+<h2>Where the line is drawn</h2>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>State</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Command surface</td>
+<td>Common workflow works: init, clone, fetch, pull (ff-only), push, add, commit, status, log, diff, show, branch, switch, checkout, merge, restore, reset, config, remote, rev-parse, cat-file, hash-object, ls-files, show-ref, ls-remote, eol, lfs, language, doctor, compatibility</td>
+<td><code>docs/GIT-GUIDE.md</code>, <code>--help</code></td>
+</tr>
+<tr>
+<td>Repository storage</td>
+<td>Reads and writes the real format; existing repositories open unchanged</td>
+<td>acceptance batches in <code>docs/benchmarks/</code></td>
+</tr>
+<tr>
+<td>Machine output</td>
+<td>Byte stable across languages; stable porcelain v1/v2</td>
+<td><code>LANGUAGE.md</code>, acceptance</td>
+</tr>
+<tr>
+<td>Interface languages</td>
+<td>10 languages, complete checker</td>
+<td><code>LANGUAGE.md</code>, <code>tools/check_locales.py</code></td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>26 pages published, task-oriented guide</td>
+<td><a href="https://neko233-com.github.io/git-next/">https://neko233-com.github.io/git-next/</a></td>
+</tr>
+<tr>
+<td>Windows packaging</td>
+<td>MSI rebuilt and structurally verified (10,601 payload files)</td>
+<td><code>DELIVERY_STATUS.md</code></td>
+</tr>
+<tr>
+<td>Windows installation</td>
+<td><strong>Not executed on a clean machine</strong></td>
+<td>blocked here by <code>msiexec</code> 1619</td>
+</tr>
+<tr>
+<td>Linux / macOS</td>
+<td>Built and checked; no runtime acceptance on real hardware</td>
+<td><code>DELIVERY_STATUS.md</code></td>
+</tr>
+<tr>
+<td>Push / server side</td>
+<td>Common cases only; no receive-pack server</td>
+<td><code>doctor</code> blocker 1</td>
+</tr>
+<tr>
+<td>Recovery semantics</td>
+<td>No rebase, stash, cherry-pick, revert</td>
+<td><code>doctor</code> blocker 3</td>
+</tr>
+</tbody>
+</table>
+<h2>The five blockers, and what each one means</h2>
+<p>These are the strings <code>git doctor</code> prints. They are generated from
+<code>compatibility.json</code>, the same file the takeover guard reads, so the printed promise
+and the enforced gate cannot drift.</p>
+<p><strong>1. Push refspec, hook and output parity; no receive-pack server.</strong>
+Push works for ordinary branch and tag refspecs, force-with-lease, atomic and
+dry-run, including local, HTTPS and embedded SSH. What is missing: wildcard refspecs,
+multiple push URLs, exact output parity, hook execution on the receiving side, and the
+<code>receive-pack</code> server command itself. <em>Cost today:</em> a CI system or a hook that expects
+Git's push output or a hosted server role cannot move yet. <em>Done means:</em> a refspec
+matrix that matches Git case for case, a hook bridge with the same environment, and a
+protocol conformance run against a real server. <em>Evidence:</em> a push acceptance report
+with exact stdout comparison.</p>
+<p><strong>2. LFS transport and locking; credential-helper/login compatibility.</strong>
+Pointer handling, <code>track</code>, <code>install</code> and the local workflow work. The full transport
+(fetch/push of LFS objects against a real LFS server), locking, and arbitrary
+credential helpers are not accepted. <em>Cost today:</em> a repository with LFS content can
+be cloned but not reliably completed, and a custom credential helper may not be
+honoured. <em>Done means:</em> a real LFS server in the acceptance path, lock/unlock
+round trips, and the documented helper protocol implemented over a helper that is not
+Git Credential Manager. <em>Evidence:</em> LFS end-to-end and helper matrix reports.</p>
+<p><strong>3. Merge and recovery semantics.</strong>
+Ordinary two-head merges, conflicts and conservative abort work. Missing: rebase,
+stash, cherry-pick, revert, and full diff semantics. <em>Cost today:</em> the workflow most
+teams use to keep a branch current (rebase) is unavailable, and a mistaken commit
+cannot be reverted without a manual <code>restore</code>. <em>Done means:</em> sequencer state
+compatible with Git's, abort/continue for each operation, and byte-identical patch
+output for the common diff options. <em>Evidence:</em> a recovery acceptance batch,
+including interrupted operations.</p>
+<p><strong>4. CLI, IDE, hooks, signing, submodule and linked-worktree compatibility.</strong>
+The command line is a subset, hooks are not executed, commits are not signed, and
+submodules and linked worktrees are refused rather than handled. <em>Cost today:</em> a team
+that signs commits or uses submodules cannot switch, and an IDE that shells out to
+<code>git</code> with uncommon flags may hit a refusal. <em>Done means:</em> hook execution with the
+documented environment, signing via the configured program or key, submodule
+init/update, linked worktrees, and the IDE call patterns recorded as fixtures.
+<em>Evidence:</em> IDE call-log fixtures plus a signed-commit and submodule acceptance batch.</p>
+<p><strong>5. Checkout requires a clean ordinary-file worktree.</strong>
+Refusing a dirty checkout is safer than doing half of it, but it is not parity: Git
+carries staged and unstaged changes across a branch switch when it can, and it
+recovers from an interrupted checkout. <em>Cost today:</em> switching branches with work in
+progress requires commit or restore first. <em>Done means:</em> the merge-in-index algorithm
+for carried changes, plus crash recovery with a journal. <em>Evidence:</em> a checkout
+matrix over dirty/staged/conflicted states and an interrupted-checkout test.</p>
+<h2>Beyond the blockers</h2>
+<p><strong>Installation has never been executed end to end in this environment.</strong> The MSI is
+built and its payload is verified file by file, but <code>msiexec</code> returns 1619 for every
+package here, so install, upgrade, repair and uninstall are unproven. This is the
+single largest unknown: everything else is a feature gap, this one is &quot;we do not know
+if it installs&quot;. <em>Done means:</em> install / upgrade / repair / uninstall on a clean
+Windows VM, and the IDE finding <code>cmd\git.exe</code> afterwards.</p>
+<p><strong>Two platforms have no runtime evidence.</strong> Linux x64/ARM64 and macOS Apple Silicon
+build and pass static checks; runtime acceptance on real hardware or a container that
+matches it has not been recorded. <em>Done means:</em> the acceptance batch executed on each
+platform, with the same report format as Windows.</p>
+<p><strong>The performance batch misses its own 60-second target.</strong> The measured batches took
+597 s and 1389 s. That target was set for the batch, not for a command, but a batch
+that cannot finish cannot gate a release cheaply. <em>Done means:</em> either the target is
+restated as a per-command budget, or the matrix is split so each part fits.</p>
+<p><strong>The HTTP clone path had a fatal configuration interaction.</strong> A <code>http.sslcainfo</code>
+pointing at a bundle that rustls cannot parse (curl's <code>ca-bundle.trust.crt</code> is the
+common case on Windows) made <em>every</em> HTTP and HTTPS remote fail, including plain
+<code>http://</code>. This is fixed in this batch: TLS settings are only applied to TLS URLs, and
+an unparsable bundle no longer aborts the connection. It is listed here because a
+fault of this class - one configuration value disabling all network operations - is
+what &quot;production&quot; means you must not have, and the fix needs a regression test with a
+<code>trust.crt</code> bundle.</p>
+<p><strong>Update delivery is local only.</strong> The MSI and the bundle scripts work, but there is
+no signed update channel and no rollback rehearsal beyond the documented procedure.
+<em>Done means:</em> a signed update manifest, an upgrade from N-1 and a rollback rehearsal,
+each with evidence.</p>
+<p><strong>A production checklist</strong></p>
+<ul>
+<li>[ ] Five <code>doctor</code> blockers cleared, <code>compatible</code> contract updated in the same commit</li>
+<li>[ ] <code>release_eligible: true</code> in <code>packaging/native-compatibility.json</code>, produced by a real batch</li>
+<li>[ ] MSI install → upgrade → repair → uninstall on a clean Windows VM</li>
+<li>[ ] Takeover and rollback rehearsed on that VM, IDE check included</li>
+<li>[ ] Runtime acceptance on Linux x64, Linux ARM64 and macOS Apple Silicon</li>
+<li>[ ] TLS regression test with a <code>ca-bundle.trust.crt</code> configured</li>
+<li>[ ] Push refspec/hook matrix and LFS end-to-end against a real server</li>
+<li>[ ] Signed update channel with rollback evidence</li>
+<li>[ ] Performance target restated as a per-command budget and enforced in the batch</li>
+</ul>
+<h2>What is already production-grade</h2>
+<p>It is worth being explicit, because the list above is long enough to read as &quot;nothing
+works&quot;:</p>
+<ul>
+<li><strong>Repository safety.</strong> Atomic ref and index updates, writer locks, refusal over
+speculative writes, no silent fallback to an installed Git or OpenSSH.</li>
+<li><strong>Determinism.</strong> Machine formats do not change with the interface language; the
+contract printed by <code>compatibility</code> is the contract enforced by the guard.</li>
+<li><strong>Performance.</strong> Measured faster than the reference on local operations and on a
+local <code>gitsss</code> clone; see <a href="clone-benchmark.html">clone measurement</a>.</li>
+<li><strong>Language and documentation.</strong> A new language is a file with an automated checker;
+the manual is written for people who do not know Git yet.</li>
+</ul>
+</main></html>

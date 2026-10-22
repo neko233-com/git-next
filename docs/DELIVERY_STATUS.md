@@ -187,3 +187,31 @@ Git-Terminal 同步采用同一套语言文件与自动检测，`git-terminal la
 以及 Git 命令集之外的额外能力，并明确写出尚未达到的部分与测量局限。
 
 文档站扩至 26 页。
+
+## HTTPS 克隆修复、克隆基准与生产就绪清单（2026-10-22）
+
+本节记录网络传输缺陷的修复、clone 实测方法与结论，以及生产就绪的差距清单。
+
+**传输缺陷（已修）**：`http.sslcaInfo` 指向 rustls 无法解析的证书捆绑（Windows 上常见的
+curl `ca-bundle.trust.crt`）时，之前会让**所有** HTTP 与 HTTPS 远端直接失败，连纯 `http://`
+也被牵连——因为 HTTP 客户端在判断 URL scheme 之前就构建了 TLS 配置。现在 TLS 设置只作用于
+`https://`，捆绑解析不出证书时回退默认信任库而不是中止连接。本机修复前 `http://127.0.0.1`
+克隆直接报 `Configured TLS CA bundle has no certificates`，修复后正常。
+
+**克隆优化**：fetch 之后原本重新 `open` 一次刚克隆的仓库再做检出，该次重开会重读配置并重扫
+pack 目录；现直接复用 fetch 返回的仓库句柄。另新增 `GIT_NEXT_TRACE_TIMING=1` 阶段计时，
+把克隆拆成「传输+索引」与「检出」两段。
+
+**实测（gitsss 本地服务端，HTTP，3000 文件 / ~100MB / 12.7MiB pack，9 轮交替采样）**：
+Git 2.55.0 中位 3379ms，git-next 中位 2726ms，快 **1.24×（-19.3%）**。
+服务端访问日志显示每次克隆有 2.0–2.9s 花在服务端（info/refs 370–720ms、协商 370–640ms、
+打包 1000–2000ms），客户端实际工作约 0.5–1.0s。Windows 上 `git upload-pack` 单次启动约 360ms，
+因此该结论**低估**了客户端贡献；该占比在 Linux 服务端会大幅下降。
+
+**GitHub 对照**：本沙箱经拦截代理访问 GitHub 的 TLS 握手不稳定（`unexpected eof` /
+`tls handshake eof`），无法给出可靠的克隆数字，已在文档中标注为未测并给出复现命令。
+可测得的是单请求路径：`ls-remote` 约 1020ms 对 1990ms（探索性，3 次）。
+
+**新增文档**：`docs/CLONE-BENCHMARK.md` 记录方法、数字与时间去向；
+`docs/PRODUCTION-READINESS.md` 列出到生产就绪仍缺的五项阻断、平台与安装证据缺口、
+以及一份可勾选的就绪清单。
