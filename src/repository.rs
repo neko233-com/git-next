@@ -31,9 +31,20 @@ pub fn atomic_write(path: &Path, bytes: &[u8]) -> Result<()> {
     result
 }
 
-pub fn init(directory: &Path, bare: bool, branch: &str) -> Result<()> {
+/// The default branch name for a new repository.
+pub const DEFAULT_BRANCH: &str = "main";
+
+/// Reject a branch name that cannot become a ref, before anything is created.
+fn validate_branch(branch: &str) -> Result<()> {
     let _: gix::refs::FullName = format!("refs/heads/{branch}").try_into()?;
     ensure!(!branch.starts_with('-'), "invalid initial branch");
+    Ok(())
+}
+
+pub fn init(directory: &Path, bare: bool, branch: Option<&str>) -> Result<()> {
+    if let Some(branch) = branch {
+        validate_branch(branch)?;
+    }
     ensure!(
         !directory.join("HEAD").exists() && !directory.join(".git").exists(),
         "destination already contains a repository; refusing to change its HEAD"
@@ -42,6 +53,21 @@ pub fn init(directory: &Path, bare: bool, branch: &str) -> Result<()> {
         gix::init_bare(directory)?
     } else {
         gix::init(directory)?
+    };
+    // The explicit `-b` wins. Otherwise the user's configured default applies,
+    // which is what makes `git init` behave like the Git it replaces: a team that
+    // standardised on another branch name sets `init.defaultBranch` once instead
+    // of passing `-b` to every `init`.
+    let branch = match branch {
+        Some(branch) => branch.to_owned(),
+        None => match repo.config_snapshot().string("init.defaultBranch") {
+            Some(configured) => {
+                let configured = String::from_utf8_lossy(&configured).into_owned();
+                validate_branch(&configured)?;
+                configured
+            }
+            None => DEFAULT_BRANCH.to_owned(),
+        },
     };
     atomic_write(
         &repo.git_dir().join("HEAD"),

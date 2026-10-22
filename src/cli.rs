@@ -81,8 +81,8 @@ enum Commands {
         directory: PathBuf,
         #[arg(long)]
         bare: bool,
-        #[arg(short = 'b', long = "initial-branch", default_value = "main")]
-        branch: String,
+        #[arg(short = 'b', long = "initial-branch")]
+        branch: Option<String>,
     },
     Clone {
         url: String,
@@ -266,7 +266,7 @@ pub fn run() -> Result<()> {
             directory,
             bare,
             branch,
-        } => crate::repository::init(&directory, bare, &branch),
+        } => crate::repository::init(&directory, bare, branch.as_deref()),
         Commands::Clone {
             url,
             directory,
