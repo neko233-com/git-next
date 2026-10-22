@@ -2,7 +2,7 @@
 
 Windows: the [Git-Terminal 0.2.0 complete MSI bundle](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) includes the accepted git-next 0.3.0 engine with the updated SSH/SFTP/monitoring terminal and prompt latency fixes. Existing installations should use its `install_bundle.ps1` helper; see the [component installation guide](docs/TERMINAL.md). Linux/macOS core packages are unchanged.
 
-[简体中文](README.zh-CN.md) · [Manual](docs/site/index.html) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
+[简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
 git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.
 
