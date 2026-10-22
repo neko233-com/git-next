@@ -189,7 +189,9 @@ impl Selection {
     fn resolve(&self) -> Language {
         match self {
             Self::Auto => system_language(),
-            Self::Fixed(code) => find(code).map(to_language).unwrap_or_else(fallback_language),
+            Self::Fixed(code) => find(code)
+                .map(to_language)
+                .unwrap_or_else(fallback_language),
         }
     }
 }
@@ -224,11 +226,13 @@ fn to_language(locale: &Locale) -> Language {
 /// English is the source language, so it is always available and is the only
 /// sensible fallback: it is the language the messages are written in.
 fn fallback_language() -> Language {
-    find(SOURCE_LANGUAGE).map(to_language).unwrap_or_else(|| Language {
-        code: SOURCE_LANGUAGE.to_owned(),
-        name: "English".to_owned(),
-        english_name: "English".to_owned(),
-    })
+    find(SOURCE_LANGUAGE)
+        .map(to_language)
+        .unwrap_or_else(|| Language {
+            code: SOURCE_LANGUAGE.to_owned(),
+            name: "English".to_owned(),
+            english_name: "English".to_owned(),
+        })
 }
 
 /// Match a device locale against the shipped locales.
@@ -412,7 +416,9 @@ fn settings(path: &std::path::Path) -> Result<serde_json::Value> {
 
 /// The language currently in effect.
 fn active() -> &'static Active {
-    ACTIVE.get().expect("the language is initialized before it is used")
+    ACTIVE
+        .get()
+        .expect("the language is initialized before it is used")
 }
 
 pub(crate) fn initialize(arguments: &[OsString]) -> Result<()> {
@@ -469,7 +475,9 @@ pub(crate) fn initialize(arguments: &[OsString]) -> Result<()> {
 
 /// Whether the active language is the source language.
 pub(crate) fn is_source() -> bool {
-    ACTIVE.get().is_some_and(|active| active.language.is_source())
+    ACTIVE
+        .get()
+        .is_some_and(|active| active.language.is_source())
 }
 
 pub(crate) fn text(english: &str) -> &str {
@@ -611,11 +619,8 @@ pub(crate) fn localize_command(mut command: clap::Command) -> clap::Command {
         for (id, help) in arguments {
             command = command.mut_arg(id, |arg| {
                 let positional = arg.is_positional();
-                let mut arg = arg.help_heading(text(if positional {
-                    "Arguments"
-                } else {
-                    "Options"
-                }));
+                let mut arg =
+                    arg.help_heading(text(if positional { "Arguments" } else { "Options" }));
                 if let Some(help) = help {
                     arg = arg.help(text(&help).to_owned());
                 }
