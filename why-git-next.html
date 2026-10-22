@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Why git-next</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Why git-next</h1>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Why git-next</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a></nav><main><h1>Why git-next</h1>
 <p>git-next is not a wrapper around Git and not a user interface on top of it. It is a
 Git-compatible client with its own command, repository and protocol implementation,
 built from source, that keeps the contracts your existing repositories, configuration
@@ -106,16 +106,19 @@ fifth faster; at a hundred thousand files the two are within noise of each other
 because there the work is real file-system traversal rather than startup.</p>
 <h3>What this does not prove</h3>
 <ul>
-<li><strong>HTTPS clone is slower</strong>: 1025 ms against 689 ms in the same batch. Cloning is
-dominated by pack transfer and checkout, and the reference implementation is
-better optimised there today.</li>
+<li><strong>Clone is not a client-only number.</strong> A clone includes the server building the pack.
+On a local <code>gitsss</code> server this client is 1.24x faster end to end (3379 ms against
+2726 ms), but more than half of both figures is the server: see
+<a href="clone-benchmark.html">clone measurement</a> for the request-by-request split. The earlier
+HTTPS-fixture figure of 1025 ms against 689 ms is historical and is not restated as a
+current clone result.</li>
 <li><strong>Large full scans are a latency limit, not a win.</strong> A complete <code>status</code> over
 100,000 files takes about 1.9 s and a full worktree <code>grep</code> about 7.7 s.</li>
 <li><strong>Memory is reported for the primary process only.</strong> It excludes child processes,
 so it is not comparable to a total for a wrapper that spawns children.</li>
 <li><strong>These are local fixtures, not your network.</strong> The HTTPS numbers come from a
-loopback TLS fixture, not from a remote provider, and they say nothing about
-throughput to a specific host.</li>
+loopback fixture, not from a remote provider, and they say nothing about throughput to
+a specific host.</li>
 </ul>
 <p>The batch itself took 597 s, over the 60 s target that was set for it. No case was
 skipped or relabelled to meet that target; the report keeps the original identity and
