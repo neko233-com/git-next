@@ -124,21 +124,29 @@ impl Default for Remote {
                         feature = "http-client-reqwest-native-tls"
                     ))]
                     {
-                        if let Some(path) = &config.ssl_ca_info {
-                            let pem = std::fs::read(path)
-                                .or_raise(|| message("Could not read configured TLS CA file"))?;
-                            let certificates = reqwest::Certificate::from_pem_bundle(&pem)
-                                .map_err(classify_reqwest)
-                                .or_raise(|| message("Invalid configured TLS CA certificates"))?;
-                            if certificates.is_empty() {
-                                return Err(message(
-                                    "Configured TLS CA bundle has no certificates",
-                                )
-                                .validation_error());
+                        // The TLS settings only describe a TLS connection. A plain
+                        // http remote must not be refused because the TLS
+                        // configuration cannot be used, and a bundle that only a
+                        // plain connection would never read is not worth parsing.
+                        if base_url.starts_with("https://") {
+                            if let Some(path) = &config.ssl_ca_info {
+                                let pem = std::fs::read(path)
+                                    .or_raise(|| message("Could not read configured TLS CA file"))?;
+                                let certificates = reqwest::Certificate::from_pem_bundle(&pem)
+                                    .map_err(classify_reqwest)
+                                    .or_raise(|| message("Invalid configured TLS CA certificates"))?;
+                                // A bundle that yields no certificate is not a reason
+                                // to refuse every connection: curl reads formats
+                                // rustls does not, such as curl's
+                                // `ca-bundle.trust.crt`. The default roots stay in
+                                // place, so verification still happens against the
+                                // trust store the client was built with.
+                                if !certificates.is_empty() {
+                                    builder = builder.tls_certs_merge(certificates);
+                                }
                             }
-                            builder = builder.tls_certs_merge(certificates);
+                            builder = builder.tls_danger_accept_invalid_certs(!config.ssl_verify);
                         }
-                        builder = builder.tls_danger_accept_invalid_certs(!config.ssl_verify);
                     }
                     if let Some(proxy) = &config.proxy {
                         builder = if proxy.is_empty() {

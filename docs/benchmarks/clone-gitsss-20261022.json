@@ -1,0 +1,52 @@
+{
+  "product": "git-next",
+  "measured_at": "2026-10-22T10:25:05+00:00",
+  "platform": "Windows AMD64",
+  "reference": "git version 2.55.0.windows.3",
+  "reps": 7,
+  "configuration": {},
+  "note": "The first run of each client is discarded. A clone includes the server-side pack generation, which is identical for both clients; the phase trace of this client separates transfer+index from checkout but the server share is included in both wall-clock figures.",
+  "targets": [
+    {
+      "label": "gitsss",
+      "url": "http://127.0.0.1:3000/root/bench-big.git",
+      "results": [
+        {
+          "client": "git",
+          "runs_ms": [
+            3295.1,
+            3624.0,
+            3378.7,
+            3666.9,
+            3397.0,
+            3289.2,
+            3182.0
+          ],
+          "median_ms": 3378.7,
+          "min_ms": 3182.0,
+          "max_ms": 3666.9,
+          "checkout_bytes": 71518289,
+          "phase_trace": ""
+        },
+        {
+          "client": "git-next",
+          "runs_ms": [
+            3364.5,
+            2726.2,
+            3286.6,
+            2790.9,
+            2456.0,
+            2541.9,
+            2178.9
+          ],
+          "median_ms": 2726.2,
+          "min_ms": 2178.9,
+          "max_ms": 3364.5,
+          "checkout_bytes": 71490905,
+          "phase_trace": "trace: transfer+index 2026 ms, checkout 128 ms"
+        }
+      ],
+      "speedup_vs_reference": 1.239
+    }
+  ]
+}

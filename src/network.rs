@@ -106,11 +106,27 @@ pub fn clone_repo(
         Ok(())
     });
     let interrupt = AtomicBool::new(false);
+    let started = std::time::Instant::now();
     let (repo, _) = prepare.fetch_only(gix::progress::Discard, &interrupt)?;
+    let fetched = started.elapsed();
     if !bare {
+        let checkout_started = std::time::Instant::now();
+        // The fetch already returned an open repository. Reopening it would re-read
+        // the configuration and re-scan the pack directory for no benefit, which is
+        // pure cost on a large clone.
         crate::eol::configure_new(&repo)?;
-        let checkout = gix::open_opts(&destination, crate::runtime::open_options())?;
-        crate::repository::checkout_initial(&crate::eol::defaults(checkout)?)?;
+        crate::repository::checkout_initial(&crate::eol::defaults(repo)?)?;
+        if trace() {
+            // The split says whether a slow clone is the network or the disk, which
+            // is the first question any clone performance report has to answer.
+            eprintln!(
+                "trace: transfer+index {} ms, checkout {} ms",
+                fetched.as_millis(),
+                checkout_started.elapsed().as_millis()
+            );
+        }
+    } else if trace() {
+        eprintln!("trace: transfer+index {} ms", fetched.as_millis());
     }
     println!(
         "{}",
@@ -461,4 +477,12 @@ fn copy_objects(source: &gix::Repository, target: &gix::Repository) -> Result<()
         }
     }
     Ok(())
+}
+
+/// Whether to print the phase timings of a clone.
+///
+/// This is a diagnostic for performance work, not a user-facing option: it stays
+/// behind an environment variable so normal output is unchanged.
+fn trace() -> bool {
+    std::env::var_os("GIT_NEXT_TRACE_TIMING").is_some()
 }
