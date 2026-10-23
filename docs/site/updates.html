@@ -33,6 +33,20 @@ enabled and <code>git update check --json</code> as current at 1.0.3, with
 <code>git-next-update.json</code> bytes. The downloaded bootstrap's <code>-Plan</code> selects Windows
 x64 machine scope and reports <code>changes_applied=false</code>. This check executes no
 installer or terminal tests. <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json">Production channel readback</a>.</p>
+<p>The registered <strong>SYSTEM worker also actually ran a <code>Check</code> request</strong>, exited 0
+and recorded <code>current</code>, version 1.0.3, with its accepted task definition unchanged.
+No Apply or installer was requested. A target-only readback script initially
+reported a timeout because PowerShell 7 had already parsed the UTC timestamp;
+parsing it again lost its timezone. The corrected readback preserves that failure
+and verifies the existing task/state timestamps without rerunning the worker.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-worker-20261024.json">Worker receipt</a>.</p>
+<p>Current real-Mac preflight connected to non-root ARM64 macOS 15.5, but that user's
+GUI launchd domain was unavailable. The isolated host-service acceptance stopped
+before uploading, installing or executing the product, leaving existing services
+and personal configuration unchanged. This is an explicit environmental blocker,
+not a passed Mac installer or upgrade lifecycle. Windows ARM64 still lacks a
+real-machine execution entrypoint. These gaps prevent an all-platform production
+acceptance claim. <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-macos-host-preflight-20261024.json">Mac preflight</a>.</p>
 <h2>Delivery contract</h2>
 <p>The Windows updater supports the built-in Windows PowerShell 5.1 even when launched from PowerShell 7: its child process selects the Windows module directory, MSI property reads suppress COM method return values, and atomic JSON/configuration replacement passes a true null backup path. First-time runtime configuration copies preserve a null destination state rather than converting it to an empty string. Task lookup distinguishes an absent task using its HRESULT, including PowerShell's wrapped file-not-found exception. POSIX directory creation accepts a root-owned sticky ancestor such as <code>/tmp</code> while continuing to reject writable or foreign-owned installation leaves and symlink traversal. Candidate refreshes use checksum-pinned archives and matching compiled-updater receipts; they do not rebuild unchanged C cores or reuse earlier acceptance for changed bytes.</p>
 <p>The requested final delivery includes Windows x64/ARM64 MSI packages, background automatic updates, official GitHub release discovery and automatic selection of a usable download mirror. These are part of the one consolidated release gate. Source implementation and an MSI that compiles do not establish installation, update, rollback or complete Git compatibility.</p>

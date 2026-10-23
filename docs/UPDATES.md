@@ -39,6 +39,22 @@ enabled and `git update check --json` as current at 1.0.3, with
 x64 machine scope and reports `changes_applied=false`. This check executes no
 installer or terminal tests. [Production channel readback](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json).
 
+The registered **SYSTEM worker also actually ran a `Check` request**, exited 0
+and recorded `current`, version 1.0.3, with its accepted task definition unchanged.
+No Apply or installer was requested. A target-only readback script initially
+reported a timeout because PowerShell 7 had already parsed the UTC timestamp;
+parsing it again lost its timezone. The corrected readback preserves that failure
+and verifies the existing task/state timestamps without rerunning the worker.
+[Worker receipt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-worker-20261024.json).
+
+Current real-Mac preflight connected to non-root ARM64 macOS 15.5, but that user's
+GUI launchd domain was unavailable. The isolated host-service acceptance stopped
+before uploading, installing or executing the product, leaving existing services
+and personal configuration unchanged. This is an explicit environmental blocker,
+not a passed Mac installer or upgrade lifecycle. Windows ARM64 still lacks a
+real-machine execution entrypoint. These gaps prevent an all-platform production
+acceptance claim. [Mac preflight](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-macos-host-preflight-20261024.json).
+
 ## Delivery contract
 
 The Windows updater supports the built-in Windows PowerShell 5.1 even when launched from PowerShell 7: its child process selects the Windows module directory, MSI property reads suppress COM method return values, and atomic JSON/configuration replacement passes a true null backup path. First-time runtime configuration copies preserve a null destination state rather than converting it to an empty string. Task lookup distinguishes an absent task using its HRESULT, including PowerShell's wrapped file-not-found exception. POSIX directory creation accepts a root-owned sticky ancestor such as `/tmp` while continuing to reject writable or foreign-owned installation leaves and symlink traversal. Candidate refreshes use checksum-pinned archives and matching compiled-updater receipts; they do not rebuild unchanged C cores or reuse earlier acceptance for changed bytes.

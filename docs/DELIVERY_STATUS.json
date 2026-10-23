@@ -61,6 +61,38 @@
         "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json"
       }
     },
+    "production_worker_check": {
+      "status": "pass",
+      "request": "Check",
+      "task_principal": "SYSTEM",
+      "task_exit_code": 0,
+      "worker_result": "current",
+      "version": "1.0.3",
+      "task_definition_matches_accepted_installation": true,
+      "worker_reexecuted_after_readback_correction": false,
+      "evidence": {
+        "path": "docs/benchmarks/native-production-worker-20261024.json",
+        "sha256": "1b9b7489e3285ab606e8749b04b67838218f224f486441cf602a79d375ee9295",
+        "bytes": 1401
+      }
+    },
+    "production_platform_blockers": {
+      "all_platforms_production_acceptance_complete": false,
+      "windows_arm64": "real-machine-runtime-and-installer-entrypoint-unavailable",
+      "macos_arm64": {
+        "status": "blocked",
+        "release_gate": false,
+        "connection_established": true,
+        "blocker": "required-user-gui-launchd-domain-unavailable",
+        "product_executed": false,
+        "remote_files_changed": false,
+        "evidence": {
+          "path": "docs/benchmarks/native-macos-host-preflight-20261024.json",
+          "sha256": "483ac731e2ee4ee0e4c377034ddae1aba7b5d364c145c8702dee55806f0f7f0c",
+          "bytes": 1807
+        }
+      }
+    },
     "failed_candidate_evidence_preserved": true,
     "final_gates": {
       "checksums_and_configured_signatures": {
