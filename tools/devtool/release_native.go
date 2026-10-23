@@ -3,6 +3,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -32,6 +34,61 @@ func resultCases(gate record, expected []string) error {
 		return fmt.Errorf("required acceptance cases missing")
 	}
 	return nil
+}
+func releaseInputReadback(matrix record) error {
+	for name, want := range object(matrix, "files") {
+		if e := requireHash(name, want); e != nil {
+			return fmt.Errorf("accepted package input changed: %s: %w", name, e)
+		}
+	}
+	return nil
+}
+func releaseOwnedReplace(root, name string, data []byte, mode os.FileMode) error {
+	target, e := confined(root, name)
+	if e != nil {
+		return e
+	}
+	regularTarget := func() error {
+		info, e := os.Lstat(target)
+		if os.IsNotExist(e) {
+			return nil
+		}
+		if e != nil {
+			return e
+		}
+		if !info.Mode().IsRegular() {
+			return fmt.Errorf("release replacement target is not a regular file: %s", name)
+		}
+		return nil
+	}
+	if e = regularTarget(); e != nil {
+		return e
+	}
+	if e = os.MkdirAll(filepath.Dir(target), 0755); e != nil {
+		return e
+	}
+	temporary, e := os.CreateTemp(filepath.Dir(target), ".git-next-release-*")
+	if e != nil {
+		return e
+	}
+	temporaryPath := temporary.Name()
+	defer os.Remove(temporaryPath)
+	_, writeErr := temporary.Write(data)
+	closeErr := temporary.Close()
+	if e = errors.Join(writeErr, closeErr); e != nil {
+		return e
+	}
+	if e = os.Chmod(temporaryPath, mode.Perm()); e != nil {
+		return e
+	}
+	if e = regularTarget(); e != nil {
+		return e
+	}
+	// Staged payloads share source hardlinks until a replacement needs a fresh inode.
+	if e = os.Remove(target); e != nil && !os.IsNotExist(e) {
+		return e
+	}
+	return os.Rename(temporaryPath, target)
 }
 func boundedReleaseRepairs(a *app, o options, matrix record) (record, error) {
 	repairs := record{}
@@ -89,7 +146,7 @@ func boundedReleaseRepairs(a *app, o options, matrix record) (record, error) {
 	}
 	return repairs, nil
 }
-func prepareNativeRelease(a *app, o options) error {
+func prepareNativeRelease(a *app, o options) (releaseErr error) {
 	if e := o.require("native-packages", "correctness", "performance", "destination", "wix", "git", "source-commit"); e != nil {
 		return e
 	}
@@ -130,12 +187,14 @@ func prepareNativeRelease(a *app, o options) error {
 	if strings.TrimSpace(string(head)) != o.get("source-commit") {
 		return fmt.Errorf("HEAD differs from release source commit")
 	}
-	for name, h := range object(matrix, "files") {
-		actual, e := digest(name)
-		if e != nil || actual != h {
-			return fmt.Errorf("accepted package input changed: %s", name)
-		}
+	if e = releaseInputReadback(matrix); e != nil {
+		return e
 	}
+	defer func() {
+		if releaseErr != nil {
+			releaseErr = errors.Join(releaseErr, releaseInputReadback(matrix))
+		}
+	}()
 	repairs, e := boundedReleaseRepairs(a, o, matrix)
 	if e != nil {
 		return e
@@ -246,7 +305,11 @@ func prepareNativeRelease(a *app, o options) error {
 				if key == "windows_runtime_acl_fix" {
 					source = "packaging/windows/Runtime.Configuration.ps1"
 				}
-				if e = copyFile(a.path(filepath.FromSlash(source)), p); e != nil {
+				repairData, e := os.ReadFile(a.path(filepath.FromSlash(source)))
+				if e != nil {
+					return e
+				}
+				if e = releaseOwnedReplace(target, name, repairData, 0644); e != nil {
 					return e
 				}
 				h, e = digest(p)
@@ -265,7 +328,7 @@ func prepareNativeRelease(a *app, o options) error {
 				entry["bytes"] = st.Size()
 			}
 			for name, data := range manuals {
-				if e = write(filepath.Join(target, filepath.FromSlash(name)), data, 0644); e != nil {
+				if e = releaseOwnedReplace(target, name, data, 0644); e != nil {
 					return e
 				}
 				entry := rec(object(manifest, "files")[name])
@@ -276,7 +339,11 @@ func prepareNativeRelease(a *app, o options) error {
 				entry["sha256"] = digestBytes(data)
 				entry["bytes"] = len(data)
 			}
-			if e = writeJSON(manifestPath, manifest); e != nil {
+			manifestData, e := json.MarshalIndent(manifest, "", "  ")
+			if e != nil {
+				return e
+			}
+			if e = releaseOwnedReplace(target, "git-next-distribution.json", append(manifestData, '\n'), 0644); e != nil {
 				return e
 			}
 			for _, scope := range []string{"machine", "user"} {
@@ -426,6 +493,9 @@ func prepareNativeRelease(a *app, o options) error {
 		fmt.Fprintf(&sums, "%s  %s\n", h, name)
 	}
 	if e = write(filepath.Join(out, "SHA256SUMS"), []byte(sums.String()), 0644); e != nil {
+		return e
+	}
+	if e = releaseInputReadback(matrix); e != nil {
 		return e
 	}
 	return a.json(record{"status": "release-staged-not-published", "source_commit": o.get("source-commit"), "platforms": len(platforms), "assets": len(assets)})

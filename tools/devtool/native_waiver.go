@@ -11,7 +11,7 @@ import (
 const terminalWaiverInstruction = "不用再测试git-terminal了"
 
 var terminalWaiverCases = wordSet("terminal-rust-contracts terminal-native-desktop")
-var terminalWaiverMSISources = wordSet("tools/devtool/batch_native.go tools/devtool/release_native.go tools/devtool/evidence.go tools/devtool/native_waiver.go tools/devtool/native_waiver_test.go")
+var terminalWaiverMSISources = wordSet("tools/devtool/batch_native.go tools/devtool/release_native.go tools/devtool/release_native_test.go tools/devtool/evidence.go tools/devtool/native_waiver.go tools/devtool/native_waiver_test.go")
 
 type nativeWaiver struct {
 	path, sha string

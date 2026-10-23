@@ -105,6 +105,13 @@ two terminal-case waivers. `waived` remains distinct from `pass`; neither a
 partial installer report nor a successful compilation substitutes for a complete
 artifact-bound product gate.
 
+Release staging replaces mutable manuals, manifests and integration scripts with
+independent files before writing them. Unchanged runtime files may share
+hardlinks with the accepted inputs. The stage checks every frozen input before
+and after packaging, and checks again on an error; a changed input rejects the
+stage. Failed or interrupted directories are diagnostic artifacts, never release
+assets.
+
 The final R6 local checkpoint completed correctness with 16 passed / 2 waived
 lanes in 246.204 seconds, and all five paired-performance lanes in 691.251 seconds.
 The report's false release/installation/publication flags describe actions still
