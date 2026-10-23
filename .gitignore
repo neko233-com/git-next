@@ -4,3 +4,14 @@
 *.log
 .DS_Store
 __pycache__/
+# Compiler leftovers from tools/build_windows_bridge.py runs
+*.obj
+*.res
+*.pdb
+*.ilk
+*.exp
+*.asm
+/bridge-build/
+# Local container or test caches
+.pytest_cache/
+*.tmp
