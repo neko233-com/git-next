@@ -1,6 +1,31 @@
-# Current Windows measurements · 2026-10-21
+# Native 1.0.3 measurement status · 2026-10-23
 
-The [current matched-artifact batch](benchmarks/native-integrated-performance-20261021.json) passes all three file scales and local HTTPS workloads with **10 pairs per operation**, complete output/fixture verification and exact current core identity `fb505db8` / binary `3bc2edf0`. Both clients use the same declared Windows read-safety profile; the reference is complete official Git 2.54. The actual batch took **596.63 seconds**, exceeding the 60-second target. No checks were skipped. A 10-sample p95 is exploratory; the previous larger-sample reports below retain their original identities.
+The current candidate's correctness batch completed with 16 passed lanes and two
+terminal lanes explicitly waived by the user. The paired performance batch is
+still pending. Those waivers do not cover any performance, MSI, CLI, transport or
+package check. No current-version latency or memory advantage is claimed before
+its own final measurements complete. See the
+[artifact-bound migration and gate evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json).
+
+The first current 100,000-file attempt was rejected when native `grep` exited 1
+without stderr. It produced no valid latency report for that scale. Smaller
+completed workloads do not replace this failed gate; diagnosis and a complete
+accepted paired batch are still required.
+
+The follow-up harness distinguishes a context deadline from an ordinary exit 1
+and gives only the 100,000-file workload 120 seconds per command, within its
+unchanged 1,800-second case bound. The rejected attempt is preserved, and its
+root cause remains unproved. This budget change retains the full output, exit,
+fsck and repeated-pair requirements; it does not turn an incomplete result into
+a timing sample.
+
+The reports below retain their original dates, binaries, reference versions and
+sample counts. They are historical measurements, not measurements of 1.0.3 or a
+comparison with a newer reference Git.
+
+# Historical matched-artifact Windows measurements · 2026-10-21
+
+The [dated matched-artifact batch](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-integrated-performance-20261021.json) passes all three file scales and local HTTPS workloads with **10 pairs per operation**, complete output/fixture verification and core identity `fb505db8` / binary `3bc2edf0`. Both clients use the same declared Windows read-safety profile; the reference is complete official Git 2.54. The actual batch took **596.63 seconds**, exceeding the 60-second target. No checks were skipped. A 10-sample p95 is exploratory; the previous larger-sample reports below retain their original identities.
 
 Primary-process memory excludes children. These measurements do not imply universal speed or memory superiority. In particular, HTTPS clone remains slower than the reference; large full scans remain a latency limitation. Fetch and fast-forward pull are comparable in this generated local TLS fixture. This does not measure WAN providers or GitSSS same-branch push throughput.
 
@@ -29,7 +54,7 @@ Primary-process memory excludes children. These measurements do not imply univer
 
 # Final Windows measurements · 2026-10-21
 
-The [final paired batch](benchmarks/native-performance-final-20261021.json) passes all three file scales and loopback HTTPS workloads. Forty local pairs use the shipped Windows stability profile for the native client and the same five explicitly recorded reference overrides; twenty network pairs use the report's declared TLS settings. Every warm-up and sample must return the complete expected output. Primary-process peak memory is recorded separately; it excludes child processes. These measurements do not establish full Git compatibility or universal speed/memory superiority.
+The [final paired batch](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-final-20261021.json) passes all three file scales and loopback HTTPS workloads. Forty local pairs use the shipped Windows stability profile for the native client and the same five explicitly recorded reference overrides; twenty network pairs use the report's declared TLS settings. Every warm-up and sample must return the complete expected output. Primary-process peak memory is recorded separately; it excludes child processes. These measurements do not establish full Git compatibility or universal speed/memory superiority.
 
 Both the 1071.771-second correctness batch and 1388.824-second performance batch exceeded the 60-second target. Cases were not skipped or relabeled to meet that target. At 100000 files, complete status takes about 1.89 seconds and full worktree grep about 7.15 seconds; this is a current full-scan latency limitation. The stable profile prevents the reproduced incomplete reads; it is not a claim that the underlying Windows race is eliminated under explicit parallel-read overrides.
 
@@ -51,7 +76,7 @@ Both the 1071.771-second correctness batch and 1388.824-second performance batch
 | 100000 | show_metadata | 61.536 / 66.172 | 51.684 / 54.532 |
 | 100000 | grep_files | 7148.149 / 7465.653 | 7190.098 / 7662.198 |
 
-Full local reports: [1000](benchmarks/native-performance-1000-20261021.json), [10000](benchmarks/native-performance-10000-20261021.json), [100000](benchmarks/native-performance-100000-20261021.json). The [read-stability diagnostic](benchmarks/native-windows-read-stability-20261021.json) retains both clients' failures under parallel defaults and successful stable-profile rounds.
+Full local reports: [1000](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-1000-20261021.json), [10000](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-10000-20261021.json), [100000](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-100000-20261021.json). The [read-stability diagnostic](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-windows-read-stability-20261021.json) retains both clients' failures under parallel defaults and successful stable-profile rounds.
 
 | Loopback HTTPS | Native median / p95 ms | Reference median / p95 ms |
 | --- | --- | --- |
@@ -59,7 +84,7 @@ Full local reports: [1000](benchmarks/native-performance-1000-20261021.json), [1
 | fetch | 295.248 / 325.771 | 287.641 / 333.007 |
 | pull_ff_only | 382.529 / 403.871 | 366.613 / 397.414 |
 
-[Network report](benchmarks/native-performance-network-20261021.json). Native clone is slower in this fixture; this is not a WAN/provider or GitSSS server-throughput measurement. Earlier checkpoints below retain their original identities and are not reassigned to these defaults.
+[Network report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-network-20261021.json). Native clone is slower in this fixture; this is not a WAN/provider or GitSSS server-throughput measurement. Earlier checkpoints below retain their original identities and are not reassigned to these defaults.
 
 # Native read thread defaults
 
@@ -105,23 +130,23 @@ Benchmark and validation-failure JSON files are written as UTF-8/LF on every pla
 go -C tools/devtool run . network-benchmark target/release/git-next --runs 40 --files 1000 --output network-benchmark.json
 ```
 
-Use `.exe` on Windows. This harness measures full clone, incremental fetch and fast-forward-only pull against a temporary local smart-HTTPS server. A private fixture CA, IP hostname validation and a generated static authorization header stay inside disposable profiles; no real provider login, user trust-store or global configuration changes occur. The reference server uses Git's HTTP backend only as fixture infrastructure. Native client PATH contains no Git/OpenSSH. On Windows the reference process explicitly selects OpenSSL so the short-lived private CA can be validated without a nonexistent fixture revocation service; native TLS uses rustls. Certificate verification remains enabled. The existing Python server responds with HTTP/1.0; this does not establish HTTP/2/v2-protocol, WAN, provider, SSH, packet-byte or object-reuse performance.
+Use `.exe` on Windows. This harness measures full clone, incremental fetch and fast-forward-only pull against a temporary local smart-HTTPS server. A private fixture CA, IP hostname validation and a generated static authorization header stay inside disposable profiles; no real provider login, user trust-store or global configuration changes occur. The reference server uses Git's HTTP backend only as fixture infrastructure. Native client PATH contains no Git/OpenSSH. On Windows the reference process explicitly selects OpenSSL so the short-lived private CA can be validated without a nonexistent fixture revocation service. The native C distribution uses its pinned owned TLS dependencies; rustls belongs to the independent Rust preview. Certificate verification remains enabled. The current fixture server is implemented in Go. The historical Python fixture used HTTP/1.0; neither those historical results nor a loopback fixture establish HTTP/2/v2-protocol, WAN, provider, SSH, packet-byte or object-reuse performance.
 
 Each trial independently verifies HEAD/tracking refs, all worktree bytes, staged IDs, fsck and unchanged source object bytes. Fetch must preserve HEAD/index/worktree and retain the previous reachable objects. Fixture copies, clean-index priming, verification and cleanup are outside timing; process creation, TLS/HTTP/backend work, transfer and client writes are included. Three warm-ups precede randomized paired samples with seed 233. Reports use UTF-8/LF and pin the native binary/source, benchmark/helper hashes, versions and request counts. `--validation-only --runs 1 --files 16` runs a conformance smoke and emits no latency statistics. Such a smoke can overlap builds; accepted latency runs must wait for build/test/install activity to finish.
 
 ## Rejected serial HEAD/index experiment · 2026-10-20
 
-The uninstalled `5a1fbe43...` candidate passed 23 optimized fixtures, including corrected protected-path validation, but its serial streaming proof delayed the existing parallel scan. In the [same-fixture 40-round comparison](benchmarks/windows-x64-0.3.0-dev-100000-status-head-dense-20261020.json), 100000 files across 16 directories measure clean status at 98.239/103.171 ms median/p95 versus the installed `d9a17139...` baseline at 91.827/101.450 and Git at 78.021/85.348. This shortcut was removed from the default implementation. Tracked/untracked ordering, configuration validation and regression fixtures are retained with the full comparison. Neither the earlier missed-validation prototype nor this slower candidate was installed.
+The uninstalled `5a1fbe43...` candidate passed 23 optimized fixtures, including corrected protected-path validation, but its serial streaming proof delayed the existing parallel scan. In the [same-fixture 40-round comparison](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-status-head-dense-20261020.json), 100000 files across 16 directories measure clean status at 98.239/103.171 ms median/p95 versus the installed `d9a17139...` baseline at 91.827/101.450 and Git at 78.021/85.348. This shortcut was removed from the default implementation. Tracked/untracked ordering, configuration validation and regression fixtures are retained with the full comparison. Neither the earlier missed-validation prototype nor this slower candidate was installed.
 
-Wide-directory timing failed output validation: reference Git briefly reported existing files as deleted. A separate reference-only 10000-file/1000-directory diagnostic, with no native client executed, reproduced two nonempty status results in 60 default runs. The staged-object digest stayed unchanged and sampled files still existed. Explicit reference-only experiments disabling fscache or preload each had zero occurrences in 60 runs; this implicates that path but does not prove a root cause or a universal fix. The original Git/global configuration is unchanged. [Failure and reference-only diagnostic](benchmarks/windows-x64-reference-wide-validation-20261020.json). These failed runs have no valid wide-tree latency report and are not used as speed evidence.
+Wide-directory timing failed output validation: reference Git briefly reported existing files as deleted. A separate reference-only 10000-file/1000-directory diagnostic, with no native client executed, reproduced two nonempty status results in 60 default runs. The staged-object digest stayed unchanged and sampled files still existed. Explicit reference-only experiments disabling fscache or preload each had zero occurrences in 60 runs; this implicates that path but does not prove a root cause or a universal fix. The original Git/global configuration is unchanged. [Failure and reference-only diagnostic](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-reference-wide-validation-20261020.json). These failed runs have no valid wide-tree latency report and are not used as speed evidence.
 
-The [installed native d9 checkpoint](benchmarks/windows-x64-installed-wide-stability-0.3.0-dev-d9-20261020.json) independently passes 60 clean status calls in each object format on 10000 files/1000 directories. Every worktree byte, staged ID, HEAD and fsck is checked; optional-lock-disabled calls leave the index unchanged. This establishes scoped stability, not wide-tree latency or complete Git parity.
+The [installed native d9 checkpoint](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-installed-wide-stability-0.3.0-dev-d9-20261020.json) independently passes 60 clean status calls in each object format on 10000 files/1000 directories. Every worktree byte, staged ID, HEAD and fsck is checked; optional-lock-disabled calls leave the index unchanged. This establishes scoped stability, not wide-tree latency or complete Git parity.
 
 ## Windows ignored-status checkpoint · 2026-10-20
 
 Installed `c425734c0640...`, 40 paired warm samples, retained ecf1 baseline, isolated profiles and system config enabled. Native PATH contains no Git/OpenSSH. No own build/test/install overlaps measurement; output, stage IDs/HEAD and fsck checks pass. These are plain status/read measurements, not dirty ignored-mode or production/Unity performance proof.
 
-[1000 data files](benchmarks/windows-x64-0.3.0-dev-status-ignored-1000-20261020.json):
+[1000 data files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-ignored-1000-20261020.json):
 
 | Operation | Current median / p95 ms | Prior ecf1 median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- |
@@ -133,7 +158,7 @@ Installed `c425734c0640...`, 40 paired warm samples, retained ecf1 baseline, iso
 | show_metadata | 11.535 / 13.581 | 11.778 / 13.889 | 23.179 / 26.501 |
 | log_metadata | 12.119 / 13.591 | 12.201 / 13.316 | 23.358 / 25.318 |
 
-[100000 data files](benchmarks/windows-x64-0.3.0-dev-status-ignored-100000-20261020.json):
+[100000 data files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-ignored-100000-20261020.json):
 
 | Operation | Current median / p95 ms | Prior ecf1 median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- |
@@ -149,7 +174,7 @@ Installed `c425734c0640...`, 40 paired warm samples, retained ecf1 baseline, iso
 
 Installed `ecf1b66b6dd1...` has two 40-round paired reports, with retained a4ba in each randomized fixture. System configuration is enabled, profiles isolated, native PATH contains no Git/OpenSSH, and output/fsck checks pass. No own build/test/install overlaps timing; caches remain warm. These reports measure the existing plain status/read commands, not dirty-v2/submodule/history scaling.
 
-[1000 data files](benchmarks/windows-x64-0.3.0-dev-status-v2-1000-20261020.json):
+[1000 data files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-v2-1000-20261020.json):
 
 | Operation | Current median / p95 ms | Previous a4ba median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- |
@@ -161,7 +186,7 @@ Installed `ecf1b66b6dd1...` has two 40-round paired reports, with retained a4ba 
 | show_metadata | 11.107 / 12.489 | 10.965 / 12.181 | 22.401 / 23.617 |
 | log_metadata | 12.211 / 13.384 | 11.966 / 13.153 | 22.956 / 24.746 |
 
-[100000 data files](benchmarks/windows-x64-0.3.0-dev-status-v2-100000-20261020.json):
+[100000 data files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-v2-100000-20261020.json):
 
 | Operation | Current median / p95 ms | Previous a4ba median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- |
@@ -177,7 +202,7 @@ Earlier network and large-layout reports below keep their original bytes/scope. 
 
 ## Windows installed staging-correction checkpoint · 2026-10-20
 
-Installed `a4ba7c7b...` has a [40-round 1000-file paired read/startup report](benchmarks/windows-x64-0.3.0-dev-staging-final-system-20261020.json), with retained b414 in the same randomized fixture. System configuration is enabled, profiles are isolated, native PATH contains no Git/OpenSSH and output/fsck checks pass. Builds, tests and installation finish before timing. OS caches stay warm.
+Installed `a4ba7c7b...` has a [40-round 1000-file paired read/startup report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-staging-final-system-20261020.json), with retained b414 in the same randomized fixture. System configuration is enabled, profiles are isolated, native PATH contains no Git/OpenSSH and output/fsck checks pass. Builds, tests and installation finish before timing. OS caches stay warm.
 
 | Operation | Current median / p95 ms | Previous b414 median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- |
@@ -193,7 +218,7 @@ The earlier 100000-file and loopback HTTPS results below retain b414 bytes and t
 
 ## Windows loopback HTTPS checkpoint · 2026-10-20
 
-The retained/installed-at-measurement `b41410ed...` client has [40-round paired measurements](benchmarks/windows-x64-0.3.0-dev-network-https-status-format-20261020.json) and an [identity checkpoint](benchmarks/windows-x64-network-local-checkpoint-0.3.0-dev-status-format-20261020.json). The fixture has 1000 data files with repeated LF text lines, one attribute file and 270259 initial worktree bytes; its next commit edits ten data files. Three warm-ups precede randomized pairs with seed 233. System configuration is disabled and profiles are isolated; Windows reference TLS explicitly uses OpenSSL, native TLS uses rustls, and both validate the private fixture CA/IP. Static fixture authorization avoids provider/vault interaction. The local Python server responds with HTTP/1.0. Build/test/install activity finished before measurement.
+The retained/installed-at-measurement `b41410ed...` client has [40-round paired measurements](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-network-https-status-format-20261020.json) and an [identity checkpoint](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-network-local-checkpoint-0.3.0-dev-status-format-20261020.json). The fixture has 1000 data files with repeated LF text lines, one attribute file and 270259 initial worktree bytes; its next commit edits ten data files. Three warm-ups precede randomized pairs with seed 233. System configuration is disabled and profiles are isolated; Windows reference TLS explicitly uses OpenSSL, native TLS uses rustls, and both validate the private fixture CA/IP. Static fixture authorization avoids provider/vault interaction. The local Python server responds with HTTP/1.0. Build/test/install activity finished before measurement.
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -205,7 +230,7 @@ Each trial verifies HEAD/tracking refs, every worktree byte, staged IDs, fsck an
 
 ## Windows native status-format checkpoint · 2026-10-20
 
-The installed `b41410ed...` bytes have [1000-file loose](benchmarks/windows-x64-0.3.0-dev-status-format-system-20261020.json) and [100000-file packed](benchmarks/windows-x64-0.3.0-dev-100000-status-format-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the accepted `e5a1e9f8...` native client in the same fixture. Enabled system configuration, isolated profiles and native PATH without Git/OpenSSH are retained. Successful output and fsck pass; build/test/install activity finished before measurement. OS caches stay warm.
+The installed `b41410ed...` bytes have [1000-file loose](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-format-system-20261020.json) and [100000-file packed](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-status-format-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the accepted `e5a1e9f8...` native client in the same fixture. Enabled system configuration, isolated profiles and native PATH without Git/OpenSSH are retained. Successful output and fsck pass; build/test/install activity finished before measurement. OS caches stay warm.
 
 | Data files | Operation | Current median / p95 ms | Previous e5a median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- | --- |
@@ -223,7 +248,7 @@ Distinct layouts/settings are separate workloads. These correctness/output chang
 
 ## Windows status consistency checkpoint · 2026-10-20
 
-The installed `e5a1e9f8...` bytes have [1000-file loose](benchmarks/windows-x64-0.3.0-dev-status-consistency-system-20261020.json) and [100000-file packed](benchmarks/windows-x64-0.3.0-dev-100000-status-consistency-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the retained `d9a17139...` client in the same fixture. System configuration is enabled, profiles are isolated and native PATH contains no Git/OpenSSH. Successful outputs and fsck pass. Builds/tests/installation finished before timing; OS caches stay warm.
+The installed `e5a1e9f8...` bytes have [1000-file loose](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status-consistency-system-20261020.json) and [100000-file packed](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-status-consistency-dense-20261020.json) measurements. Each has 40 randomized samples per client/operation after three warm-ups, with the retained `d9a17139...` client in the same fixture. System configuration is enabled, profiles are isolated and native PATH contains no Git/OpenSSH. Successful outputs and fsck pass. Builds/tests/installation finished before timing; OS caches stay warm.
 
 | Data files | Operation | Current median / p95 ms | Previous d9 median / p95 ms | Git median / p95 ms |
 | --- | --- | --- | --- | --- |
@@ -245,7 +270,7 @@ The current [installed bytes](ACCEPTANCE.md) use the required `FILE_FULL_DIR_INF
 
 All three workloads have 40 randomized samples per client/operation after three warm-ups, enabled conventional system configuration, isolated profiles and no Git/OpenSSH on the client PATH. Successful output matches reference Git and independent fsck passes. Builds, tests and installation do not overlap measurement. OS caches stay warm; no cold-cache, memory, network or broad-platform claim follows.
 
-The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-full-directory-system-20261020.json):
+The [1000-file loose workload](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-full-directory-system-20261020.json):
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -264,7 +289,7 @@ The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-full-directory-s
 | 100000 / packed | status --porcelain (clean) | 90.626 / 94.233 | 76.979 / 82.548 |
 | 100000 / packed | diff (clean) | 60.456 / 63.182 | 57.660 / 64.905 |
 
-[10000-file report](benchmarks/windows-x64-0.3.0-dev-10000-full-directory-20261020.json), [100000-file report](benchmarks/windows-x64-0.3.0-dev-100000-packed-full-directory-20261020.json). The packed fixture has local input/LF settings and a distinct object layout. All seven median results are faster than the paired reference in the 1000/10000-file runs. At 100000 files, clean status remains near the prior shared-cache result, while diff moves from 84.942 to 60.456 ms median across the retained separate snapshots. Each report retains its own paired Git baseline and bytes. Status and diff medians remain slower than reference Git; the broad performance goal is incomplete.
+[10000-file report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-10000-full-directory-20261020.json), [100000-file report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-packed-full-directory-20261020.json). The packed fixture has local input/LF settings and a distinct object layout. All seven median results are faster than the paired reference in the 1000/10000-file runs. At 100000 files, clean status remains near the prior shared-cache result, while diff moves from 84.942 to 60.456 ms median across the retained separate snapshots. Each report retains its own paired Git baseline and bytes. Status and diff medians remain slower than reference Git; the broad performance goal is incomplete.
 
 ## Windows shared-cache/lazy-diff checkpoint · 2026-10-20 · 0.3.0-dev
 
@@ -272,7 +297,7 @@ The newer directory-only metadata checkpoint is recorded above. This shared-cach
 
 These previously installed bytes are pinned by [acceptance](ACCEPTANCE.md). Each paired workload has 40 samples per client/operation after three warm-ups, randomized order seed 233, enabled conventional system configuration and isolated profiles. The client PATH excludes Git/OpenSSH. Successful outputs match reference Git and independent fsck passes. Build/test/install activity does not overlap measurement. Cache snapshots live for one scan; no persistent daemon or repository layout migration is involved.
 
-The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-shared-cache-system-20261020.json):
+The [1000-file loose workload](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-shared-cache-system-20261020.json):
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -291,9 +316,9 @@ The [1000-file loose workload](benchmarks/windows-x64-0.3.0-dev-shared-cache-sys
 | 100000 / packed | status --porcelain (clean) | 91.116 / 93.629 | 71.142 / 75.057 |
 | 100000 / packed | diff (clean) | 84.942 / 88.588 | 55.608 / 58.563 |
 
-[10000-file report](benchmarks/windows-x64-0.3.0-dev-10000-shared-cache-20261020.json), [100000-file report](benchmarks/windows-x64-0.3.0-dev-100000-packed-shared-cache-20261020.json). The packed fixture uses local input/LF settings; it is not the same object layout/settings as the loose fixtures. All seven operations are faster at median in the 1000/10000-file paired runs. At 100000 files, status/diff remain slower than Git despite improving from the retained 206.106/180.535 ms pre-optimization medians to 91.116/84.942 ms. These before/after runs occurred separately; each retains its own paired reference and exact bytes. The lazy-map-only experiment remains [recorded](benchmarks/windows-x64-0.3.0-dev-100000-packed-lazy-candidate-20261020.json).
+[10000-file report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-10000-shared-cache-20261020.json), [100000-file report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-packed-shared-cache-20261020.json). The packed fixture uses local input/LF settings; it is not the same object layout/settings as the loose fixtures. All seven operations are faster at median in the 1000/10000-file paired runs. At 100000 files, status/diff remain slower than Git despite improving from the retained 206.106/180.535 ms pre-optimization medians to 91.116/84.942 ms. These before/after runs occurred separately; each retains its own paired reference and exact bytes. The lazy-map-only experiment remains [recorded](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-packed-lazy-candidate-20261020.json).
 
-Disabling core.fscache was rejected: the retained [explicit off experiment](benchmarks/windows-x64-0.3.0-dev-100000-packed-fscache-off-20261020.json) measures 2208.278/5236.688 ms clean status/diff medians. It did not alter installed configuration. The selected default keeps the cache enabled and shares per-scan listings. Large blobs, dirty/conflicted repositories, cold cache, memory, network, physical ARM64 and macOS performance remain separate requirements.
+Disabling core.fscache was rejected: the retained [explicit off experiment](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-packed-fscache-off-20261020.json) measures 2208.278/5236.688 ms clean status/diff medians. It did not alter installed configuration. The selected default keeps the cache enabled and shares per-scan listings. Large blobs, dirty/conflicted repositories, cold cache, memory, network, physical ARM64 and macOS performance remain separate requirements.
 
 ## Larger Windows worktrees: retained pre-optimization baseline · 2026-10-20
 
@@ -306,15 +331,15 @@ These reports pin the accepted/installed `264214cf...` bytes and their original 
 | 100000 / packed | status --porcelain | 206.106 / 230.855 | 77.922 / 88.311 |
 | 100000 / packed | diff (clean) | 180.535 / 195.507 | 57.700 / 62.514 |
 
-The [10000-file loose sample](benchmarks/windows-x64-0.3.0-dev-10000-files-20261020.json) retains the earlier fixture's isolated/system EOL settings. The [100000-file packed sample](benchmarks/windows-x64-0.3.0-dev-100000-packed-baseline-20261020.json) uses fixture-only fast-import to create a pack and LF checkout with local autocrlf=input/eol=lf. Each is an independent paired comparison; different object layouts/settings must not be treated as one controlled scaling curve. The larger clean status/diff results are slower than Git and remain an unfinished performance requirement.
+The [10000-file loose sample](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-10000-files-20261020.json) retains the earlier fixture's isolated/system EOL settings. The [100000-file packed sample](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-packed-baseline-20261020.json) uses fixture-only fast-import to create a pack and LF checkout with local autocrlf=input/eol=lf. Each is an independent paired comparison; different object layouts/settings must not be treated as one controlled scaling curve. The larger clean status/diff results are slower than Git and remain an unfinished performance requirement.
 
-The earlier [100000-file loose attempt](benchmarks/windows-x64-0.3.0-dev-100000-loose-setup-failure-20261020.json) timed out in reference Git add after 180 seconds, before measurements. It has no valid latency result. Packed preparation avoids that loose-object setup path and is distinct from client runtime behavior. [Git fast-import input](https://git-scm.com/docs/git-fast-import) is used only by the fixture, never as a native fallback.
+The earlier [100000-file loose attempt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-100000-loose-setup-failure-20261020.json) timed out in reference Git add after 180 seconds, before measurements. It has no valid latency result. Packed preparation avoids that loose-object setup path and is distinct from client runtime behavior. [Git fast-import input](https://git-scm.com/docs/git-fast-import) is used only by the fixture, never as a native fallback.
 
 Use `--fixture-layout packed --files 100000 --timeout 180` for the packed workload. The timeout also covers fixture preparation; progress is printed outside command timing. Use `--source-checkpoint` when measuring a retained historical binary so current source is not assigned to old bytes. The new installed shared-cache/lazy-diff checkpoint above records matching optimized acceptance and paired measurements. Large blobs, dirty/conflicted repositories, cold cache, memory, network and platform-wide performance remain separate scopes.
 
 ## Windows x64 pending-merge snapshot · 2026-10-20 · 0.3.0-dev
 
-The [previous pending-merge optimized bytes](benchmarks/windows-x64-0.3.0-dev-merge-pending-system-20261020.json) have 40 samples per client/operation after three warm-ups, randomized order seed 233, 1000 tracked files and one commit. Conventional system configuration is enabled, the profile is isolated and the client PATH excludes Git/OpenSSH. All Windows/Linux build, installation and acceptance activity finished before measurement.
+The [previous pending-merge optimized bytes](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-merge-pending-system-20261020.json) have 40 samples per client/operation after three warm-ups, randomized order seed 233, 1000 tracked files and one commit. Conventional system configuration is enabled, the profile is isolated and the client PATH excludes Git/OpenSSH. All Windows/Linux build, installation and acceptance activity finished before measurement.
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -330,7 +355,7 @@ The previous binary's clean merge measurement below retains its original hash; i
 
 ## Windows x64 native-merge snapshot · 2026-10-20 · 0.3.0-dev
 
-The historical native-merge optimized bytes have a [40-round startup/read comparison](benchmarks/windows-x64-0.3.0-dev-merge-system-20261020.json). Same 1000-file/one-commit workload, three warm-ups, seed 233, enabled system configuration, isolated profile and no Git/OpenSSH on the client PATH. Build, installation and acceptance finished before measurement.
+The historical native-merge optimized bytes have a [40-round startup/read comparison](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-merge-system-20261020.json). Same 1000-file/one-commit workload, three warm-ups, seed 233, enabled system configuration, isolated profile and no Git/OpenSSH on the client PATH. Build, installation and acceptance finished before measurement.
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -343,7 +368,7 @@ The historical native-merge optimized bytes have a [40-round startup/read compar
 | log -n 20 (one fixture commit) | 11.297 / 12.242 | 21.554 / 23.972 |
 | merge --no-edit topic | 110.294 / 118.245 | 105.835 / 109.239 |
 
-The merge row is a separate [clean two-parent workload](benchmarks/windows-x64-0.3.0-dev-merge-operation-20261020.json): 1000 text data files plus one attribute file, three initial commits, nonoverlapping same-file changes and one incoming separate-file change. Each operation starts from a fresh fixture copy with a primed clean index. Copying, priming and verification are outside measurement; process creation and captured output are included. Forty measured pairs follow three warm-up pairs in randomized order. Raw commit/parents/tree, index stages, all worktree file hashes, ORIG_HEAD, HEAD reflog, clean status and independent fsck match after each pair. Windows read-only object fixture cleanup is outside timing.
+The merge row is a separate [clean two-parent workload](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-merge-operation-20261020.json): 1000 text data files plus one attribute file, three initial commits, nonoverlapping same-file changes and one incoming separate-file change. Each operation starts from a fresh fixture copy with a primed clean index. Copying, priming and verification are outside measurement; process creation and captured output are included. Forty measured pairs follow three warm-up pairs in randomized order. Raw commit/parents/tree, index stages, all worktree file hashes, ORIG_HEAD, HEAD reflog, clean status and independent fsck match after each pair. Windows read-only object fixture cleanup is outside timing.
 
 Reproduce with `go -C tools/devtool run . merge-benchmark target/release/git-next.exe --runs 40 --files 1000 --output merge-benchmark.json`. These results do not establish conflict, recovery, large-repository, cold-cache, memory, network or native macOS/Linux performance. Full takeover and the broad high-performance goal remain open.
 
@@ -351,7 +376,7 @@ The seven read/startup operations are faster in this run. Clean merge is slightl
 
 ## Windows x64 native-discovery snapshot · 2026-10-20 · 0.3.0-dev
 
-The installed optimized bytes are pinned by the [enabled-system report](benchmarks/windows-x64-0.3.0-dev-discovery-system-20261020.json). Forty samples per client/operation, three warm-ups, randomized order, 1000 files and one commit; successful output matches reference Git. The profile is isolated and client PATH contains no Git/OpenSSH. Conventional system configuration stays enabled. Build/install/acceptance activity finished before the final benchmark sequence.
+The installed optimized bytes are pinned by the [enabled-system report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-discovery-system-20261020.json). Forty samples per client/operation, three warm-ups, randomized order, 1000 files and one commit; successful output matches reference Git. The profile is isolated and client PATH contains no Git/OpenSSH. Conventional system configuration stays enabled. Build/install/acceptance activity finished before the final benchmark sequence.
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -363,15 +388,15 @@ The installed optimized bytes are pinned by the [enabled-system report](benchmar
 | show --no-patch --format=fuller | 10.708 / 11.652 | 21.339 / 22.552 |
 | log -n 20 (one fixture commit) | 10.825 / 12.001 | 21.868 / 24.139 |
 
-These seven operations are faster in this workload. A fresh [previous-binary baseline](benchmarks/windows-x64-0.3.0-dev-discovery-baseline-20261020.json) records clean status at 58.771/60.687 ms and clean diff at 58.054/62.714 ms with system configuration enabled. Removing Git subprocess configuration/auxiliary discovery reduces this startup cost; the enabled-system tripwire independently verifies no fallback. The baseline's source-tree hash is taken from its earlier accepted checkpoint after matching the binary hash, rather than assigning current source to old bytes.
+These seven operations are faster in this workload. A fresh [previous-binary baseline](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-discovery-baseline-20261020.json) records clean status at 58.771/60.687 ms and clean diff at 58.054/62.714 ms with system configuration enabled. Removing Git subprocess configuration/auxiliary discovery reduces this startup cost; the enabled-system tripwire independently verifies no fallback. The baseline's source-tree hash is taken from its earlier accepted checkpoint after matching the binary hash, rather than assigning current source to old bytes.
 
-The separate [system-disabled run](benchmarks/windows-x64-0.3.0-dev-discovery-nosystem-20261020.json) records native clean status at 20.472/22.260 ms and clean diff at 19.607/21.097 ms. Earlier slow snapshots below retain their original accepted bytes and measurements. Configuration modes and fixtures can change performance; no cross-platform, large-repository, cold-cache, memory, network throughput or universal ultra-low-latency conclusion follows.
+The separate [system-disabled run](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-discovery-nosystem-20261020.json) records native clean status at 20.472/22.260 ms and clean diff at 19.607/21.097 ms. Earlier slow snapshots below retain their original accepted bytes and measurements. Configuration modes and fixtures can change performance; no cross-platform, large-repository, cold-cache, memory, network throughput or universal ultra-low-latency conclusion follows.
 
 Use `--system-config-enabled` for the additional mode. `--source-checkpoint <accepted-benchmark.json>` identifies historical binaries only after verifying the recorded binary hash. Reports pin the harness hash as well as build inputs. No real user credentials are used or reported.
 
 ## Windows x64 LF/restoration snapshot · 2026-10-20 · 0.3.0-dev
 
-Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned installed binary and results](benchmarks/windows-x64-0.3.0-dev-lf-20261020.json).
+Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned installed binary and results](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-lf-20261020.json).
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -387,7 +412,7 @@ Version/ref/object/metadata reads are faster in this run. Clean status and diff 
 
 ## Windows x64 read-command snapshot · 2026-10-19 · 0.3.0-dev
 
-Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned optimized binary and results](benchmarks/windows-x64-0.3.0-dev-read.json).
+Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture commit. Process creation and captured output are included; the client runs without Git/OpenSSH on PATH. [Pinned optimized binary and results](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-read.json).
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -403,7 +428,7 @@ Version/ref/object/commit metadata reads are faster in this run. Clean status an
 
 ## Windows x64 local snapshot · 2026-10-19 · 0.3.0-dev
 
-Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1. [Exact optimized bytes and measurements](benchmarks/windows-x64-0.3.0-dev-status.json).
+Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1. [Exact optimized bytes and measurements](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.3.0-dev-status.json).
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -416,7 +441,7 @@ The measured version/ref/object reads are faster in this run. Clean status remai
 
 ### Native-created index workload
 
-A separate [40-round comparison](benchmarks/windows-x64-status-cache-0.3.0-dev.json) uses equivalent 1000-file repositories created/staged/committed by the native client. It compares the previous optimized binary with the stat-cache refresh binary, pinning both executable hashes. Warm status median falls from 95.104 ms to 41.487 ms (about 56%); p95 falls from 99.516 ms to 45.621 ms. Reference Git is 38.118 / 43.911 ms. This result applies to the native zero-stat index workload, not every repository.
+A separate [40-round comparison](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-status-cache-0.3.0-dev.json) uses equivalent 1000-file repositories created/staged/committed by the native client. It compares the previous optimized binary with the stat-cache refresh binary, pinning both executable hashes. Warm status median falls from 95.104 ms to 41.487 ms (about 56%); p95 falls from 99.516 ms to 45.621 ms. Reference Git is 38.118 / 43.911 ms. This result applies to the native zero-stat index workload, not every repository.
 
 The first status also publishes verified metadata, costing 119.841 ms in one unreplicated observation versus 96.716 ms before refresh. Subsequent scans reuse the refreshed stat cache. The first observation is not a repeated cold-start benchmark. Optional lock ownership predates scanning; read-only, v4, split/sparse and unfamiliar-extension indexes are not rewritten automatically.
 
@@ -424,7 +449,7 @@ Reproduce with `go -C tools/devtool run . status-benchmark CURRENT --baseline PR
 
 ## Windows x64 local snapshot · 2026-10-19 · 0.2.0
 
-Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1, standard installed command. [Machine-readable result](benchmarks/windows-x64-0.2.0.json).
+Warm cache, 40 samples per client/operation, 1000 tracked files; process creation and captured output included. Reference: Git for Windows 2.54.0.windows.1, standard installed command. [Machine-readable result](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-x64-0.2.0.json).
 
 | Operation | git-next median / p95 ms | Git median / p95 ms |
 | --- | --- | --- |
@@ -444,4 +469,4 @@ The consolidated native batch uses the packed fixture layout for all three sizes
 
 ## Accepted native measurement scope
 
-The user clarified that ultra-low latency is a GitSSS server requirement; git-next needs practical high performance without extreme tuning. The final native batch improves startup and status at 1k/10k/100k files. One measured boundary remains: 100k-file show metadata is 70.424ms versus 57.774ms for the reference (p95 78.754ms versus 63.701ms), so that operation does not match the reference. Network is comparable. These results do not establish universal speedups or lower total process-tree memory. See the [consolidated report](benchmarks/native-performance-consolidated-20261020.json).
+The user clarified that ultra-low latency is a GitSSS server requirement; git-next needs practical high performance without extreme tuning. The final native batch improves startup and status at 1k/10k/100k files. One measured boundary remains: 100k-file show metadata is 70.424ms versus 57.774ms for the reference (p95 78.754ms versus 63.701ms), so that operation does not match the reference. Network is comparable. These results do not establish universal speedups or lower total process-tree memory. See the [consolidated report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-consolidated-20261020.json).

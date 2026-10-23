@@ -54,6 +54,9 @@ func measuredRun(cwd string, env []string, input []byte, timeout time.Duration, 
 	elapsed := float64(time.Since(started).Nanoseconds()) / 1e6
 	peak := query()
 	value := measuredProcess{result{stdout.Bytes(), stderr.Bytes(), 0}, elapsed, peak}
+	if contextErr := ctx.Err(); contextErr != nil {
+		return value, fmt.Errorf("benchmark process exceeded %s: %w", timeout, contextErr)
+	}
 	if e != nil {
 		if exit, ok := e.(*exec.ExitError); ok {
 			value.code = exit.ExitCode()

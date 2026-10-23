@@ -2,11 +2,23 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 )
+
+const benchmarkContextDeadlineBlock = "\tif contextErr := ctx.Err(); contextErr != nil {\n\t\treturn value, fmt.Errorf(\"benchmark process exceeded %s: %w\", timeout, contextErr)\n\t}\n"
+
+func boundedBenchmarkDeadlineRepair(a *app, before, after any) bool {
+	data, e := os.ReadFile(a.path("tools/devtool/benchmark_process.go"))
+	block := []byte(benchmarkContextDeadlineBlock)
+	if e != nil || digestBytes(data) != after || bytes.Count(data, block) != 1 {
+		return false
+	}
+	return digestBytes(bytes.Replace(data, block, nil, 1)) == before
+}
 
 func desktopDependencies(a *app, previous, current record) error {
 	for _, key := range []string{"product", "version"} {
@@ -124,6 +136,12 @@ func validateReuseAt(a *app, report, previous, current record, reference string,
 	}
 	for name := range all {
 		permitted := allowed[name] || !desktop && terminalWaiverMSIReuseSource(name)
+		if !desktop && name == "tools/devtool/benchmark_process.go" && !equalJSON(before[name], after[name]) {
+			permitted = boundedBenchmarkDeadlineRepair(a, before[name], after[name])
+		}
+		if !desktop && name == "tools/devtool/benchmark_process_timeout_test.go" {
+			permitted = true
+		}
 		if desktop {
 			permitted = !(strings.HasPrefix(name, "../git-terminal/") && name != "../git-terminal/src/shell_acceptance.rs") && name != "tools/terminal_runtime_fixture.py" && name != "tools/devtool/evidence.go"
 			if strings.HasPrefix(name, "tools/devtool/") {

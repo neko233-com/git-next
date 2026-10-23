@@ -1,13 +1,14 @@
 # Compatibility contract
 
-Archived fixture descriptions below explain historical receipts. Current commands use Rust acceptance and Go tooling; these descriptions do not extend current acceptance coverage.
+## Native distribution and independent Rust preview
 
-> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+The native product and the 1.0.3 candidate use a source-built native C Git engine with owned runtime, OpenSSH, shell and helper components. Product `git-p4` and owned build/package/maintenance tooling use Go; necessary PowerShell/POSIX shell scripts remain. Native command/repository semantics and installer eligibility are judged by the native product's actual platform and release evidence, not by the independent Rust preview's subset or parity flag. [Current delivery evidence](DELIVERY_STATUS.md) and [platform requirements](INSTALLATION.md) define that scope.
 
+The remainder of this page describes the **independent Rust preview**, including its declared command subset, limitations and historical receipts. It does not restrict the native distribution to that subset. Python CLI suites linked below were deleted from the current tree; their source remains in Git history at `3609553`. The Rust client's merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md), whose 39-command L0 and 100-scenario full coverage do not imply one-for-one equivalence with every historical assertion or complete Git parity.
 
-The Rust client implements Git's documented command behavior in its own code. Repository objects, refs and the index stay in Git's on-disk format. [Git's command documentation](https://git-scm.com/docs) is the behavior reference. This program does not link native Git and does not run an installed `git` binary. `compatibility.json` records `implementation: rust`, `native_git_linked: false` and `complete_git_parity: false`. Parity stays false until each documented command matches. Unsupported commands fail in this process.
+The Rust preview implements Git's documented command behavior in its own code. Repository objects, refs and the index stay in Git's on-disk format. [Git's command documentation](https://git-scm.com/docs) is its behavior reference. This program does not link native Git and does not run an installed `git` binary. `compatibility.json` records `implementation: rust`, `native_git_linked: false` and `complete_git_parity: false`. Unsupported commands fail in this process; these Rust implementation fields do not describe the native installer.
 
-`packaging/native-compatibility.json` describes a separate C tree. That tree is not linked into the Rust client. [Current evidence](DELIVERY_STATUS.md) and [platform requirements](INSTALLATION.md) define the accepted delivery scope. The command-by-command closure plan lives in [parity roadmap](PARITY_ROADMAP.md).
+`packaging/native-compatibility.json` is the separate native contract, not a report embedded into the Rust client. Historical fields or receipts retain their original artifact identity; current release closure comes from the actual final gates in [delivery status](DELIVERY_STATUS.md). The [parity roadmap](PARITY_ROADMAP.md) concerns the independent Rust implementation.
 
 ## Implemented command subset
 

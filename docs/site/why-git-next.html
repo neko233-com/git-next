@@ -1,38 +1,49 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Why git-next</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Why git-next</h1>
-<p>git-next is not a wrapper around Git and not a user interface on top of it. It is a
-Git-compatible client with its own command, repository and protocol implementation,
-built from source, that keeps the contracts your existing repositories, configuration
-and tools already rely on. This page records what that buys, what was measured, and
-what it does not buy.</p>
+<p>The native product and the 1.0.3 candidate use a source-built native C Git engine,
+with git-next's identity, LF policy, language support and installation/update behavior.
+They include an owned runtime and preserve existing Git repository, configuration
+and helper contracts. The independent Rust client is a separate preview; its
+implementation choices and compatibility limits do not describe the native installer.
+This page separates the current architecture from historical measurements.</p>
 <p>Read <a href="git-guide.html">the Git guide</a> first if you want to use it. This page is about the
 engineering.</p>
-<h2>Where the speed comes from</h2>
-<p>Git's own startup cost is mostly not Git. A single <code>git status</code> on Windows runs a
-chain of programs - the launcher, the command, a shell for hooks, sometimes a pager
-and an editor - and each link pays for process creation, environment setup and path
-conversion. On a warm cache that chain is often the largest part of the command.</p>
-<p>git-next is one process. Concretely:</p>
-<ul>
-<li><strong>No shell and no script layer.</strong> The commands are implemented in the binary, so
-nothing is spawned to interpret them and no MSYS path translation happens between
-a shell and a child process.</li>
-<li><strong>No fallback to an installed Git or OpenSSH.</strong> Both are refused rather than used:
-<code>git version --json</code> reports <code>external_git_fallback: false</code> and
-<code>external_ssh_fallback: false</code>, and SSH is an embedded client (<code>russh</code>). There is
-no second program to find, version-check or start.</li>
-<li><strong>Index and object reads are direct.</strong> Reading status, diff metadata or object
-content does not go through the command surface of another implementation; the
-files are read in the format they are stored in.</li>
-<li><strong>The stability profile avoids the Windows read race.</strong> On Windows the shipped
-profile reads the index serially and disables <code>fscache</code>, <code>fsmonitor</code> and
-<code>preload</code>. The diagnostic that accompanied the measurements reproduced incomplete
-reads with parallel defaults on both clients; the serial profile does not. Slower
-in theory, correct in practice - and still not slower than the reference.</li>
-</ul>
-<h3>Measured</h3>
-<p>From the <a href="../benchmarks/native-integrated-performance-20261021.json">matched-artifact batch of 2026-10-21</a>:
-ten pairs per operation, complete output verification, both clients on the same
-declared Windows read-safety profile, reference is official Git 2.54.</p>
+<h2>Native runtime and process boundaries</h2>
+<p>The native core reads Git objects, refs and indexes using its Git implementation.
+It does not dispatch ordinary commands to a separately installed system Git. Its
+runtime includes owned OpenSSH, shell and helper components; hooks, filters,
+subcommands, transport and user-configured tools can start child processes.
+There is no general one-process or shell-free guarantee. Embedded <code>russh</code> belongs
+to the independent Rust preview, while the native product uses its owned SSH runtime.
+Neither product may silently fall back to installed Git or OpenSSH.</p>
+<p>Go owns build, packaging, documentation, fixtures, benchmarks and release tooling,
+and the product's <code>git-p4</code> helper. Necessary PowerShell and POSIX shell scripts
+remain. The 115-file Python retirement removes the owned Python toolchain and
+product helper dependency; it does not remove Git's supported helper interfaces.
+<a href="go-tooling.html">Tooling</a> and <a href="delivery-status.html">delivery status</a> define that scope.</p>
+<p>Windows uses serial index/grep reads and disables <code>fscache</code>, <code>fsmonitor</code> and
+<code>preload</code> through the authoritative defaults fragment. In the
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-read-safety-20261023.json">2026-10-23 same-core control</a>, the
+former automatic profile returned 3,999 of 4,000 files at round 21; the stable
+profile completed all 30 grep/status rounds and six contract checks. This supports
+the scoped read-safety choice, not an internal root-cause or speed claim. Explicit
+user/repository/command-line settings retain their normal priority.
+<a href="defaults.html">Defaults</a>.</p>
+<h2>Historical measurements · 2026-10-21</h2>
+<p>The 1.0.3 candidate has its own final correctness result: 16 passed lanes and two
+terminal lanes waived by explicit user instruction. Its paired performance
+measurements are still pending, so the table below remains historical. The
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">current evidence report</a>
+keeps the exact inputs, failed attempts and waiver boundary; the waiver does not
+cover performance or installer lifecycle checks.
+The first current 100,000-file attempt failed at native <code>grep</code> and has no valid
+latency report for that scale; smaller successful runs are not a substitute.</p>
+<p>The following table belongs to the historical native artifact in the
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-integrated-performance-20261021.json">matched-artifact batch of 2026-10-21</a>,
+whose source-tree identity starts <code>fb505db8</code>. It used ten pairs per operation,
+complete output verification and the declared Windows read-safety profile for both
+clients; the reference was official Git 2.54. These are not 1.0.3 measurements or a
+comparison against Git 2.56. Current candidate performance requires its own final
+artifact-bound report, tracked in <a href="delivery-status.html">delivery status</a>.</p>
 <table>
 <thead>
 <tr>
@@ -99,82 +110,82 @@ declared Windows read-safety profile, reference is official Git 2.54.</p>
 </tr>
 </tbody>
 </table>
-<p>The pattern is the point: the gap is largest where the work is smallest, which is
-exactly the process-startup cost that disappears when there is only one process.
-<code>version</code> is roughly twice as fast; a clean <code>status</code> on a thousand files is about a
-fifth faster; at a hundred thousand files the two are within noise of each other,
-because there the work is real file-system traversal rather than startup.</p>
+<p>These selected historical medians show a larger relative difference for short
+operations and a small difference for the large clean scan. They do not isolate
+process startup as the cause, prove a one-process architecture, or establish an
+advantage for other machines, workloads or versions.</p>
 <h3>What this does not prove</h3>
 <ul>
-<li><strong>Clone is not a client-only number.</strong> A clone includes the server building the pack.
-On a local <code>gitsss</code> server this client is 1.24x faster end to end (3379 ms against
-2726 ms), but more than half of both figures is the server: see
-<a href="clone-benchmark.html">clone measurement</a> for the request-by-request split. The earlier
-HTTPS-fixture figure of 1025 ms against 689 ms is historical and is not restated as a
-current clone result.</li>
-<li><strong>Large full scans are a latency limit, not a win.</strong> A complete <code>status</code> over
-100,000 files takes about 1.9 s and a full worktree <code>grep</code> about 7.7 s.</li>
+<li><strong>Clone is not a client-only number.</strong> A separate historical
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/clone-gitsss-20261022.json">2026-10-22 local gitsss fixture</a>, against
+Git 2.55.0.windows.3, recorded 3379 ms for the reference and 2726 ms for git-next
+(1.24x). Clone includes server pack generation; this fixture does not establish
+current 1.0.3 performance or throughput to a remote provider. See the historical
+<a href="clone-benchmark.html">clone measurement</a> for its method and limits.</li>
+<li><strong>Large full scans remain a measured latency limit.</strong> The 2026-10-21 artifact's
+complete <code>status</code> over 100,000 files took about 1.9 s and full worktree <code>grep</code>
+about 7.7 s; these are dated measurements, not current-version guarantees.</li>
 <li><strong>Memory is reported for the primary process only.</strong> It excludes child processes,
-so it is not comparable to a total for a wrapper that spawns children.</li>
+including owned helpers, so it does not establish total process-tree memory.</li>
 <li><strong>These are local fixtures, not your network.</strong> The HTTPS numbers come from a
 loopback fixture, not from a remote provider, and they say nothing about throughput to
 a specific host.</li>
 </ul>
-<p>The batch itself took 597 s, over the 60 s target that was set for it. No case was
-skipped or relabelled to meet that target; the report keeps the original identity and
-the original duration.</p>
+<p>The 2026-10-21 batch took 596.63 s, over its 60 s target. No case was skipped or
+relabelled to meet that target; the report retains its original identity and duration.</p>
 <h2>What it does beyond the Git command set</h2>
 <p>Git answers &quot;what happened in this repository&quot;. These answer &quot;is this machine
 healthy, is this installation trustworthy, and can a tool depend on the answer&quot;.</p>
-<p><strong>A compatibility contract that cannot drift from behaviour.</strong> <code>git compatibility</code>
-prints the contract, and <code>git doctor</code> prints the current blockers for replacing Git
-on this machine. Both read the same embedded report that the takeover guard reads,
-so the printed promise and the enforced gate are one object, not two documents that
-can disagree.</p>
-<p><strong>Refusal instead of silent degradation.</strong> Unsupported semantics fail with a message
-instead of doing something approximately right: <code>git pull</code> without <code>--ff-only</code>,
-a checkout over a dirty worktree, a non-fast-forward push, a stale force-lease, a
-push refspec form it does not implement. A refusal is a result you can act on; a
-half-done merge is not.</p>
-<p><strong>Machine output that does not move.</strong> Human messages are translated; <code>--porcelain</code>,
-<code>--porcelain=v2</code>, <code>-z</code>, <code>--numstat</code>, <code>--name-status</code> and the JSON responses are byte
-stable across interface languages. A script that parses Git output keeps working when
-a user switches from English to Japanese, which is a class of bug that translated
-command-line tools usually ship with.</p>
+<p><strong>Separate product and preview contracts.</strong> The native distribution retains Git's
+command and repository semantics, with the product extensions and platform scope
+described in <a href="compatibility.html">compatibility</a> and <a href="delivery-status.html">delivery status</a>.
+The independent Rust preview has a smaller declared command subset and its own
+<code>git compatibility</code>/<code>git doctor</code> contract. Preview refusals, such as its documented
+<code>pull --ff-only</code> boundary, must not be presented as native product limitations.</p>
+<p><strong>Machine interfaces separate from translation.</strong> Git's <code>--porcelain</code>,
+<code>--porcelain=v2</code>, <code>-z</code>, <code>--numstat</code> and <code>--name-status</code> output and the product's
+declared JSON schemas remain machine interfaces. Human English/Chinese translation
+is separate; the independent Rust preview's accepted output subset is documented
+under its own compatibility scope.</p>
 <p><strong>A line-ending policy you can inspect.</strong> <code>git eol</code> reports the policy in force and
-<code>git eol --json</code> reports it to a tool. <code>git add --renormalize</code> applies it as an
-ordinary commit. Existing tracked bytes are never rewritten silently.</p>
-<p><strong>Identity for launchers.</strong> <code>git version --json</code> reports the product, version,
-engine, SSH implementation, platform and whether fallbacks are enabled. An installer,
-an IDE or a terminal can check what it is talking to before it depends on it, instead
-of probing for files.</p>
-<p><strong>An installation that can be verified and undone.</strong> The Windows package installs
-into the default Git directory, so the IDE entry point is a real binary rather than a
-forwarder. Replacement requires an explicit authorization that the bootstrap verifies
-from the MSI log, the leftovers of the previous installation are removed by content
-hash rather than by guesswork, and rollback is refused while the package that owns the
-directory is still installed.</p>
+<code>git eol --json</code> reports it to a tool. An explicit <code>git add --renormalize</code> stages
+normalization for review and a normal commit. Existing tracked bytes are never
+rewritten silently.</p>
+<p><strong>Identity for launchers.</strong> <code>git version --json</code> identifies the executing product
+and its declared compatibility information. Check the actual artifact's report;
+Rust preview implementation fields must not be assumed to describe a native binary.</p>
+<p><strong>An installation that can be verified and undone.</strong> Windows MSI packages install
+the owned CLI/runtime with scoped registration and guarded compatibility bridges.
+Takeover and recovery preserve configuration and verify owned content; lifecycle
+guards protect the installed package and its rollback transaction. Actual final-byte
+installation, repair and rollback results are recorded in
+<a href="delivery-status.html">delivery status</a>; candidate build output alone is insufficient.</p>
 <p><strong>The terminal is part of the install.</strong> Git-Terminal is the same product family and
 the same managed installation: the shell it starts puts the git-next <code>bin</code> first on
 <code>PATH</code>, so the <code>git</code> inside the terminal is the one you installed, not whichever one
 happens to be on the machine.</p>
-<p><strong>Languages as data.</strong> Every interface language is a document. Adding one is a file,
-not a code change, and <code>tools/devtool/locales.go</code> fails on the defects that would
-otherwise surface as wrong output in exactly one language: a stale key, a renamed
-placeholder, a lost trailing newline, a duplicate entry, an unsorted file.</p>
-<p><strong>Evidence, not adjectives.</strong> Every performance and compatibility claim on this site
-points at a report under <code>docs/benchmarks/</code> or <code>docs/DELIVERY_STATUS.md</code>, with the
-batch date and the exact artifact identity. When a target was missed, the report says
-so.</p>
+<p><strong>Declared language implementations.</strong> The native product provides owned
+English/Chinese catalogs and language selection. The independent Rust preview
+embeds locale documents; <code>tools/devtool/locales.go</code> checks those documents for
+stale keys, placeholders, trailing newlines, duplicates and ordering. That Rust
+locale workflow is separate from the native catalog implementation.</p>
+<p><strong>Evidence with a declared scope.</strong> Performance and compatibility claims require
+dated reports and an artifact binding. Historical fixture reports keep their original
+inputs and limitations; they cannot establish the current candidate's acceptance.
+Missed targets and failed checks remain recorded in the reports and
+<a href="delivery-status.html">delivery status</a>.</p>
 <h2>What it deliberately does not do</h2>
 <ul>
-<li>It does not claim universal speed or memory superiority, and it does not claim full
-Git parity. <code>complete_git_parity</code> is <code>false</code> today, and the guard refuses to replace
-your installed Git while it is false.</li>
+<li>It does not claim universal speed or memory superiority. Native release eligibility
+depends on its actual package, platform, lifecycle and performance evidence.</li>
+<li>The independent Rust preview keeps <code>complete_git_parity: false</code>; its 39-command
+L0 and 100-scenario full suite are scoped conformance, not complete Git parity or
+authorization to replace an installed native Git product.</li>
 <li>It does not fall back to the installed Git when something is unimplemented. That
 would make the compatibility claim untestable.</li>
 <li>It does not provide a Git GUI. The terminal is a terminal.</li>
 </ul>
-<p>The measured scope and the open items are in <a href="delivery-status.html">delivery status</a>;
-the command-by-command boundary is in <a href="compatibility.html">compatibility</a>.</p>
+<p>The native product's measured scope and open items are in
+<a href="delivery-status.html">delivery status</a>; the independent Rust preview's command subset
+and historical receipts are in <a href="compatibility.html">compatibility</a>.</p>
 </main></html>

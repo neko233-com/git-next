@@ -230,7 +230,11 @@ func nativeProductBatch(a *app, o options) error {
 		}
 		for _, shape := range [][2]int{{1000, 16}, {10000, 1000}, {100000, 1000}} {
 			name := "performance-" + strconv.Itoa(shape[0])
-			results = append(results, run(makeTool(name, 1800, "benchmark", binary, "--reference", reference, "--runs", strconv.Itoa(runs), "--files", strconv.Itoa(shape[0]), "--directories", strconv.Itoa(shape[1]), "--read-commands", "--system-config-enabled", "--native-distribution", "--reference-read-safety", "--fixture-layout", "packed", "--source-checkpoint", checkpoint, "--output", filepath.Join(out, name+".json"))))
+			args := []string{"benchmark", binary, "--reference", reference, "--runs", strconv.Itoa(runs), "--files", strconv.Itoa(shape[0]), "--directories", strconv.Itoa(shape[1]), "--read-commands", "--system-config-enabled", "--native-distribution", "--reference-read-safety", "--fixture-layout", "packed", "--source-checkpoint", checkpoint, "--output", filepath.Join(out, name+".json")}
+			if shape[0] == 100000 {
+				args = append(args, "--timeout", "120")
+			}
+			results = append(results, run(makeTool(name, 1800, args...)))
 		}
 		results = append(results, run(makeTool("performance-network", 1800, "network-benchmark", binary, "--reference", reference, "--runs", strconv.Itoa(networkRuns), "--native-distribution", "--source-checkpoint", checkpoint, "--output", filepath.Join(out, "performance-network.json"))))
 	} else {

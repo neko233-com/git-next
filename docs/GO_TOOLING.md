@@ -96,6 +96,25 @@ are recorded separately and are not added to this batch's verified count.
 Thirty retired CLI suites are preserved at Git commit
 `3609553`; removing them does not claim every old assertion moved into Rust.
 
+The [public retirement inventory and evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
+records all 115 old-file hashes, replacement modules, same-input comparisons and
+the exact acceptance boundaries. The
+[readable evidence report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md)
+also preserves rejected candidates, the R5b missing-Go-PATH failure and the user's
+two terminal-case waivers. `waived` remains distinct from `pass`; neither a
+partial installer report nor a successful compilation substitutes for a complete
+artifact-bound product gate.
+
+The consolidated 100,000-file paired benchmark uses a 120-second per-command
+budget; its whole-case limit remains 1,800 seconds. Smaller local scales keep
+their 30-second command budget. Context deadlines are reported as deadlines,
+separately from an ordinary child exit 1. Sample counts, complete-output checks,
+exit checks and fsck are unchanged. The first rejected large-scale attempt is
+retained; increasing budget headroom does not establish why that attempt failed.
+MSI evidence reuse across this harness repair requires that removing exactly the
+added context-error check restores the previous measured-process source hash;
+installer scripts, recipe, process bounds and package bytes remain pinned.
+
 Equivalent checks use the same pinned inputs: native source integration, Windows
 runtime manifests and ABI imports, TLS pins, shared assets, corresponding source
 archive members, helper/updater/bridge/worker builds, native CLI and credential/
