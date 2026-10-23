@@ -3,10 +3,12 @@
 default <code>git</code> on a machine that matters. It is a gap list, not a roadmap of wishes.
 Every item names what is missing, what it costs the user today, what &quot;done&quot; means,
 and what evidence would close it.</p>
-<p>The current release is <strong>1.0.1</strong>. Linux x64 installs that package as the <code>git</code>
+<p>The current release is <strong>1.0.2</strong>. Linux x64 installs that package as the <code>git</code>
 command, including <code>git-remote-https</code>, <code>git-remote-ftp</code> and <code>git-remote-ftps</code>.
-1.0.0 replaced <code>git</code> and <code>git-remote-http</code> only; the other three scheme helpers
-were still the 0.3.0 binaries. <code>packaging/native-compatibility.json</code> records
+Windows x64 and ARM64 machine and user installers are in the same release and
+use the <code>git-default-v2</code> directory. 1.0.0 replaced <code>git</code> and <code>git-remote-http</code>
+only; the other three scheme helpers were still the 0.3.0 binaries, and that
+release had no Windows installer. <code>packaging/native-compatibility.json</code> records
 parity and release eligibility as true. The Rust preview's root
 <code>compatibility.json</code> still reports <code>complete_git_parity: false</code>; the five
 blockers below belong to that preview contract, not to the native Linux

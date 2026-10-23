@@ -1,6 +1,6 @@
 # git-next
 
-当前发布版本是 1.0.1。Linux x64 安装后默认 `git` 就是 git-next。1.0.0 换了 `git`，但 `git-remote-https`、`git-remote-ftp` 和 `git-remote-ftps` 仍是 0.3.0；1.0.1 让这三种传输和 HTTP 使用同一套核心。Windows 请下载 [Git-Terminal 0.2.0 完整 MSI 包](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0)：包含已验收的 git-next 0.3.0 核心，以及新版 SSH / SFTP / 监控终端和提示符延迟修复。已有安装请使用随包的 `install_bundle.ps1`，参见[组件安装说明](docs/TERMINAL.md)。1.0.0 的 Windows MSI 不在这次发布里，需要用带 freestanding 桥接的源码重新打包后才能替换 Git for Windows。
+当前发布版本是 1.0.2。Linux x64 安装后默认 `git` 就是 git-next。Windows x64 与 ARM64 的机器版和用户版 MSI 会装进官方 Git 目录，并带上重新编译的 CRT-free 旧入口桥接。1.0.1 已修正 HTTPS、FTP、FTPS；1.0.2 保留这个修正并补上 Windows 包。Windows 终端组件仍可参考 [Git-Terminal 0.2.0](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) 和[组件安装说明](docs/TERMINAL.md)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
