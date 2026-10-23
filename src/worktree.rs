@@ -268,6 +268,7 @@ fn checkout(repo: &gix::Repository, target: gix::ObjectId, edits: Vec<RefEdit>) 
             file_views: None,
             metadata: Vec::new(),
             allow_merge_state: false,
+            allow_sequencer_state: false,
         },
     )
 }
@@ -286,6 +287,7 @@ pub(crate) struct Update {
     pub file_views: Option<(Files, Files)>,
     pub metadata: Vec<crate::metadata::Change>,
     pub allow_merge_state: bool,
+    pub allow_sequencer_state: bool,
 }
 
 fn snapshot_attributes(
@@ -339,6 +341,8 @@ pub(crate) fn apply(
 ) -> Result<()> {
     if update.allow_merge_state {
         crate::write::safe_merge_state(repo)?;
+    } else if update.allow_sequencer_state {
+        crate::write::safe_sequencer_state(repo)?;
     } else {
         crate::write::safe_state(repo)?;
     }

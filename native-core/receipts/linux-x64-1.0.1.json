@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "status": "linux-x64-1.0.1-replacement-checked",
+  "version": "1.0.1",
+  "product": "git-next",
+  "fix": "1.0.0 replaced bin/git and git-remote-http, but left git-remote-https, git-remote-ftp and git-remote-ftps as the 0.3.0 binaries. 1.0.1 installs the 1.0.1 remote-http core for all four names.",
+  "build": {
+    "platform": "linux-x64",
+    "system": "Debian 12",
+    "glibc_maximum": "2.34",
+    "git_version": "2.54.0.git-next.1.0.1"
+  },
+  "comparison": {
+    "reference": "git 2.43.0 at /usr/bin/git",
+    "operations": ["init", "commit", "switch", "merge --no-ff", "fsck --strict"],
+    "commit": "4b3d178dfae7ffe711132e06c1d6da726bdfd096",
+    "hashes_equal": true
+  },
+  "windows_msi_attached": false,
+  "macos_package_attached": false,
+  "product_executed": true,
+  "release_eligible": true
+}

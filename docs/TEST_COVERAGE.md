@@ -4,7 +4,7 @@
 
 ## 常用命令与恢复
 
-`tests/native_common_cli_acceptance.py` 将以下 16 组场景分别在两种对象格式运行，共 32 个独立场景。默认 4 路并发；收集全部失败，失败命令还必须是正常 Git 错误码，不能以崩溃冒充拒绝。每组结束用独立 Git 比较索引和历史，并运行双方 `fsck --full`。
+`go -C tools/devtool run . native-common-cli-acceptance` 将以下 16 组场景分别在两种对象格式运行，共 32 个独立场景。默认 4 路并发；收集全部失败，失败命令还必须是正常 Git 错误码，不能以崩溃冒充拒绝。每组结束用独立 Git 比较索引和历史，并运行双方 `fsck --full`。
 
 | 场景 | 实际校验 |
 | --- | --- |
@@ -31,9 +31,9 @@ SHA-256 的 stash 存储曾因十六进制缓冲区缺少 NUL 结束符空间触
 
 | 层级 | 用例/工具与边界 |
 | --- | --- |
-| 核心契约 | native_contract_acceptance.py：对象/pack/gc、子模块递归、hooks、稀疏检出、split index、错误参数与锁保护 |
-| Windows 读取稳定性 | native_read_threads_acceptance.py：索引/grep 默认与覆盖、宽目录多轮完整输出、仓库文件不变 |
-| 游戏资产/LFS | native_game_project_acceptance.py 与 native_integrations_acceptance.py：自带过滤器、模板、游戏配置、失败路径与签名 |
+| 核心契约 | go -C tools/devtool run . native-contract-acceptance：对象/pack/gc、子模块递归、hooks、稀疏检出、split index、错误参数与锁保护 |
+| Windows 读取稳定性 | go -C tools/devtool run . native-read-threads-acceptance：索引/grep 默认与覆盖、宽目录多轮完整输出、仓库文件不变 |
+| 游戏资产/LFS | go -C tools/devtool run . native-game-project-acceptance 与 go -C tools/devtool run . native-integrations-acceptance：自带过滤器、模板、游戏配置、失败路径与签名 |
 | 登录迁移 | 隔离 DPAPI fixture；Docker 生成 HTTPS/SSH 私有仓库账号，校验旧数据/认证失败保护；不读取个人密码 |
 | 安装与更新 | 两种 MSI 范围的安装/修复/升级/注入失败回滚/拒绝降级/卸载，包身份/哈希、并发配置保护、镜像损坏回退 |
 | Bootstrap | bootstrap_acceptance.ps1 对真实 MSI 的版本读取只允许一个字符串；特殊进程名 `[`、`?` 必须按字面量检测 |
@@ -47,9 +47,9 @@ SHA-256 的 stash 存储曾因十六进制缓冲区缺少 NUL 结束符空间触
 ## 复现
 
 ```powershell
-python tests/native_common_cli_acceptance.py <git-next/bin/git.exe> --reference <reference-git.exe> --output <new-result.json>
+go -C tools/devtool run . native-common-cli-acceptance <git-next/bin/git.exe> --reference <reference-git.exe> --output <new-result.json>
 # 定位修复时只运行受影响场景；完整发布仍使用组合验收清单。
-python tests/native_common_cli_acceptance.py <git-next/bin/git.exe> --reference <reference-git.exe> --case stash_untracked --output <new-result.json>
+go -C tools/devtool run . native-common-cli-acceptance <git-next/bin/git.exe> --reference <reference-git.exe> --case stash_untracked --output <new-result.json>
 ```
 
 当前状态见 [交付清单](DELIVERY_STATUS.md)，历史大样本性能见 [性能说明](PERFORMANCE.md)。正式发布必须全部本地门禁通过，且只有一次综合版本发布。

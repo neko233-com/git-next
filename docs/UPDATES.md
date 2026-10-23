@@ -6,7 +6,7 @@ The Windows updater supports the built-in Windows PowerShell 5.1 even when launc
 
 The requested final delivery includes Windows x64/ARM64 MSI packages, background automatic updates, official GitHub release discovery and automatic selection of a usable download mirror. These are part of the one consolidated release gate. Source implementation and an MSI that compiles do not establish installation, update, rollback or complete Git compatibility.
 
-`packaging/native_msi.py` and `packaging/windows/` implement the Windows packaging/update path. The consolidated local acceptance has passed in its declared contract scope. v0.3.0 is published and the final native machine MSI has replaced the workstation default; see the final delivery receipt.
+`go -C tools/devtool run . native-msi` and `packaging/windows/` implement the Windows packaging/update path. The consolidated local acceptance has passed in its declared contract scope. v0.3.0 is published and the final native machine MSI has replaced the workstation default; see the final delivery receipt.
 
 The native MSI now defaults to `--scope machine`; `--scope user` retains the original user identities. Machine packages install under Program Files with HKLM/System PATH registration and use `%ProgramData%/git-next` for protected shared state. Their task runs as SYSTEM without a password, including after logout. User packages retain LocalAppData and an interactive user task. Update manifests select matching scope variants and reject scope changes. Machine assets use the ordinary platform filename; explicit user assets append `-user.msi`.
 
@@ -57,7 +57,7 @@ WiX is a build dependency, not an installed runtime dependency. The build entry 
 
 ```powershell
 dotnet tool install wix --version 5.0.2 --tool-path .evidence/tools/wix5
-python packaging/native_msi.py --distribution .evidence/native-core-integration/distribution-owned-native-20261020 `
+go -C tools/devtool run . native-msi --distribution .evidence/native-core-integration/distribution-owned-native-20261020 `
   --wix .evidence/tools/wix5/wix.exe --allow-experimental-local
 ```
 

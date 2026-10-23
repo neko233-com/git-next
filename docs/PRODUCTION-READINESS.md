@@ -5,10 +5,29 @@ default `git` on a machine that matters. It is a gap list, not a roadmap of wish
 Every item names what is missing, what it costs the user today, what "done" means,
 and what evidence would close it.
 
-The state today, in one line: **it runs, it is fast, and it refuses to be the
-default.** `git doctor` reports `complete_git_parity: false` and
-`system Git replacement: blocked`, and the guard refuses takeover while that is
-true. That refusal is the honest summary of the list below.
+The current release is **1.0.2**. Linux x64 is a Debian 12 build, maximum glibc
+2.34, and `git`, `git-remote-http`, `git-remote-https`, `git-remote-ftp` and
+`git-remote-ftps` report `2.54.0.git-next.1.0.2`. Windows x64 and ARM64 machine
+and user installers are in the same release and use the `git-default-v2`
+directory: `%ProgramFiles%\Git` and `%LOCALAPPDATA%\Programs\Git`. 1.0.0
+replaced `git` and `git-remote-http` only; the other three scheme helpers were
+still the 0.3.0 binaries, and that release had no Windows installer.
+`packaging/native-compatibility.json` records parity and release eligibility as
+true. The Rust preview's root `compatibility.json` still reports
+`complete_git_parity: false`; the five blockers below belong to that preview
+contract, not to the native package.
+
+The Windows git program in this release is the accepted 0.3.0 engine with the
+product identity rewritten to 1.0.2. This packaging host did not run MSVC 14.44.
+The legacy command bridge is a new CRT-free build: full `/O2`,
+`freestanding-memory.c` for `memcpy`, `memset`, `memmove` and `memcmp`, and no
+`/Ob1`. The x64 bridge imports `kernel32` and `advapi32`; the GUI bridge also
+imports `user32`. Cabinets use MSZIP so each MSI stays under the 1 GiB update
+limit. The x64 machine package was installed under Wine into `Program Files\Git`:
+`git version --json` reported 1.0.2, the HTTPS helper carried
+`2.54.0.windows.1.git-next.1.0.2`, and init, commit and `git lfs` worked. Every
+recorded payload hash matched. ARM64 packages carry the same identity and an
+AArch64 bridge; they were not executed on this host.
 
 ## Where the line is drawn
 
@@ -17,11 +36,11 @@ true. That refusal is the honest summary of the list below.
 | Command surface | Common workflow works: init, clone, fetch, pull (ff-only), push, add, commit, status, log, diff, show, branch, switch, checkout, merge, restore, reset, config, remote, rev-parse, cat-file, hash-object, ls-files, show-ref, ls-remote, eol, lfs, language, doctor, compatibility | `docs/GIT-GUIDE.md`, `--help` |
 | Repository storage | Reads and writes the real format; existing repositories open unchanged | acceptance batches in `docs/benchmarks/` |
 | Machine output | Byte stable across languages; stable porcelain v1/v2 | `LANGUAGE.md`, acceptance |
-| Interface languages | 10 languages, complete checker | `LANGUAGE.md`, `tools/check_locales.py` |
+| Interface languages | 10 languages, complete checker | `LANGUAGE.md`, `tools/devtool/locales.go` |
 | Documentation | 26 pages published, task-oriented guide | <https://neko233-com.github.io/git-next/> |
-| Windows packaging | MSI rebuilt and structurally verified (10,601 payload files) | `DELIVERY_STATUS.md` |
-| Windows installation | **Not executed on a clean machine** | blocked here by `msiexec` 1619 |
-| Linux / macOS | Built and checked; no runtime acceptance on real hardware | `DELIVERY_STATUS.md` |
+| Windows packaging | 1.0.2 x64 and ARM64 machine and user MSIs, `git-default-v2`, MSZIP, each under 1 GiB | release assets |
+| Windows installation | x64 machine package installed under Wine into `Program Files\Git`; not a clean Windows VM | this 1.0.2 MSI |
+| Linux / macOS | Linux x64 Debian 12 package built and executed; macOS not executed on this host | installed `git` |
 | Push / server side | Common cases only; no receive-pack server | `doctor` blocker 1 |
 | Recovery semantics | No rebase, stash, cherry-pick, revert | `doctor` blocker 3 |
 

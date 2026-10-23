@@ -4,7 +4,7 @@
 *.log
 .DS_Store
 __pycache__/
-# Compiler leftovers from tools/build_windows_bridge.py runs
+# Compiler leftovers from Go build-windows-bridge runs
 *.obj
 *.res
 *.pdb

@@ -76,6 +76,12 @@ enum Commands {
         target: Option<String>,
     },
     Merge(crate::merging::Options),
+    Stash(crate::stash::Options),
+    CherryPick(crate::sequencer::CherryPickOptions),
+    Revert(crate::sequencer::RevertOptions),
+    Rebase(crate::sequencer::RebaseOptions),
+    Submodule(crate::submodule::Options),
+    Worktree(crate::linked_worktree::Options),
     Init {
         #[arg(default_value = ".")]
         directory: PathBuf,
@@ -163,6 +169,7 @@ enum Commands {
         #[arg(default_value = "HEAD")]
         revision: String,
     },
+    Tag(crate::tag::Options),
     Remote {
         #[command(subcommand)]
         command: Option<RemoteCommand>,
@@ -263,6 +270,12 @@ pub fn run() -> Result<()> {
             target,
         } => crate::worktree::switch(target.as_deref(), create.as_deref(), detach),
         Commands::Merge(options) => crate::merging::run(options),
+        Commands::Stash(options) => crate::stash::run(options),
+        Commands::CherryPick(options) => crate::sequencer::cherry_pick(options),
+        Commands::Revert(options) => crate::sequencer::revert(options),
+        Commands::Rebase(options) => crate::sequencer::rebase(options),
+        Commands::Submodule(options) => crate::submodule::run(options),
+        Commands::Worktree(options) => crate::linked_worktree::run(options),
         Commands::Init {
             directory,
             bare,
@@ -314,6 +327,7 @@ pub fn run() -> Result<()> {
         Commands::Branch { name, revision } => {
             crate::repository::branch(name.as_deref(), &revision)
         }
+        Commands::Tag(options) => crate::tag::run(options),
         Commands::Remote { command, verbose } => match command {
             Some(RemoteCommand::Add { name, url }) => crate::repository::remote_add(&name, &url),
             Some(RemoteCommand::GetUrl { name }) => crate::repository::remote_url(&name),

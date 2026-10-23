@@ -8,7 +8,7 @@ and "the MSI installs" are different statements, and only the second one matters
 
 ### Full lifecycle, user scope, at the package's own path
 
-`msi_lifecycle.py` installed, repaired and removed the package at
+`go -C tools/devtool run . msi-lifecycle` installed, repaired and removed the package at
 `%LOCALAPPDATA%\Programs\Git`, which is where a user-scope installation belongs:
 
 | Step | Result | Time | What was checked |
@@ -145,11 +145,11 @@ installer that wrote it:
 
 ```sh
 # build the package from a distribution tree
-python packaging/native_msi.py --distribution <tree> --wix .evidence/tools/wix5/wix.exe \
+go -C tools/devtool run . native-msi --distribution <tree> --wix .evidence/tools/wix5/wix.exe \
     --output-dir <out> --scope user --allow-experimental-local
 
 # prove install, repair and uninstall at the package's own path
-python tools/msi_lifecycle.py \
+go -C tools/devtool run . msi-lifecycle \
     --package <out>/git-next-0.3.0-windows-x64-user.msi \
     --work "$LOCALAPPDATA/Temp/gn-lifecycle" \
     --natural-folder --install-dir "$LOCALAPPDATA/Programs/Git" \

@@ -184,11 +184,23 @@ pub(crate) fn restore(options: RestoreOptions) -> Result<()> {
                 file_views: None,
                 metadata: Vec::new(),
                 allow_merge_state: false,
+                allow_sequencer_state: false,
             },
         )
     } else {
         lock.persist(&index, &repo.index_path())
     }
+}
+
+pub(crate) fn reset_hard_quiet() -> Result<()> {
+    reset(ResetOptions {
+        soft: false,
+        mixed: false,
+        hard: true,
+        quiet: true,
+        revisions: Vec::new(),
+        paths: Vec::new(),
+    })
 }
 
 pub(crate) fn reset(mut options: ResetOptions) -> Result<()> {
@@ -270,6 +282,7 @@ pub(crate) fn reset(mut options: ResetOptions) -> Result<()> {
                     file_views: None,
                     metadata: Vec::new(),
                     allow_merge_state: false,
+                    allow_sequencer_state: false,
                 },
             )
         } else {
@@ -348,6 +361,7 @@ pub(crate) fn reset(mut options: ResetOptions) -> Result<()> {
                 file_views: None,
                 metadata: Vec::new(),
                 allow_merge_state: false,
+                allow_sequencer_state: false,
             },
         )?;
         if !options.quiet {

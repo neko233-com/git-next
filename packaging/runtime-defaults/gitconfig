@@ -2,11 +2,11 @@
 #
 # This fragment is the single source of truth for the product's software
 # configuration. Three consumers are built from it or compared against it, and
-# tools/check_runtime_defaults.py fails when any of them drifts:
+# the Go check-runtime-defaults command fails when any of them drifts:
 #
-#   tools/assemble_native_windows.py - splices it into the payload's etc/gitconfig
+#   tools/devtool/packaging_assemble.go - splices it into the payload's etc/gitconfig
 #   packaging/windows/Takeover.Core.psm1 - writes it as the migration override
-#   tools/native_msi_evidence.py - refuses evidence reuse without it
+#   tools/devtool/evidence.go - refuses evidence reuse without it
 #
 # Every key here was exercised against the installed binary; the measured cost
 # and the reason are recorded in docs/DEFAULTS.md. A default that starts a

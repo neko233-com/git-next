@@ -34,8 +34,8 @@
       "completion_evidence": [
         "native-core/receipts/implementation-complete-core-20261020.json",
         "native-core/patches/series.json",
-        "tools/assemble_native_windows.py",
-        "packaging/native_msi.py",
+        "tools/devtool/packaging_assemble.go",
+        "tools/devtool/packaging_msi.go",
         "native-core/receipts/implementation-static-runtime-20261020.json",
         "native-core/receipts/read-thread-five-platform-compilation-20261021.json"
       ]
@@ -49,11 +49,11 @@
       "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-five-platform-runtimes-20261020.json",
-        "tools/collect_macos_runtime.py",
-        "tools/collect_linux_runtime.py",
-        "tools/assemble_native_posix.py",
+        "tools/devtool/posix_runtime.go",
+        "tools/devtool/posix_runtime.go",
+        "tools/devtool/packaging_assemble.go",
         "packaging/posix/updater/configuration.go",
-        "tools/prepare_git_terminal.py",
+        "tools/devtool/packaging_assets.go",
         "packaging/git-terminal-runtime.lock.json",
         "packaging/lfs-hooks/source.json",
         "install.ps1"
@@ -98,10 +98,10 @@
       "remaining": "Consolidated final-byte acceptance and any discovered defect repair remain D08; release and workstation takeover remain D10.",
       "completion_evidence": [
         "native-core/receipts/implementation-windows-scopes-20261020.json",
-        "packaging/native_msi.py",
+        "tools/devtool/packaging_msi.go",
         "packaging/windows/Product.wxs",
         "packaging/windows/Takeover.Core.psm1",
-        "tools/prepare_git_terminal.py",
+        "tools/devtool/packaging_assets.go",
         "packaging/git-terminal-runtime.lock.json",
         "packaging/lfs-hooks/source.json",
         "install.ps1"
@@ -120,7 +120,7 @@
         "packaging/posix/updater",
         "packaging/windows/update.ps1",
         "packaging/windows/Update.Core.psm1",
-        "tools/build_posix_updater.py"
+        "tools/devtool/build_bridge.go"
       ]
     },
     {
@@ -133,9 +133,9 @@
       "completion_evidence": [
         "native-core/receipts/implementation-final-packages-20261020.json",
         "packaging/corresponding-sources.lock.json",
-        "tools/freeze_native_batch.py",
-        "tools/native_product_batch.py",
-        "tools/prepare_git_terminal.py",
+        "tools/devtool/batch_freeze.go",
+        "tools/devtool/batch_native.go",
+        "tools/devtool/packaging_assets.go",
         "packaging/git-terminal-runtime.lock.json",
         "packaging/lfs-hooks/source.json",
         "install.ps1"

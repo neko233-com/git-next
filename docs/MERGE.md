@@ -1,5 +1,8 @@
 # Native two-parent merges
 
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+
+
 The primary product uses the complete source-built native Git compatibility core, including merge and its ordinary conflict/recovery workflows. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The narrower implementation details below describe the separate historical Rust preview.
 
 ## Historical Rust preview
@@ -44,12 +47,7 @@ State-file locks, original metadata bytes, old index and tracked-file backups jo
 The existing Git object/ref/index/reflog layout, storage paths, LFS bytes and credential stores remain unchanged. New commits use the repository's current object format. No existing objects or refs are rewritten or repacked. The merge snapshot and journal are additive; ordinary Git can read the standard merge state. Rollback is the previous binary, which refuses active merges until completion or recovery. Supported merges add reachable objects and temporary staging/backup space proportional to selected content; no universal faster-merge claim is made.
 
 ```sh
-python tests/merge_acceptance.py target/release/git-next --object-format sha1
-python tests/merge_acceptance.py target/release/git-next --object-format sha256
-python tests/merge_message_acceptance.py target/release/git-next
-python tests/merge_pending_acceptance.py target/release/git-next
-python tests/commit_acceptance.py target/release/git-next
-python tests/repository_format_acceptance.py target/release/git-next
+cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
 ```
 
 Use `.exe` on Windows. Fixtures isolate HOME/USERPROFILE, remove Git/OpenSSH from the measured client PATH, compare raw objects/state/output with reference Git and run independent fsck. No real game repository or login is modified.

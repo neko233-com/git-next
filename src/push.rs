@@ -428,7 +428,7 @@ pub(crate) fn run(options: Options) -> Result<()> {
     );
     crate::lfs::check_hooks(&repo, &["pre-push"], None)?;
     if url.scheme == gix::url::Scheme::File {
-        let target = gix::open(gix::path::from_bstr(url.path.as_bstr())?)?;
+        let target = crate::network::open_local_file_repo(&url)?;
         ensure!(
             target.is_bare(),
             "local push currently requires a bare destination"

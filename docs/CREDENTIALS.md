@@ -21,8 +21,7 @@ Private HTTPS read/clone/push/fetch/ff-only pull and embedded SSH read/clone/fet
 This uses generated accounts with GCM's Linux plaintext store inside a disposable Docker volume, never the user's vault or keys. It does not establish Linux desktop secret-store, macOS Keychain, OAuth/renewal, real private-provider, physical-host performance or full Git compatibility. Runtime networking is internal, ports are unpublished and container root filesystems are read-only. The receipt records the pinned upstream archive, binary/image/harness hashes and successful removal of both containers, their volume/network and both temporary images. No global Docker prune runs.
 
 ```powershell
-docker build -t git-next-local-acceptance:20261020 -f tests/containers/Dockerfile tests/containers
-python tests/containers/migration_host.py --output .evidence/docker-migration-new.json
+go -C tools/devtool run . migration-host --native-package <linux-x64-package.tar.gz> --output <new-report.json>
 ```
 
 Use the accepted Linux x64 package and matching cross-build receipt; the runner refuses mismatched binaries. Obtain the standalone helper from the [official GCM release](https://github.com/git-ecosystem/git-credential-manager/releases/tag/v2.7.3); its accepted Linux archive SHA-256 is `c7935c3e1b22681d56011b580086aeb6d60f3f0aaf6ef9c581480356988ff804`. The report's archived harness is authoritative for this checkpoint; later source changes need separate acceptance.
@@ -61,8 +60,8 @@ Support removal deletes only files and locators matching the recorded hashes, re
 ## Reproducible acceptance
 
 ```powershell
-python tests/native_discovery_acceptance.py target/release/git-next.exe
-python tests/gcm_acceptance.py target/release/git-next.exe --helper <standalone-gcm-executable>
+go -C tools/devtool run . native-discovery-acceptance target/release/git-next.exe
+go -C tools/devtool run . gcm-acceptance target/release/git-next.exe --helper <standalone-gcm-executable>
 ./tests/credential_support_install_acceptance.ps1 -Archive <official-gcm-zip>
 ```
 
@@ -71,7 +70,7 @@ Fixtures generate temporary credentials and store them under an isolated DPAPI d
 See [native discovery](NATIVE_DISCOVERY.md), [installation](INSTALLATION.md) and [complete takeover gates](TAKEOVER.md). GCM store configuration and isolation variables follow the [pinned upstream environment documentation](https://github.com/git-ecosystem/git-credential-manager/blob/v2.7.3/docs/environment.md).
 ## Native POSIX credential helper inputs
 
-The final native route now has pinned GCM 2.7.3 assets for Linux x64/ARM64 and macOS ARM64 in `packaging/posix-helpers.lock.json`. They are primary owned helper inputs, with producer digests/notices and logical `git-credential-manager`/legacy `git-credential-manager-core` aliases. `tools/fetch_posix_helpers.py` only downloads and stages bytes; it does not configure a credential store, contact an account, execute the helper or read a personal profile. The [POSIX build checkpoint](../native-core/receipts/implementation-posix-core-20261020.json) is input evidence only.
+The final native route now has pinned GCM 2.7.3 assets for Linux x64/ARM64 and macOS ARM64 in `packaging/posix-helpers.lock.json`. They are primary owned helper inputs, with producer digests/notices and logical `git-credential-manager`/legacy `git-credential-manager-core` aliases. `go -C tools/devtool run . fetch-posix-helpers` only downloads and stages bytes; it does not configure a credential store, contact an account, execute the helper or read a personal profile. The [POSIX build checkpoint](../native-core/receipts/implementation-posix-core-20261020.json) is input evidence only.
 
 Windows system-config migration now selects the retained original system config when it exists, then applies product LF defaults. It does not prepend another credential helper list; ordered helper behavior and existing saved-login providers must remain intact. Native generated-account and real caller/store behavior remain in the consolidated D08 acceptance.
 

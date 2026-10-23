@@ -51,6 +51,24 @@ impl IndexLock {
         Ok(())
     }
 }
+pub(crate) fn index_tree(
+    repo: &gix::Repository,
+    index: &gix::index::State,
+) -> Result<gix::ObjectId> {
+    let mut tree = Tree::default();
+    for entry in index.entries() {
+        tree.insert(
+            entry.path(index),
+            entry
+                .mode
+                .to_tree_entry_mode()
+                .context("unsupported index mode")?,
+            entry.id,
+        )?;
+    }
+    tree.write(repo)
+}
+
 impl Drop for IndexLock {
     fn drop(&mut self) {
         drop(self.file.take());
@@ -61,7 +79,11 @@ impl Drop for IndexLock {
 }
 
 pub(crate) fn safe_state(repo: &gix::Repository) -> Result<()> {
-    safe_state_inner(repo, false)
+    safe_state_inner(repo, false, false)
+}
+
+pub(crate) fn safe_sequencer_state(repo: &gix::Repository) -> Result<()> {
+    safe_state_inner(repo, false, true)
 }
 
 pub(crate) fn working_tree(repo: &gix::Repository) -> Result<PathBuf> {
@@ -82,10 +104,14 @@ pub(crate) fn working_tree(repo: &gix::Repository) -> Result<PathBuf> {
 }
 
 pub(crate) fn safe_merge_state(repo: &gix::Repository) -> Result<()> {
-    safe_state_inner(repo, true)
+    safe_state_inner(repo, true, false)
 }
 
-fn safe_state_inner(repo: &gix::Repository, allow_merge: bool) -> Result<()> {
+fn safe_state_inner(
+    repo: &gix::Repository,
+    allow_merge: bool,
+    allow_sequencer: bool,
+) -> Result<()> {
     ensure!(
         !crate::worktree::has_pending_checkout(repo)?,
         "an interrupted git-next checkout needs recovery; keep its journal and backups"
@@ -99,6 +125,9 @@ fn safe_state_inner(repo: &gix::Repository, allow_merge: bool) -> Result<()> {
         "sequencer",
     ] {
         if allow_merge && name == "MERGE_HEAD" {
+            continue;
+        }
+        if allow_sequencer && matches!(name, "CHERRY_PICK_HEAD" | "REVERT_HEAD") {
             continue;
         }
         ensure!(

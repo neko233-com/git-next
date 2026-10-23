@@ -54,8 +54,12 @@ static void normalize(WCHAR *path)
 		write[-1] = 0;
 }
 
-/* The identity is copied field by field on purpose: a struct assignment makes the
-   compiler emit a memcpy call, and this binary links without a C runtime. */
+/* The identity is copied field by field on purpose. A struct assignment makes
+   MSVC 14.44 /O2 emit a memcpy call; that call now resolves to
+   freestanding-memory.c, which is what lets this image keep full /O2 and
+   /NODEFAULTLIB. /Ob1 would hide the call by disabling inlining of this
+   forwarder, so it is not the link fix. These three fields are still copied
+   explicitly because the comparison does not use the rest of the record. */
 static int identify(const WCHAR *path, DWORD *volume, DWORD *high, DWORD *low)
 {
 	HANDLE file;

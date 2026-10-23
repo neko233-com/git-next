@@ -1,10 +1,14 @@
 # git-next
 
-Windows 请下载 [Git-Terminal 0.2.0 完整 MSI 包](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0)：包含已验收的 git-next 0.3.0 核心，以及新版 SSH / SFTP / 监控终端和提示符延迟修复。已有安装请使用随包的 `install_bundle.ps1`，参见[组件安装说明](docs/TERMINAL.md)。Linux/macOS 核心包保持不变。
+开发工具采用 [Rust 验收 + Go 工具链](docs/GO_TOOLING.md)。Go 接替自有 Python 构建、打包和文档工具；native 构建、MSI 和迁移能力保留到替代实现通过等价验证，迁移审计如实报告剩余 Python 文件。
+
+Rust CLI 的合并/tag 门禁统一为 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)：L0/full/network 分层、JSON 报告，Windows/macOS 无需 Python；发布分支必须通过 full。Python CLI 套件已立即归档到 `tests/legacy_cli/` 并禁止执行，聚合 wrapper 已移除。native 产品包、安装器和 GUI 仍按各自范围验收。
+
+当前发布版本是 1.0.2。Linux x64 是 Debian 12 构建，安装后默认 `git` 就是 git-next。Windows x64 与 ARM64 的机器版和用户版 MSI 会装进官方 Git 目录。其中的 git 程序是已验收的 0.3.0 引擎，产品身份改为 1.0.2，旧命令桥接则是重新链接的 CRT-free 程序。1.0.1 已修正 HTTPS、FTP、FTPS；1.0.2 保留这个修正并补上 Windows 包。Windows 终端组件仍可参考 [Git-Terminal 0.2.0](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) 和[组件安装说明](docs/TERMINAL.md)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
-git-next 是从固定源码构建的完整 Git 客户端，提供自身产品身份、跨平台 LF 默认和原生中英文。主要引擎采用完整的 Git 2.54.0 原生命令、仓库和协议实现，不依赖本机原 Git 或 OpenSSH 兜底。现有仓库、Git 配置和凭据助手保留原有契约。
+git-next 的客户端用 Rust 实现命令、仓库读写和传输。行为对照 [Git 官方文档](https://git-scm.com/docs)，对象、refs 和 index 仍是 Git 仓库格式。程序不链接、不调用本机的原生 Git。已实现的命令见 [兼容性说明](docs/COMPATIBILITY.md)；`complete_git_parity` 在文档里的命令都对齐之前保持为 false。现有仓库、Git 配置和凭据助手保留原有契约。
 
 0.3.0 已通过最终 18 项本地正确性证据和成对批量性能门禁；本机已卸载原版并接管默认 Git，正式发布及 10/10 完成记录见[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
 
@@ -44,6 +48,10 @@ git update check
 独立正确性验证并行执行，Windows Installer 事务串行执行，报告保留真实耗时和失败结果。性能采用独立成对批量测量，根据实际 median、p95 和主进程内存给出结论，不承诺所有场景都更快。[构建](docs/BUILDING.md) · [性能](docs/PERFORMANCE.md) · [兼容性](docs/COMPATIBILITY.md)。
 
 原生核心遵循 GPL-2.0-only，并提供依赖许可证及对应源码包。[源码与许可](docs/CORRESPONDING_SOURCES.md)。本仓库不使用 GitHub Actions。
+
+## Rust 包
+
+`go -C tools/devtool run . package-rust --platform windows-x64` 打出一个 zip，里面只有 Rust 写的 `git`、LFS 入口和 Git-Terminal。包里没有 MinGW、Bash、Perl、Python，也没有 Git for Windows 的任何文件。解压后运行其中的 `install.ps1`，程序会装到 `%LOCALAPPDATA%\Programs\git-next`，不会改已注册的官方 Git 目录。说明见[安装](docs/INSTALLATION.md)。
 
 ## Windows 一键安装
 

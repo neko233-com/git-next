@@ -13,7 +13,10 @@ pub fn version(build_options: bool, json: bool) -> Result<()> {
             serde_json::to_string_pretty(&serde_json::json!({
                 "product": "git-next",
                 "version": env!("CARGO_PKG_VERSION"),
+                "implementation": "rust",
                 "engine": "gitoxide 0.89",
+                "behavior_spec": "https://git-scm.com/docs",
+                "native_git_linked": false,
                 "ssh": "russh (embedded)",
                 "os": std::env::consts::OS,
                 "arch": std::env::consts::ARCH,
@@ -26,7 +29,7 @@ pub fn version(build_options: bool, json: bool) -> Result<()> {
         println!("{VERSION}");
         if build_options {
             println!(
-                "engine: gitoxide 0.89\nssh: russh (embedded)\ncpu: {}\nos: {}\nexternal Git fallback: disabled\nexternal OpenSSH fallback: disabled\ncomplete Git parity: false",
+                "implementation: rust\nengine: gitoxide 0.89\nbehavior spec: https://git-scm.com/docs\nnative Git linked: false\nssh: russh (embedded)\ncpu: {}\nos: {}\nexternal Git fallback: disabled\nexternal OpenSSH fallback: disabled\ncomplete Git parity: false",
                 std::env::consts::ARCH,
                 std::env::consts::OS
             );

@@ -21,6 +21,13 @@ try {
     $env:GIT_NEXT_FIXTURE_RUSTC = (& (Join-Path $HOME '.cargo\bin\rustup.exe') which rustc) -join ''
     if ($LASTEXITCODE -ne 0) { throw 'Fixture compiler discovery failed.' }
     New-Item -ItemType Directory -Path (Join-Path $root 'home') | Out-Null
+    $devtool = $env:GIT_NEXT_TOOL
+    if (-not $devtool) {
+        $devtool = Join-Path $root 'git-next-tool.exe'
+        & go -C (Join-Path $PSScriptRoot '..\tools\devtool') build -trimpath -o $devtool .
+        if ($LASTEXITCODE -ne 0) { throw 'Go fixture tool build failed.' }
+    }
+    $devtool = (Resolve-Path -LiteralPath $devtool).Path
     $env:HOME = Join-Path $root 'home'
     $env:USERPROFILE = $env:HOME
     & $installer -Prefix $prefix -CommandDirectory $commands -NoShortcut -NoPathUpdate -SourceBinary (Join-Path $source 'git-next.exe') -SourceTerminal (Join-Path $source 'git-terminal.exe')
@@ -42,7 +49,7 @@ try {
         if ($bytes -contains 13 -or [Text.Encoding]::UTF8.GetString($bytes) -notmatch 'git-next') { throw 'Support locator is not LF JSON.' }
     }
     $helper = Join-Path $manifest.directory 'git-credential-manager.exe'
-    & python (Join-Path $PSScriptRoot 'gcm_acceptance.py') (Join-Path $commands 'git-next.exe') --helper $helper --installed-support
+    & $devtool gcm-acceptance (Join-Path $commands 'git-next.exe') --helper $helper --installed-support
     if ($LASTEXITCODE -ne 0) { throw 'Installed credential support failed native HTTPS acceptance.' }
     $before = [IO.File]::ReadAllBytes($manifestPath)
     $locatorBefore = @{}

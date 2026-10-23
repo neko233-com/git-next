@@ -123,7 +123,7 @@ the same managed installation: the shell it starts puts the git-next `bin` first
 happens to be on the machine.
 
 **Languages as data.** Every interface language is a document. Adding one is a file,
-not a code change, and `tools/check_locales.py` fails on the defects that would
+not a code change, and `tools/devtool/locales.go` fails on the defects that would
 otherwise surface as wrong output in exactly one language: a stale key, a renamed
 placeholder, a lost trailing newline, a duplicate entry, an unsorted file.
 

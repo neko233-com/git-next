@@ -1,2 +1,4 @@
 # Shared text normalization; preserve explicit per-path and binary rules below.
 * text=auto eol=lf
+# Unified-diff context prefixes are syntax; integration pins resulting source bytes.
+native-core/patches/*.patch whitespace=-blank-at-eol,-space-before-tab

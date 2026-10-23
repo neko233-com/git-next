@@ -1,0 +1,61 @@
+--- a/exec-cmd.c
++++ b/exec-cmd.c
+@@ -44,6 +44,27 @@ static const char *system_prefix(void);
+  */
+ static const char *executable_dirname;
+ 
++static char *git_next_owned_prefix(const char *dirname, const char *suffix)
++{
++	char *candidate = strip_path_suffix(dirname, suffix);
++	struct strbuf marker = STRBUF_INIT;
++	int owned;
++
++	if (!candidate)
++		return NULL;
++	strbuf_addf(&marker, "%s/git-next-distribution.json", candidate);
++	owned = !access(marker.buf, F_OK);
++	if (!owned) {
++		strbuf_reset(&marker);
++		strbuf_addf(&marker, "%s/runtime/etc/gitconfig", candidate);
++		owned = !access(marker.buf, F_OK);
++	}
++	strbuf_release(&marker);
++	if (!owned)
++		FREE_AND_NULL(candidate);
++	return candidate;
++}
++
+ static const char *system_prefix(void)
+ {
+ 	static const char *prefix;
+@@ -53,19 +74,19 @@ static const char *system_prefix(void)
+ 
+ 	if (!prefix &&
+ #ifdef GIT_WINDOWS_NATIVE
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/mingw64/bin")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/clangarm64/bin")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/mingw64/libexec/git-core")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/clangarm64/libexec/git-core")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/cmd")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "cmd")) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/bin")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/mingw64/bin")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/clangarm64/bin")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/mingw64/libexec/git-core")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/clangarm64/libexec/git-core")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/cmd")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "cmd")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/bin")) &&
+ #else
+-	    !(prefix = strip_path_suffix(executable_dirname, "runtime/usr/bin")) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "runtime/usr/bin")) &&
+ #endif
+-	    !(prefix = strip_path_suffix(executable_dirname, GIT_EXEC_PATH)) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, BINDIR)) &&
+-	    !(prefix = strip_path_suffix(executable_dirname, "git"))) {
++	    !(prefix = git_next_owned_prefix(executable_dirname, GIT_EXEC_PATH)) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, BINDIR)) &&
++	    !(prefix = git_next_owned_prefix(executable_dirname, "git"))) {
+ 		die("git-next runtime layout is invalid; run the owned package from its bin directory");
+ 	}
+ 	return prefix;

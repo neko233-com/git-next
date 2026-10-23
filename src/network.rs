@@ -7,6 +7,28 @@ use std::{
     sync::atomic::AtomicBool,
 };
 
+/// Resolve a `file://` URL to a normal filesystem path (Windows-safe; no `\\?\` extended paths).
+pub(crate) fn local_path_from_file_url(url: &gix::Url) -> Result<PathBuf> {
+    ensure!(
+        url.scheme == gix::url::Scheme::File,
+        "local path resolution requires a file URL"
+    );
+    let raw = url.path.to_str()?.trim_end_matches('/');
+    let path = if cfg!(windows) {
+        let raw = raw.strip_prefix('/').unwrap_or(raw);
+        PathBuf::from(raw)
+    } else {
+        PathBuf::from(raw)
+    };
+    Ok(path)
+}
+
+pub(crate) fn open_local_file_repo(url: &gix::Url) -> Result<gix::Repository> {
+    let path = local_path_from_file_url(url)?;
+    let path = path.canonicalize().unwrap_or(path);
+    gix::open(&path).context("open local source")
+}
+
 pub(crate) fn parsed(url: &str) -> Result<gix::Url> {
     let parsed = if Path::new(url).is_absolute() && !url.contains("://") {
         let normalized = url.replace('\\', "/");
@@ -218,7 +240,7 @@ pub fn pull(name: Option<&str>) -> Result<()> {
 pub fn ls_remote(url: &str) -> Result<()> {
     let url = parsed(url)?;
     if url.scheme == gix::url::Scheme::File {
-        let repo = gix::open(gix::path::from_bstr(url.path.as_bstr())?)?;
+        let repo = open_local_file_repo(&url)?;
         if let Ok(id) = repo.head_id() {
             println!("{id}\tHEAD")
         }
@@ -274,8 +296,7 @@ fn local_clone(
         depth.is_none(),
         "local shallow clones are not implemented; use HTTPS or SSH --depth"
     );
-    let source =
-        gix::open(gix::path::from_bstr(url.path.as_bstr())?).context("open local source")?;
+    let source = open_local_file_repo(url)?;
     ensure!(
         branch.is_some() || source.head_name()?.is_some() || source.head_id().is_err(),
         "detached local sources require an explicit --branch"
@@ -397,7 +418,7 @@ fn local_fetch(repo: &gix::Repository, name: &str, url: &gix::Url) -> Result<()>
         specs.len() == 1 && specs[0].to_ref().to_bstring() == expected.as_bytes(),
         "local fetch currently requires the default branch refspec"
     );
-    let source = gix::open(gix::path::from_bstr(url.path.as_bstr())?)?;
+    let source = open_local_file_repo(url)?;
     ensure!(
         repo.object_hash() == source.object_hash(),
         "object hash mismatch"

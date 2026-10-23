@@ -77,7 +77,7 @@ static int git_next_interpreter_environment(struct strvec *env)
 			if (perl.len)
 				strbuf_addch(&perl, ':');
 			strbuf_addstr(&perl, path);
-		} else if (!strcmp(line, "PYTHONHOME") || !strcmp(line, "TCL_LIBRARY") || !strcmp(line, "TK_LIBRARY")) {
+		} else if (!strcmp(line, "TCL_LIBRARY") || !strcmp(line, "TK_LIBRARY")) {
 			const char *explicit = git_next_child_env(env, line);
 			if (!explicit || !*explicit)
 				strvec_pushf(env, "%s=%s", line, path);
@@ -144,7 +144,6 @@ int git_next_prepare_interpreter(struct strvec *args, struct strvec *env)
 		base = token;
 	}
 	if (!strcmp(base, "perl")) selected = "perl";
-	else if (!strcmp(base, "python") || !strcmp(base, "python3")) selected = "python3";
 	else if (!strcmp(base, "sh") || !strcmp(base, "bash")) selected = base;
 	else if (!strcmp(base, "wish") || !strcmp(base, "tclsh")) selected = base;
 	if (!selected)

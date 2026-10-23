@@ -90,7 +90,7 @@ Current implementation caps checkout/pack workers, shares a two-worker SSH runti
 ## Reproduce local latency
 
 ```sh
-python tests/benchmark.py target/release/git-next --runs 40 --files 1000 --output benchmark.json
+go -C tools/devtool run . benchmark target/release/git-next --runs 40 --files 1000 --output benchmark.json
 ```
 
 On Windows append `.exe`. The harness creates an isolated HOME/USERPROFILE and a disposable 1000-file SHA-1 repository. It warms each operation three times, randomizes client order with seed 233, checks successful output against reference Git, and runs independent `fsck`. It records source-tree and binary SHA-256, versions, OS/CPU, median and nearest-rank p95, and refuses a binary that changes during measurement. The measured client PATH contains no Git/OpenSSH. `--client-fscache on|off` supports explicitly labeled experiments without changing installed configuration; default measurements retain the native default.
@@ -102,7 +102,7 @@ Benchmark and validation-failure JSON files are written as UTF-8/LF on every pla
 ## Reproduce loopback HTTPS latency
 
 ```sh
-python tests/network_benchmark.py target/release/git-next --runs 40 --files 1000 --output network-benchmark.json
+go -C tools/devtool run . network-benchmark target/release/git-next --runs 40 --files 1000 --output network-benchmark.json
 ```
 
 Use `.exe` on Windows. This harness measures full clone, incremental fetch and fast-forward-only pull against a temporary local smart-HTTPS server. A private fixture CA, IP hostname validation and a generated static authorization header stay inside disposable profiles; no real provider login, user trust-store or global configuration changes occur. The reference server uses Git's HTTP backend only as fixture infrastructure. Native client PATH contains no Git/OpenSSH. On Windows the reference process explicitly selects OpenSSL so the short-lived private CA can be validated without a nonexistent fixture revocation service; native TLS uses rustls. Certificate verification remains enabled. The existing Python server responds with HTTP/1.0; this does not establish HTTP/2/v2-protocol, WAN, provider, SSH, packet-byte or object-reuse performance.
@@ -345,7 +345,7 @@ The historical native-merge optimized bytes have a [40-round startup/read compar
 
 The merge row is a separate [clean two-parent workload](benchmarks/windows-x64-0.3.0-dev-merge-operation-20261020.json): 1000 text data files plus one attribute file, three initial commits, nonoverlapping same-file changes and one incoming separate-file change. Each operation starts from a fresh fixture copy with a primed clean index. Copying, priming and verification are outside measurement; process creation and captured output are included. Forty measured pairs follow three warm-up pairs in randomized order. Raw commit/parents/tree, index stages, all worktree file hashes, ORIG_HEAD, HEAD reflog, clean status and independent fsck match after each pair. Windows read-only object fixture cleanup is outside timing.
 
-Reproduce with `python tests/merge_benchmark.py target/release/git-next.exe --runs 40 --files 1000 --output merge-benchmark.json`. These results do not establish conflict, recovery, large-repository, cold-cache, memory, network or native macOS/Linux performance. Full takeover and the broad high-performance goal remain open.
+Reproduce with `go -C tools/devtool run . merge-benchmark target/release/git-next.exe --runs 40 --files 1000 --output merge-benchmark.json`. These results do not establish conflict, recovery, large-repository, cold-cache, memory, network or native macOS/Linux performance. Full takeover and the broad high-performance goal remain open.
 
 The seven read/startup operations are faster in this run. Clean merge is slightly slower than reference Git at median and p95; the journal/backup safety path has not been justified as a faster merge implementation.
 
@@ -399,7 +399,7 @@ Warm cache, 40 samples per client/operation, 1000 tracked files and one fixture 
 | show --no-patch --format=fuller | 10.558 / 11.660 | 21.611 / 23.357 |
 | log -n 20 (one fixture commit) | 10.801 / 11.652 | 21.514 / 22.905 |
 
-Version/ref/object/commit metadata reads are faster in this run. Clean status and diff remain slower. Log measures one commit; it provides no evidence about long-history traversal throughput. These results do not satisfy the universal high-performance goal. Reproduce with `python tests/benchmark.py target/release/git-next --read-commands --runs 40 --files 1000`.
+Version/ref/object/commit metadata reads are faster in this run. Clean status and diff remain slower. Log measures one commit; it provides no evidence about long-history traversal throughput. These results do not satisfy the universal high-performance goal. Reproduce with `go -C tools/devtool run . benchmark target/release/git-next --read-commands --runs 40 --files 1000`.
 
 ## Windows x64 local snapshot · 2026-10-19 · 0.3.0-dev
 
@@ -420,7 +420,7 @@ A separate [40-round comparison](benchmarks/windows-x64-status-cache-0.3.0-dev.j
 
 The first status also publishes verified metadata, costing 119.841 ms in one unreplicated observation versus 96.716 ms before refresh. Subsequent scans reuse the refreshed stat cache. The first observation is not a repeated cold-start benchmark. Optional lock ownership predates scanning; read-only, v4, split/sparse and unfamiliar-extension indexes are not rewritten automatically.
 
-Reproduce with `python tests/status_benchmark.py CURRENT --baseline PREVIOUS --runs 40 --files 1000`. Preserve both optimized executable sets; debug binaries are not valid performance baselines. Other commands, transport throughput, large-object memory and large production repositories remain unmeasured.
+Reproduce with `go -C tools/devtool run . status-benchmark CURRENT --baseline PREVIOUS --runs 40 --files 1000`. Preserve both optimized executable sets; debug binaries are not valid performance baselines. Other commands, transport throughput, large-object memory and large production repositories remain unmeasured.
 
 ## Windows x64 local snapshot · 2026-10-19 · 0.2.0
 

@@ -24,8 +24,7 @@ cpus="${GIT_NEXT_TEST_CPUS:-2}"
 
 root=$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)
 
-# Only the build-image modes need the build image. The defaults check runs in a plain
-# Python image, so a broken Cargo cache cannot block it.
+# Only the Rust build modes need the build image; repository/default checks use Go.
 case "$mode" in
 test|stress|shell)
     if ! docker image inspect "$image" >/dev/null 2>&1; then
@@ -46,19 +45,19 @@ stress)
         sh docker/tests/stress.sh
     ;;
 defaults|contract)
-    # The behavioural half needs a real Windows binary, so the container proves the half
-    # that can be proven anywhere: that every consumer of the defaults agrees, and that
-    # the repository still follows the contract. Both need Python and nothing else, so
-    # they use their own image instead of the build image and cost a pull rather than a
-    # Rust toolchain. Rules that need git are skipped rather than failed: this image has
-    # no git, and a rule that cannot be evaluated is not a broken rule.
+    # The static checks use a CGO-free Linux tool; Windows behavior stays a separate gate.
+    tool="$root/target/devtool/linux-amd64/git-next-tool"
+    mkdir -p "$(dirname "$tool")"
+    GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go -C "$root/tools/devtool" build -o "$tool" .
     if [ "$mode" = contract ]; then
-        command="python tools/verify_repo_contract.py"
+        command="verify-repo-contract"
     else
-        command="python tools/check_runtime_defaults.py --agreement-only"
+        command="check-runtime-defaults --agreement-only"
     fi
     docker run --rm --init --pids-limit "$pids" --memory "$memory" --cpus "$cpus" \
-        -v "$root:/src" -w /src python:3.13-alpine $command
+        --platform linux/amd64 -v "$root:/src" -w /src \
+        debian@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587 \
+        /src/target/devtool/linux-amd64/git-next-tool $command
     ;;
 shell)
     docker run --rm -it --init --pids-limit "$pids" --memory "$memory" --cpus "$cpus" \

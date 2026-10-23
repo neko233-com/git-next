@@ -606,7 +606,7 @@ pub(crate) fn localize_command(mut command: clap::Command) -> clap::Command {
         // replaced with the translated text.
         command = command
             .subcommand_help_heading(text("Commands"))
-            .help_template(&format!(
+            .help_template(format!(
                 "{{about-with-newline}}\n{usage} {{usage}}\n\n{{all-args}}{{after-help}}",
                 usage = text("Usage:"),
             ));

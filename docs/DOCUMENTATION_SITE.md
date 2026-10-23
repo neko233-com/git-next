@@ -33,8 +33,7 @@ The manual of git-next is published as a GitHub Pages site, so it can be read wi
 ## Rendering
 
 ```sh
-python -m pip install markdown-it-py
-python tools/render_docs.py
+go -C tools/devtool run . render-docs
 ```
 
 The renderer writes every page into `docs/site/` and then verifies that every local link of every page resolves. A broken link fails the run, so a page that is published always points at pages that exist.
@@ -42,8 +41,8 @@ The renderer writes every page into `docs/site/` and then verifies that every lo
 ## Publishing
 
 ```sh
-python tools/publish_docs.py            # render and publish
-python tools/publish_docs.py --dry-run  # render and report, push nothing
+go -C tools/devtool run . publish-docs            # render and publish
+go -C tools/devtool run . publish-docs --dry-run  # render and report; do not create commits, update refs or push
 ```
 
 The site is published from the `gh-pages` branch, which Pages serves from the branch root. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release.

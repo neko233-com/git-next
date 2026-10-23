@@ -6,7 +6,7 @@ where a modern option is faster or easier without changing what a command means,
 turned on.
 
 Every default lives in one file, `packaging/runtime-defaults/gitconfig`, and every one
-of them is exercised against the real binary by `tools/check_runtime_defaults.py`. A
+of them is exercised against the real binary by `go -C tools/devtool run . check-runtime-defaults`. A
 default is a promise about behaviour, and the checks are the claims in this document: if
 a value stops doing what is written here, the tool fails instead of the change reaching a
 workstation.
@@ -23,7 +23,7 @@ tree size, one day. The file-count and process-count facts are reproducible anyw
 1. Add the key to `packaging/runtime-defaults/gitconfig`, nowhere else. The payload
    configuration, the migration override and the evidence reuse check are rendered from
    that file or compared against it.
-2. Run `python tools/check_runtime_defaults.py`. It fails if the migration's literal has
+2. Run `go -C tools/devtool run . check-runtime-defaults`. It fails if the migration's literal has
    drifted from the fragment and if the new key cannot be shown to do something.
 3. Add a behavioural probe for it. A key that only has to be accepted needs no probe; a
    key that changes output or behaviour needs one that would fail if the value stopped
@@ -63,7 +63,7 @@ A default is not eligible if it starts a process per repository. See
 
 The thread values are the clearest case for behaviour over appearance. Both `-1` and `0`
 look like "use the machine", one of them is a configuration that makes `grep` refuse to
-run, and the other is the fastest value measured. `tools/check_runtime_defaults.py`
+run, and the other is the fastest value measured. `go -C tools/devtool run . check-runtime-defaults`
 asserts the exit codes, which is the only way to tell them apart.
 
 ## The file-system monitor is not a default
@@ -87,7 +87,7 @@ Someone who wants the speed can have it:
 
 ```
 git config --global core.fsmonitor true
-python tools/git_process_watchdog.py --daemons --apply
+go -C tools/devtool run . git-process-watchdog --daemons --apply
 ```
 
 The second command terminates Git processes that have no parent and have been alive
@@ -111,7 +111,7 @@ two of them:
    repository operation accepts a long path even where a helper's Win32 manifest does
    not.
 3. **The machine.** `HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\LongPathsEnabled`
-   is an administrator setting, not a product default. `tools/check_runtime_defaults.py`
+   is an administrator setting, not a product default. `go -C tools/devtool run . check-runtime-defaults`
    reports it, and a machine where it is 0 needs an administrator to set it.
 
 ## The ceiling
@@ -121,28 +121,28 @@ starting a thousand copies. Three layers cover that:
 
 - The forwarder refuses to start a copy of itself and stops a two-file cycle after four
   hops, so an entry point can never multiply itself.
-- `tools/verify_windows_bridge_guard.py` proves it inside a job object limited to 64
+- `go -C tools/devtool run . verify-windows-bridge-guard` proves it inside a job object limited to 64
   processes: `self` costs 1, `cycle` costs 5, and the previous forwarder hit the limit in
   both.
-- `tools/git_process_watchdog.py` is the machine-wide ceiling, and it terminates the
+- `go -C tools/devtool run . git-process-watchdog` is the machine-wide ceiling, and it terminates the
   *newest* excess because the oldest processes are the ones a person is waiting for.
   `--daemons` handles the slower leak described above.
 
 ## Verifying and installing
 
 ```
-python tools/check_runtime_defaults.py                  # agreement and behaviour
-python tools/check_runtime_defaults.py --agreement-only # in a Linux container
-python tools/install_runtime_defaults.py                # put them on this machine
-python tools/install_runtime_defaults.py --plan         # show what is still missing
-python tools/verify_repo_contract.py                    # every rule in AGENTS.md
+go -C tools/devtool run . check-runtime-defaults                  # agreement and behaviour
+go -C tools/devtool run . check-runtime-defaults --agreement-only # in a Linux container
+go -C tools/devtool run . install-runtime-defaults                # put them on this machine
+go -C tools/devtool run . install-runtime-defaults --plan         # show what is still missing
+go -C tools/devtool run . verify-repo-contract                    # every rule in AGENTS.md
 ```
 
 The agreement half runs anywhere; the behavioural half needs a real binary. The last
 check in the run is the one that guards the incident this document came out of: after
 three repositories are used with the shipped defaults, no Git process is left behind.
 
-`install_runtime_defaults.py` is the other half of shipping a default. It writes the
+`go -C tools/devtool run . install-runtime-defaults` is the other half of shipping a default. It writes the
 migrated system configuration, relaunching itself elevated because that file is an
 administrator's; if consent is refused it falls back to the user's global configuration
 rather than leaving the defaults unapplied. It never overwrites a value a person chose,

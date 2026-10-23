@@ -1,5 +1,10 @@
 # Native diff, show and history
 
+Archived fixture descriptions below explain historical receipts. Current commands use Rust acceptance and Go tooling; these descriptions do not extend current acceptance coverage.
+
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+
+
 The primary product uses the complete source-built native Git compatibility core for diff, show, history and status. It does not dispatch these commands to installed official Git. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The Gitoxide implementation details below describe the separate historical Rust preview, not limitations of the primary native product.
 
 ## Historical Rust preview
@@ -20,7 +25,7 @@ Porcelain v2 emits ordinary, renamed/copied and unmerged records with HEAD/index
 
 `--ignored[=traditional|matching|no]` includes ignored paths after untracked paths, using `!!` in v1/short output and `!` in v2. Bare means traditional. Traditional mode normally collapses ignored directories and omits empty ones; `-uall` requests their files. Matching mode reports explicitly ignored directories, including empty directories, and keeps file-level matches separate. It retains Git's common-prefix behavior for directory pathspecs, which can include an explicitly ignored directory even when a file wildcard or exclusion would not select that directory. Global excludes, `.git/info/exclude`, nested `.gitignore`, negative rules and forced tracked files retain their roles. Effective untracked mode `no` suppresses traditional ignored output and rejects matching mode before index locking. Existing tracked edits and staged deletions remain visible. [Git status contract](https://git-scm.com/docs/git-status).
 
-The fixtures `tests/status_format_acceptance.py`, `tests/status_v2_acceptance.py` and `tests/status_ignored_acceptance.py` use isolated SHA-1/SHA-256 repositories, raw-byte reference comparisons, unchanged repository files and no Git/OpenSSH on the client PATH. `--include-long` extends the first two matrices to long output; `tests/status_long_acceptance.py` and `tests/status_operation_acceptance.py` cover default/explicit/configured formats, tracking/detached states and operation summaries. Windows covers Unicode/space names and emulated symlinks; Unix additionally exercises quote/control/backslash and non-UTF8 names. The ignored fixture also checks forced tracked ignored files, staged deletions, ignored empty/nested directories and ordinary nested repository boundaries. See [acceptance](ACCEPTANCE.md) for exact accepted binaries; source support alone does not establish current Mac or full IDE acceptance. Stash headers, complete long-output configuration and complete submodule behavior remain open; unsupported options refuse.
+The fixtures [archived status_format_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_format_acceptance.py), [archived status_v2_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_v2_acceptance.py) and [archived status_ignored_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_ignored_acceptance.py) use isolated SHA-1/SHA-256 repositories, raw-byte reference comparisons, unchanged repository files and no Git/OpenSSH on the client PATH. `--include-long` extends the first two matrices to long output; [archived status_long_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_long_acceptance.py) and [archived status_operation_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_operation_acceptance.py) cover default/explicit/configured formats, tracking/detached states and operation summaries. Windows covers Unicode/space names and emulated symlinks; Unix additionally exercises quote/control/backslash and non-UTF8 names. The ignored fixture also checks forced tracked ignored files, staged deletions, ignored empty/nested directories and ordinary nested repository boundaries. See [acceptance](ACCEPTANCE.md) for exact accepted binaries; source support alone does not establish current Mac or full IDE acceptance. Stash headers, complete long-output configuration and complete submodule behavior remain open; unsupported options refuse.
 
 ## Diff
 
@@ -44,11 +49,11 @@ Three-dot merge-base comparisons, conflicted/sparse indexes, combined diffs, ful
 
 ## Verification
 
-`tests/status_directory_acceptance.py` additionally compares same-name file/directory replacements, staged deletion plus an untracked file or directory, empty directories and nested repositories in both object formats. Status row identity retains tracked deletions independently of same-name untracked results. Ordinary and `-uall` output follow their distinct tested Git behavior. Full IDE acceptance remains separate.
+[archived status_directory_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_directory_acceptance.py) additionally compares same-name file/directory replacements, staged deletion plus an untracked file or directory, empty directories and nested repositories in both object formats. Status row identity retains tracked deletions independently of same-name untracked results. Ordinary and `-uall` output follow their distinct tested Git behavior. Full IDE acceptance remains separate.
 
 ```sh
-python tests/diff_acceptance.py target/release/git-next
-python tests/benchmark.py target/release/git-next --read-commands --runs 40 --files 1000
+cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
+go -C tools/devtool run . benchmark target/release/git-next --read-commands --runs 40 --files 1000
 ```
 
 On Windows use `.exe`. The acceptance fixture compares bytes and exit status against reference Git, then checks all `.git` files remain unchanged. It covers unstaged/staged/tree comparisons, renames, pathspecs, binary/CRLF/Unicode paths, ID collisions, emulated links, type changes, show formats and log records. Unsupported options must fail without output or writes. The client PATH contains no Git/OpenSSH. This is scoped compatibility evidence; full Git parity and global takeover remain false.

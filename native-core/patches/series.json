@@ -446,5 +446,12 @@
     "before_sha256": "4441b4d8d3930e4d083638510920d4b0f175439061c59b7e4b2393e66da1edc8",
     "after_sha256": "2b29fd151d6166806ea64b8c45b0dc55d0b1b2408154dbdce20e305371f9caf6",
     "patch_sha256": "7a99cde6141ec564d25100cc938d231e46e38c06a0f2949280f56438ac1a55f4"
+  },
+  {
+    "path": "exec-cmd.c",
+    "patch": "0064-owned-runtime-prefix-markers.patch",
+    "before_sha256": "2a0e705a4c334d8eb6b589a1e3fc06c2d5337b479b8094c3bafdf4380558c942",
+    "after_sha256": "fdf53062bc9781cbad0c5cc41b05eca28953c4e5136ad7e18b826724b662c0d1",
+    "patch_sha256": "e459a759a09772cdfb40b6ab4ec3b9221d58fa3d395ef7944bbc42aca4e474d5"
   }
 ]

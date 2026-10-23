@@ -1,12 +1,12 @@
 # git-next
 
-Windows: the [Git-Terminal 0.2.0 complete MSI bundle](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) includes the accepted git-next 0.3.0 engine with the updated SSH/SFTP/monitoring terminal and prompt latency fixes. Existing installations should use its `install_bundle.ps1` helper; see the [component installation guide](docs/TERMINAL.md). Linux/macOS core packages are unchanged.
+Version 1.0.2 is the current release. Linux x64 installs a Debian 12 build as the `git` command. Windows x64 and ARM64 machine and user MSIs install into the official Git directory. Their git program is the accepted 0.3.0 engine with the 1.0.2 identity, and the legacy command bridge is the rebuilt CRT-free binary. The 1.0.1 Linux package already corrected HTTPS, FTP and FTPS; 1.0.2 keeps that correction and adds the Windows packages.
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
-git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.
+The git-next client implements commands, repository access and transport in Rust. Behavior follows [Git's documentation](https://git-scm.com/docs), while objects, refs and the index remain Git's on-disk format. The program does not link or execute a native Git binary. Implemented commands are listed in [compatibility](docs/COMPATIBILITY.md). `complete_git_parity` stays false until those documented commands match. Existing repositories, Git configuration and credential helpers keep their normal contracts.
 
-Version 0.3.0 passed the final 18-case local correctness evidence and paired performance batch. Original Git has been uninstalled and the workstation default is git-next. Publication and the completed 10/10 scope are recorded in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
+Version 1.0.1 is the release that replaces the `git` command. The 1.0.0 Linux package copied a new `git` but left `git-remote-https`, `git-remote-ftp` and `git-remote-ftps` as the 0.3.0 binaries, so those transports did not run the 1.0.0 core. 1.0.1 installs one core for HTTP and those three schemes. On Linux x64 the command was checked against Git 2.43.0: the same init, branch and merge produced the same commit hash. Version 0.3.0 passed the earlier 18-case local correctness evidence and paired performance batch; that record stays in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
 
 ## Native packages
 
@@ -41,9 +41,17 @@ Language follows system preferences and supports persistent and per-command over
 
 ## Evidence and source
 
+Rust CLI conformance has one local merge/tag gate: [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md), with L0/full/network tiers and JSON reports. It runs on Windows/macOS without Python; release branches require full. Python CLI suites are retired immediately under `tests/legacy_cli/`, with no runnable wrapper. Native package/installer/GUI acceptance remains a separate scope.
+
 Validation runs locally, with independent correctness lanes in parallel and Windows Installer transactions serialized. Reports retain actual elapsed time and failures. Performance uses a separate paired batch; measured medians, p95 and primary-process memory determine claims. No universal speedup is promised. [Builds](docs/BUILDING.md) · [Performance](docs/PERFORMANCE.md) · [Compatibility](docs/COMPATIBILITY.md).
 
 The native core is GPL-2.0-only with the declared dependency licenses and corresponding source bundles. [Source/license delivery](docs/CORRESPONDING_SOURCES.md). No GitHub Actions are used.
+
+## Rust package
+
+Development tooling follows [Rust acceptance + Go tooling](docs/GO_TOOLING.md). Go replaces the owned Python build/package/docs controllers; native build/MSI/migration capabilities are retained until their replacements have equivalent evidence. The migration audit reports remaining Python files explicitly.
+
+`go -C tools/devtool run . package-rust --platform windows-x64` writes a zip of the Rust `git`, LFS entrypoints, and Git-Terminal. The zip contains no MinGW, Bash, Perl, Python, or Git for Windows files. Its `install.ps1` copies them to `%LOCALAPPDATA%\Programs\git-next` and does not replace a registered official Git directory. See [installation](docs/INSTALLATION.md).
 
 ## Windows one-click installation
 

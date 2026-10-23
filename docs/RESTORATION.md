@@ -1,5 +1,8 @@
 # Native restore and reset
 
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+
+
 The primary product uses the complete source-built native Git compatibility core for restore, reset and recovery. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The narrower implementation details and installation hashes below describe the separate historical Rust preview.
 
 ## Historical Rust preview
@@ -13,8 +16,7 @@ Index/reference locks precede mutation. Worktree updates stage selected files, b
 Sparse/conflicted/skip-worktree indexes, linked worktrees, symlink/submodule worktree updates, directory/file replacements, `--merge`/`--keep`, interactive/ours/theirs and complete command parity remain open. Worktree restoration refuses customized checkout hooks and transformed `.gitattributes`; ordinary reset does not execute checkout hooks. Index-only restoration can preserve Git link/submodule entry modes. Hard reset can overwrite selected ordinary untracked files when the target tree requires them, retaining unrelated untracked files. Directory/reparse-point collisions fail before application.
 
 ```sh
-python tests/restore_acceptance.py target/release/git-next
-python tests/worktree_acceptance.py target/release/git-next
+cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
 ```
 
 Use `.exe` on Windows. Disposable differential fixtures compare file bytes, index entries, HEAD/branches, ORIG_HEAD, reflog messages, output and errors against reference Git. They cover CRLF attributes, partial selection, missing paths, detached/unborn HEAD, disabled reflog creation and index/HEAD/branch/ORIG_HEAD locks. Client PATH contains no Git/OpenSSH.

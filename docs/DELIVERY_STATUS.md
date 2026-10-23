@@ -36,7 +36,7 @@ Windows ARM64 为交叉编译/PE 检查；macOS ARM64 为本机编译及 Dockerf
 5. 正确性通过后执行 D09，所有性能场景作为同一批处理，不与构建、回归或模拟器并发。慢于参考 Git 的结果必须列为待修复或明确未达标，不能宣称普遍更快。
 6. D08/D09 通过后才完成 D10；仅发布一个汇总版本。最终交付前的接管演练必须可回滚，最终默认命令安装以实际 Windows 调用结果为准。
 
-`tools/product_batch.py` 增加实现阶段前置检查；D01–D07 未全部关闭时拒绝进入测试阶段。现有脚本仍是子集脚手架，D07 必须先适配完整核心，不能通过修改状态文件把子集测试冒充完整回归。其他单项脚本也不得绕过本轮执行顺序。
+`go -C tools/devtool run . product-batch` 增加实现阶段前置检查；D01–D07 未全部关闭时拒绝进入测试阶段。现有脚本仍是子集脚手架，D07 必须先适配完整核心，不能通过修改状态文件把子集测试冒充完整回归。其他单项脚本也不得绕过本轮执行顺序。
 
 ## 每批进展必须报告
 
@@ -162,7 +162,7 @@ MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCo
 
 文档站已发布为 GitHub Pages（`gh-pages` 分支根目录，`.nojekyll` 已随分支发布），
 `https://neko233-com.github.io/git-next/` 线上可访问，共 24 页。本仓库的工程约定禁止
-`.github/workflows/`，因此发布由 `tools/publish_docs.py` 在本地完成：用 Git 底层命令在临时
+`.github/workflows/`，因此发布由 `go -C tools/devtool run . publish-docs` 在本地完成：用 Git 底层命令在临时
 索引中构建仅含渲染结果的分支提交，不触碰工作区与当前分支；推送为快进，不强制覆盖。
 
 Git-Terminal 同步采用同一套语言文件与自动检测，`git-terminal language list` 可列出内置语言，
@@ -177,7 +177,7 @@ Git-Terminal 同步采用同一套语言文件与自动检测，`git-terminal la
 其余消息按设计逐条回退英文。简体中文为完整文档（140 条）。实测 `zh-CN`→`zh-Hans`、
 `zh-TW`→`zh-Hant`、`ja-JP`→`ja`、`pt_BR`→`pt-BR`，显式 `--language` 与设备自动检测使用同一套匹配链。
 
-新增 `tools/check_locales.py` 作为配置检查：文档不可读、重复键、源码已不再产生的键、命名占位符
+新增 `go -C tools/devtool run . check-locales` 作为配置检查：文档不可读、重复键、源码已不再产生的键、命名占位符
 丢失、行尾换行不一致、键未排序均判为失败；`--fix` 排序，`--coverage` 输出各语言覆盖率。
 该检查随本地检查流程执行，不进入跨语言回归矩阵——按工程约定，语言只在其文档加入时验收一次，
 措辞问题属于该文档自身的缺陷，通过修改 JSON 修正。

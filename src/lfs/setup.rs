@@ -2,9 +2,9 @@ use anyhow::{Context, Result, ensure};
 use std::{fs, io::Write};
 
 pub(super) fn install(repo: &gix::Repository, skip_smudge: bool) -> Result<()> {
-    let directory = super::hooks::directory(repo)?;
+    let directory = crate::hooks::directory(repo)?;
     let names = ["pre-push", "post-checkout", "post-commit", "post-merge"];
-    super::hooks::check(repo, &names, None)?;
+    crate::hooks::check_lfs_lockable(repo, &names, None)?;
     let mut config = repo.config_file_mut(repo.common_dir().join("config"))?;
     config.set_raw_value("filter.lfs.clean", "git-lfs clean -- %f")?;
     config.set_raw_value(

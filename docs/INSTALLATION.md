@@ -4,6 +4,12 @@ Windows MSI lifecycle actions use the bundled native no-console worker. Schedule
 
 Windows defaults disable fscache, fsmonitor and index preloading, and set index/grep read threads to one. This tested stability profile prevents the observed intermittent incomplete Windows reads. User/repository settings retain normal precedence. See [performance](PERFORMANCE.md) for evidence and the explicitly matching reference configuration.
 
+## Rust package
+
+`go -C tools/devtool run . package-rust --platform windows-x64` packs the Rust `git`, `git-lfs`, `git-next-lfs-filter`, and Git-Terminal programs into one zip. The archive contains no MinGW, Bash, Perl, Python, or Git for Windows file, and nothing in that installer downloads those projects. Extract the zip and run its `install.ps1`. The programs are copied to `%LOCALAPPDATA%\Programs\git-next`, and that `bin` directory is prepended to the user PATH. A registered official Git directory is left unchanged.
+
+Git-Terminal uses PowerShell or CMD when the owned Bash runtime is absent. Its SSH connections use the Windows OpenSSH client when that client is installed. The packaged programs import only Windows system libraries. A build that did not use the static Microsoft C runtime also imports `VCRUNTIME140.dll`; that DLL is the Visual C++ runtime, not a Git component. `RUSTFLAGS=-C target-feature=+crt-static` removes the import.
+
 ## Windows: one PowerShell entry
 
 Download the root `install.ps1` from the official git-next repository or the accepted release, then run:
@@ -14,14 +20,14 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
 
 The default detects registered Git for Windows, chooses native x64/ARM64 and the matching user/machine scope, requests UAC when needed, installs the complete MSI and automatically performs protected takeover. No Rust, Cargo, compiler, existing Git or installed OpenSSH is required. It installs **Git-Terminal** (Rust + GPUI Fast), the owned Bash/runtime and native Git LFS together. It creates no Git GUI shortcut. App-private Git copies such as UGit are not default replacement targets.
 
-`-Plan` prints architecture, scope and registered replacement root without downloading or changing anything. `-Scope user|machine` explicitly selects scope; a mismatch with registered Git is refused. `-Version 0.3.0` pins an official stable release. The default uses the latest stable release. GitHub's official API selects the release and supplies the package SHA-256; parallel transport probes select an available official/mirror download, and every payload must match the official digest.
+`-Plan` prints architecture, scope and registered replacement root without downloading or changing anything. `-Scope user|machine` explicitly selects scope; a mismatch with registered Git is refused. `-Version 1.0.2` pins the current stable release. The default uses the latest stable release. 1.0.2 includes the Linux x64 package and the Windows x64/ARM64 machine and user MSIs. Install 1.0.2 rather than 1.0.0: the 1.0.0 Linux package left HTTPS, FTP and FTPS on the 0.3.0 helper, and it did not ship Windows packages. GitHub's official API selects the release and supplies the package SHA-256; parallel transport probes select an available official/mirror download, and every payload must match the official digest.
 
 A compatible independent OpenSSL provider is prepared **before installation/removal** to preserve existing `http.sslBackend=openssl` configurations. Its fixed producer archive is about 117 MB on x64, with pinned archive/member checksums and licenses. It is a compatibility component, not an installed-Git fallback. It is not redistributed inside the MSI. No online download is required to fill missing core components after a completed installation.
 
 For an offline installation, obtain the architecture/scope-matching accepted MSI and the pinned TLS archive identified in `packaging/tls-providers.lock.json` beforehand:
 
 ```powershell
-.\install.ps1 -PackagePath .\git-next-0.3.0-windows-x64.msi -ExpectedSha256 <trusted-release-sha256> -TlsArchive .\Git-2.54.0-64-bit.tar.bz2
+.\install.ps1 -PackagePath .\git-next-1.0.2-windows-x64.msi -ExpectedSha256 <trusted-release-sha256> -TlsArchive .\Git-2.54.0-64-bit.tar.bz2
 ```
 
 The TLS archive is needed for takeover of registered Git; a new installation using the default Windows TLS backend does not need it. Offline takeover without the material is refused before MSI installation. `-TlsArchive` accepts a predownloaded, checksum-matching archive. Downloads are staged and verified before the original Git uninstaller can run. Configuration, credentials, SSH files and repositories remain in place; recovery records preserve the selected original installation. Failures during takeover attempt verified rollback rather than leaving an unrecorded partial replacement.
@@ -33,7 +39,7 @@ After completion, reopen existing terminals. `git --version` identifies git-next
 Direct MSI installation is available for managed deployment:
 
 ```powershell
-msiexec.exe /i .\git-next-0.3.0-windows-x64.msi
+msiexec.exe /i .\git-next-1.0.2-windows-x64.msi
 ```
 
 The `git-default-v2` layout installs into `%ProgramFiles%\Git` (machine scope) and

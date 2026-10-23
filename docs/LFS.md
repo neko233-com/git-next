@@ -1,5 +1,10 @@
 # Native Git LFS
 
+Archived fixture descriptions below explain historical receipts. Current commands use Rust acceptance and Go tooling; these descriptions do not extend current acceptance coverage.
+
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+
+
 The current native product bundles Git LFS 3.7.1, registers standard filters and supplies standard LFS hooks in new-repository templates. No separate LFS application installation is needed. Existing repositories/custom hooks remain untouched. [Game-project behavior and current scope](GAME_PROJECTS.md) supersede historical Rust preview notes below; final new-byte acceptance remains in the delivery ledger.
 
 The final native route uses the pinned owned Git LFS 3.7.1 primary helper, with Windows runtime inputs and Linux x64/ARM64/macOS ARM64 assets prepared. It preserves the standard pointer/cache/filter/transport interfaces; complete runtime assembly and D08 acceptance remain open. Historical Rust pointer/filter/basic-transfer implementation and subset evidence are retained below and do not establish final native-product compatibility.
@@ -33,7 +38,7 @@ The process filter negotiates clean/smudge only, spools request/result streams a
 
 ## Verified scope and remaining work
 
-`tests/lfs_acceptance.py` compares pointers and clean/smudge with official Git LFS, checks corruption refusal, multi-request filter framing and native add/status/switch with an empty client PATH. It also checks local install/tracking and command-scoped storage overrides. `tests/lfs_transfer_acceptance.py` runs an authenticated HTTPS fixture with a generated CA, verifies official-tool interoperability, upload deduplication, response validation and failure before Git ref publication. Fixtures use temporary profiles and generated secrets; real user credentials are not read.
+[archived lfs_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/lfs_acceptance.py) compares pointers and clean/smudge with official Git LFS, checks corruption refusal, multi-request filter framing and native add/status/switch with an empty client PATH. It also checks local install/tracking and command-scoped storage overrides. [archived lfs_transfer_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/lfs_transfer_acceptance.py) runs an authenticated HTTPS fixture with a generated CA, verifies official-tool interoperability, upload deduplication, response validation and failure before Git ref publication. Fixtures use temporary profiles and generated secrets; real user credentials are not read.
 
 Recognized current standard pre-push/post-commit/post-checkout/post-merge hooks are handled by the native path only when their behavior is supported. Lockable-file permission management and lock verification refuse before writes rather than being silently skipped. Customized or unrecognized hook bodies still refuse.
 

@@ -1,5 +1,8 @@
 # Consistent LF text across platforms
 
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+
+
 The primary native core integrates shared LF defaults, new-repository/clone configuration, policy-file creation, the eol command and canonical filtered-content comparison after stat/size mismatches. Current Windows x64, Linux x64 and emulated Linux ARM64 native-core checks pass. macOS evidence covers compilation, Mach-O packaging and shell/static checks without executing the product. See [delivery status](DELIVERY_STATUS.md) for the final combined gate. Earlier preview checkpoints below retain their original identities.
 
 ## Defaults
@@ -46,8 +49,7 @@ The earlier Rust preview intentionally refused renormalization through a replace
 After a stat mismatch, native status verifies the clean-filtered object hash instead of treating a changed worktree byte count as proof of a content change. LF/CRLF-only saves can therefore remain clean even when their lengths differ. The existing optional index lock can publish verified metadata; locks/read-only indexes retain the previous no-write behavior. Unchanged files still use the stat fast path. Genuine content, executable-bit, file-type and staged changes remain visible. This does not rewrite files or suppress all whitespace changes.
 
 ```sh
-python tests/eol_acceptance.py target/release/git-next
-python tests/status_cache_acceptance.py target/release/git-next
+cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
 ```
 
 Use `.exe` on Windows. Fixtures isolate profiles, remove Git/OpenSSH from the client PATH, compare canonical object IDs and deliberate renormalization with reference Git, and verify Unity-style text, binary bytes, real edits, explicit exceptions and writer locks. No real user login or existing game project is modified by these tests.

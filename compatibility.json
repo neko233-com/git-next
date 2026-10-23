@@ -3,6 +3,9 @@
   "product": "git-next",
   "status": "experimental",
   "default_branch": "main",
+  "implementation": "rust",
+  "behavior_spec": "https://git-scm.com/docs",
+  "native_git_linked": false,
   "external_git_fallback": false,
   "external_ssh_fallback": false,
   "complete_git_parity": false,
@@ -36,13 +39,19 @@
     "native_two_parent_merge_subset": true,
     "native_merge_no_commit_subset": true,
     "commit_message_cleanup_subset": true,
-    "required_repository_extension_negotiation": true
+    "required_repository_extension_negotiation": true,
+    "rust_tag_lightweight_annotated_subset": true,
+    "rust_stash_push_pop_apply_subset": true,
+    "rust_cherry_pick_revert_rebase_linear_subset": true,
+    "rust_submodule_status_init_update_subset": true,
+    "rust_linked_worktree_add_list_remove_subset": true,
+    "rust_hook_execution_subset": true
   },
   "replacement_blockers": [
     "Complete push refspec/hook/output parity and the receive-pack server command are not accepted",
     "Complete LFS transport/locking and real credential-helper/login compatibility are not accepted",
-    "Complete merge/recovery semantics, rebase, stash, cherry-pick, revert and full diff are not accepted",
-    "Complete Git CLI, IDE, hooks, signing, submodule and linked-worktree compatibility is not accepted",
+    "Complete merge/recovery semantics, interactive rebase, stash -u and full diff are not accepted",
+    "Complete Git CLI, IDE, hook argument parity, signing and full submodule/linked-worktree compatibility is not accepted",
     "Checkout requires a clean ordinary-file worktree; full checkout/pathspec and crash-recovery automation are not accepted"
   ],
   "performance": "Measure optimized binaries with tests/benchmark.py; no universal speedup claim"

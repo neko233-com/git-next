@@ -10,10 +10,10 @@ Everything is reproducible with the tools in this repository.
 
 ```sh
 # a remote that behaves like a real host, served by the reference implementation
-python tools/git_http_fixture.py --root <dir-of-bare-repos> --port 8123
+go -C tools/devtool run . git-http-fixture --root <dir-of-bare-repos> --port 8123
 
 # the comparison, alternating clients round by round
-python tools/benchmark_clone.py --reps 9 \
+go -C tools/devtool run . benchmark-clone --reps 9 \
     --target gitsss=http://127.0.0.1:3000/root/bench-big.git \
     --json docs/benchmarks/clone-gitsss-20261022.json
 ```
@@ -102,7 +102,7 @@ consistent with the architecture - one process instead of a launcher chain - and
 network:
 
 ```sh
-python tools/benchmark_clone.py --reps 9 \
+go -C tools/devtool run . benchmark-clone --reps 9 \
     --target github=https://github.com/neko233-com/git-next \
     --json docs/benchmarks/clone-github-<date>.json
 ```

@@ -274,6 +274,7 @@ fn abort_merge() -> Result<()> {
             file_views: Some((old_files, new_files)),
             metadata: clear_metadata(),
             allow_merge_state: true,
+            allow_sequencer_state: false,
         },
     )
 }
@@ -331,6 +332,7 @@ pub(crate) fn finish_commit(
             file_views: None,
             metadata: clear_metadata(),
             allow_merge_state: true,
+            allow_sequencer_state: false,
         },
     )
 }
@@ -553,6 +555,7 @@ fn publish_pending(
             file_views: Some((old_files, new_files)),
             metadata,
             allow_merge_state: false,
+            allow_sequencer_state: false,
         },
     )?;
     if !quiet {
@@ -794,6 +797,7 @@ pub(crate) fn run(options: Options) -> Result<()> {
             file_views: None,
             metadata: Vec::new(),
             allow_merge_state: false,
+            allow_sequencer_state: false,
         },
     )?;
     if !options.quiet {

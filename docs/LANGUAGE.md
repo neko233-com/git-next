@@ -85,9 +85,9 @@ see is worth more than one that translates everything badly.
 ## Checking a document
 
 ```sh
-python tools/check_locales.py            # check every document
-python tools/check_locales.py --coverage # and report what each language leaves to English
-python tools/check_locales.py --fix      # sort the keys, then check
+go -C tools/devtool run . check-locales            # check every document
+go -C tools/devtool run . check-locales --coverage # and report what each language leaves to English
+go -C tools/devtool run . check-locales --fix      # sort the keys, then check
 ```
 
 The checker fails on a document that is unreadable, a duplicated key, a key the

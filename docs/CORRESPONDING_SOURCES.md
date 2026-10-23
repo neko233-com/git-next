@@ -7,7 +7,7 @@ The complete native product uses its source-built GPL-2.0-only Git engine. Its m
 Build the source bundles with:
 
 ```sh
-python tools/prepare_corresponding_sources.py --cache /path/to/source-cache --output /path/to/new-source-output
+go -C tools/devtool run . prepare-corresponding-sources --cache /path/to/source-cache --output /path/to/new-source-output
 ```
 
 The tool reuses only matching cache files, fetches missing files concurrently, checks every size/hash and produces a `sources.json` bundle manifest. Release checksums also cover these source assets. Include all four bundles beside the single matching product release; they are not separate feature releases.
