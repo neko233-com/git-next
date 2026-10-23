@@ -23,6 +23,14 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def bridge_imports_match(name, libraries):
+    """CRT-free bridge: kernel32 and advapi32, plus user32 for the GUI entry."""
+    required = {'kernel32.dll', 'advapi32.dll'}
+    if 'gui' in name.lower():
+        required.add('user32.dll')
+    return {item.lower() for item in libraries} == required
+
+
 def machine(path):
     data = path.read_bytes()
     if data[:2] != b'MZ':
@@ -90,10 +98,19 @@ def main():
             or machine(worker/'msi-worker.exe')!=expected_machine):
         parser.error('Windows Installer worker does not match its owned source/build receipt')
     bridge_receipt = json.loads((bridge/'receipt.json').read_text())
+    bridge_imports = bridge_receipt.get('imports') or {}
+    # A receipt from before freestanding-memory.c cannot be reused: MSVC 14.44
+    # /O2 needs that object, and the old bytes were not linked with it.
     if (bridge_receipt['platform'] != platform or bridge_receipt['source_sha256'] != sha(ROOT/'native-core/launcher/windows-bridge.c')
             or bridge_receipt['resource_sha256'] != sha(ROOT/'native-core/launcher/windows-bridge.rc.in') or bridge_receipt['product_version'] != receipt['product_version']
-            or any(sha(bridge/name) != record['sha256'] or machine(bridge/name) != expected_machine for name,record in bridge_receipt['binaries'].items())):
-        parser.error('Owned migration bridge differs from its source/build receipt.')
+            or bridge_receipt.get('memory_source_sha256') != sha(ROOT/'native-core/launcher/freestanding-memory.c')
+            or bridge_receipt.get('optimizer') != 'O2' or bridge_receipt.get('ob1_workaround') is not False
+            or set(bridge_imports) != set(bridge_receipt['binaries'])
+            or any(sha(bridge/name) != record['sha256'] or machine(bridge/name) != expected_machine
+                   or not bridge_imports_match(name, bridge_imports.get(name) or [])
+                   or not bridge_imports_match(name, imports((bridge/name).read_bytes())[1])
+                   for name, record in bridge_receipt['binaries'].items())):
+        parser.error('Owned migration bridge differs from its source/build receipt. Rebuild it with tools/build_windows_bridge.py before packaging.')
     psl_receipt = json.loads((psl/'receipt.json').read_text())
     if psl_receipt['platform'] != platform or any(sha(psl/'bin'/name) != record['sha256']
             for name, record in psl_receipt['files'].items()):

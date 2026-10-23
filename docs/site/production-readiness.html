@@ -4,9 +4,20 @@ default <code>git</code> on a machine that matters. It is a gap list, not a road
 Every item names what is missing, what it costs the user today, what &quot;done&quot; means,
 and what evidence would close it.</p>
 <p>The state today, in one line: <strong>it runs, it is fast, and it refuses to be the
-default.</strong> <code>git doctor</code> reports <code>complete_git_parity: false</code> and
-<code>system Git replacement: blocked</code>, and the guard refuses takeover while that is
-true. That refusal is the honest summary of the list below.</p>
+default.</strong> Takeover still requires <code>release_eligible</code> and <code>complete_git_parity</code>
+on the package actually being installed. <code>packaging/native-compatibility.json</code>
+records parity as true and release eligibility as false, with D08/D09/D10 still
+open. That refusal is why this tree is not version 1.0.0. The Rust preview's
+root <code>compatibility.json</code> still reports <code>complete_git_parity: false</code>; the five
+blockers below belong to that contract. Native takeover reads the package it is
+installing, and that package is still not release-eligible.</p>
+<p>The MSVC 14.44 CRT-free bridge link is no longer an open choice between <code>/O2 /Ob1</code>
+and a freestanding <code>memcpy</code>. Full <code>/O2</code> stays, and <code>freestanding-memory.c</code> supplies
+<code>memcpy</code>, <code>memset</code>, <code>memmove</code> and <code>memcmp</code>. <code>/Ob1</code> would also turn off inlining in
+the forwarder, so it is not the fix. The next Windows package has to rebuild the
+bridge; the assembler rejects a receipt that does not name the current helper
+source. The Linux proof of that link is not a substitute for the MSVC packaging
+run, and it does not close the list below.</p>
 <h2>Where the line is drawn</h2>
 <table>
 <thead>

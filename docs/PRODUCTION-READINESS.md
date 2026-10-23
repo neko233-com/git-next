@@ -6,9 +6,21 @@ Every item names what is missing, what it costs the user today, what "done" mean
 and what evidence would close it.
 
 The state today, in one line: **it runs, it is fast, and it refuses to be the
-default.** `git doctor` reports `complete_git_parity: false` and
-`system Git replacement: blocked`, and the guard refuses takeover while that is
-true. That refusal is the honest summary of the list below.
+default.** Takeover still requires `release_eligible` and `complete_git_parity`
+on the package actually being installed. `packaging/native-compatibility.json`
+records parity as true and release eligibility as false, with D08/D09/D10 still
+open. That refusal is why this tree is not version 1.0.0. The Rust preview's
+root `compatibility.json` still reports `complete_git_parity: false`; the five
+blockers below belong to that contract. Native takeover reads the package it is
+installing, and that package is still not release-eligible.
+
+The MSVC 14.44 CRT-free bridge link is no longer an open choice between `/O2 /Ob1`
+and a freestanding `memcpy`. Full `/O2` stays, and `freestanding-memory.c` supplies
+`memcpy`, `memset`, `memmove` and `memcmp`. `/Ob1` would also turn off inlining in
+the forwarder, so it is not the fix. The next Windows package has to rebuild the
+bridge; the assembler rejects a receipt that does not name the current helper
+source. The Linux proof of that link is not a substitute for the MSVC packaging
+run, and it does not close the list below.
 
 ## Where the line is drawn
 

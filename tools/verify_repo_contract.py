@@ -114,6 +114,28 @@ def check_process_safety(report):
     report.add("bridge-limits-forwarding-depth", "DEPTH_LIMIT" in bridge,
                "the bridge counts hops" if "DEPTH_LIMIT" in bridge
                else "the bridge has no hop limit")
+    # MSVC 14.44 /O2 emits memcpy from a CRT-free image. /Ob1 hides that call by
+    # disabling the inlining this forwarder exists to keep, so the repository
+    # supplies the four helpers and the packager refuses a receipt without them.
+    memory = read("native-core/launcher/freestanding-memory.c")
+    builder = read("tools/build_windows_bridge.py")
+    assembler = read("tools/assemble_native_windows.py")
+    report.add("bridge-provides-freestanding-memory",
+               all(token in memory for token in ("void *memcpy(", "void *memset(", "void *memmove(", "int memcmp("))
+               and "#pragma function(memcpy)" in memory and "GN_NOOPT" in memory,
+               "freestanding helpers are present and optimization-off"
+               if "void *memcpy(" in memory else "freestanding memcpy is missing")
+    report.add("bridge-keeps-full-o2",
+               "OPTIMIZER = 'O2'" in builder and "OB1_WORKAROUND = False" in builder
+               and "reject_reduced_inlining" in builder and "'/NODEFAULTLIB'" in builder
+               and "'/Ob1'" not in builder,
+               "the bridge build keeps /O2 and rejects reduced inlining"
+               if "OPTIMIZER = 'O2'" in builder else "the bridge build no longer states full /O2")
+    report.add("packager-requires-rebuilt-bridge",
+               "memory_source_sha256" in builder and "memory_source_sha256" in assembler
+               and "freestanding-memory.c" in assembler and "bridge_imports_match" in assembler,
+               "packaging rejects a bridge receipt that predates the freestanding helpers"
+               if "memory_source_sha256" in assembler else "the packager can still reuse a stale bridge")
 
     watchdog = read("tools/git_process_watchdog.py")
     report.add("watchdog-has-ceiling", "--limit" in watchdog and "PROCESS_TERMINATE" in watchdog,

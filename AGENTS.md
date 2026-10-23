@@ -10,6 +10,8 @@
 - 转发必须有跳数上限（`GIT_NEXT_BRIDGE_DEPTH`，上限 4）。两个互相指向的文件会被这个上限截断，而不是被"看起来不同"绕过去。
 - 拒绝转发时退出 127 并说明修复工具，**绝不启动子进程**。
 - 安装程序写入桥接注册前必须拒绝"目标即自身"的映射。
+- CRT-free 桥接保持完整 `/O2`。MSVC 14.44 会为结构复制发出 `memcpy`、`memset`、`memmove` 和 `memcmp`；这些符号由 `native-core/launcher/freestanding-memory.c` 提供。不要改用 `/Ob1`，那会关掉转发器自身的内联。四个函数体必须关闭优化，否则编译器会把实现改写成对自身的调用。
+- 下次打包前必须重编桥接。`tools/assemble_native_windows.py` 只接受带当前 `freestanding-memory.c` 哈希、`optimizer` 为 `O2`、`ob1_workaround` 为 false，且导入表只有 `kernel32`/`advapi32`（GUI 另加 `user32`）的回执。旧的 `native-core/receipts` 二进制哈希不能当作这次桥接的验收。
 - 每个仓库一个常驻进程的默认值是不允许的。`core.fsmonitor` 因此不是默认值：实测每仓库 12.1 MB，且守护进程**在仓库被删除后仍然存活**。谁打开它，谁必须同时提供回收手段（`tools/git_process_watchdog.py --daemons`）。
 - 测试必须有进程上限，不能靠信任被测代码。`docker/tests/run.sh` 用 `--pids-limit 128 --memory 2g`；Windows 行为用作业对象限制 64 个进程。一个会无限派生的测试必须死在容器里，而不是死在工作站上。
 
@@ -64,6 +66,7 @@
 
 ```text
 python tools/verify_repo_contract.py        # 本文件的每条硬约束
+python tools/verify_freestanding_bridge.py  # /O2 辅助函数不会调用自身，且桥接不链 CRT
 python tools/check_runtime_defaults.py      # 默认值：一致性与真实行为
 python tools/check_locales.py               # 语言文档
 python tools/render_docs.py                 # 站点 HTML 与 Markdown 同步

@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "status": "freestanding-bridge-proved-not-msvc-packaged",
+  "decision": "full-O2-freestanding-memory",
+  "rejected_alternative": "O2-plus-inline-limit",
+  "optimizer": "O2",
+  "ob1_workaround": false,
+  "msvc_14_44_link_executed": false,
+  "product_executed": false,
+  "release_eligible": false,
+  "bridge_source_sha256": "f5b00f16028a755d743d216bf03c935941abd0982cedbff3a80e032bb8883e32",
+  "memory_source_sha256": "6da4c9fd960312a6f5d29f13a5e77c48646de0cf1f6530e5e4253b347529ee5b",
+  "driver_source_sha256": "f5121aebeb0f8b2dd3fd886d69917905b7367f3f17a31bf54d3fbf3eb496cc50",
+  "host_proof": {
+    "compiler_version": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "helper_undefined": [],
+    "driver_exit": 0,
+    "compiler_libcall_exit": 0
+  },
+  "mingw_x64": {
+    "compiler": "/usr/bin/x86_64-w64-mingw32-gcc",
+    "compiler_version": "x86_64-w64-mingw32-gcc (GCC) 13-win32",
+    "resource_linked": false,
+    "binaries": {
+      "git-next-bridge.exe": {
+        "sha256": "5e0af1a50bafec8e73bc46fe168092b0335123b4d561efa91528e4bda4791447",
+        "bytes": 17362
+      },
+      "git-next-bridge-gui.exe": {
+        "sha256": "d95ec209605fd54105778957478fc458065110b3ba252acc1992fd5f28027bb2",
+        "bytes": 16230
+      }
+    },
+    "imports": {
+      "git-next-bridge.exe": [
+        "advapi32.dll",
+        "kernel32.dll"
+      ],
+      "git-next-bridge-gui.exe": [
+        "advapi32.dll",
+        "kernel32.dll",
+        "user32.dll"
+      ]
+    },
+    "product_executed": false
+  }
+}
