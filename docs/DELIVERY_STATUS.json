@@ -46,6 +46,21 @@
       "status": "r8-pre-msi-snapshot-bootstrap-and-independent-workstation-readback-pass"
     },
     "current_gate_generation": "r8",
+    "production_channel_readback": {
+      "status": "pass",
+      "checked_at_utc": "2026-10-23T20:57:30Z",
+      "platform": "windows-x64",
+      "install_scope": "machine",
+      "version": "1.0.3",
+      "metadata_trust": "official-api-digest",
+      "all_platforms_hardware_production_acceptance": false,
+      "evidence": {
+        "path": "docs/benchmarks/native-production-channel-20261024.json",
+        "sha256": "f3720db8eb21a3e1f1c33f495e065fe618d0689a41565e7d75d3e548b1e4b9e6",
+        "bytes": 2020,
+        "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json"
+      }
+    },
     "failed_candidate_evidence_preserved": true,
     "final_gates": {
       "checksums_and_configured_signatures": {

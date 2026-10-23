@@ -30,6 +30,15 @@ source-time pending flags. [Delivery status](DELIVERY_STATUS.md) preserves the R
 failures and recovery. Dated implementation-only and v0.3.0 notes below retain
 their historical scope.
 
+The published production entrypoints were checked at `2026-10-23T20:57:30Z`.
+The installed Windows x64 machine client reports `git update status --json` as
+enabled and `git update check --json` as current at 1.0.3, with
+`metadata_trust=official-api-digest`. Anonymous downloads through the official
+`releases/latest/download/` endpoints match the accepted `install.ps1` and
+`git-next-update.json` bytes. The downloaded bootstrap's `-Plan` selects Windows
+x64 machine scope and reports `changes_applied=false`. This check executes no
+installer or terminal tests. [Production channel readback](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json).
+
 ## Delivery contract
 
 The Windows updater supports the built-in Windows PowerShell 5.1 even when launched from PowerShell 7: its child process selects the Windows module directory, MSI property reads suppress COM method return values, and atomic JSON/configuration replacement passes a true null backup path. First-time runtime configuration copies preserve a null destination state rather than converting it to an empty string. Task lookup distinguishes an absent task using its HRESULT, including PowerShell's wrapped file-not-found exception. POSIX directory creation accepts a root-owned sticky ancestor such as `/tmp` while continuing to reject writable or foreign-owned installation leaves and symlink traversal. Candidate refreshes use checksum-pinned archives and matching compiled-updater receipts; they do not rebuild unchanged C cores or reuse earlier acceptance for changed bytes.
@@ -52,8 +61,9 @@ uninstaller removed the shared `bin/git.exe` that MSI had just installed. The
 protected R7 backups allowed those exact files to be restored; the installation
 subsequently passed a full owned-file hash audit. That operational repair does
 not turn the failed workstation takeover into a passed release gate. The R8
-changes below have fresh isolated MSI lifecycle passes; final workstation evidence
-is still required before release.
+changes below have fresh isolated MSI lifecycle passes. The subsequent standard
+R8 bootstrap and independent workstation readback passed, as recorded above;
+the R7 failure remains historical evidence.
 
 The standalone installer now verifies the downloaded MSI, extracts only its
 manifest and the seven allowlisted migration/updater source files, and checks

@@ -12,6 +12,8 @@ R8 已完成最终本地门禁：正确性 **16 通过、2 项指定终端豁免
 
 本轮完成 Python 工具链退役。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。1.0.2 继续作为历史打包检查点记录。
 
+**生产入口回读（上海时间 2026-10-24）。** 已安装的 Windows x64 机器级客户端实际执行 `git update status --json` 与 `git update check --json`：更新启用，当前/线上版本均为 1.0.3，`newer=false`，元数据校验为 `official-api-digest`。匿名下载官方 latest 的安装脚本、更新清单与发布哈希一致；下载脚本的 `-Plan` 正确选择 x64/machine，`changes_applied=false`。这证明当前生产发布、发现与已安装客户端的连接，不代替尚缺的 Windows ARM64 真机或 Mac 完整宿主更新生命周期证据；Rust 仍为 preview，两项终端验收仍按用户要求豁免。[生产入口记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json)。
+
 115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前 `tests/legacy_cli/` 受版本控制的内容仅为退役说明 README，无 Python 脚本，本地忽略的生成缓存可保留。Rust 的 100 场景也不代表全部历史断言逐条等量迁移。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
 
 | 当前证据 | 已完成范围及边界 |

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "checked_at_utc": "2026-10-23T20:57:30Z",
+  "product": "git-next",
+  "version": "1.0.3",
+  "release_id": 422290807,
+  "release_url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.3",
+  "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+  "release_assets": 28,
+  "remote_asset_digests_match": true,
+  "latest_downloads": [
+    {
+      "asset": "install.ps1",
+      "url": "https://github.com/neko233-com/git-next/releases/latest/download/install.ps1",
+      "bytes": 46748,
+      "sha256": "807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3",
+      "http_status": 200,
+      "official_latest_bytes_match": true
+    },
+    {
+      "asset": "git-next-update.json",
+      "url": "https://github.com/neko233-com/git-next/releases/latest/download/git-next-update.json",
+      "bytes": 5110,
+      "sha256": "340a70a3ca62da471150da70ba67902df64701600e12b240e99c4b960a8a8c81",
+      "http_status": 200,
+      "official_latest_bytes_match": true
+    }
+  ],
+  "installed_update_status": {
+    "schema_version": 1,
+    "status": "idle",
+    "version": "1.0.3",
+    "installed_version": "1.0.3",
+    "install_scope": "machine",
+    "enabled": true
+  },
+  "installed_update_check": {
+    "schema_version": 1,
+    "status": "checked",
+    "version": "1.0.3",
+    "installed_version": "1.0.3",
+    "install_scope": "machine",
+    "newer": false,
+    "metadata_trust": "official-api-digest"
+  },
+  "published_bootstrap_plan": {
+    "platform": "windows-x64",
+    "scope": "machine",
+    "changes_applied": false,
+    "exit_code": 0
+  },
+  "terminal_tests_executed": false,
+  "installer_executed": false,
+  "all_platforms_hardware_production_acceptance": false,
+  "boundaries": [
+    "Two terminal lanes remain user-waived.",
+    "Windows ARM64 lacks hardware runtime/installer acceptance.",
+    "Mac CLI/runtime evidence does not yet establish a full host update-service lifecycle.",
+    "MSI signatures are NotSigned; no signer is configured."
+  ]
+}
