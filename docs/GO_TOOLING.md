@@ -112,10 +112,14 @@ and after packaging, and checks again on an error; a changed input rejects the
 stage. Failed or interrupted directories are diagnostic artifacts, never release
 assets.
 
-The final R6 local checkpoint completed correctness with 16 passed / 2 waived
-lanes in 246.204 seconds, and all five paired-performance lanes in 691.251 seconds.
+The final R7 local checkpoint completed correctness with 16 passed / 2 waived
+lanes in 249.801 seconds, and all five paired-performance lanes in
+668.849 seconds. R6's complete local gates remain in the history;
+its later stage hardlink source mutation was rejected, and 25 ARM64 metadata/docs
+files were restored from frozen MSI bytes with no runtime binary drift. R7 uses
+a new matrix and fresh measurements after the release-only write-isolation fix.
 The report's false release/installation/publication flags describe actions still
-pending at that source checkpoint; they do not negate those completed gates.
+pending at that source checkpoint; they do not negate completed local gates.
 Actual subsequent staging, workstation acceptance and publication are recorded
 in a separate public release-completion asset and a normal later documentation
 commit, retaining the accepted package's original checkpoint.

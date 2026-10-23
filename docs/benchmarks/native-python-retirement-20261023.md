@@ -1,6 +1,6 @@
 # Python 工具链退役证据
 
-报告开始日：2026-10-23；最终本地门禁完成日：2026-10-24。correctness 为 16 pass / 2 waived，246.204 秒；performance 为 5 pass，691.251 秒。本报告是源码检查点：当时 release staging、工作站更新和 push/publish 尚 pending；后续完成动作由独立公开 release-completion asset 与 main 的正常文档提交记录，不重写已接受包中的本报告。被拒候选与用户豁免均保留，waived 不计为 pass。
+报告开始日：2026-10-23；最终本地门禁完成日：2026-10-24。R7 correctness 为 16 pass / 2 waived，249.801 秒；performance 为 5 pass，668.849 秒。本报告是源码检查点：当时 release staging、工作站更新和 push/publish 尚 pending；后续完成动作由独立公开 release-completion asset 与 main 的正常文档提交记录，不重写已接受包中的本报告。被拒候选与用户豁免均保留，waived 不计为 pass。
 
 机器可读清单见 [native-python-retirement-20261023.json](native-python-retirement-20261023.json)。该清单逐文件记录旧入口 SHA-256、对应 Go/Rust 模块、退休理由与覆盖边界，只含仓库相对路径、哈希和公开计数。
 
@@ -75,7 +75,7 @@ Perforce `p4` 客户端仍是可选集成的外部依赖，与原产品相同。
 
 | 平台 | 已完成的范围 | Python 扫描 |
 | --- | --- | --- |
-| Windows x64 | R6 适用 native lane 通过，MSI user 27 / machine 25 项真实检查精确复用；Rust full 100/100；两 terminal lane 按用户授权豁免，R4 失败保留 | 10,690 文件，0 Python |
+| Windows x64 | R7 适用 native lane 通过，MSI user 27 / machine 25 项真实检查精确复用；Rust full 100/100；两 terminal lane 按用户授权豁免，R4 失败保留 | 10,690 文件，0 Python |
 | Windows ARM64 | 构建与 PE/静态包检查；未宣称真实 ARM64 运行或安装验收 | 9,005 文件，0 Python |
 | Linux x64 | Docker 中四个 native lane 共 52/52，另 P4 两入口通过 | 4,275 文件，0 Python |
 | Linux ARM64 | Docker 中四个 native lane 共 52/52，另 P4 两入口通过 | 4,282 文件，0 Python |
@@ -91,8 +91,12 @@ Mac 最新实机回执的仓库相对位置为 target/go-native-release-1.0.3/ma
 
 最终 correctness 已绑定 18 行、16 pass / 2 waived，状态 pass-with-user-waiver；五条 paired performance 实际 pass。准确引用及 SHA 见 JSON 的 accepted_correctness / accepted_performance。waived 不能称为 pass。release_eligible、published、workstation_installed_and_accepted 的 false 仅描述此源码检查点尚未执行 release staging、工作站安装/更新和发布，不否定本地门禁已完成。后续动作由独立公开 release-completion asset 与 main 的正常文档提交记录，保留本检查点及原始回执。
 
-完整 correctness 用时 246.204 秒，performance 用时 691.251 秒，均未达到 60 秒编排目标；没有为此跳过检查。性能每操作为 10 对样本，p95 属于小样本探索值，主要进程峰值工作集不含子进程。100,000-file status 中位数为 git-next 1656.999 ms / reference 1666.073 ms，grep 为 9698.981 / 10391.285 ms；loopback HTTPS clone 为 1078.937 / 753.106 ms。不能宣称普遍更快或更省内存，也没有 WAN/provider/GitSSS 吞吐量结论。
+完整 R7 correctness 用时 249.801 秒，performance 用时 668.849 秒，均未达到 60 秒编排目标；没有为此跳过检查。性能每操作为 10 对样本，p95 属于小样本探索值，主要进程峰值工作集不含子进程。100,000-file status 中位数为 git-next 1576.423 ms / reference 1547.554 ms，grep 为 8092.692 / 8524.933 ms；loopback HTTPS clone 为 1051.060 / 728.930 ms。不能宣称普遍更快或更省内存，也没有 WAN/provider/GitSSS 吞吐量结论。
 
 R5b 原批次保留为 12 pass / 4 fail / 2 waived，readback pass；四个 Docker 相关 lane 均因编排进程 PATH 缺少 Go 而在预定 fixture 执行前失败。真实 MSI user 生命周期为 27 项检查、622.69 秒，machine 为 25 项检查、473.217 秒；后续完全相同冻结输入可精确复用这些原始通过证据。
 
 原 R5c performance 失败报告仍保留：100,000-file native grep 退出 1 且无 stderr，该失败操作没有有效延迟报告。较小规模的通过不代替失败门禁；后续通过须绑定新报告，不覆盖原失败。
+
+R6 本地 correctness 16 pass / 2 waived（246.204 秒）、performance 5 pass（691.251 秒）作为历史检查点保留。后续 release-stage-r6 的硬链接源别名错误污染了 Windows ARM64 的 25 个文档/metadata 文件，stage 已停止且未发布；严格 r6b immutable 校验拒绝继续。25 个文件仅从已冻结 r5b MSI 的原始 CAB 字节恢复并先脱离旧 inode，9005 个 ARM 冻结文件 SHA 全相符，896 个 exe/dll 无漂移，runtime binary 写入为 0。原污染 stage 保留，恢复没有运行 MSI 安装或 terminal。
+
+release-only 修复提交 e849f9c2fce0b99ee85b8ee52f44a803af12f607 改为新 inode 替换 repair/manual/manifest，成功和错误路径均复查源输入；共享复制器、runtime、benchmark 与 MSI recipe 没有修改。R7 使用新冻结矩阵及新精确豁免，重新完成非 terminal correctness 和全部五条 paired performance，不把 R6 性能重新绑定到新 harness。准确恢复回执与源码 SHA 见 JSON 的 release_staging_repair。

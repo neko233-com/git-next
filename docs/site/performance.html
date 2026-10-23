@@ -1,20 +1,20 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Performance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Native 1.0.3 measurements · 2026-10-24</h1>
-<p>The exact R6 correctness batch completed <strong>16 passed / 2 user-waived lanes</strong> in
-<strong>246.204 seconds</strong>. All <strong>five performance lanes passed</strong> in <strong>691.251 seconds</strong>:
-three file scales, loopback HTTPS and frozen-input readback. Neither batch met
-the 60-second orchestration target; no checks were skipped for that target.
-The terminal waiver covers only its two named terminal test lanes. MSI, native
-CLI, transport, package and performance checks retain their full requirements.
-The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">artifact-bound source checkpoint</a>
+<p>The exact R7 correctness batch completed <strong>16 passed / 2 user-waived lanes</strong> in
+<strong>249.801 seconds</strong>. All <strong>five performance lanes passed</strong> in
+<strong>668.849 seconds</strong>: three file scales, loopback HTTPS and frozen-input
+readback. Neither batch met the 60-second orchestration target; no checks were
+skipped for that target. The terminal waiver covers only its two named terminal
+test lanes. MSI, native CLI, transport, package and performance checks retain
+their full requirements. The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">artifact-bound source checkpoint</a>
 records local gates as complete, with staging, workstation update and publication
-pending at that checkpoint. Later release completion is recorded separately.</p>
+pending at that checkpoint. Later completion is recorded separately.</p>
 <p>These Windows x64 measurements compare native
-<code>2.54.0.windows.1.git-next.1.0.3</code> with reference <code>2.56.0.windows.3</code> on
+2.54.0.windows.1.git-next.1.0.3 with reference 2.56.0.windows.3 on
 Windows 10.0.26300, AMD64 Family 26 Model 68 Stepping 0, 32 logical CPUs.
 Each command has <strong>10 randomized pairs</strong>, three warm-ups and warm OS cache.
-Both clients use the declared five-setting Windows read-safety profile.
-The full reports pin binary/source/harness hashes and verify complete output,
-refs, worktree bytes and fsck. A ten-pair p95 is exploratory.</p>
+Both clients use the declared five-setting Windows read-safety profile. Full
+reports pin binary/source/harness hashes and verify complete output, refs,
+worktree bytes and fsck. A ten-pair p95 is exploratory.</p>
 <table>
 <thead>
 <tr>
@@ -28,92 +28,92 @@ refs, worktree bytes and fsck. A ten-pair p95 is exploratory.</p>
 <tr>
 <td>1000</td>
 <td>version</td>
-<td>13.244 / 15.000</td>
-<td>23.441 / 26.556</td>
+<td>14.602 / 16.039</td>
+<td>26.691 / 29.983</td>
 </tr>
 <tr>
 <td>1000</td>
 <td>status_clean</td>
-<td>35.494 / 38.400</td>
-<td>46.786 / 49.630</td>
+<td>37.869 / 41.136</td>
+<td>49.842 / 52.153</td>
 </tr>
 <tr>
 <td>1000</td>
 <td>diff_clean</td>
-<td>30.575 / 31.692</td>
-<td>39.916 / 45.847</td>
+<td>30.702 / 31.945</td>
+<td>42.154 / 44.618</td>
 </tr>
 <tr>
 <td>1000</td>
 <td>show_metadata</td>
-<td>17.739 / 19.511</td>
-<td>27.746 / 30.012</td>
+<td>19.036 / 20.050</td>
+<td>28.528 / 31.243</td>
 </tr>
 <tr>
 <td>1000</td>
 <td>grep_files</td>
-<td>93.581 / 103.897</td>
-<td>101.352 / 123.449</td>
+<td>90.055 / 101.335</td>
+<td>99.871 / 120.687</td>
 </tr>
 <tr>
 <td>10000</td>
 <td>version</td>
-<td>14.571 / 15.477</td>
-<td>25.278 / 31.582</td>
+<td>16.038 / 16.635</td>
+<td>27.765 / 31.816</td>
 </tr>
 <tr>
 <td>10000</td>
 <td>status_clean</td>
-<td>196.824 / 240.385</td>
-<td>207.301 / 224.013</td>
+<td>208.153 / 267.964</td>
+<td>232.690 / 253.850</td>
 </tr>
 <tr>
 <td>10000</td>
 <td>diff_clean</td>
-<td>173.333 / 200.685</td>
-<td>184.457 / 201.101</td>
+<td>178.620 / 215.503</td>
+<td>190.149 / 212.941</td>
 </tr>
 <tr>
 <td>10000</td>
 <td>show_metadata</td>
-<td>23.311 / 25.279</td>
-<td>33.504 / 34.522</td>
+<td>23.725 / 27.424</td>
+<td>33.867 / 43.516</td>
 </tr>
 <tr>
 <td>10000</td>
 <td>grep_files</td>
-<td>785.654 / 845.520</td>
-<td>807.518 / 841.718</td>
+<td>977.826 / 1371.733</td>
+<td>930.960 / 1243.645</td>
 </tr>
 <tr>
 <td>100000</td>
 <td>version</td>
-<td>14.118 / 15.234</td>
-<td>25.228 / 37.548</td>
+<td>13.664 / 15.109</td>
+<td>23.996 / 27.564</td>
 </tr>
 <tr>
 <td>100000</td>
 <td>status_clean</td>
-<td>1656.999 / 1738.231</td>
-<td>1666.073 / 1736.873</td>
+<td>1576.423 / 1750.447</td>
+<td>1547.554 / 1667.810</td>
 </tr>
 <tr>
 <td>100000</td>
 <td>diff_clean</td>
-<td>1640.182 / 1714.801</td>
-<td>1674.215 / 1864.504</td>
+<td>1411.979 / 1485.115</td>
+<td>1437.367 / 1496.629</td>
 </tr>
 <tr>
 <td>100000</td>
 <td>show_metadata</td>
-<td>72.212 / 79.799</td>
-<td>83.850 / 89.714</td>
+<td>66.174 / 70.203</td>
+<td>74.498 / 81.349</td>
 </tr>
 <tr>
 <td>100000</td>
 <td>grep_files</td>
-<td>9698.981 / 12116.947</td>
-<td>10391.285 / 11732.632</td>
+<td>8092.692 / 8975.921</td>
+<td>8524.933 / 9109.385</td>
 </tr>
 </tbody>
 </table>
@@ -131,36 +131,42 @@ refs, worktree bytes and fsck. A ten-pair p95 is exploratory.</p>
 <tbody>
 <tr>
 <td>clone</td>
-<td>1078.937 / 1166.181</td>
-<td>753.106 / 784.315</td>
+<td>1051.060 / 1181.805</td>
+<td>728.930 / 771.395</td>
 </tr>
 <tr>
 <td>fetch</td>
-<td>439.677 / 468.387</td>
-<td>451.569 / 469.257</td>
+<td>410.538 / 444.398</td>
+<td>432.197 / 451.336</td>
 </tr>
 <tr>
 <td>pull_ff_only</td>
-<td>622.031 / 749.229</td>
-<td>627.105 / 782.475</td>
+<td>585.100 / 601.374</td>
+<td>597.053 / 608.425</td>
 </tr>
 </tbody>
 </table>
 <p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-network-20261023.json">network report</a>
 uses HTTP/1.1, Schannel on both clients, a private fixture CA and static fixture
-authorization. Clone is slower here. This is not WAN/provider authentication or
-GitSSS throughput evidence. Full scans remain a latency limit: the 100,000-file
-grep median is about 9.7 seconds. Primary-process peak working set excludes
-children; its 100,000-file status median is 33,423,360 bytes for git-next versus
-6,944,768 for reference Git. These results establish no universal speed or memory
-advantage.</p>
-<p>The rejected R5c 100,000-file attempt remains recorded: native <code>grep</code> exited 1
-without stderr and produced no valid timing for that failed operation. A separate
-forced one-second probe reproduced exit 1 with a real deadline and partial output;
-the old attempt's root cause remains unproved. R6 distinguishes deadlines from
-ordinary exit 1 and gives only this scale 120 seconds per command, within the
-unchanged 1,800-second case bound. Output, exit, fsck and sample checks remain
-unchanged; the accepted R6 reports do not overwrite the failed attempt.</p>
+authorization. This is not WAN/provider authentication or GitSSS throughput
+evidence. Native clone and 100,000-file clean status have higher medians here;
+the complete 100,000-file grep still takes about 8.1 seconds. Primary-process
+peak working set excludes children; the 100,000-file
+status median is 33413120 bytes for git-next versus 6946816 for reference
+Git. These results establish no universal speed or memory advantage.</p>
+<p>R6 remains a historical complete local checkpoint: correctness 246.204 seconds,
+performance 691.251 seconds. Its later release stage was stopped after hardlink
+aliasing changed 25 ARM64 metadata/document files. Strict r6b validation rejected
+the changed source. Original bytes were recovered from the frozen MSI; all 9,005
+ARM files and 896 executable/DLL paths match, with no runtime binary writes.
+The release-only fresh-inode replacement fix has its own R7 matrix and new full
+measurements; R6 performance is not rebound to that changed harness.</p>
+<p>The rejected R5c 100,000-file attempt is also retained: native grep exited 1
+without stderr, with no valid timing for that failed operation. A separate forced
+one-second probe established a real deadline can cause exit 1 and partial output;
+the original attempt's root cause remains unproved. The large scale now has
+120 seconds per command within the unchanged 1,800-second case limit, with the
+same complete-output, exit, fsck and sample checks.</p>
 <p>The sections below retain their historical dates, binaries and sample counts.</p>
 <h1>Historical matched-artifact Windows measurements · 2026-10-21</h1>
 <p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-integrated-performance-20261021.json">dated matched-artifact batch</a> passes all three file scales and local HTTPS workloads with <strong>10 pairs per operation</strong>, complete output/fixture verification and core identity <code>fb505db8</code> / binary <code>3bc2edf0</code>. Both clients use the same declared Windows read-safety profile; the reference is complete official Git 2.54. The actual batch took <strong>596.63 seconds</strong>, exceeding the 60-second target. No checks were skipped. A 10-sample p95 is exploratory; the previous larger-sample reports below retain their original identities.</p>

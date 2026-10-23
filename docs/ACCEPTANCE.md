@@ -2,15 +2,16 @@
 
 ## Current 1.0.3 local scope · 2026-10-24
 
-Native correctness R6 completed with 16 passed lanes and two user-waived
-Git-Terminal lanes in 246.204 seconds. Actual Windows x64 MSI lifecycle evidence
+Native correctness R7 completed with 16 passed lanes and two user-waived
+Git-Terminal lanes in 249.801 seconds. Actual Windows x64 MSI lifecycle evidence
 covers 27 user-scope and 25 machine-scope checks, reused only with matching
 immutable inputs. macOS ARM64 has real Apple Silicon execution of 51 native
 scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated ARM64 each
 have 52 native scenarios and two dispatch checks. Windows ARM64 remains
 cross-compilation, PE/table and static-package evidence rather than hardware
-runtime/lifecycle acceptance. Performance, release staging, workstation state and
-publication remain separate; see [delivery status](DELIVERY_STATUS.md). The dated
+runtime/lifecycle acceptance. R7 paired performance passed all five lanes in
+668.849 seconds. Release staging, workstation state and publication remain
+separate; see [delivery status](DELIVERY_STATUS.md). The dated
 snapshots below retain their own binaries, scope, failures and limitations.
 
 ## Historical acceptance snapshot · 2026-10-21

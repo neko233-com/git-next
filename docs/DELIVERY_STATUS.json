@@ -363,9 +363,10 @@
       "posix_packages_consume_fragment": false,
       "internal_cause_established": false,
       "performance_claim": false,
-      "final_package_and_installation_binding": "r6-local-correctness-pass-workstation-installation-pending",
+      "final_package_and_installation_binding": "r7-local-correctness-pass-workstation-installation-pending",
       "r4_read_thread_lane": "pass",
-      "r6_read_thread_lane": "pass"
+      "r6_read_thread_lane": "pass",
+      "r7_read_thread_lane": "pass"
     },
     "final_gates": {
       "correctness": {
@@ -374,12 +375,12 @@
         "passed_lanes": 16,
         "waived_lanes": 2,
         "failed_lanes": 0,
-        "elapsed_seconds": 246.204,
+        "elapsed_seconds": 249.801,
         "wall_clock_target_seconds": 60,
         "wall_clock_target_met": false,
-        "receipt": "target/go-native-release-1.0.3/final-correctness-r6/batch.json",
-        "sha256": "d8db3596c3e3691955aa6ac7f75e821017ef3cf00fb6a935001f063612b9d4e6",
-        "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+        "receipt": "target/go-native-release-1.0.3/final-correctness-r7/batch.json",
+        "sha256": "437f397568c2f11b96721ddf703d42f68b555b0a96e09b0922305b830092366c",
+        "matrix_sha256": "f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c",
         "release_asset_name": "native-correctness.json",
         "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
         "actual_mac_runtime_receipt_bound": true,
@@ -429,7 +430,7 @@
         "status": "pass",
         "passed_lanes": 5,
         "failed_lanes": 0,
-        "elapsed_seconds": 691.251,
+        "elapsed_seconds": 668.849,
         "wall_clock_target_seconds": 60,
         "wall_clock_target_met": false,
         "local_pairs_per_command": 10,
@@ -443,9 +444,9 @@
         ],
         "reference_version": "git version 2.56.0.windows.3",
         "product_version_output": "git version 2.54.0.windows.1.git-next.1.0.3",
-        "receipt": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
-        "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd",
-        "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+        "receipt": "target/go-native-release-1.0.3/final-performance-r7/batch.json",
+        "sha256": "b22eb08be3aff72fa71cfd084103d323e5950652248374f0c14ccfec4c81282f",
+        "matrix_sha256": "f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c",
         "release_asset_name": "native-performance.json",
         "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
         "universal_speedup_claim": false,
@@ -508,7 +509,8 @@
         "reuse_source_batch_sha256": "90b0131471d67a76a869f7f21cb5bad347f7e0b2fbe47657fc30da067fe4993e",
         "reuse_source_matrix_sha256": "cdc1c5794bdeb28111f617728c4b05d008b171fdf69ecb930baf75ba05a0f5d7",
         "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
-        "proves_final_workstation_installation": false
+        "proves_final_workstation_installation": false,
+        "reused_in_r7_with_strict_immutable_input_validation": true
       },
       "workstation_install_update_and_profile_readback": {
         "status": "pending",
@@ -544,7 +546,7 @@
       "url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.1"
     },
     "terminal_validation_waiver": {
-      "status": "user-authorized-and-r6-matrix-bound",
+      "status": "user-authorized-and-r7-matrix-bound",
       "lanes": [
         "terminal-rust-contracts",
         "terminal-native-desktop"
@@ -552,25 +554,182 @@
       "waived_is_passed": false,
       "original_reports_and_failures_preserved": true,
       "final_matrix_binding": "pass",
-      "authorization_file": "target/go-native-release-1.0.3/terminal-waiver-r6.json",
-      "authorization_sha256": "0286de6e4fba224269c28e8f75fe8c4327f30b004b3ac31d23fd80ca2b4d41f7",
+      "authorization_file": "target/go-native-release-1.0.3/terminal-waiver-r7.json",
+      "authorization_sha256": "e18894e31b2fe2f705d5f7dcf209fba23ccf86d23455a503fef3f02da116c236",
       "release_asset_name": "native-terminal-waiver.json",
       "scope_excludes_msi_and_nonterminal_validation": true,
-      "matrix": "target/go-native-release-1.0.3/final-matrix-r6.json",
-      "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+      "matrix": "target/go-native-release-1.0.3/final-matrix-r7.json",
+      "matrix_sha256": "f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c",
       "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json"
     },
     "version": "1.0.3",
     "local_acceptance_complete_in_declared_scope": true,
     "source_snapshot": {
       "date": "2026-10-24",
-      "verification_commit": "f2e5c1b0f9966f18c08dff1718e759833e9ff819",
+      "verification_commit": "e849f9c2fce0b99ee85b8ee52f44a803af12f607",
       "native_source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
-      "matrix": "target/go-native-release-1.0.3/final-matrix-r6.json",
-      "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+      "matrix": "target/go-native-release-1.0.3/final-matrix-r7.json",
+      "matrix_sha256": "f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c",
       "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
-      "public_evidence_sha256": "135a4b31532fb9f50d87391bfe5818e05ed834013caf8d69df24e4355416a97e",
+      "public_evidence_sha256": "f40f624c676908eab39906ec3e6500623a83c6aec9d7b1af9a930ae8755ecafa",
       "delivery_actions_recorded_separately": true
-    }
+    },
+    "local_gate_checkpoints": [
+      {
+        "id": "r6-local-gates-before-stage-rejection",
+        "scope": "Historical complete local gates; not release-stage completion or publication",
+        "source_snapshot": {
+          "date": "2026-10-24",
+          "verification_commit": "f2e5c1b0f9966f18c08dff1718e759833e9ff819",
+          "native_source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+          "matrix": "target/go-native-release-1.0.3/final-matrix-r6.json",
+          "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+          "public_evidence": "https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json",
+          "public_evidence_sha256": "135a4b31532fb9f50d87391bfe5818e05ed834013caf8d69df24e4355416a97e",
+          "delivery_actions_recorded_separately": true
+        },
+        "correctness": {
+          "required_lanes": 18,
+          "status": "pass-with-user-waiver",
+          "passed_lanes": 16,
+          "waived_lanes": 2,
+          "failed_lanes": 0,
+          "elapsed_seconds": 246.204,
+          "wall_clock_target_seconds": 60,
+          "wall_clock_target_met": false,
+          "receipt": "target/go-native-release-1.0.3/final-correctness-r6/batch.json",
+          "sha256": "d8db3596c3e3691955aa6ac7f75e821017ef3cf00fb6a935001f063612b9d4e6",
+          "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+          "release_asset_name": "native-correctness.json",
+          "public_evidence": "https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json",
+          "actual_mac_runtime_receipt_bound": true,
+          "msi_evidence_reused_only_with_strict_immutable_input_checks": true,
+          "failed_attempts": [
+            {
+              "candidate": "r4",
+              "status": "fail",
+              "lanes": 18,
+              "passed": 16,
+              "failed": 2,
+              "failures": [
+                {
+                  "lane": "terminal-native-desktop",
+                  "stage": "GUI startup"
+                },
+                {
+                  "lane": "msi-user",
+                  "stage": "user rollback"
+                }
+              ],
+              "receipt": "target/go-native-release-1.0.3/final-correctness-r4/batch.json",
+              "sha256": "34173f9fd9e6a68debeed0ec37676c2429ebb62233fc53d3d7d1c5eb25a24865"
+            },
+            {
+              "candidate": "r5b",
+              "status": "fail",
+              "lanes": 18,
+              "passed": 12,
+              "failed": 4,
+              "waived": 2,
+              "elapsed_seconds": 521.095,
+              "failed_lanes": [
+                "linux-x64",
+                "linux-arm64",
+                "macos-arm64",
+                "docker-login-migration"
+              ],
+              "reason": "Controller omitted Go from PATH; original four Docker-lane failures retained.",
+              "receipt": "target/go-native-release-1.0.3/final-correctness-r5b/batch.json",
+              "sha256": "90b0131471d67a76a869f7f21cb5bad347f7e0b2fbe47657fc30da067fe4993e"
+            }
+          ]
+        },
+        "paired_performance": {
+          "required_lanes": 5,
+          "status": "pass",
+          "passed_lanes": 5,
+          "failed_lanes": 0,
+          "elapsed_seconds": 691.251,
+          "wall_clock_target_seconds": 60,
+          "wall_clock_target_met": false,
+          "local_pairs_per_command": 10,
+          "network_pairs_per_operation": 10,
+          "cases": [
+            "performance-1000",
+            "performance-10000",
+            "performance-100000",
+            "performance-network",
+            "frozen-input-readback"
+          ],
+          "reference_version": "git version 2.56.0.windows.3",
+          "product_version_output": "git version 2.54.0.windows.1.git-next.1.0.3",
+          "receipt": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
+          "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd",
+          "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+          "release_asset_name": "native-performance.json",
+          "public_evidence": "https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json",
+          "universal_speedup_claim": false,
+          "hundred_thousand_files_command_timeout_seconds": 120,
+          "complete_output_exit_fsck_and_warmup_checks_preserved": true,
+          "failed_attempts": [
+            {
+              "candidate": "r5c",
+              "status": "fail",
+              "elapsed_seconds": 442.933,
+              "failed_lane": "performance-100000",
+              "failure": "grep exit 1 without stderr; original root cause remains unknown",
+              "root_cause_established": false,
+              "receipt": "target/go-native-release-1.0.3/final-performance-r5c/batch.json",
+              "sha256": "c2932d890efeea71b31b73b8132fe9f49f53f9f529dd2cb25d56319f9df9d866",
+              "r6_change": "Classify command deadline expiration explicitly and use a 120-second command deadline for the 100k fixture; preserve original failure."
+            }
+          ]
+        },
+        "terminal_validation_waiver": {
+          "status": "user-authorized-and-r6-matrix-bound",
+          "lanes": [
+            "terminal-rust-contracts",
+            "terminal-native-desktop"
+          ],
+          "waived_is_passed": false,
+          "original_reports_and_failures_preserved": true,
+          "final_matrix_binding": "pass",
+          "authorization_file": "target/go-native-release-1.0.3/terminal-waiver-r6.json",
+          "authorization_sha256": "0286de6e4fba224269c28e8f75fe8c4327f30b004b3ac31d23fd80ca2b4d41f7",
+          "release_asset_name": "native-terminal-waiver.json",
+          "scope_excludes_msi_and_nonterminal_validation": true,
+          "matrix": "target/go-native-release-1.0.3/final-matrix-r6.json",
+          "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+          "public_evidence": "https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json"
+        },
+        "source_checkpoint_commit": "36d7b9d2e5772b5fb93ebd476d881b919ca115ef",
+        "public_evidence_at_source_checkpoint": "https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json"
+      }
+    ],
+    "release_stage_failure_history": [
+      {
+        "id": "r6-hardlink-source-aliasing",
+        "status": "rejected-before-publication",
+        "reason": "Release hard links allowed staged Windows ARM64 metadata/docs writes to alter source bytes; immutable-input validation rejected the next attempt.",
+        "runtime_binary_bytes_changed": false,
+        "r6b_final_gate_execution_started": false,
+        "published": false,
+        "recovery": {
+          "status": "restored-exact-frozen-bytes",
+          "receipt": "target/go-native-release-1.0.3/arm64-r6-byte-recovery-20261024/summary-public.json",
+          "sha256": "fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461",
+          "method": "Read-only CAB extraction from the frozen r5b Windows ARM64 user MSI; restore exact metadata/docs into new inodes.",
+          "restored_file_count": 25,
+          "frozen_files_verified": 9005,
+          "frozen_file_mismatches": 0,
+          "exe_dll_paths_verified": 896,
+          "runtime_binary_mismatches": 0,
+          "runtime_binaries_written": 0,
+          "all_restored_paths_use_new_inodes": true,
+          "msi_installation_executed": false,
+          "terminal_executed": false
+        }
+      }
+    ]
   }
 }

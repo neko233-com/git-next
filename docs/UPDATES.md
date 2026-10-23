@@ -2,8 +2,8 @@
 
 ## Current 1.0.3 validation scope · 2026-10-24
 
-Local native correctness R6 completed with 16 passed lanes and two explicitly
-user-waived Git-Terminal lanes in 246.204 seconds. Actual Windows x64 MSI
+Local native correctness R7 completed with 16 passed lanes and two explicitly
+user-waived Git-Terminal lanes in 249.801 seconds. Actual Windows x64 MSI
 lifecycles passed 27 user-scope checks in 622.690 seconds and 25 machine-scope
 checks in 473.217 seconds; the final batch reuses those receipts only after
 checking their immutable inputs. Windows ARM64's two MSI flavors have compilation,
@@ -12,8 +12,8 @@ macOS 15.5 passed 51 native runtime scenarios and two owned-Git/P4 dispatch chec
 in addition to package/Mach-O/shell validation. This does not establish full Mac
 installation, launchd scheduling or an automatic upgrade on that host.
 
-Final performance, release staging, workstation activation and publication remain
-separate gates; current results and exact artifact bindings belong to
+R7 paired performance passed all five lanes in 668.849 seconds. Release staging,
+workstation activation and publication remain separate; exact artifact bindings belong to
 [delivery status](DELIVERY_STATUS.md). Dated implementation-only and v0.3.0 notes
 below preserve their historical scope rather than asserting that no installer or
 Mac product has run in the current delivery.

@@ -1,8 +1,8 @@
 {
   "acceptance_batch": {
     "bytes": 3454,
-    "path": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
-    "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd"
+    "path": "target/go-native-release-1.0.3/final-performance-r7/batch.json",
+    "sha256": "b22eb08be3aff72fa71cfd084103d323e5950652248374f0c14ccfec4c81282f"
   },
   "actual_data_directories": 16,
   "arch": "amd64",
@@ -34,144 +34,144 @@
   "results": {
     "cat_file": {
       "git": {
-        "median_ms": 27.345,
-        "min_ms": 24.649,
-        "p95_ms": 29.491,
-        "peak_working_set_median_bytes": 6942720,
+        "median_ms": 28.526,
+        "min_ms": 27.106,
+        "p95_ms": 33.24,
+        "peak_working_set_median_bytes": 6946816,
         "peak_working_set_p95_bytes": 6950912,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 16.82,
-        "min_ms": 15.234,
-        "p95_ms": 19.148,
-        "peak_working_set_median_bytes": 11186176,
-        "peak_working_set_p95_bytes": 11218944,
+        "median_ms": 18.121,
+        "min_ms": 16.455,
+        "p95_ms": 19.56,
+        "peak_working_set_median_bytes": 11194368,
+        "peak_working_set_p95_bytes": 11206656,
         "peak_working_set_samples": 10
       }
     },
     "diff_clean": {
       "git": {
-        "median_ms": 39.916,
-        "min_ms": 37.902,
-        "p95_ms": 45.847,
+        "median_ms": 42.154,
+        "min_ms": 38.281,
+        "p95_ms": 44.618,
         "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_p95_bytes": 6955008,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 30.575,
-        "min_ms": 28.113,
-        "p95_ms": 31.692,
-        "peak_working_set_median_bytes": 11438080,
-        "peak_working_set_p95_bytes": 11448320,
+        "median_ms": 30.702,
+        "min_ms": 28.979,
+        "p95_ms": 31.945,
+        "peak_working_set_median_bytes": 11442176,
+        "peak_working_set_p95_bytes": 11464704,
         "peak_working_set_samples": 10
       }
     },
     "grep_files": {
       "git": {
-        "median_ms": 101.352,
-        "min_ms": 94.134,
-        "p95_ms": 123.449,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6955008,
+        "median_ms": 99.871,
+        "min_ms": 95.966,
+        "p95_ms": 120.687,
+        "peak_working_set_median_bytes": 6944768,
+        "peak_working_set_p95_bytes": 6950912,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 93.581,
-        "min_ms": 83.278,
-        "p95_ms": 103.897,
-        "peak_working_set_median_bytes": 11493376,
-        "peak_working_set_p95_bytes": 11501568,
+        "median_ms": 90.055,
+        "min_ms": 84.395,
+        "p95_ms": 101.335,
+        "peak_working_set_median_bytes": 11495424,
+        "peak_working_set_p95_bytes": 11513856,
         "peak_working_set_samples": 10
       }
     },
     "log_metadata": {
       "git": {
-        "median_ms": 28.033,
-        "min_ms": 25.711,
-        "p95_ms": 30.976,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6946816,
-        "peak_working_set_samples": 10
-      },
-      "git_next": {
-        "median_ms": 17.197,
-        "min_ms": 15.993,
-        "p95_ms": 18.565,
-        "peak_working_set_median_bytes": 12023808,
-        "peak_working_set_p95_bytes": 12046336,
-        "peak_working_set_samples": 10
-      }
-    },
-    "rev_parse": {
-      "git": {
-        "median_ms": 26.783,
-        "min_ms": 24.338,
-        "p95_ms": 28.741,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6959104,
-        "peak_working_set_samples": 10
-      },
-      "git_next": {
-        "median_ms": 15.232,
-        "min_ms": 14.405,
-        "p95_ms": 17.748,
-        "peak_working_set_median_bytes": 10934272,
-        "peak_working_set_p95_bytes": 10973184,
-        "peak_working_set_samples": 10
-      }
-    },
-    "show_metadata": {
-      "git": {
-        "median_ms": 27.746,
-        "min_ms": 25.42,
-        "p95_ms": 30.012,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
-        "peak_working_set_samples": 10
-      },
-      "git_next": {
-        "median_ms": 17.739,
-        "min_ms": 16.166,
-        "p95_ms": 19.511,
-        "peak_working_set_median_bytes": 12236800,
-        "peak_working_set_p95_bytes": 12251136,
-        "peak_working_set_samples": 10
-      }
-    },
-    "status_clean": {
-      "git": {
-        "median_ms": 46.786,
-        "min_ms": 44.739,
-        "p95_ms": 49.63,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
-        "peak_working_set_samples": 10
-      },
-      "git_next": {
-        "median_ms": 35.494,
-        "min_ms": 34.815,
-        "p95_ms": 38.4,
-        "peak_working_set_median_bytes": 12378112,
-        "peak_working_set_p95_bytes": 12390400,
-        "peak_working_set_samples": 10
-      }
-    },
-    "version": {
-      "git": {
-        "median_ms": 23.441,
-        "min_ms": 22.04,
-        "p95_ms": 26.556,
+        "median_ms": 27.577,
+        "min_ms": 25.278,
+        "p95_ms": 28.884,
         "peak_working_set_median_bytes": 6946816,
         "peak_working_set_p95_bytes": 6955008,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 13.244,
-        "min_ms": 11.613,
-        "p95_ms": 15,
-        "peak_working_set_median_bytes": 10510336,
+        "median_ms": 17.388,
+        "min_ms": 16.224,
+        "p95_ms": 18.347,
+        "peak_working_set_median_bytes": 12017664,
+        "peak_working_set_p95_bytes": 12029952,
+        "peak_working_set_samples": 10
+      }
+    },
+    "rev_parse": {
+      "git": {
+        "median_ms": 28.558,
+        "min_ms": 26.773,
+        "p95_ms": 29.689,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 17.29,
+        "min_ms": 15.347,
+        "p95_ms": 18.804,
+        "peak_working_set_median_bytes": 10930176,
+        "peak_working_set_p95_bytes": 10956800,
+        "peak_working_set_samples": 10
+      }
+    },
+    "show_metadata": {
+      "git": {
+        "median_ms": 28.528,
+        "min_ms": 27.22,
+        "p95_ms": 31.243,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6955008,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 19.036,
+        "min_ms": 17.412,
+        "p95_ms": 20.05,
+        "peak_working_set_median_bytes": 12238848,
+        "peak_working_set_p95_bytes": 12255232,
+        "peak_working_set_samples": 10
+      }
+    },
+    "status_clean": {
+      "git": {
+        "median_ms": 49.842,
+        "min_ms": 47.254,
+        "p95_ms": 52.153,
+        "peak_working_set_median_bytes": 6948864,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 37.869,
+        "min_ms": 35.79,
+        "p95_ms": 41.136,
+        "peak_working_set_median_bytes": 12382208,
+        "peak_working_set_p95_bytes": 12410880,
+        "peak_working_set_samples": 10
+      }
+    },
+    "version": {
+      "git": {
+        "median_ms": 26.691,
+        "min_ms": 23.25,
+        "p95_ms": 29.983,
+        "peak_working_set_median_bytes": 6944768,
+        "peak_working_set_p95_bytes": 6959104,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 14.602,
+        "min_ms": 12.751,
+        "p95_ms": 16.039,
+        "peak_working_set_median_bytes": 10502144,
         "peak_working_set_p95_bytes": 10526720,
         "peak_working_set_samples": 10
       }
@@ -183,9 +183,9 @@
   "scope": "process creation + command + captured output; local disposable SHA-1 repository",
   "source_hash_origin": "recorded checkpoint verified against binary hash",
   "source_report": {
-    "bytes": 5726,
-    "path": "target/go-native-release-1.0.3/final-performance-r6/performance-1000.json",
-    "sha256": "444fe1f83f440896e7e67d31059aee359ddf51f057f27bd5285a2ddecd79ff2d"
+    "bytes": 5728,
+    "path": "target/go-native-release-1.0.3/final-performance-r7/performance-1000.json",
+    "sha256": "36635b86bd1da8c730da3a1fde9f4abe36e2c46e6b92a95384b297d6d65392e7"
   },
   "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
   "system_configuration": "enabled conventional filesystem paths",

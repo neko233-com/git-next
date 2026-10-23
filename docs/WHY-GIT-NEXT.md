@@ -37,41 +37,42 @@ user/repository/command-line settings retain their normal priority.
 
 ## Current measurements · 2026-10-24
 
-Native 1.0.3 completed its exact R6 correctness batch with 16 passed lanes and
-two terminal lanes waived by explicit user instruction, in 246.204 seconds.
-All five separate performance lanes passed in 691.251 seconds. The waiver does
-not cover performance, MSI or other product checks. The
+Native 1.0.3 completed its exact R7 correctness batch with 16 passed lanes and
+two terminal lanes waived by explicit user instruction, in 249.801
+seconds. All five separate performance lanes passed in 668.849 seconds.
+The waiver does not cover performance, MSI or other product checks. The
 [source checkpoint](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
 records staging, workstation update and publication as pending at that point;
 later completion is recorded separately. Failed candidates remain preserved.
 
 On Windows x64, ten warm paired samples per operation compare native
-`2.54.0.windows.1.git-next.1.0.3` with reference `2.56.0.windows.3`, using matching
+2.54.0.windows.1.git-next.1.0.3 with reference 2.56.0.windows.3, using matching
 declared read-safety settings. Selected medians are:
 
 | Workload | git-next | Reference Git |
 | --- | --- | --- |
-| 1000-file `version` | 13.244 ms | 23.441 ms |
-| 1000-file clean `status` | 35.494 ms | 46.786 ms |
-| 100000-file clean `status` | 1656.999 ms | 1666.073 ms |
-| 100000-file full `grep` | 9698.981 ms | 10391.285 ms |
-| Loopback HTTPS `clone` | 1078.937 ms | 753.106 ms |
-| Loopback HTTPS `fetch` | 439.677 ms | 451.569 ms |
-| Loopback HTTPS `pull --ff-only` | 622.031 ms | 627.105 ms |
+| 1000-file version | 14.602 ms | 26.691 ms |
+| 1000-file clean status | 37.869 ms | 49.842 ms |
+| 100000-file clean status | 1576.423 ms | 1547.554 ms |
+| 100000-file full grep | 8092.692 ms | 8524.933 ms |
+| Loopback HTTPS clone | 1051.060 ms | 728.930 ms |
+| Loopback HTTPS fetch | 410.538 ms | 432.197 ms |
+| Loopback HTTPS pull --ff-only | 585.100 ms | 597.053 ms |
 
-[Performance details](PERFORMANCE.md) retain every selected operation's p95 and
-the full artifact-bound reports. These samples show lower startup latency in
-this fixture, small differences for large scans and a slower HTTPS clone.
-They do not establish universal speed or memory superiority: primary-process
-peak working set excludes children and is larger for native status here.
-The network fixture uses loopback HTTP/1.1, not a WAN or provider login.
-Both complete batches exceeded the 60-second target without skipping checks.
+[Performance details](PERFORMANCE.md) retain p95 and full artifact-bound reports.
+A ten-pair p95 is exploratory; these fixtures establish no universal speed or
+memory advantage. Primary-process peak memory excludes children, and loopback
+HTTP/1.1 is not WAN/provider-login or GitSSS throughput evidence. Both complete
+batches exceeded the 60-second target without skipping checks.
+Native clone and 100,000-file clean status are slower by median in this fixture;
+the full grep remains an approximately 8.1-second scan.
 
-The first 100,000-file attempt failed at native `grep` without a valid latency
-report. A later deadline probe established that a timeout can cause exit 1 with
-empty stderr and partial output; the original failure's root cause remains
-unproved. R6 adds large-scale budget headroom and correct deadline reporting,
-then repeats the complete strict measurements. The failed attempt is retained.
+R6 local gates remain historical passes; its later staging hardlink bug changed
+25 ARM64 metadata/docs inputs and was rejected before publication. Exact frozen
+MSI bytes restored those files with zero runtime drift. R7 independently reruns
+the non-terminal correctness and all performance gates after the release-only
+fresh-inode write fix. The old rejected grep failure is also retained; a later
+deadline probe proves a mechanism, not that old attempt's root cause.
 
 ## Historical measurements · 2026-10-21
 
@@ -80,8 +81,7 @@ The following table belongs to the historical native artifact in the
 whose source-tree identity starts `fb505db8`. It used ten pairs per operation,
 complete output verification and the declared Windows read-safety profile for both
 clients; the reference was official Git 2.54. These are not 1.0.3 measurements or a
-comparison against Git 2.56. Current candidate performance requires its own final
-artifact-bound report, tracked in [delivery status](DELIVERY_STATUS.md).
+comparison against Git 2.56. Current artifact-bound results appear above; this table retains its historical identity.
 
 | Files | Operation | git-next | Git 2.54 |
 | --- | --- | --- | --- |

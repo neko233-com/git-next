@@ -2,14 +2,15 @@
 
 ## Current 1.0.3 local evidence · 2026-10-24
 
-The native C distribution has completed R6 correctness with 16 passed lanes and
-two explicitly user-waived Git-Terminal lanes in 246.204 seconds. Windows x64
+The native C distribution has completed R7 correctness with 16 passed lanes and
+two explicitly user-waived Git-Terminal lanes in 249.801 seconds. Windows x64
 has actual MSI install/repair/upgrade/failure-rollback/uninstall evidence for
 27 user-scope and 25 machine-scope checks. Real Apple Silicon macOS 15.5 has
 51 native scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated
 ARM64 each have 52 scenarios and two dispatch checks. Windows ARM64 has build,
 PE/table and static-package evidence, not hardware runtime/lifecycle acceptance.
-Performance, staging, workstation activation and publication remain separate;
+R7 paired performance passed all five lanes in 668.849 seconds. Staging,
+workstation activation and publication remain separate;
 [delivery status](DELIVERY_STATUS.md) records their current state. The Rust
 preview's `complete_git_parity: false` and five blockers below do not describe
 the native product's command surface or establish its release eligibility.
