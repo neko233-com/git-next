@@ -25,6 +25,14 @@ records these later actions separately from the retirement report's unchanged
 source-time pending flags. <a href="delivery-status.html">Delivery status</a> preserves the R6/R7
 failures and recovery. Dated implementation-only and v0.3.0 notes below retain
 their historical scope.</p>
+<p>The published production entrypoints were checked at <code>2026-10-23T20:57:30Z</code>.
+The installed Windows x64 machine client reports <code>git update status --json</code> as
+enabled and <code>git update check --json</code> as current at 1.0.3, with
+<code>metadata_trust=official-api-digest</code>. Anonymous downloads through the official
+<code>releases/latest/download/</code> endpoints match the accepted <code>install.ps1</code> and
+<code>git-next-update.json</code> bytes. The downloaded bootstrap's <code>-Plan</code> selects Windows
+x64 machine scope and reports <code>changes_applied=false</code>. This check executes no
+installer or terminal tests. <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json">Production channel readback</a>.</p>
 <h2>Delivery contract</h2>
 <p>The Windows updater supports the built-in Windows PowerShell 5.1 even when launched from PowerShell 7: its child process selects the Windows module directory, MSI property reads suppress COM method return values, and atomic JSON/configuration replacement passes a true null backup path. First-time runtime configuration copies preserve a null destination state rather than converting it to an empty string. Task lookup distinguishes an absent task using its HRESULT, including PowerShell's wrapped file-not-found exception. POSIX directory creation accepts a root-owned sticky ancestor such as <code>/tmp</code> while continuing to reject writable or foreign-owned installation leaves and symlink traversal. Candidate refreshes use checksum-pinned archives and matching compiled-updater receipts; they do not rebuild unchanged C cores or reuse earlier acceptance for changed bytes.</p>
 <p>The requested final delivery includes Windows x64/ARM64 MSI packages, background automatic updates, official GitHub release discovery and automatic selection of a usable download mirror. These are part of the one consolidated release gate. Source implementation and an MSI that compiles do not establish installation, update, rollback or complete Git compatibility.</p>
@@ -39,8 +47,9 @@ uninstaller removed the shared <code>bin/git.exe</code> that MSI had just instal
 protected R7 backups allowed those exact files to be restored; the installation
 subsequently passed a full owned-file hash audit. That operational repair does
 not turn the failed workstation takeover into a passed release gate. The R8
-changes below have fresh isolated MSI lifecycle passes; final workstation evidence
-is still required before release.</p>
+changes below have fresh isolated MSI lifecycle passes. The subsequent standard
+R8 bootstrap and independent workstation readback passed, as recorded above;
+the R7 failure remains historical evidence.</p>
 <p>The standalone installer now verifies the downloaded MSI, extracts only its
 manifest and the seven allowlisted migration/updater source files, and checks
 their hashes before running <code>New-GnPreinstallSnapshot</code>. For a same-directory
