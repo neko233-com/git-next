@@ -130,6 +130,19 @@ The requested Mac validation uses `tests/containers/Dockerfile_mac` only after a
 
 ## Five-target native packaging
 
+Build the [Go Perforce helper](GIT_P4.md) for each target with `build-git-p4` and
+pass its directory as `--git-p4` to `assemble-native-windows` or
+`assemble-native-posix`. The assembler excludes the old Python entrypoint,
+interpreter and standard library, then verifies the Go helper's source, licenses,
+architecture and every output hash. Its external `p4` client requirement is unchanged.
+
+`freeze-native-batch --terminal-source <clean-worktree>` binds the selected,
+committed peer terminal source to the matrix and subsequent Rust terminal gate.
+Use this when the shared development checkout has unrelated changes; the clean
+source requirement still applies. `verify-native-prefix-layout --distribution
+<directory> --output <new-report.json>` exercises public and internal Git aliases
+under package names that also occur in the runtime directory layout.
+
 `go -C tools/devtool run . prepare-native-release` stages a consolidated release only after passed correctness and paired performance receipts identify the same frozen five-target matrix. It rechecks every input, requires the immutable project HEAD, finalizes release metadata and canonical POSIX archive roots, compiles both Windows MSI scopes, includes corresponding source bundles, and writes the shared update manifest and checksums. It does not publish. Product runtime bytes remain those accepted by the local gates; release metadata changes are identified in the accompanying acceptance record.
 
 For an identity/resource metadata change, `go -C tools/devtool run . build-native-linux --reuse-core-build ARCHIVE --core-producer RECEIPT` can reuse the owned compiler object cache. It verifies the archive, frozen producer sources, declared resource patch, dependency/compiler recipes and target, rejects functional source changes, refreshes the identity header dependency and relinks all final executables. A fresh target receipt and subsequent package acceptance remain required.

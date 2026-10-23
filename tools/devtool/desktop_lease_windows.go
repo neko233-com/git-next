@@ -51,6 +51,14 @@ func protectTerminalClipboard() (func() error, error) {
 		release()
 		return nil, e
 	}
+	if e = desktopSetClipboard(window, "git-next Rust unit clipboard fixture"); e != nil {
+		_ = snapshot.restore(window)
+		snapshot.close()
+		desktopCall(desktopUser, "DestroyWindow", window)
+		runtime.UnlockOSThread()
+		release()
+		return nil, e
+	}
 	return func() error {
 		defer release()
 		defer runtime.UnlockOSThread()
