@@ -437,7 +437,7 @@
         "source_commit": "33269276902e1d3c52fab176516f14db908b7570",
         "failed_bootstrap_elapsed_seconds": 1127.534,
         "receipt": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json",
-        "sha256": "f83b233ecba706f6f500728cc8dbc885697947e4529a0a759b88caddd449203f",
+        "sha256": "dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17",
         "restored_files": [
           "package.json",
           "bin/git.exe"
@@ -512,7 +512,7 @@
       "matrix": null,
       "matrix_sha256": null,
       "public_evidence": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json",
-      "public_evidence_sha256": "f83b233ecba706f6f500728cc8dbc885697947e4529a0a759b88caddd449203f",
+      "public_evidence_sha256": "dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17",
       "public_evidence_scope": "R7 workstation failure and verified recovery only; release_gate=false",
       "previous_completed_checkpoint": "r7-local-gates-and-stage-before-workstation-failure",
       "delivery_actions_recorded_separately": true
@@ -893,7 +893,7 @@
         "source_commit": "33269276902e1d3c52fab176516f14db908b7570",
         "elapsed_seconds": 1127.534,
         "receipt": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json",
-        "sha256": "f83b233ecba706f6f500728cc8dbc885697947e4529a0a759b88caddd449203f",
+        "sha256": "dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17",
         "reason": "Same-directory cleanup marked its own package.json stale; original uninstaller removed shared bin/git.exe; completion and rollback required exact-byte recovery.",
         "original_failed_reports_preserved": true,
         "earlier_unattributed_known_hosts_drift_preserved": true

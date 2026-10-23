@@ -18,7 +18,7 @@ restored with <code>CreateNew</code> from verified original bytes. Readback then
 profile files remained unchanged. This recovery has <strong><code>release_gate=false</code></strong> and does
 not establish a completed installation, rollback lifecycle or release.
 <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json">Recovery record</a>
-has SHA-256 <code>f83b233ecba706f6f500728cc8dbc885697947e4529a0a759b88caddd449203f</code>.</p>
+has SHA-256 <code>dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17</code>.</p>
 <p>R8 source adds a protected complete snapshot before MSI can overwrite original
 <code>cmd</code>/<code>bin</code> bytes, pins the snapshot manifest SHA before MSI, and supplies that pin
 to post-MSI Apply. Same-directory cleanup and protected rollback are being repaired.
