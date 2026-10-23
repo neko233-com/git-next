@@ -1,0 +1,51 @@
+# git-next runtime defaults.
+#
+# This fragment is the single source of truth for the product's software
+# configuration. Three consumers are built from it or compared against it, and
+# tools/check_runtime_defaults.py fails when any of them drifts:
+#
+#   tools/assemble_native_windows.py - splices it into the payload's etc/gitconfig
+#   packaging/windows/Takeover.Core.psm1 - writes it as the migration override
+#   tools/native_msi_evidence.py - refuses evidence reuse without it
+#
+# Every key here was exercised against the installed binary; the measured cost
+# and the reason are recorded in docs/DEFAULTS.md. A default that starts a
+# process per repository does not belong in this file.
+[core]
+	autocrlf = input
+	eol = lf
+	longpaths = true
+	fscache = true
+	preloadIndex = true
+	commitGraph = true
+	quotePath = false
+	fsmonitor = false
+[gc]
+	auto = 256
+	autoDetach = true
+	writeCommitGraph = true
+[fetch]
+	prune = true
+	pruneTags = true
+	writeCommitGraph = true
+[feature]
+	manyFiles = true
+[diff]
+	algorithm = histogram
+[merge]
+	conflictStyle = zdiff3
+[rebase]
+	autoStash = true
+	updateRefs = true
+[push]
+	autoSetupRemote = true
+[init]
+	defaultBranch = main
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[index]
+	threads = 0
+[grep]
+	threads = 0

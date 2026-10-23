@@ -13,6 +13,7 @@ from build_native_core import source_identity
 from prepare_windows_runtime import CORE_NAMES, system_attribute
 from prepare_tls_provider import imports
 from native_product import native_compatibility
+import runtime_defaults
 import os
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -211,12 +212,14 @@ def main():
         for path in crt_files:
             copy(path, directory + '/' + path.name, 'microsoft-vc-redistributable')
     # The vendor default is software configuration, never a user's config file.
+    # The product defaults are spliced in from packaging/runtime-defaults/gitconfig so
+    # the payload and the migration cannot disagree about a single value.
     config = (assets / 'etc/gitconfig').read_text(encoding='utf-8')
-    config, count = re.subn(r'(?m)^\s*autocrlf\s*=\s*true\s*$', '\tautocrlf = input\n\teol = lf\n\tfscache = false\n\tfsmonitor = false\n\tpreloadIndex = false\n\tlongpaths = true', config)
+    core, tail = runtime_defaults.core_body(), runtime_defaults.tail()
+    config, count = re.subn(r'(?m)^\s*autocrlf\s*=\s*true\s*$', lambda _: core, config)
     if count != 1:
         raise ValueError('Pinned vendor LF configuration anchor differs')
-    config += '\n[http]\n\tsslBackend = schannel\n'
-    config += '\n[index]\n\tthreads = 1\n[grep]\n\tthreads = 1\n'
+    config += '\n[http]\n\tsslBackend = schannel\n' + tail
     write('runtime/etc/gitconfig', config.encode('utf-8'), 'managed-product-lf-defaults')
     copy(ROOT / 'native-core/LICENSE.GPL-2.0', 'LICENSE', 'native-core-license')
     copy(ROOT / 'native-core/vendor/yyjson/LICENSE', 'LICENSES/yyjson/LICENSE', 'third-party-license')

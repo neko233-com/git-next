@@ -56,7 +56,9 @@ Three places have to agree before a long path works, and all three now do:
 
 - The forwarder rebuilds its target with the extended-length marker (`\\?\`) when the path reaches 260 characters. The marker cannot be added before normalisation, because an extended-length path is not normalised and a recorded root ending with a separator would leave a doubled one; the test creates a target of more than 300 characters and asserts the child's exit status arrives.
 - `core.longpaths = true` is part of the migrated system configuration, so repository operations accept long paths even where the Win32 manifest of a helper does not.
-- `HKLM/SYSTEM/CurrentControlSet/Control/FileSystem/LongPathsEnabled` is a machine setting, not a product default. `tools/repair_windows_entry_points.py --plan` and the installation report it; enabling it is an administrator action.
+- `HKLM/SYSTEM/CurrentControlSet/Control/FileSystem/LongPathsEnabled` is a machine setting, not a product default. `tools/check_runtime_defaults.py` reports it; enabling it is an administrator action.
+
+Every default the product ships, including these, is written down once in `packaging/runtime-defaults/gitconfig` and justified in [Runtime defaults](DEFAULTS.md).
 
 
 

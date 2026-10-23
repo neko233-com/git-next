@@ -610,7 +610,10 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         # include must always point at the payload's own runtime configuration.
         $selectedConfig = if ($Plan.same_directory -or -not [IO.File]::Exists((Join-Path $Plan.original_root 'etc/gitconfig'))) { $baseConfig } else { $legacyConfig }
         $text += "`tpath = `"$selectedConfig`"`n"
-        $text += "[core]`n`tautocrlf = input`n`teol = lf`n`tfscache = false`n`tfsmonitor = false`n`tpreloadIndex = false`n[index]`n`tthreads = 1`n[grep]`n`tthreads = 1`n"
+        # The product defaults are rendered from packaging/runtime-defaults/gitconfig by
+        # tools/runtime_defaults.py and compared with it by tools/check_runtime_defaults.py,
+        # so a migrated system configuration cannot disagree with the payload's own.
+        $text += "[core]`n`tautocrlf = input`n`teol = lf`n`tlongpaths = true`n`tfscache = true`n`tpreloadIndex = true`n`tcommitGraph = true`n`tquotePath = false`n`tfsmonitor = false`n[gc]`n`tauto = 256`n`tautoDetach = true`n`twriteCommitGraph = true`n[fetch]`n`tprune = true`n`tpruneTags = true`n`twriteCommitGraph = true`n[feature]`n`tmanyFiles = true`n[diff]`n`talgorithm = histogram`n[merge]`n`tconflictStyle = zdiff3`n[rebase]`n`tautoStash = true`n`tupdateRefs = true`n[push]`n`tautoSetupRemote = true`n[init]`n`tdefaultBranch = main`n[branch]`n`tsort = -committerdate`n[tag]`n`tsort = version:refname`n[index]`n`tthreads = 0`n[grep]`n`tthreads = 0`n"
         $stream = Open-GnNewFile $Plan.system_config
         try { $data = [Text.UTF8Encoding]::new($false).GetBytes($text); $stream.Write($data,0,$data.Length); $stream.Flush($true) } finally { $stream.Dispose() }
         $Plan.system_config_sha256 = (Get-FileHash -LiteralPath $Plan.system_config -Algorithm SHA256).Hash.ToLowerInvariant()

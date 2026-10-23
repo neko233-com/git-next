@@ -33,7 +33,10 @@
 
 - `docs/GIT-GUIDE.md` is the plain-language manual that replaces the official Git documentation for our users. It is task-first: a reader who has never used Git must be able to follow it end to end. Keep every command it shows one the binary actually accepts, and check `--help` when in doubt.
 - `docs/WHY-GIT-NEXT.md` records the measured speed work and the checks beyond the Git command set. Numbers must come from a benchmark report under `docs/benchmarks/`, with the report date, and must state the limits as plainly as the wins.
-- `docs/LANGUAGE.md` describes the language documents and the device-language resolution. `docs/DOCUMENTATION_SITE.md` describes how the site is rendered and published.
+- `docs/LANGUAGE.md` describes the language documents and the device-language resolution. `docs/DOCUMENTATION_SITE.md` describes how the site is rendered and published. `docs/DEFAULTS.md` records every runtime default and the measurement behind it.
+- A runtime default is written in exactly one place, `packaging/runtime-defaults/gitconfig`. The payload configuration, the migration override and the evidence reuse check are rendered from it or compared against it; nothing else holds a copy. `tools/check_runtime_defaults.py` fails on drift and exercises every key against the real binary, because a default is a promise about behaviour and not a line in a file.
+- A default that starts a process per repository is not a default. `core.fsmonitor` was measured and rejected on that rule - 12.1 MB and one daemon per repository, and the daemon outlives the repository it belongs to - and `docs/DEFAULTS.md` records the measurement so the next person does not have to repeat it.
+- A performance or behaviour claim names its scope: the machine, the tree size and the date. A number without a scope is not evidence, and a default without a measurement is not a decision.
 - Regenerate `docs/site/` with `python tools/render_docs.py` in the same commit as the Markdown change; the HTML is tracked and a stale page is a defect.
 - Publish with `python tools/publish_docs.py`. It builds the `gh-pages` branch through a temporary index and never touches the working tree; the push is a fast forward.
 

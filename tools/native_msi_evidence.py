@@ -1,5 +1,6 @@
 """Reuse passed MSI transactions only when their bytes and validation sources match."""
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 
@@ -8,6 +9,15 @@ UNRELATED_HARNESS_CHANGES={
     'tests/native_msi_evidence_test.py','../git-terminal/tests/windows_desktop_acceptance.py',
     '../git-terminal/src/shell_acceptance.rs',
 }
+
+
+def _product_defaults_block():
+    """The rendered product defaults, loaded next to this file so cwd cannot matter."""
+    spec = importlib.util.spec_from_file_location(
+        "runtime_defaults", Path(__file__).resolve().parent / "runtime_defaults.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return (module.core_body() + module.tail()).encode("utf-8")
 
 
 def validate_desktop_dependencies(previous, current):
@@ -34,13 +44,17 @@ def validate_desktop_dependencies(previous, current):
         actual=(new_root/'runtime/etc/gitconfig').read_bytes()
         if hashlib.sha256(original).hexdigest()!=old_config or hashlib.sha256(actual).hexdigest()!=new_config:
             raise ValueError('Desktop configuration bytes differ from their frozen receipt')
-        anchor=b'\tfscache = true\n'
-        if original.count(anchor)!=1:
-            raise ValueError('Previous desktop config has an unexpected read profile')
-        expected=original.replace(anchor,b'\tfscache = false\n\tfsmonitor = false\n\tpreloadIndex = false\n')
-        expected+=b'\n[index]\n\tthreads = 1\n[grep]\n\tthreads = 1\n'
-        if actual!=expected:
-            raise ValueError('Only the exact shipped read-safety config transition may reuse desktop evidence')
+        # A desktop configuration may only differ from the accepted one where the product
+        # defaults changed, and the current defaults come from the shared fragment. A
+        # change to them is a deliberate product change, so old evidence is rejected
+        # instead of being patched into shape.
+        block=_product_defaults_block()
+        if not actual.endswith(block):
+            raise ValueError('Desktop configuration lacks the current product defaults')
+        if not original.endswith(block):
+            raise ValueError('The product configuration defaults changed; desktop evidence cannot be reused')
+        if original[:-len(block)]!=actual[:-len(block)]:
+            raise ValueError('Desktop configuration differs outside the product defaults')
 
 
 def validate_reuse(report, previous, current, reference_sha256, cases=('msi-user','msi-machine')):
