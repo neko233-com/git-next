@@ -344,6 +344,12 @@ function Copy-GnMigrationFile([string]$SourceRoot,[string]$TargetRoot,$Record,[s
 
 function Set-GnBridgeRegistration($Plan,$Record,[bool]$Remove) {
     $path = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $Record.relative)
+    if (-not $Remove) {
+        # A forwarder whose target resolves to its own file starts a copy of itself on every
+        # invocation, and each copy does the same. The mapping is refused before it is stored.
+        $target = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root $Record.target)
+        if ([IO.Path]::GetFullPath($target).TrimEnd('\') -ieq [IO.Path]::GetFullPath($path).TrimEnd('\')) { throw 'A legacy bridge would forward to its own entry point.' }
+    }
     $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$($Plan.hive),[Microsoft.Win32.RegistryView]::Registry64)
     $name = 'Software\git-next\Bridges\' + $path
     try {
@@ -539,6 +545,17 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         if ($Plan.same_directory) {
             # git-default-v2: the payload already owns the official directory, so the official
             # uninstaller's leftovers are removed outright instead of being replaced by bridges.
+            # A registration left behind by an earlier layout would point cmd\git.exe and
+            # bin\git.exe at themselves once InstallRoot moves to this directory, and a
+            # forwarder that starts itself never stops: it is removed with the leftovers.
+            $bridgeBase = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$($Plan.hive),[Microsoft.Win32.RegistryView]::Registry64)
+            try {
+                foreach ($relative in @('cmd\git.exe','bin\git.exe')) {
+                    $name = 'Software\git-next\Bridges\' + (Join-Path $Plan.original_root $relative)
+                    $existing = $bridgeBase.OpenSubKey($name)
+                    if ($existing) { try { $existing.Dispose() } finally { $bridgeBase.DeleteSubKeyTree($name,$false) } }
+                }
+            } finally { $bridgeBase.Dispose() }
             foreach ($file in @(Get-GnTree $Plan.original_root)) {
                 $relative = $file.relative.Replace('\','/')
                 $owned = @($Plan.stale | Where-Object { $_.relative.Replace('\','/') -ceq $relative })

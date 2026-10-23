@@ -28,6 +28,38 @@ The one-click root `install.ps1` detects registered Git, prepares the pinned ind
 
 After removal, regular non-PE support/configuration/certificate data remain at their compatibility paths. Original PE files are replaced only by the project's own small bridges, which dispatch directly to the matching user or machine native MSI registration. They preserve the raw argument tail, current directory, streams and child exit status; console and GUI subsystems have separate binaries, and 8.3 launch paths are normalized. No original Git/OpenSSH binary is a fallback. The MSI owns the updating runtime, while machine-protected bridge files need no rewriting for ordinary package updates. Existing Git discovery keys identify `git-next`; selected shell associations, shortcuts and Terminal fragments retain their previous paths through these bridges.
 
+### A bridge that names itself
+
+A bridge decides what to run from its own registration, so a registration whose `RelativePath` resolves back to the bridge file makes every invocation start another copy of the same process. Nothing in the child differs from the parent, so the chain only ends when the machine runs out of memory. This is not hypothetical: a machine-scope installation whose `InstallRoot` recorded as `C:\Program Files\Git\` kept `cmd\git.exe` and `bin\git.exe` registrations from an earlier layout. The forwarder built `C:\Program Files\Git\\cmd\git.exe` and compared that string with its own module path; the repeated separator made two spellings of one file look different, the guard that exists to prevent recursion never fired, and one `git` call from an IDE left 54914 processes running.
+
+Three changes stop that class of failure:
+
+- The forwarder compares file identity, not text. A repeated separator, a trailing separator, an 8.3 name and a hard link all resolve to one volume serial number and file index, and the target is refused before it is started. A hop counter in `GIT_NEXT_BRIDGE_DEPTH` stops a cycle between two different files after four hops. A refused forward exits 127 with a message naming the repair tool; it never starts a child.
+- `Set-GnBridgeRegistration` refuses to store a mapping whose target resolves to the same file, and the `git-default-v2` apply step deletes any `cmd\git.exe` or `bin\git.exe` registration an earlier layout left behind, because the payload occupies those paths.
+- Two tools make the state auditable. `tools/repair_windows_entry_points.py` verifies the payload digest, restores a forwarder entry point from it and deletes every self-referential registration in both hives (`--plan` reports without writing). `tools/verify_windows_bridge_guard.py` proves the guard works: it runs `self`, `cycle` and `forward` scenarios inside a job object with an active-process limit, so a regression is bounded instead of fatal. Against the previous forwarder the first two scenarios reach the 64-process limit; against the current one they cost one and five processes.
+
+An entry point that is still a forwarder after a layout change is a defect in the installation, not in the bridge: the manifest records the payload digest for `cmd/git.exe` and `bin/git.exe`, and any file there smaller than the payload is the forwarder. Repair before running `git` again.
+
+### A ceiling on concurrent invocations
+
+A bridge cannot stop a caller from starting a hundred processes; that decision belongs to the IDE or the build. What the product can guarantee is that each process is a single Git process, that it exits, and that the machine has a ceiling. Three layers enforce that:
+
+- The forwarder refuses to start a copy of itself and stops a two-file cycle after four hops, so no invocation multiplies.
+- `tools/verify_windows_bridge_guard.py` runs the `self`, `cycle`, `forward` and `longpath` scenarios inside a job object with an active-process limit of 64. A regression is measured, not suffered: the previous forwarder reached the limit in the first two scenarios, the current one costs one and five processes. A burst of 200 concurrent `git status` through the installed payload peaks at 200 and drains, because each invocation is one process.
+- `tools/git_process_watchdog.py` enforces a machine-wide ceiling for callers that ignore both. It terminates the *newest* excess and leaves the oldest alone, because the oldest processes are the ones a person or a build is waiting for. Measured: 80 live invocations with `--limit 20 --apply` leave 20.
+
+Tests follow the same rule. `docker/tests/` builds the suite into an image and runs it with `--pids-limit 128` and `--memory 2g`, so a test that spawns without end hits the container's ceiling and dies there instead of on the workstation; `docker/tests/run.sh stress` runs the concurrent-invocation burst under the same limits. Windows-only behaviour cannot run in a Linux container, which is why the bridge scenarios use the job object instead: both harnesses bound the process count rather than trusting the code.
+
+### Paths beyond MAX_PATH
+
+Three places have to agree before a long path works, and all three now do:
+
+- The forwarder rebuilds its target with the extended-length marker (`\\?\`) when the path reaches 260 characters. The marker cannot be added before normalisation, because an extended-length path is not normalised and a recorded root ending with a separator would leave a doubled one; the test creates a target of more than 300 characters and asserts the child's exit status arrives.
+- `core.longpaths = true` is part of the migrated system configuration, so repository operations accept long paths even where the Win32 manifest of a helper does not.
+- `HKLM/SYSTEM/CurrentControlSet/Control/FileSystem/LongPathsEnabled` is a machine setting, not a product default. `tools/repair_windows_entry_points.py --plan` and the installation report it; enabling it is an administrator action.
+
+
+
 User migration adds `system.gitconfig` beside the git-next language settings; machine migration uses `%ProgramData%/git-next/config/system.gitconfig`. It includes the retained old system config when present, otherwise managed product defaults, then selects LF software defaults. Native `git_system_config()` uses this file when present, so `git config --system` reads and writes the effective migrated file. Explicit `GIT_CONFIG_SYSTEM`, `GIT_CONFIG_NOSYSTEM`, global/local config, attributes and command-line overrides retain their precedence. Rollback removes only an unchanged migration-owned file. An additive `migration.json` points to the protected transaction; older binaries ignore these files. Runtime consumers of customized system SSH/shell/signing settings still belong to D02 integration and final D08 checks; retaining their bytes is not proof that every consumer has been verified.
 
 The handoff and updater share one lock. Failure attempts an automatic rollback after the uninstaller exits; active processes or independently changed files/registry values are preserved for explicit recovery. Rollback restores original executables and integration from the verified private backup, removes only transaction-owned bridges, and restores old Git PATH entries while preserving unrelated PATH additions. The MSI blocks manual removal of an active handoff until rollback restores its original dependency/caller state; major upgrades retain the current install directory and bypass this removal guard.
