@@ -1,0 +1,261 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Runtime defaults</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Runtime defaults</h1>
+<p>git-next is a replacement for Git, not a copy of it. The configuration it ships is
+therefore a product decision rather than whatever the upstream defaults happen to be:
+where a modern option is faster or easier without changing what a command means, it is
+turned on.</p>
+<p>Every default lives in one file, <code>packaging/runtime-defaults/gitconfig</code>, and every one
+of them is exercised against the real binary by <code>go -C tools/devtool run . check-runtime-defaults</code>. A
+default is a promise about behaviour, and the checks are the claims in this document: if
+a value stops doing what is written here, the tool fails instead of the change reaching a
+workstation.</p>
+<h2>Scope of the measurements</h2>
+<p>Times are from one workstation (Windows, this repository's parent tree, git-next 0.3.0 on
+Git 2.54.0.windows.1) with a 5,000-file working tree, median of five runs, taken with no
+other build or benchmark running. They are reported as what they are: one machine, one
+tree size, one day. The file-count and process-count facts are reproducible anywhere.</p>
+<p>The current Windows read defaults prioritize complete results over those historical
+timings. On 2026-10-23, the same frozen 1.0.3 native binary and a generated 4,000-file
+repository returned only 3,999 files in round 21 with fscache/preloading enabled and
+automatic index/grep threads. The five-setting serial control below completed all
+30 grep/status rounds. This isolates the configuration effect; it does not establish
+the internal cause or a throughput comparison. See the
+<a href="../benchmarks/windows-read-safety-20261023.json">bounded read-safety evidence</a>.</p>
+<h2>Adding or changing a default</h2>
+<ol>
+<li>Add the key to <code>packaging/runtime-defaults/gitconfig</code>, nowhere else. The payload
+configuration, the migration override and the evidence reuse check are rendered from
+that file or compared against it.</li>
+<li>Run <code>go -C tools/devtool run . check-runtime-defaults</code>. It fails if the migration's literal has
+drifted from the fragment and if the new key cannot be shown to do something.</li>
+<li>Add a behavioural probe for it. A key that only has to be accepted needs no probe; a
+key that changes output or behaviour needs one that would fail if the value stopped
+being applied.</li>
+<li>Record the reason and the cost in this document, with the measurement you relied on.</li>
+</ol>
+<p>A default is not eligible if it starts a process per repository. See
+<a href="#the-file-system-monitor-is-not-a-default">the monitor</a> for what that costs.</p>
+<h2>The defaults</h2>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+<th>Why</th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>core.longpaths</code></td>
+<td><code>true</code></td>
+<td>Paths beyond <code>MAX_PATH</code> are ordinary in game and <code>node_modules</code> trees.</td>
+<td>A 280-character path round-trips through <code>add</code>, <code>status</code> and <code>commit</code>.</td>
+</tr>
+<tr>
+<td><code>core.autocrlf</code> / <code>core.eol</code></td>
+<td><code>input</code> / <code>lf</code></td>
+<td>The LF policy; unchanged from before.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>core.fscache</code></td>
+<td><code>false</code></td>
+<td>Part of the Windows read-safety profile; preserving complete results takes priority over cached <code>lstat</code> throughput.</td>
+<td>The combined profile completed 30 rounds; disabling fscache alone was not sufficient in the earlier diagnostic.</td>
+</tr>
+<tr>
+<td><code>core.preloadIndex</code></td>
+<td><code>false</code></td>
+<td>Keeps worktree stat reads serial in the Windows stability profile. Explicit configuration can still request preloading.</td>
+<td>The combined profile completed all 4,000-file grep/status rounds.</td>
+</tr>
+<tr>
+<td><code>core.commitGraph</code></td>
+<td><code>true</code></td>
+<td>Commit-graph makes <code>log</code> and merge-base independent of history length.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>core.quotePath</code></td>
+<td><code>false</code></td>
+<td>A non-ASCII name should be readable. <code>status --porcelain</code> shows <code>文档.txt</code> instead of <code>&quot;\346\226\207\346\241\243.txt&quot;</code>.</td>
+<td>Verified both ways.</td>
+</tr>
+<tr>
+<td><code>core.fsmonitor</code></td>
+<td><code>false</code></td>
+<td>See below.</td>
+<td>12.1 MB and one process per repository.</td>
+</tr>
+<tr>
+<td><code>gc.auto</code></td>
+<td><code>256</code></td>
+<td>The upstream 6,700 lets loose objects pile up until a <code>gc</code> big enough to notice.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>gc.autoDetach</code></td>
+<td><code>true</code></td>
+<td>A triggered <code>gc</code> must not hold the caller.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>gc.writeCommitGraph</code> / <code>fetch.writeCommitGraph</code></td>
+<td><code>true</code></td>
+<td>Keeps the graph current without a separate <code>gc</code>.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>fetch.prune</code></td>
+<td><code>true</code></td>
+<td>A branch deleted upstream should stop being listed locally.</td>
+<td>Verified: the remote-tracking ref disappears.</td>
+</tr>
+<tr>
+<td><code>fetch.pruneTags</code></td>
+<td><code>true</code></td>
+<td>The same for tags. <strong>This one deletes things</strong>: a tag removed upstream is removed locally.</td>
+<td>Verified.</td>
+</tr>
+<tr>
+<td><code>feature.manyFiles</code></td>
+<td><code>true</code></td>
+<td>Index version 4 plus the untracked cache: the two single biggest <code>status</code> wins.</td>
+<td>Verified: index version 4 with the <code>UNTR</code> extension.</td>
+</tr>
+<tr>
+<td><code>diff.algorithm</code></td>
+<td><code>histogram</code></td>
+<td>Better hunks on moved code.</td>
+<td>Verified: output matches passing <code>--histogram</code>.</td>
+</tr>
+<tr>
+<td><code>merge.conflictStyle</code></td>
+<td><code>zdiff3</code></td>
+<td>Shows the base between the two sides and drops what all three agree on.</td>
+<td>Verified: the base marker is present and the hunk is well formed.</td>
+</tr>
+<tr>
+<td><code>rebase.autoStash</code></td>
+<td><code>true</code></td>
+<td>A dirty tree should not be a reason a rebase refuses to run.</td>
+<td>Verified: rc 0 with it, rc 1 without.</td>
+</tr>
+<tr>
+<td><code>rebase.updateRefs</code></td>
+<td><code>true</code></td>
+<td>Rebasing a stack updates the branches stacked on it.</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>push.autoSetupRemote</code></td>
+<td><code>true</code></td>
+<td><code>git push</code> on a new branch works instead of printing three instructions.</td>
+<td>Verified: upstream is set after a bare <code>push</code>.</td>
+</tr>
+<tr>
+<td><code>init.defaultBranch</code></td>
+<td><code>main</code></td>
+<td>Already the product behaviour; stated so it survives a user config that says otherwise.</td>
+<td>Verified: a new repository is on <code>main</code>.</td>
+</tr>
+<tr>
+<td><code>branch.sort</code></td>
+<td><code>-committerdate</code></td>
+<td>Recently touched branches first.</td>
+<td>Verified: <code>zeta</code> before <code>alpha</code>.</td>
+</tr>
+<tr>
+<td><code>tag.sort</code></td>
+<td><code>version:refname</code></td>
+<td><code>v1.10</code> after <code>v1.2</code>, not before it.</td>
+<td>Verified: <code>v1.0</code>, <code>v1.2</code>, <code>v1.10</code>.</td>
+</tr>
+<tr>
+<td><code>index.threads</code></td>
+<td><code>1</code></td>
+<td>Serial index reads in the shipped Windows profile. Automatic CPU-based budgets remain available with an explicit <code>0</code>.</td>
+<td>Historical 5,000-file timing was 298 ms at <code>1</code>; the current correctness control completed 30 rounds.</td>
+</tr>
+<tr>
+<td><code>grep.threads</code></td>
+<td><code>1</code></td>
+<td>Serial grep avoids the observed intermittent incomplete Windows results. <strong><code>-1</code> is fatal</strong> (<code>invalid number of threads specified</code>).</td>
+<td>The former automatic profile omitted one of 4,000 files; the serial control completed 30 rounds.</td>
+</tr>
+</tbody>
+</table>
+<p>These five settings apply to the shipped Windows profile and takeover defaults.
+POSIX packages retain their native automatic budgets. User, repository and command-line
+settings keep their normal precedence. The read-thread gate verifies the shipped values
+against the authoritative fragment and requires complete results in every one of 30
+rounds; timing a command that omitted files is not an accepted performance sample.</p>
+<h2>The file-system monitor is not a default</h2>
+<p><code>core.fsmonitor = true</code> makes <code>status</code> faster. On 5,000 files it took the median from
+292 ms to 241 ms, about 17%, and the cold run that starts the monitor costs 795 ms.</p>
+<p>It is still not a default, because of what it leaves behind:</p>
+<ul>
+<li>One daemon per repository, <strong>12.1 MB</strong> each. Fifteen repositories measured 181.6 MB.</li>
+<li>The daemon <strong>outlives the repository</strong>. Six repositories were created, used and
+deleted; six daemons were still alive one second later, and still alive fifteen seconds
+later. Nothing reaps them.</li>
+</ul>
+<p>That last point is the one that matters. A population that only ever grows is the shape
+of the failure this product must not have, and a cache that survives its own repository is
+not a cache anyone can reason about. On this workstation the reaper found eight such
+daemons holding 67 MB, from repositories that no longer existed.</p>
+<p>Someone who wants the speed can have it:</p>
+<pre><code>git config --global core.fsmonitor true
+go -C tools/devtool run . git-process-watchdog --daemons --apply
+</code></pre>
+<p>The second command terminates Git processes that have no parent and have been alive
+longer than two minutes, which is what a daemon looks like; a <code>clone</code> or a <code>gc</code> still has
+the process that asked for it and is left alone. It is the reason turning the monitor on
+is safe now rather than a slow leak.</p>
+<p><code>maintenance.auto</code> is off for the same reason: it runs <code>git maintenance</code> after ordinary
+commands, which is a process per command per repository.</p>
+<h2>Long paths</h2>
+<p>Three things have to agree before a path past <code>MAX_PATH</code> works, and the product controls
+two of them:</p>
+<ol>
+<li><strong>The forwarder.</strong> A target at or beyond 260 characters is rebuilt with the
+extended-length marker (<code>\\?\</code>). The marker has to be added <em>after</em> normalisation,
+because an extended-length path is not normalised and a recorded root ending in a
+separator would leave a doubled one.</li>
+<li><strong>The configuration.</strong> <code>core.longpaths = true</code> lives in the system configuration, so a
+repository operation accepts a long path even where a helper's Win32 manifest does
+not.</li>
+<li><strong>The machine.</strong> <code>HKLM\SYSTEM\CurrentControlSet\Control\FileSystem\LongPathsEnabled</code>
+is an administrator setting, not a product default. <code>go -C tools/devtool run . check-runtime-defaults</code>
+reports it, and a machine where it is 0 needs an administrator to set it.</li>
+</ol>
+<h2>The ceiling</h2>
+<p>Nothing above slows a caller down, and nothing in a single Git process can stop a caller
+starting a thousand copies. Three layers cover that:</p>
+<ul>
+<li>The forwarder refuses to start a copy of itself and stops a two-file cycle after four
+hops, so an entry point can never multiply itself.</li>
+<li><code>go -C tools/devtool run . verify-windows-bridge-guard</code> proves it inside a job object limited to 64
+processes: <code>self</code> costs 1, <code>cycle</code> costs 5, and the previous forwarder hit the limit in
+both.</li>
+<li><code>go -C tools/devtool run . git-process-watchdog</code> is the machine-wide ceiling, and it terminates the
+<em>newest</em> excess because the oldest processes are the ones a person is waiting for.
+<code>--daemons</code> handles the slower leak described above.</li>
+</ul>
+<h2>Verifying and installing</h2>
+<pre><code>go -C tools/devtool run . check-runtime-defaults                  # agreement and behaviour
+go -C tools/devtool run . check-runtime-defaults --agreement-only # in a Linux container
+go -C tools/devtool run . install-runtime-defaults                # put them on this machine
+go -C tools/devtool run . install-runtime-defaults --plan         # show what is still missing
+go -C tools/devtool run . verify-repo-contract                    # every rule in AGENTS.md
+</code></pre>
+<p>The agreement half runs anywhere; the behavioural half needs a real binary. The last
+check in the run is the one that guards the incident this document came out of: after
+three repositories are used with the shipped defaults, no Git process is left behind.</p>
+<p><code>go -C tools/devtool run . install-runtime-defaults</code> is the other half of shipping a default. It writes the
+migrated system configuration, relaunching itself elevated because that file is an
+administrator's; if consent is refused it falls back to the user's global configuration
+rather than leaving the defaults unapplied. It never overwrites a value a person chose,
+and it verifies by asking Git what each key resolves to afterwards, so &quot;installed&quot; means
+Git reports the value rather than a file having been written.</p>
+</main></html>

@@ -1,0 +1,274 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Parity roadmap</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Rust parity roadmap</h1>
+<p>Goal: replace installed Git for all documented user-facing behavior. Implementation stays in Rust (<code>goxide</code> / <code>russh</code> / this repository). Behavior follows <a href="https://git-scm.com/docs">Git's documentation</a>. On-disk repositories stay Git-compatible. <code>complete_git_parity</code> in <code>compatibility.json</code> becomes <code>true</code> only when every row below is <strong>accepted</strong> (implemented + covered by local acceptance).</p>
+<p>Fast loop while closing gaps:</p>
+<pre><code class="language-sh">go -C tools/devtool run . fast-verify
+cargo test --offline --locked --lib
+cargo test --offline --locked --test tag_acceptance   # when present
+go -C tools/devtool run . package-rust --platform windows-x64
+</code></pre>
+<h2>Legend</h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accepted</td>
+<td>Matches Git docs for the scoped flags; acceptance recorded</td>
+</tr>
+<tr>
+<td>partial</td>
+<td>Usable subset; documented gaps</td>
+</tr>
+<tr>
+<td>planned</td>
+<td>Not started in Rust client</td>
+</tr>
+<tr>
+<td>native-only</td>
+<td>Exists only in the separate C/MSI tree; not part of the Rust product</td>
+</tr>
+</tbody>
+</table>
+<h2>Porcelain commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>add</td>
+<td>partial</td>
+<td>Root paths, <code>-A</code>, <code>--renormalize</code>; no magic pathspec / sparse</td>
+</tr>
+<tr>
+<td>branch</td>
+<td>partial</td>
+<td>List, create; no <code>-d</code>, tracking, <code>-u</code></td>
+</tr>
+<tr>
+<td>tag</td>
+<td>partial</td>
+<td>List, lightweight, annotated <code>-a -m</code>, <code>-d</code>, <code>-f</code></td>
+</tr>
+<tr>
+<td>checkout / switch</td>
+<td>partial</td>
+<td>Clean ordinary-file worktrees; see COMPATIBILITY</td>
+</tr>
+<tr>
+<td>clone</td>
+<td>partial</td>
+<td>HTTPS/SSH, shallow; local/bare rules in COMPATIBILITY</td>
+</tr>
+<tr>
+<td>commit</td>
+<td>partial</td>
+<td><code>-m</code>, <code>--no-edit</code>, cleanup; no <code>-a</code>, signing, <code>-S</code></td>
+</tr>
+<tr>
+<td>config</td>
+<td>partial</td>
+<td>Scopes and multivar subset</td>
+</tr>
+<tr>
+<td>diff / show</td>
+<td>partial</td>
+<td>Read-command subset</td>
+</tr>
+<tr>
+<td>fetch</td>
+<td>partial</td>
+<td>Default remote refspec</td>
+</tr>
+<tr>
+<td>init</td>
+<td>accepted</td>
+<td><code>main</code> default, <code>-b</code>, bare</td>
+</tr>
+<tr>
+<td>log</td>
+<td>partial</td>
+<td>Subset of formats</td>
+</tr>
+<tr>
+<td>merge</td>
+<td>partial</td>
+<td>Two-parent subset, continue/abort</td>
+</tr>
+<tr>
+<td>pull</td>
+<td>partial</td>
+<td><code>--ff-only</code></td>
+</tr>
+<tr>
+<td>push</td>
+<td>partial</td>
+<td>Refspec/lease subset</td>
+</tr>
+<tr>
+<td>restore / reset</td>
+<td>partial</td>
+<td>Ordinary-file subset</td>
+</tr>
+<tr>
+<td>status</td>
+<td>partial</td>
+<td>Porcelain v1/v2 subsets</td>
+</tr>
+<tr>
+<td>remote</td>
+<td>partial</td>
+<td>add, get-url, show</td>
+</tr>
+<tr>
+<td>lfs</td>
+<td>partial</td>
+<td>Pointer, batch HTTPS; not full locking</td>
+</tr>
+<tr>
+<td>rebase</td>
+<td>partial</td>
+<td>Linear <code>rebase --onto</code> only; no interactive continue/abort</td>
+</tr>
+<tr>
+<td>stash</td>
+<td>partial</td>
+<td>push/pop/list/apply/drop; no <code>-u</code></td>
+</tr>
+<tr>
+<td>cherry-pick</td>
+<td>partial</td>
+<td>Single commit, linear; no conflict continue</td>
+</tr>
+<tr>
+<td>revert</td>
+<td>partial</td>
+<td>Single-parent linear; tip revert fast path</td>
+</tr>
+<tr>
+<td>submodule</td>
+<td>partial</td>
+<td>status/init/update; local <code>file://</code> URLs</td>
+</tr>
+<tr>
+<td>worktree</td>
+<td>partial</td>
+<td>add/list/remove <code>--force</code>; main checkout unchanged</td>
+</tr>
+<tr>
+<td>bisect</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>grep</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>blame</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>archive</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>bundle</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>notes</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>replace</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>send-email</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>svn</td>
+<td>planned</td>
+<td>Out of scope unless explicitly requested</td>
+</tr>
+</tbody>
+</table>
+<h2>Plumbing and services</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rev-parse, cat-file, hash-object, ls-files, show-ref, ls-remote</td>
+<td>partial</td>
+<td>As documented in COMPATIBILITY</td>
+</tr>
+<tr>
+<td>receive-pack / upload-pack server</td>
+<td>planned</td>
+<td>For hosting; client transport exists</td>
+</tr>
+<tr>
+<td>hooks</td>
+<td>partial</td>
+<td>pre-commit/post-* execution; Windows batch via temp <code>.cmd</code></td>
+</tr>
+<tr>
+<td>signing (GPG/SSH commit-sig)</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>credential helpers</td>
+<td>partial</td>
+<td>No native Git dispatcher</td>
+</tr>
+<tr>
+<td>filters / clean-smudge</td>
+<td>partial</td>
+<td>LFS filter process</td>
+</tr>
+<tr>
+<td>sparse checkout / partial clone</td>
+<td>planned</td>
+<td></td>
+</tr>
+<tr>
+<td>reftable</td>
+<td>planned</td>
+<td>Refuse unknown required extensions today</td>
+</tr>
+</tbody>
+</table>
+<h2>Release gate</h2>
+<ol>
+<li>Every <strong>porcelain</strong> row that Git documents for normal workflows is <strong>accepted</strong> or explicitly marked out-of-scope in <code>compatibility.json</code>.</li>
+<li><code>complete_git_parity: true</code> and <code>replacement_blockers: []</code>.</li>
+<li><code>go -C tools/devtool run . product-batch</code> (or successor) passes on optimized release binaries.</li>
+<li>Rust zip/MSI path contains no MinGW, Bash, Perl, Python, or Git for Windows files.</li>
+<li>Human sign-off on takeover (<code>install.ps1</code> / migration) after the above.</li>
+</ol>
+<p>Until then, do not replace a user's only Git installation on production machines.</p>
+</main></html>

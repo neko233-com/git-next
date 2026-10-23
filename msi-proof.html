@@ -1,10 +1,81 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Installer proof</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a></nav><main><h1>Windows installer proof</h1>
-<p>This page records what the Windows package has actually been made to do, on a real
-machine, with the evidence each claim rests on. It exists because &quot;the MSI builds&quot;
-and &quot;the MSI installs&quot; are different statements, and only the second one matters.</p>
-<h2>What is proven</h2>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Installer proof</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Windows installer proof</h1>
+<p>This page separates native MSI lifecycle evidence, workstation recovery and the
+independent Rust preview's verification command. A compiled MSI, an isolated lifecycle
+pass and a completed workstation takeover are different acceptance layers.</p>
+<h2>Published v1.0.3: R8 local gates and scoped workstation acceptance complete</h2>
+<p>R8 correctness passed 16 lanes with exactly two user-waived terminal lanes in
+1,229.320 seconds. Paired performance passed 5/5 in 649.347 seconds. Both Windows
+x64 MSI lifecycles ran afresh, passing 27 user checks in 530.630 seconds and 26
+machine checks in 453.501 seconds. No MSI receipt was reused. Final release staging
+and scoped Windows x64 machine workstation acceptance are complete.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">R8 local evidence</a>.</p>
+<p>The final standard bootstrap completed in <strong>1,075.391 seconds</strong>. Its independent
+workstation readback matched <strong>10,698/10,698 immutable files, 1,362,711,981 bytes</strong>,
+inspected <strong>10,714 files with Python 0</strong>, passed both owned P4 dispatches, confirmed
+the SYSTEM updater task and found <strong>12 personal profile files unchanged</strong>. Exactly
+<code>terminal-rust-contracts</code> and <code>terminal-native-desktop</code> remain user-waived.
+Windows ARM64 has build/table/static evidence; this does not claim hardware MSI
+lifecycle acceptance. Mac CLI/runtime proof does not establish a full host
+installation or update-service lifecycle.</p>
+<p><a href="https://github.com/neko233-com/git-next/releases/tag/v1.0.3">v1.0.3</a> is published
+and official latest at <code>2026-10-23T20:44:12Z</code>, from source
+<code>05dac2a938784ce03a2de219349c4d381a637ab5</code> (release ID <code>422290807</code>). All 28 remote
+asset hashes match local release bytes; 27 assets are checksummed, with actual
+public downloads of SHA256SUMS and the acceptance proof independently verified.
+All four MSIs are actually <strong><code>NotSigned</code></strong>; no cryptographic signature verification
+is claimed. The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json">completion record</a>
+records these actions without rewriting the retirement report's source-time
+pending flags or historical failures.</p>
+<h3>Preserved R7 failure and recovery</h3>
+<p>R7 local correctness completed with 16 passed lanes and two user-waived terminal
+lanes in 249.801 seconds; its paired performance passed 5/5 in 668.849 seconds and
+release staging completed. Windows x64 user/machine lifecycle receipts passed 27/25
+checks and were reused only after exact-input validation. Windows ARM64 MSI evidence
+is compilation/table/static checking, not hardware lifecycle acceptance.
+<a href="https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.json">Fixed R7 evidence</a>.</p>
+<p>The subsequent real workstation bootstrap failed after 1,127.534 seconds: cleanup
+marked its own <code>package.json</code> stale, and original-Git removal also deleted the shared
+<code>bin/git.exe</code> entry. Completion and rollback required recovery. Both files were
+restored with <code>CreateNew</code> from verified original bytes. Readback then matched all
+10,696 declared immutable files (1,362,591,995 bytes), found zero Python entries among
+10,712 files, and passed both owned P4 entrypoints with empty PATH. Twelve personal
+profile files remained unchanged. This recovery has <strong><code>release_gate=false</code></strong> and does
+not establish a completed installation, rollback lifecycle or release.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json">Recovery record</a>
+has SHA-256 <code>dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17</code>.</p>
+<p>R8 source adds a protected complete snapshot before MSI can overwrite original
+<code>cmd</code>/<code>bin</code> bytes, pins the snapshot manifest SHA before MSI, and supplies that pin
+to post-MSI Apply. Same-directory cleanup and protected rollback pass the new
+applicable local gates. Verified recovery control then restored all 9,625 original
+Git files through ordinary guarded MSI removal; registration and migration pointer
+are absent and twelve private profiles are unchanged. This operator recovery is
+not a normal pre-MSI snapshot or final installation acceptance.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r8-legacy-recovery-20261024.json">R8 recovery</a>.
+The later standard R8 installation and independent scoped workstation readback
+passed as recorded above. This does not rewrite the legacy recovery's
+<code>release_gate=false</code>. See <a href="installation.html">installation</a>.</p>
+<h2>Current native verification entrypoints</h2>
+<p>The native C CLI does <strong>not</strong> implement <code>git install verify</code>; that command belongs
+to the independent Rust preview below. Native source tooling can inspect an actual
+package directory/archive without executing the product:</p>
+<pre><code class="language-powershell">go -C tools/devtool run . migration-product-audit --package &lt;installed-root-or-archive&gt; --json &lt;new-report.json&gt; --require-complete
+</code></pre>
+<p>This checks package identity and Python interpreters/libraries/scripts. It is not an
+all-file immutable SHA audit or proof that installation completed. The completion
+record above binds those separate full-hash results. Go is needed to run source verification
+tools, not to install the native product.</p>
+<p>Exact-input reuse of already completed MSI lifecycle receipts has a separate verifier:</p>
+<pre><code class="language-powershell">go -C tools/devtool run . native-msi-evidence --report &lt;completed-batch.json&gt; --matrix &lt;original-matrix.json&gt; --current &lt;current-matrix.json&gt; --reference-sha256 &lt;reference-git-sha256&gt; --cases msi-user,msi-machine
+</code></pre>
+<p>This validates the frozen inputs and allowed changes for receipt reuse. It does not
+install, repair or uninstall the current workstation. A new or changed installation
+still needs its applicable lifecycle and protected takeover/rollback evidence.</p>
+<h2>Historical 2026-10-22 lifecycle evidence</h2>
+<p>The tables and investigation below describe the original 0.3.0-era checkpoint. Their
+versions, limitations and session-specific launch failures are preserved history,
+not a description of the current 1.0.3 workstation or a new release gate.</p>
 <h3>Full lifecycle, user scope, at the package's own path</h3>
-<p><code>msi_lifecycle.py</code> installed, repaired and removed the package at
+<p><code>go -C tools/devtool run . msi-lifecycle</code> installed, repaired and removed the package at
 <code>%LOCALAPPDATA%\Programs\Git</code>, which is where a user-scope installation belongs:</p>
 <table>
 <thead>
@@ -43,9 +114,10 @@ and &quot;the MSI installs&quot; are different statements, and only the second o
 </tbody>
 </table>
 <p>Receipt: <code>docs/benchmarks/msi-user-lifecycle-20261022.json</code>.</p>
-<p>The <code>cmd\git.exe</code> size check is the point of the whole exercise: a bridge forwarder
-is a few kilobytes, the payload is 5.2 MB, and an IDE that starts a forwarder cannot
-work. The installer is verified on the file the IDE will call, not on a file count.</p>
+<p>The historical <code>cmd\git.exe</code> size check distinguished that layout's real payload
+from an inherited forwarder. The receipt checked the actual IDE entrypoint rather
+than inferring it from a file count; this does not claim that every compatibility
+forwarder is invalid.</p>
 <h3>Machine scope, major upgrade over an existing installation</h3>
 <p>Installing the machine package over an existing git-next installation:</p>
 <table>
@@ -76,15 +148,16 @@ work. The installer is verified on the file the IDE will call, not on a file cou
 </table>
 <p>The major upgrade path is real: <code>RemoveExistingProducts</code> runs after the new product's
 files land, and the old registration is gone afterwards.</p>
-<h2>What this work fixed</h2>
+<h2>Historical fixes and preview-specific work</h2>
 <p>Every item below was found by trying to install, and each one is a defect that would
 have reached a user.</p>
 <p><strong>1. A custom action could destroy a correct installation.</strong> Making the update task
 registration fail the install meant a five-minute file copy was rolled back because a
 scheduled task could not be created. Registration is an integration, not part of the
-file installation: it is now attempted, recorded if it fails, and reported by
-<code>git install verify</code> with the command that repairs it. An install cannot be broken by
-an optional integration any more.</p>
+file installation: that checkpoint attempted it separately and recorded failures.
+The independent Rust preview's <code>git install verify</code> can report integration problems;
+the native C CLI does not provide that subcommand. Current native MSI results must
+be read from its scoped lifecycle/action receipts.</p>
 <p><strong>2. Custom action failures were invisible.</strong> A Windows Installer custom action has no
 console, so <code>msiexec</code> reported <code>Error 1722</code> and nothing else - no reason, no scope, no
 stack. Every action now writes its failure to <code>%ProgramData%\git-next\logs\msi-action-&lt;mode&gt;.log</code>
@@ -105,17 +178,16 @@ not complete because the running shell holds an open handle on the installed
 takeover is active is refused on purpose, because removing the files would strand the
 machine's Git. The refusal surfaced as a bare <code>Error 1722</code>; the reason is now recorded,
 and the supported order is documented: roll the takeover back, then uninstall.</p>
-<p><strong>5. A TLS setting could disable every remote.</strong> Unrelated to the installer, found while
-building the clone benchmark: an <code>http.sslCAInfo</code> that rustls cannot parse (curl's
+<p><strong>5. Rust preview TLS configuration.</strong> This fix belongs to the Rust client's gix/rustls
+transport, not the native C engine. An <code>http.sslCAInfo</code> that rustls cannot parse (curl's
 <code>ca-bundle.trust.crt</code> is the common Windows case) made all HTTP and HTTPS remotes fail.
 TLS configuration now applies only to <code>https://</code>, and an unparsable bundle falls back to
 the default trust store. See <a href="../../vendor/gix-transport/PATCHES.md">vendor/gix-transport/PATCHES.md</a>.</p>
-<h2>The agent path</h2>
-<p>An installation is something an automated agent has to drive: install, verify, decide,
-repair. That path must not require a shell with the right language, a GUI, or an
-elevated desktop session.</p>
-<pre><code class="language-sh">msiexec /i git-next.msi /qn /norestart REPLACEGIT=1     # install, no interaction
-git install verify --json                                # verify, machine readable
+<h2>Historical Rust preview verification path</h2>
+<p>The following command and JSON describe the independent Rust preview implementation.
+They must not be used as native C installation instructions or native MSI proof.</p>
+<pre><code class="language-sh"># independent Rust preview only
+git install verify --json
 </code></pre>
 <p><code>git install verify</code> is the verification half. It takes no locks and opens every file
 read-only, so it runs while Git is in use and while the thing being diagnosed is
@@ -146,16 +218,16 @@ every entry point, because hashing 1.3 GB takes longer than most callers want to
 not use PowerShell, and does not need the update task, which is what makes it usable
 when the runtime is the thing that is broken.</li>
 </ul>
-<h2>What is not proven here</h2>
+<h2>Limitations of the historical 2026-10-22 checkpoint</h2>
 <ul>
 <li><strong>A clean machine.</strong> This machine already had a git-next installation and an active
 takeover, so the machine-scope test exercised the upgrade and over-install paths, not
 a first install on an empty machine. The user-scope test did start from nothing.</li>
 <li><strong>Uninstalling a taken-over installation.</strong> Refused by design; exercising the
-rollback needs PowerShell, and this session cannot start it (the PowerShell tool
-fails with a sandbox injection error, and the shell refuses to launch it). The
-documented order is rollback, then uninstall; that whole sequence needs a session
-with a working PowerShell.</li>
+rollback needed PowerShell, whose launch failed in that historical session. That
+environment limitation does not describe the later R7 run. R7 did execute takeover
+but its completion/rollback failed as recorded above. The later standard R8
+bootstrap and scoped workstation readback passed with separate evidence.</li>
 <li><strong>Upgrade from a real previous release.</strong> The archived <code>0.2.999</code> fixture predates the
 current launch conditions and refuses to install beside an official Git. A synthetic
 0.3.1 built by bumping the version was rejected by the runtime manifest check - which
@@ -166,28 +238,28 @@ directory left files from both layouts (19,813 files on disk against a 10,600-fi
 table). <code>install.ps1</code> owns the stale-file removal; the MSI alone does not clean a
 directory it did not create.</li>
 </ul>
-<h2>Reproduce</h2>
+<h2>Historical reproduction examples</h2>
 <pre><code class="language-sh"># build the package from a distribution tree
-python packaging/native_msi.py --distribution &lt;tree&gt; --wix .evidence/tools/wix5/wix.exe \
+go -C tools/devtool run . native-msi --distribution &lt;tree&gt; --wix .evidence/tools/wix5/wix.exe \
     --output-dir &lt;out&gt; --scope user --allow-experimental-local
 
 # prove install, repair and uninstall at the package's own path
-python tools/msi_lifecycle.py \
+go -C tools/devtool run . msi-lifecycle \
     --package &lt;out&gt;/git-next-0.3.0-windows-x64-user.msi \
     --work &quot;$LOCALAPPDATA/Temp/gn-lifecycle&quot; \
     --natural-folder --install-dir &quot;$LOCALAPPDATA/Programs/Git&quot; \
     --receipt docs/benchmarks/msi-user-lifecycle-20261022.json --skip-upgrade
 
-# verify any installation, including a broken one
+# independent Rust preview only; unavailable in native C
 git install verify --root &quot;C:/Program Files/Git&quot; --json
 </code></pre>
-<h2>The checklist this leaves</h2>
+<h2>Historical checklist</h2>
 <ul>
 <li>[x] install, repair, uninstall at a real path, with a receipt</li>
 <li>[x] major upgrade over an existing product, old registration removed</li>
 <li>[x] entry points verified as the real payload, not a forwarder</li>
 <li>[x] custom action failures produce a named reason</li>
-<li>[x] machine-readable verification that needs no PowerShell</li>
+<li>[x] Rust preview machine-readable verification that needs no PowerShell (not a native CLI feature)</li>
 <li>[ ] first install on a clean VM</li>
 <li>[ ] uninstall of a taken-over installation, after a real rollback</li>
 <li>[ ] upgrade from the previous release artifact</li>

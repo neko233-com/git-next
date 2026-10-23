@@ -1,0 +1,128 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Go tooling migration</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Rust acceptance and Go tooling</h1>
+<p>Rust owns client behavior and CLI conformance. Go owns build/package/docs/release
+orchestration, benchmarks, fixture services, desktop automation and the Perforce
+helper. Native C, PowerShell and shell remain where their platform APIs require
+them. The product and these tools do not need a Python interpreter, venv or pip.</p>
+<h2>Entry points</h2>
+<p>Use Go 1.27.2, matching the pinned independent modules. From the repository root:</p>
+<pre><code class="language-sh">go -C tools/devtool run . help
+go -C tools/devtool run . render-docs
+go -C tools/devtool run . publish-docs --dry-run
+go -C tools/devtool run . check-locales --coverage
+go -C tools/devtool run . verify-repo-contract
+go -C tools/devtool run . migration-audit --require-complete
+go -C tools/devtool test ./...
+go -C tools/devtool vet ./...
+</code></pre>
+<p>For repeated work build once with <code>go -C tools/devtool build -o ../../target/devtool/git-next-tool .</code> (add <code>.exe</code> on Windows). <code>GIT_NEXT_ROOT</code> or
+the current checkout selects the repository. Command paths resolve from that
+root even when Go uses <code>-C</code>. Unknown options fail; arguments retain their exact
+boundaries. Child processes have bounded lifetimes and owned process cleanup.</p>
+<p>The former underscore-separated filename maps to a hyphenated subcommand, for
+example <code>prepare-windows-runtime</code>, <code>native-product-batch</code>, <code>msi-lifecycle</code> and
+<code>benchmark-clone</code>. Existing options, layouts, MSI identities and manifest fields
+remain compatibility contracts. <code>help</code> lists every supported command.
+<code>build-git-p4</code> builds the independent Go Perforce module for the five targets.</p>
+<h2>Acceptance layers</h2>
+<pre><code class="language-sh">cargo build --release --locked
+cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
+</code></pre>
+<p>The same commands run on Windows and macOS. L0 covers 39 commands and is mandatory
+before merge/tag; full covers 100 local scenarios and is mandatory on release
+branches. <code>--tier network</code> is explicit, with skips recorded. The client runs with
+an empty PATH; reference Git constructs fixtures. See
+<a href="git-next-acceptance.html">the exact Rust coverage and gaps</a>.</p>
+<p>Native full-package CLI, GCM, HTTP/SSH/LFS, desktop and installer lifecycle checks
+use their Go/platform gates. They still require frozen package and harness
+identities. A source or runtime change reopens the affected gate. Compilation,
+cross-compilation and static package inspection are distinct from actual platform
+execution. Existing receipts keep their original hashes and scope.</p>
+<p><code>native-msi-acceptance --native-packages MATRIX --reference REF --output NEWDIR</code>
+runs the actual user and elevated machine installer lifecycle checks serially,
+including injected-failure rollback. It rehashes the frozen inputs and reference
+before and after execution, and writes a correctness <code>batch.json</code> with
+<code>scope: msi-lifecycle-only</code>: two installer cases plus frozen-input readback.
+The consolidated <code>native-product-batch</code> can reuse exactly those two passed cases
+with <code>--reuse-msi-batch NEWDIR/batch.json --reuse-msi-matrix MATRIX</code> after checking
+the package, source, reference and installer harness identities. This partial
+report cannot satisfy <code>prepare-native-release</code>; all 18 consolidated correctness
+cases and the separate performance gate remain required.</p>
+<p>An explicit user instruction to stop terminal testing can be recorded with
+<code>--terminal-waiver PATH</code> on <code>native-product-batch</code> and <code>prepare-native-release</code>.
+The schema-1 <code>terminal-test-waiver</code> JSON must name <code>authorized_by: user</code>, quote
+the instruction in <code>authorization</code> and <code>reason</code>, bind the exact matrix SHA-256,
+and list only <code>terminal-rust-contracts</code> and <code>terminal-native-desktop</code> in <code>cases</code>.
+Its <code>terminal_binaries</code> map must identify both <code>windows-x64</code> and <code>windows-arm64</code>:
+each has the exact <code>source_commit</code> and a <code>files</code> map containing the SHA-256 of
+<code>bin/git-terminal.exe</code> and <code>bin/git-terminal-shell.exe</code>. Matrix, manifest and
+actual binary bytes must agree.</p>
+<p>With that exact authorization, correctness keeps all 18 rows: 16 passed cases and
+two <code>waived</code> cases, with overall <code>pass-with-user-waiver</code>. The terminal Rust,
+desktop and startup tests are not executed. Earlier failed reports remain intact.
+Performance requires this same exact correctness report and waiver; all five
+performance rows must pass. MSI, native CLI, actual Mac/Linux, package and hash
+gates are unchanged. Release proofs and package acceptance metadata retain the
+waiver and its hash, and <code>native-terminal-waiver.json</code> is included among the
+checksummed release assets. A waiver for any other case is rejected.</p>
+<p>The native release also requires <code>native-mac-runtime-acceptance</code> on Apple Silicon.
+Pass its exact-archive receipt to <code>freeze-native-batch --mac-runtime-receipt</code>.
+The 51 actual cases cover common CLI, core contracts, LFS/signing and read-thread
+budgets; Darwin CPU affinity constraints remain explicitly unsupported. The Linux
+static inspection still checks the same Mac archive independently. Release staging
+rejects absent, incomplete or changed Mac runtime evidence.</p>
+<h2>Migration evidence and rollback</h2>
+<p>The initial remaining inventory was 114 files. Upstream added the freestanding
+bridge verifier during this work, bringing that batch to 115. Earlier migrations
+are recorded separately and are not added to this batch's verified count.
+Thirty retired CLI suites are preserved at Git commit
+<code>3609553</code>; removing them does not claim every old assertion moved into Rust.</p>
+<p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">public retirement inventory and evidence</a>
+records all 115 old-file hashes, replacement modules, same-input comparisons and
+the exact acceptance boundaries. The
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md">readable evidence report</a>
+also preserves rejected candidates, the R5b missing-Go-PATH failure and the user's
+two terminal-case waivers. <code>waived</code> remains distinct from <code>pass</code>; neither a
+partial installer report nor a successful compilation substitutes for a complete
+artifact-bound product gate.</p>
+<p>Release staging replaces mutable manuals, manifests and integration scripts with
+independent files before writing them. Unchanged runtime files may share
+hardlinks with the accepted inputs. The stage checks every frozen input before
+and after packaging, and checks again on an error; a changed input rejects the
+stage. Failed or interrupted directories are diagnostic artifacts, never release
+assets.</p>
+<p>The final R7 local checkpoint completed correctness with 16 passed / 2 waived
+lanes in 249.801 seconds, and all five paired-performance lanes in
+668.849 seconds. R6's complete local gates remain in the history;
+its later stage hardlink source mutation was rejected, and 25 ARM64 metadata/docs
+files were restored from frozen MSI bytes with no runtime binary drift. R7 uses
+a new matrix and fresh measurements after the release-only write-isolation fix.
+The report's false release/installation/publication flags describe actions still
+pending at that source checkpoint; they do not negate completed local gates.
+Actual subsequent staging, workstation acceptance and publication are recorded
+in a separate public release-completion asset and a normal later documentation
+commit, retaining the accepted package's original checkpoint.</p>
+<p>The consolidated 100,000-file paired benchmark uses a 120-second per-command
+budget; its whole-case limit remains 1,800 seconds. Smaller local scales keep
+their 30-second command budget. Context deadlines are reported as deadlines,
+separately from an ordinary child exit 1. Sample counts, complete-output checks,
+exit checks and fsck are unchanged. The first rejected large-scale attempt is
+retained; increasing budget headroom does not establish why that attempt failed.
+MSI evidence reuse across this harness repair requires that removing exactly the
+added context-error check restores the previous measured-process source hash;
+installer scripts, recipe, process bounds and package bytes remain pinned.</p>
+<p>Equivalent checks use the same pinned inputs: native source integration, Windows
+runtime manifests and ABI imports, TLS pins, shared assets, corresponding source
+archive members, helper/updater/bridge/worker builds, native CLI and credential/
+transport fixtures. Tests also reject archive escapes, foreign PE runtime imports,
+incomplete or altered desktop evidence and unsafe MSI upgrade-family reuse.
+The corresponding-source archives may contain upstream Python source as opaque
+license materials; they are not installed or executed as product tools.</p>
+<p>No installed Git, repository object/ref/index layout, LFS bytes, credential stores,
+storage paths or database schemas move for this migration. Defaults continue to
+come from <code>packaging/runtime-defaults/gitconfig</code>. Rollback is the previous source
+revision or accepted product binary; user data needs no migration. Generated
+fixture secrets stay in disposable profiles and are never written to receipts.</p>
+<p>No GitHub Actions are used. The one consolidated native release requires the full
+local five-platform build/package/checksum and applicable runtime/lifecycle gates.
+Publication and a workstation installation are separate actions.</p>
+</main></html>
