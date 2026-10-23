@@ -51,6 +51,17 @@ identities. A source or runtime change reopens the affected gate. Compilation,
 cross-compilation and static package inspection are distinct from actual platform
 execution. Existing receipts keep their original hashes and scope.
 
+`native-msi-acceptance --native-packages MATRIX --reference REF --output NEWDIR`
+runs the actual user and elevated machine installer lifecycle checks serially,
+including injected-failure rollback. It rehashes the frozen inputs and reference
+before and after execution, and writes a correctness `batch.json` with
+`scope: msi-lifecycle-only`: two installer cases plus frozen-input readback.
+The consolidated `native-product-batch` can reuse exactly those two passed cases
+with `--reuse-msi-batch NEWDIR/batch.json --reuse-msi-matrix MATRIX` after checking
+the package, source, reference and installer harness identities. This partial
+report cannot satisfy `prepare-native-release`; all 18 consolidated correctness
+cases and the separate performance gate remain required.
+
 The native release also requires `native-mac-runtime-acceptance` on Apple Silicon.
 Pass its exact-archive receipt to `freeze-native-batch --mac-runtime-receipt`.
 The 51 actual cases cover common CLI, core contracts, LFS/signing and read-thread
