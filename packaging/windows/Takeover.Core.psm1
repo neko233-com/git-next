@@ -2,6 +2,16 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+function Assert-GnNoRepository([IO.DirectoryInfo]$Directory) {
+    $head = Join-Path $Directory.FullName 'HEAD'
+    if ([IO.File]::Exists($head) -and ((Get-Item -LiteralPath $head -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) { throw 'Migration refuses reparse points in the selected installation.' }
+    $isHead = [IO.File]::Exists($head) -and ([IO.FileInfo]::new($head)).Length -le 4096
+    if ($isHead) { $isHead = [IO.File]::ReadAllText($head).Trim() -match '^(ref: refs/[^\r\n]+|[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$' }
+    $metadata = $Directory.Name -ieq '.git' -and $isHead
+    $bare = $isHead -and [IO.Directory]::Exists((Join-Path $Directory.FullName 'objects')) -and [IO.Directory]::Exists((Join-Path $Directory.FullName 'refs'))
+    if ($metadata -or $bare) { throw 'The selected installation contains Git repository metadata; migration preserves it without installing or removing files.' }
+}
+
 function Get-GnTree([string]$Root) {
     $Root = [IO.Path]::GetFullPath($Root).TrimEnd('\','/')
     [void](Assert-GnOwnedPath $Root (Join-Path $Root '.ownership-check'))
@@ -10,9 +20,12 @@ function Get-GnTree([string]$Root) {
     $result = [Collections.Generic.List[object]]::new()
     [long]$bytes = 0
     while ($pending.Count) {
-        foreach ($item in $pending.Pop().GetFileSystemInfos()) {
+        $directory = $pending.Pop()
+        Assert-GnNoRepository $directory
+        foreach ($item in $directory.GetFileSystemInfos()) {
             if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Migration refuses reparse points in the selected installation.' }
             if ($item.Attributes -band [IO.FileAttributes]::Directory) { $pending.Push($item); continue }
+            if ($item.Name -ieq '.git' -and $item.Length -le 4096 -and [IO.File]::ReadAllText($item.FullName) -match '^gitdir: [^\r\n]+\r?\n?$') { throw 'The selected installation contains a Git worktree pointer; migration preserves it without following it.' }
             $relative = $item.FullName.Substring($Root.Length + 1).Replace('\','/')
             [void](Assert-GnOwnedPath $Root $item.FullName)
             $bytes += $item.Length
@@ -141,10 +154,24 @@ function Get-GnOldUpdateTasks([string]$OriginalRoot) {
 }
 
 function Set-GnOldUpdateTasks($Tasks,[bool]$Restore) {
+    if (-not @($Tasks).Count) { return }
     $service = New-Object -ComObject Schedule.Service; [void]$service.Connect(); $folder = $service.GetFolder('\')
+    Set-GnOldUpdateTasksAtFolder $folder $Tasks $Restore
+}
+
+function Set-GnOldUpdateTasksAtFolder($Folder,$Tasks,[bool]$Restore) {
     foreach ($record in $Tasks) {
-        if ($Restore) { [void]$folder.RegisterTask($record.name,$record.xml,6,$record.sid,$null,3,$null) }
-        else { [void]$folder.DeleteTask($record.name,0) }
+        $current = $null
+        try { $current = $Folder.GetTask($record.name) } catch { if (-not (Test-GnMissingTaskError $_)) { throw } }
+        if ($current) {
+            $identities = @($record.sid)
+            if ($record.sid -ceq [Security.Principal.WindowsIdentity]::GetCurrent().User.Value) { $identities += [Security.Principal.WindowsIdentity]::GetCurrent().Name }
+            if ($current.Xml -cne $record.xml -or $current.Definition.Principal.LogonType -ne 3 -or $current.Definition.Principal.UserId -cnotin $identities) { throw 'A legacy updater task changed outside this takeover; its current task was preserved.' }
+        }
+        if ($Restore) {
+            # TASK_CREATE rejects a task that appeared after the lookup; it never replaces it.
+            if (-not $current) { [void]$Folder.RegisterTask($record.name,$record.xml,2,$record.sid,$null,3,$null) }
+        } elseif ($current) { [void]$Folder.DeleteTask($record.name,0) }
     }
 }
 
@@ -244,7 +271,192 @@ function Get-GnRegisteredUninstaller([string]$Root,[string]$Command) {
     return $path
 }
 
-function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
+function Get-GnMigrationFileIndex($Records) {
+    $index = [Collections.Generic.Dictionary[string,object]]::new([StringComparer]::Ordinal)
+    foreach ($record in @($Records)) {
+        $relative = $record.relative.Replace('\','/')
+        if ($index.ContainsKey($relative)) { $index[$relative] = $null }
+        else { $index.Add($relative,$record) }
+    }
+    return ,$index
+}
+
+function Get-GnSameDirectoryStale($Package,[string]$PackageSha256,$Files) {
+    if ($PackageSha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'The selected package identity is invalid.' }
+    $owned = @{'package.json'=$PackageSha256}
+    foreach ($property in $Package.files.PSObject.Properties) { $owned[$property.Name.Replace('\','/')] = $property.Value }
+    $stale = [Collections.Generic.List[object]]::new()
+    foreach ($file in @($Files)) {
+        if (-not $owned.ContainsKey($file.relative.Replace('\','/'))) { $stale.Add($file) }
+    }
+    return $stale.ToArray()
+}
+
+function Restore-GnSameDirectoryPayload($Plan,$Package,[string]$Backup) {
+    $snapshot = Get-GnMigrationFileIndex $Plan.files
+    $owned = [Collections.Generic.Dictionary[string,string]]::new([StringComparer]::Ordinal)
+    foreach ($property in $Package.files.PSObject.Properties) { $owned.Add($property.Name,$property.Value) }
+    $owned['package.json'] = $Plan.package_sha256
+    foreach ($relative in $owned.Keys) {
+        if (-not $snapshot.ContainsKey($relative) -or -not $snapshot[$relative] -or $snapshot[$relative].sha256 -cne $owned[$relative]) { throw 'The protected snapshot lacks an exact MSI-owned file.' }
+        $target = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root $relative)
+        if ([IO.File]::Exists($target)) {
+            if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -cne $owned[$relative]) { throw 'An MSI-owned file changed during takeover; it was preserved.' }
+            continue
+        }
+        if ([IO.Directory]::Exists($target)) { throw 'An MSI-owned file was replaced by a directory; it was preserved.' }
+        Copy-GnMigrationFile $Backup $Plan.install_root $snapshot[$relative] -RestoreAccess
+    }
+    Assert-GnInstalledFiles $Plan.install_root $Package
+}
+
+function Remove-GnSameDirectoryStale($Plan) {
+    $packagePath = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root 'package.json')
+    if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Plan.package_sha256) { throw 'The selected candidate changed during takeover.' }
+    $stale = Get-GnMigrationFileIndex $Plan.stale
+    foreach ($file in @(Get-GnTree $Plan.original_root)) {
+        $relative = $file.relative.Replace('\','/')
+        if ($relative -ieq 'package.json' -or -not $stale.ContainsKey($relative) -or -not $stale[$relative] -or $stale[$relative].sha256 -cne $file.sha256) { continue }
+        $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)
+        if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -cne $stale[$relative].sha256) { continue }
+        Remove-Item -LiteralPath $target -Force
+    }
+}
+
+function Restore-GnTakeoverRoot($Plan) {
+    if ([IO.Directory]::Exists($Plan.original_root)) {
+        [void](Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root '.ownership-check'))
+        if ((Get-Acl -LiteralPath $Plan.original_root).Sddl -cne $Plan.root_acl) { throw 'The original installation root access changed; it was preserved.' }
+        return
+    }
+    if ([IO.File]::Exists($Plan.original_root)) { throw 'The original installation root was replaced by a file.' }
+    if (-not ('GitNext.ScopeNative' -as [type])) { Add-Type -Path (Join-Path $PSScriptRoot '../updater/Scope.Native.cs') }
+    [GitNext.ScopeNative]::CreateProtectedDirectory($Plan.original_root,$Plan.root_acl)
+    [void](Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root '.ownership-check'))
+    if ((Get-Acl -LiteralPath $Plan.original_root).Sddl -cne $Plan.root_acl) { throw 'The original root was created concurrently with different access; recovery preserved it.' }
+}
+
+function Get-GnTakeoverRegistry([string]$Hive) {
+    $paths = @('Software\GitForWindows','Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1',
+        'Software\Classes\Applications\git.exe','Software\Classes\Applications\git-gui.exe','Software\Classes\Applications\gitk.exe',
+        'Software\Classes\Directory\shell\git_gui','Software\Classes\Directory\shell\git_shell',
+        'Software\Classes\Directory\Background\shell\git_gui','Software\Classes\Directory\Background\shell\git_shell',
+        'Software\Classes\LibraryFolder\Background\shell\git_gui','Software\Classes\LibraryFolder\Background\shell\git_shell',
+        'Software\Classes\.git','Software\Classes\.gitignore','Software\Classes\.gitattributes','Software\Classes\.gitmodules',
+        'Software\Classes\.sh','Software\Classes\git_auto_file','Software\Classes\sh_auto_file')
+    foreach ($path in $paths) { Get-GnRegistrySnapshot $Hive $path }
+    foreach ($path in @('Console\Git Bash','Console\Git CMD')) { Get-GnRegistrySnapshot 'CurrentUser' $path }
+}
+
+function Get-GnOriginalGitRegistration([string]$Root) {
+    foreach ($hive in @('CurrentUser','LocalMachine')) {
+        $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$hive,[Microsoft.Win32.RegistryView]::Registry64)
+        try {
+            $key = $base.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1')
+            if (-not $key) { continue }
+            try { $location = $key.GetValue('InstallLocation'); $command = $key.GetValue('UninstallString') } finally { $key.Dispose() }
+            if ($location -and [IO.Path]::GetFullPath($location).TrimEnd('\','/') -ieq $Root) {
+                return [pscustomobject]@{hive=$hive;uninstaller=(Get-GnRegisteredUninstaller $Root $command)}
+            }
+        } finally { $base.Dispose() }
+    }
+    throw 'The old uninstaller registration does not match the selected directory.'
+}
+
+function New-GnPreinstallSnapshot([string]$OriginalGitRoot,[string]$SnapshotRoot,[string]$CandidatePackagePath,[string]$CandidateMsiSha256) {
+    $OriginalGitRoot = [IO.Path]::GetFullPath($OriginalGitRoot).TrimEnd('\','/')
+    $SnapshotRoot = [IO.Path]::GetFullPath($SnapshotRoot).TrimEnd('\','/')
+    $CandidatePackagePath = [IO.Path]::GetFullPath($CandidatePackagePath)
+    if ($CandidateMsiSha256 -cnotmatch '^[a-f0-9]{64}$' -or $SnapshotRoot -ieq $OriginalGitRoot -or $SnapshotRoot.StartsWith($OriginalGitRoot+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'The pre-MSI snapshot identity or location is invalid.' }
+    if ([IO.Directory]::Exists($SnapshotRoot) -or [IO.File]::Exists($SnapshotRoot)) { throw 'A pre-MSI snapshot must use a new private directory.' }
+    [void](Assert-GnOwnedPath ([IO.Path]::GetDirectoryName($CandidatePackagePath)) $CandidatePackagePath)
+    $package = Get-Content -LiteralPath $CandidatePackagePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($package.schema_version -ne 1 -or $package.product -cne 'git-next' -or $package.install_kind -cne 'msi' -or $package.platform -notin @('windows-x64','windows-arm64') -or -not $package.complete_git_parity -or -not $package.release_eligible) { throw 'A verified complete MSI candidate is required for the preinstall snapshot.' }
+    $scope = Get-GnInstallScope $package
+    $machine = $scope -eq 'machine'
+    if ($machine -and -not (Test-GnAdministrator)) { throw 'The pre-MSI machine snapshot requires an administrator.' }
+    if (Test-GnBusy $OriginalGitRoot) { throw 'The original Git is busy; no installation has started.' }
+    if ([IO.File]::Exists((Join-Path $OriginalGitRoot 'package.json'))) { throw 'The original Git directory is already overlaid by an MSI; a pre-MSI snapshot cannot be invented afterwards.' }
+    $registration = Get-GnOriginalGitRegistration $OriginalGitRoot
+    if (($registration.hive -eq 'LocalMachine') -ne $machine) { throw 'The original Git and candidate MSI installation scopes differ.' }
+    $sid = [Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+    if ($machine) {
+        Assert-GnProtectedObject ([IO.Path]::GetDirectoryName($SnapshotRoot))
+        if (-not ('GitNext.ScopeNative' -as [type])) { Add-Type -Path (Join-Path $PSScriptRoot '../updater/Scope.Native.cs') }
+        [GitNext.ScopeNative]::CreateProtectedDirectory($SnapshotRoot,'O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)')
+        Assert-GnProtectedObject $SnapshotRoot
+    } else { New-GnPrivateDirectory $SnapshotRoot }
+    $files = @(Get-GnTree $OriginalGitRoot)
+    $index = Get-GnMigrationFileIndex $files
+    if (-not $index.ContainsKey('cmd/git.exe') -or -not $index['cmd/git.exe']) { throw 'The original Git snapshot lacks its exact command entry.' }
+    $related = @(Get-GnRelatedIntegration $OriginalGitRoot)
+    $snapshot = [pscustomobject]@{schema_version=1;product='git-next';kind='pre-msi-original-git';user_sid=$sid;install_scope=$scope;platform=$package.platform;original_root=$OriginalGitRoot;candidate_package_sha256=(Get-FileHash -LiteralPath $CandidatePackagePath -Algorithm SHA256).Hash.ToLowerInvariant();candidate_msi_sha256=$CandidateMsiSha256;original_git_sha256=$index['cmd/git.exe'].sha256;files=$files;registry=@(Get-GnTakeoverRegistry $registration.hive);related=$related;old_update_tasks=@(Get-GnOldUpdateTasks $OriginalGitRoot);user_path=[Environment]::GetEnvironmentVariable('Path','User');machine_path=[Environment]::GetEnvironmentVariable('Path','Machine');root_acl=(Get-Acl -LiteralPath $OriginalGitRoot).Sddl;hive=$registration.hive;uninstaller_relative=[IO.Path]::GetFileName($registration.uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $registration.uninstaller -Algorithm SHA256).Hash.ToLowerInvariant()}
+    $original = Join-Path $SnapshotRoot 'original'
+    [void][IO.Directory]::CreateDirectory($original)
+    foreach ($file in $files) { Copy-GnMigrationFile $OriginalGitRoot $original $file }
+    $integration = Join-Path $SnapshotRoot 'integration'
+    [void][IO.Directory]::CreateDirectory($integration)
+    Copy-GnRelatedIntegration $integration $related $false
+    if (Test-GnBusy $OriginalGitRoot) { throw 'The original Git became busy while snapshotting; no MSI installation may start.' }
+    foreach ($file in $files) {
+        $source = Assert-GnOwnedPath $OriginalGitRoot (Join-Path $OriginalGitRoot $file.relative)
+        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $file.sha256) { throw 'The original Git changed while snapshotting; no MSI installation may start.' }
+    }
+    $after = @(Get-GnTree $OriginalGitRoot)
+    $afterIndex = Get-GnMigrationFileIndex $after
+    if ($afterIndex.Count -ne $index.Count) { throw 'The original Git file set changed while snapshotting; no MSI installation may start.' }
+    foreach ($name in $index.Keys) {
+        if (-not $afterIndex.ContainsKey($name) -or -not $afterIndex[$name] -or ($index[$name] | ConvertTo-Json -Depth 5 -Compress) -cne ($afterIndex[$name] | ConvertTo-Json -Depth 5 -Compress)) { throw 'The original Git file or access metadata changed while snapshotting.' }
+    }
+    $registryAfter = @(Get-GnTakeoverRegistry $registration.hive)
+    $relatedAfter = @(Get-GnRelatedIntegration $OriginalGitRoot)
+    $tasksAfter = @(Get-GnOldUpdateTasks $OriginalGitRoot)
+    if (($snapshot.registry | ConvertTo-Json -Depth 20 -Compress) -cne ($registryAfter | ConvertTo-Json -Depth 20 -Compress) -or ($snapshot.related | ConvertTo-Json -Depth 10 -Compress) -cne ($relatedAfter | ConvertTo-Json -Depth 10 -Compress) -or ($snapshot.old_update_tasks | ConvertTo-Json -Depth 10 -Compress) -cne ($tasksAfter | ConvertTo-Json -Depth 10 -Compress) -or $snapshot.user_path -cne [Environment]::GetEnvironmentVariable('Path','User') -or $snapshot.machine_path -cne [Environment]::GetEnvironmentVariable('Path','Machine') -or $snapshot.root_acl -cne (Get-Acl -LiteralPath $OriginalGitRoot).Sddl -or $snapshot.candidate_package_sha256 -cne (Get-FileHash -LiteralPath $CandidatePackagePath -Algorithm SHA256).Hash.ToLowerInvariant()) { throw 'Pre-MSI integration or candidate metadata changed while snapshotting.' }
+    $manifest = Join-Path $SnapshotRoot 'snapshot.json'
+    Write-GnJson $manifest $snapshot
+    if ($machine) { Assert-GnProtectedObject $manifest }
+    return $manifest
+}
+
+function Read-GnOriginalSnapshot([string]$Manifest,[string]$ExpectedSha256,[string]$OriginalRoot,[switch]$AllowOperator) {
+    $Manifest = [IO.Path]::GetFullPath($Manifest)
+    $root = [IO.Path]::GetDirectoryName($Manifest)
+    [void](Assert-GnOwnedPath $root $Manifest)
+    Assert-GnScopedFile $Manifest
+    if (([IO.FileInfo]::new($Manifest)).Length -gt 64MB -or $ExpectedSha256 -cnotmatch '^[a-f0-9]{64}$' -or (Get-FileHash -LiteralPath $Manifest -Algorithm SHA256).Hash.ToLowerInvariant() -cne $ExpectedSha256) { throw 'The protected original snapshot manifest changed.' }
+    $snapshot = Get-Content -LiteralPath $Manifest -Raw -Encoding UTF8 | ConvertFrom-Json
+    $validKind = $snapshot.kind -ceq 'pre-msi-original-git' -or ($AllowOperator -and $snapshot.kind -ceq 'operator-recovery-original-git')
+    if ($snapshot.schema_version -ne 1 -or $snapshot.product -cne 'git-next' -or -not $validKind -or $snapshot.user_sid -cne [Security.Principal.WindowsIdentity]::GetCurrent().User.Value -or [IO.Path]::GetFullPath($snapshot.original_root).TrimEnd('\','/') -ine $OriginalRoot -or $snapshot.install_scope -notin @('user','machine') -or $snapshot.platform -notin @('windows-x64','windows-arm64') -or $snapshot.candidate_package_sha256 -cnotmatch '^[a-f0-9]{64}$' -or $snapshot.candidate_msi_sha256 -cnotmatch '^[a-f0-9]{64}$' -or @($snapshot.files).Count -gt 100000 -or $snapshot.original_git_sha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'The protected original snapshot identity is invalid.' }
+    if ($root.TrimEnd('\','/') -ieq $OriginalRoot -or $root.StartsWith($OriginalRoot+'\',[StringComparison]::OrdinalIgnoreCase)) { throw 'The original snapshot must be outside the installation.' }
+    Assert-GnTakeoverPrivateObject $root ($snapshot.install_scope -eq 'machine')
+    Assert-GnTakeoverPrivateObject $Manifest ($snapshot.install_scope -eq 'machine')
+    $index = Get-GnMigrationFileIndex $snapshot.files
+    [long]$total = 0
+    foreach ($file in $snapshot.files) {
+        if (-not $index[$file.relative] -or $file.relative.Contains('\') -or $file.relative.StartsWith('/') -or $file.sha256 -cnotmatch '^[a-f0-9]{64}$' -or $file.bytes -lt 0 -or $file.bytes -gt 1GB) { throw 'The original snapshot file inventory is invalid.' }
+        [void](Assert-GnOwnedPath (Join-Path $root 'original') (Join-Path $root ('original/'+$file.relative)))
+        $total += $file.bytes
+        if ($total -gt 4GB) { throw 'The original snapshot exceeds the recovery capacity limit.' }
+    }
+    if (-not $index.ContainsKey('cmd/git.exe') -or -not $index['cmd/git.exe'] -or $index['cmd/git.exe'].sha256 -cne $snapshot.original_git_sha256) { throw 'The original snapshot command identity is invalid.' }
+    return $snapshot
+}
+
+function Assert-GnTakeoverPrivateObject([string]$Path,[bool]$Machine) {
+    if ($Machine) { Assert-GnProtectedObject $Path; return }
+    if (-not (Test-Path -LiteralPath $Path)) { throw 'A private takeover object is missing.' }
+    if ((Get-Item -LiteralPath $Path -Force).Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'A private takeover object is a reparse point.' }
+    $acl = Get-Acl -LiteralPath $Path
+    $trusted = @([Security.Principal.WindowsIdentity]::GetCurrent().User.Value,'S-1-5-18','S-1-5-32-544')
+    if ($acl.GetOwner([Security.Principal.SecurityIdentifier]).Value -notin $trusted) { throw 'A private takeover object has a different owner.' }
+    $write = [Security.AccessControl.FileSystemRights]::WriteData -bor [Security.AccessControl.FileSystemRights]::AppendData -bor [Security.AccessControl.FileSystemRights]::WriteExtendedAttributes -bor [Security.AccessControl.FileSystemRights]::WriteAttributes -bor [Security.AccessControl.FileSystemRights]::Delete -bor [Security.AccessControl.FileSystemRights]::ChangePermissions -bor [Security.AccessControl.FileSystemRights]::TakeOwnership
+    foreach ($rule in $acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier])) {
+        if ($rule.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) { continue }
+        if ($rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow -and ($rule.FileSystemRights -band $write) -and $rule.IdentityReference.Value -notin $trusted) { throw 'A private takeover object permits another user to write.' }
+    }
+}
+
+function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot,[string]$OriginalSnapshot='',[string]$OriginalSnapshotSha256='') {
     $InstallRoot = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')
     $OriginalGitRoot = [IO.Path]::GetFullPath($OriginalGitRoot).TrimEnd('\','/')
     # git-default-v2 installs into the official Git directory itself. Nesting is still rejected
@@ -253,25 +465,24 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $SameDirectory = $InstallRoot -ieq $OriginalGitRoot
     $packagePath = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot 'package.json')
     $package = Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    $packageSha256 = (Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $originalBinding = $null
+    if ($OriginalSnapshot) {
+        $OriginalSnapshot = [IO.Path]::GetFullPath($OriginalSnapshot)
+        $snapshotHash = $OriginalSnapshotSha256
+        $snapshot = Read-GnOriginalSnapshot $OriginalSnapshot $snapshotHash $OriginalGitRoot
+        if ($snapshot.candidate_package_sha256 -cne $packageSha256 -or $snapshot.platform -cne $package.platform -or $snapshot.install_scope -cne (Get-GnInstallScope $package)) { throw 'The pre-MSI snapshot belongs to a different candidate.' }
+        $originalBinding = [pscustomobject]@{manifest=$OriginalSnapshot;sha256=$snapshotHash;candidate_package_sha256=$snapshot.candidate_package_sha256;candidate_msi_sha256=$snapshot.candidate_msi_sha256;original_git_sha256=$snapshot.original_git_sha256;kind=$snapshot.kind}
+    }
     Assert-GnInstalledFiles $InstallRoot $package
     if ($package.platform -notin @('windows-x64','windows-arm64') -or $package.engine -cne 'source-built-git-next-native-core') { throw 'The complete native MSI installation is required.' }
     foreach ($name in @('migration/git-next-bridge.exe','migration/git-next-bridge-gui.exe')) {
         if (-not $package.files.PSObject.Properties[$name]) { throw 'The MSI lacks its owned migration bridge.' }
     }
     if (-not [IO.File]::Exists((Join-Path $OriginalGitRoot 'cmd/git.exe'))) { throw 'The selected old installation is not the supported Git for Windows installer layout.' }
-    $hive = $null
-    $uninstaller = $null
-    foreach ($candidate in @('CurrentUser','LocalMachine')) {
-        $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$candidate,[Microsoft.Win32.RegistryView]::Registry64)
-        try {
-            $key = $base.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Uninstall\Git_is1')
-            if ($key) {
-                try { $location = $key.GetValue('InstallLocation'); $uninstallCommand = $key.GetValue('UninstallString') } finally { $key.Dispose() }
-                if ($location -and [IO.Path]::GetFullPath($location).TrimEnd('\','/') -ieq $OriginalGitRoot) { $hive = $candidate; $uninstaller = Get-GnRegisteredUninstaller $OriginalGitRoot $uninstallCommand; break }
-            }
-        } finally { $base.Dispose() }
-    }
-    if (-not $hive) { throw 'The old uninstaller registration does not match the selected directory.' }
+    $registration = Get-GnOriginalGitRegistration $OriginalGitRoot
+    $hive = $registration.hive
+    $uninstaller = $registration.uninstaller
     $files = @(Get-GnTree $OriginalGitRoot)
     $nativePrefix = if ($package.platform -eq 'windows-arm64') { 'clangarm64' } else { 'mingw64' }
     $coreHashes = @($files | Where-Object { $_.relative -in @('cmd/git.exe','bin/git.exe',($nativePrefix+'/bin/git.exe'),($nativePrefix+'/libexec/git-core/git.exe')) } | ForEach-Object sha256)
@@ -281,12 +492,7 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
         # The MSI already placed the real payload in the official directory, so no bridge
         # forwarder is produced. Everything still owned by the official uninstaller is stale
         # and must be gone once its uninstaller has run.
-        $owned = @{}
-        foreach ($property in $package.files.PSObject.Properties) { $owned[$property.Name.Replace('\','/')] = $property.Value }
-        foreach ($file in $files) {
-            $relative = $file.relative.Replace('\','/')
-            if (-not $owned.ContainsKey($relative)) { $stale += $file }
-        }
+        $stale = @(Get-GnSameDirectoryStale $package $packageSha256 $files)
     } else {
         foreach ($file in $files) {
             if ($file.relative -match '(^|/)unins[0-9]+\.' -or $file.relative -match 'git-update-git-for-windows|git-for-windows-updater' -or $file.relative -in @('mingw64/bin/wintoast.exe','clangarm64/bin/wintoast.exe')) { continue }
@@ -317,25 +523,37 @@ function Get-GnTakeoverPlan([string]$InstallRoot,[string]$OriginalGitRoot) {
     $pointer = Assert-GnOwnedPath $configDirectory (Join-Path $configDirectory 'migration.json')
     if ([IO.File]::Exists($pointer)) { throw 'A prior migration transaction exists; resume or roll it back first.' }
     if ([IO.File]::Exists($systemConfig)) { throw 'A prior system-config migration exists; resume or roll it back first.' }
-    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';same_directory=$SameDirectory;install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=(Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant();release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_relative=[IO.Path]::GetFileName($uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;stale=$stale;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
+    if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $packageSha256) { throw 'The selected package changed during planning.' }
+    return [pscustomobject]@{schema_version=1;product='git-next';status='planned';same_directory=$SameDirectory;install_root=$InstallRoot;install_scope=$installScope;original_root=$OriginalGitRoot;original_snapshot=$originalBinding;hive=$hive;platform=$package.platform;version=$package.version;package_sha256=$packageSha256;release_eligible=$package.release_eligible;complete_git_parity=$package.complete_git_parity;uninstaller_relative=[IO.Path]::GetFileName($uninstaller);uninstaller_sha256=(Get-FileHash -LiteralPath $uninstaller -Algorithm SHA256).Hash.ToLowerInvariant();files=$files;bridges=$bridges;retained=$retained;stale=$stale;unmapped=$unmapped;system_config=$systemConfig;pointer=$pointer;registry=@();related=@(Get-GnRelatedIntegration $OriginalGitRoot);old_update_tasks=@();user_path=$null;machine_path=$null;root_acl=$null;system_config_sha256=$null}
 }
 
 function Copy-GnMigrationFile([string]$SourceRoot,[string]$TargetRoot,$Record,[string]$AllowedTargetSha256 = '',[switch]$RestoreAccess) {
     $source = Assert-GnOwnedPath $SourceRoot (Join-Path $SourceRoot $Record.relative)
     $target = Assert-GnOwnedPath $TargetRoot (Join-Path $TargetRoot $Record.relative)
     if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Record.sha256) { throw 'Migration source bytes changed; no replacement was made.' }
+    $replaceExisting = $false
     if ([IO.File]::Exists($target)) {
         Assert-GnScopedFile $target
         $current = (Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant()
         if ($current -ceq $Record.sha256) { return }
         if (-not $AllowedTargetSha256 -or $current -cne $AllowedTargetSha256) { throw 'A migration destination changed; it was preserved without replacement.' }
+        $replaceExisting = $true
         [IO.File]::SetAttributes($target,[IO.FileAttributes]::Normal)
     }
     New-GnOutputParent $target
-    if ([IO.File]::Exists($target)) { [IO.File]::Delete($target) }
     $inputStream = [IO.File]::OpenRead($source)
     $outputStream = $null
-    try { $outputStream = Open-GnNewFile $target; $inputStream.CopyTo($outputStream); $outputStream.Flush($true) }
+    try {
+        if ($replaceExisting) {
+            [void](Assert-GnOwnedPath $TargetRoot $target)
+            $outputStream = [IO.File]::Open($target,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+            $algorithm = [Security.Cryptography.SHA256]::Create()
+            try { $lockedHash = ([BitConverter]::ToString($algorithm.ComputeHash($outputStream))).Replace('-','').ToLowerInvariant() } finally { $algorithm.Dispose() }
+            if ($lockedHash -cne $AllowedTargetSha256) { throw 'A migration destination changed; it was preserved without replacement.' }
+            $outputStream.Position = 0; $outputStream.SetLength(0)
+        } else { $outputStream = Open-GnNewFile $target }
+        $inputStream.CopyTo($outputStream); $outputStream.Flush($true)
+    }
     finally { if ($outputStream) { $outputStream.Dispose() }; $inputStream.Dispose() }
     [IO.File]::SetAttributes($target,[IO.FileAttributes]$Record.attributes)
     if ($RestoreAccess) { Restore-GnFileAccess $target $Record.access }
@@ -445,10 +663,21 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
     if ($Plan.hive -eq 'LocalMachine' -and $Plan.install_scope -ne 'machine') { throw 'Replacing machine-wide Git requires an accepted machine-wide MSI; a user MSI cannot remove it.' }
     if (@($Plan.unmapped).Count) { throw 'Unmapped legacy executables prevent removal. Preserve the old installation and finish the explicit mappings.' }
     if (($Plan.hive -eq 'LocalMachine' -or $Plan.install_scope -eq 'machine') -and -not (Test-GnAdministrator)) { throw 'Replacing the selected machine installation requires one elevated migration run.' }
+    if ($Plan.same_directory -and (-not $Plan.PSObject.Properties['original_snapshot'] -or -not $Plan.original_snapshot)) { throw 'Same-directory takeover requires its verified pre-MSI original snapshot; preserve the current installation.' }
+    if ($Plan.same_directory) {
+        $originalSnapshot = Read-GnOriginalSnapshot $Plan.original_snapshot.manifest $Plan.original_snapshot.sha256 $Plan.original_root
+        if ($originalSnapshot.candidate_package_sha256 -cne $Plan.package_sha256) { throw 'The original snapshot belongs to another candidate.' }
+        $snapshotRoot = [IO.Path]::GetDirectoryName($Plan.original_snapshot.manifest)
+        foreach ($file in $originalSnapshot.files) {
+            $source = Assert-GnOwnedPath $snapshotRoot (Join-Path $snapshotRoot ('original/'+$file.relative))
+            if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $file.sha256) { throw 'The protected pre-MSI original bytes changed; takeover was not started.' }
+        }
+    }
     if ((Test-GnBusy $Plan.install_root) -or (Test-GnBusy $Plan.original_root)) { throw 'An owned Git/runtime process is active; migration was not started.' }
     $packagePath = Join-Path $Plan.install_root 'package.json'
     if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Plan.package_sha256) { throw 'The selected candidate changed after planning.' }
-    Assert-GnInstalledFiles $Plan.install_root (Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json)
+    $package = Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    Assert-GnInstalledFiles $Plan.install_root $package
     $native = Assert-GnOwnedPath $Plan.install_root (Join-Path $Plan.install_root 'bin/git.exe')
     $identity = (& $native version --json) | ConvertFrom-Json
     if ($LASTEXITCODE -ne 0 -or $identity.product -cne 'git-next' -or $identity.version -cne $Plan.version -or $identity.complete_git_parity -ne $true -or $identity.external_git_fallback -ne $false -or $identity.external_ssh_fallback -ne $false) { throw 'The embedded native identity does not permit takeover; the old Git is preserved.' }
@@ -540,9 +769,9 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         Write-GnTakeoverJournal $transaction $Plan
         if (-not $process.WaitForExit(300000)) { throw 'The original uninstaller is still running; retain this transaction for recovery.' }
         if ($process.ExitCode -ne 0) { throw 'The original uninstaller failed; the protected backup is retained.' }
-        [void][IO.Directory]::CreateDirectory($Plan.original_root)
-        $acl = [Security.AccessControl.DirectorySecurity]::new(); $acl.SetSecurityDescriptorSddlForm($Plan.root_acl); Set-Acl -LiteralPath $Plan.original_root -AclObject $acl
+        Restore-GnTakeoverRoot $Plan
         if ($Plan.same_directory) {
+            Restore-GnSameDirectoryPayload $Plan $package $backup
             # git-default-v2: the payload already owns the official directory, so the official
             # uninstaller's leftovers are removed outright instead of being replaced by bridges.
             # A registration left behind by an earlier layout would point cmd\git.exe and
@@ -556,12 +785,7 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
                     if ($existing) { try { $existing.Dispose() } finally { $bridgeBase.DeleteSubKeyTree($name,$false) } }
                 }
             } finally { $bridgeBase.Dispose() }
-            foreach ($file in @(Get-GnTree $Plan.original_root)) {
-                $relative = $file.relative.Replace('\','/')
-                $owned = @($Plan.stale | Where-Object { $_.relative.Replace('\','/') -ceq $relative })
-                if ($owned.Count -ne 1 -or $owned[0].sha256 -cne $file.sha256) { continue }
-                Remove-Item -LiteralPath (Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)) -Force
-            }
+            Remove-GnSameDirectoryStale $Plan
         } else {
             foreach ($file in @(Get-GnTree $Plan.original_root)) {
                 if (-not $file.pe) { continue }
@@ -619,6 +843,8 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
         $Plan.system_config_sha256 = (Get-FileHash -LiteralPath $Plan.system_config -Algorithm SHA256).Hash.ToLowerInvariant()
         if ($machine) { Set-GnMigratedPath $Plan 'Machine' $Plan.machine_path }
         Set-GnMigratedPath $Plan 'User' $Plan.user_path
+        Assert-GnInstalledFiles $Plan.install_root $package
+        if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $Plan.package_sha256) { throw 'The selected candidate changed during takeover.' }
         $Plan.status = 'active'; Write-GnTakeoverJournal $transaction $Plan
         return $transaction
     } catch {
@@ -634,66 +860,336 @@ function Start-GnTakeover($Plan,[string]$StateRoot,[string]$TlsArchive) {
     }
 }
 
-function Restore-GnTakeover([string]$Transaction) {
+function Get-GnTakeoverRecoveryContext([string]$Transaction) {
     $Transaction = [IO.Path]::GetFullPath($Transaction).TrimEnd('\','/')
-    Assert-GnScopedFile (Join-Path $Transaction 'transaction.json')
-    $plan = Get-Content -LiteralPath (Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'transaction.json')) -Raw -Encoding UTF8 | ConvertFrom-Json
-    if ($plan.schema_version -ne 1 -or $plan.product -cne 'git-next' -or $plan.transaction_id -cne [IO.Path]::GetFileName($Transaction) -or $plan.user_sid -cne [Security.Principal.WindowsIdentity]::GetCurrent().User.Value) { throw 'The transaction does not belong to this user and directory.' }
+    $journal = Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'transaction.json')
+    Assert-GnScopedFile $journal
+    if (([IO.FileInfo]::new($journal)).Length -gt 64MB) { throw 'The protected migration journal exceeds its size limit.' }
+    $plan = Get-Content -LiteralPath $journal -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($plan.schema_version -ne 1 -or $plan.product -cne 'git-next' -or $plan.transaction_id -cnotmatch '^[a-f0-9]{32}$' -or $plan.transaction_id -cne [IO.Path]::GetFileName($Transaction) -or $plan.user_sid -cne [Security.Principal.WindowsIdentity]::GetCurrent().User.Value -or $plan.platform -notin @('windows-x64','windows-arm64') -or $plan.install_scope -notin @('user','machine') -or $plan.package_sha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'The transaction does not belong to this user and directory.' }
+    $machine = $plan.install_scope -eq 'machine'
+    foreach ($path in @($plan.install_root,$plan.original_root,$plan.state_root,$plan.pointer,$plan.system_config)) { if (-not [IO.Path]::IsPathRooted($path)) { throw 'The protected transaction contains a relative installation/state path.' } }
+    if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory -and [IO.Path]::GetFullPath($plan.install_root).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($plan.original_root).TrimEnd('\','/')) { throw 'The protected same-directory transaction roots differ.' }
+    if ($machine -and -not (Test-GnAdministrator)) { throw 'The protected machine rollback requires an administrator.' }
     [void](Assert-GnOwnedPath $plan.state_root $Transaction)
-    if ($plan.status -eq 'rolled-back') { return }
-    if ([IO.File]::Exists($plan.pointer)) {
-        $pointer = Get-Content -LiteralPath $plan.pointer -Raw -Encoding UTF8 | ConvertFrom-Json
-        if ($pointer.transaction_id -cne $plan.transaction_id) { throw 'A different migration owns the active handoff; rollback was deferred.' }
+    if ([IO.Path]::GetDirectoryName($Transaction) -ine [IO.Path]::GetFullPath($plan.state_root).TrimEnd('\','/')) { throw 'The transaction is outside its selected state root.' }
+    $ownership = Assert-GnOwnedPath $plan.state_root (Join-Path $plan.state_root 'git-next-migrations.json')
+    Assert-GnScopedFile $ownership
+    $owner = Get-Content -LiteralPath $ownership -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($owner.schema_version -ne 1 -or $owner.product -cne 'git-next' -or $owner.user_sid -cne $plan.user_sid) { throw 'The protected transaction state has a different owner.' }
+    Assert-GnTakeoverPrivateObject $plan.state_root $machine
+    Assert-GnTakeoverPrivateObject $Transaction $machine
+    Assert-GnTakeoverPrivateObject $journal $machine
+    Assert-GnTakeoverPrivateObject $ownership $machine
+    $root = if ($machine) { Get-GnMachineDataRoot } else { Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'git-next' }
+    if ($machine) {
+        if ([IO.Path]::GetFullPath($plan.state_root).TrimEnd('\','/') -ine (Join-Path $root ('migrations/'+$plan.platform)).TrimEnd('\','/')) { throw 'The protected machine migration root is invalid.' }
+        Assert-GnProtectedObject $plan.state_root; Assert-GnProtectedObject $Transaction; Assert-GnProtectedObject $journal
+    }
+    $configuration = if ($machine) { Join-Path $root 'config' } else { Get-GnConfigDirectory }
+    $pointerPath = Assert-GnOwnedPath $configuration (Join-Path $configuration 'migration.json')
+    if ([IO.Path]::GetFullPath($plan.pointer) -ine $pointerPath) { throw 'The protected migration pointer is outside its selected configuration root.' }
+    if ([IO.Path]::GetFullPath($plan.system_config) -ine (Join-Path $configuration 'system.gitconfig')) { throw 'The protected migration system configuration is outside its selected root.' }
+    if ([IO.File]::Exists($pointerPath)) {
+        Assert-GnScopedFile $pointerPath
+        $pointer = Get-Content -LiteralPath $pointerPath -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($pointer.schema_version -ne 1 -or $pointer.product -cne 'git-next' -or $pointer.transaction_id -cne $plan.transaction_id -or $pointer.install_scope -cne $plan.install_scope -or [IO.Path]::GetFullPath($pointer.transaction).TrimEnd('\','/') -ine $Transaction -or [IO.Path]::GetFullPath($pointer.install_root).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($plan.install_root).TrimEnd('\','/')) { throw 'A different migration owns the active handoff; rollback was deferred.' }
+    }
+    $backup = Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'original')
+    $packageRoot = if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory) { $backup } else { $plan.install_root }
+    $packagePath = Assert-GnOwnedPath $packageRoot (Join-Path $packageRoot 'package.json')
+    if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $plan.package_sha256) { throw 'The original candidate manifest in the protected transaction changed.' }
+    $package = Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($package.schema_version -ne 1 -or $package.product -cne 'git-next' -or $package.platform -cne $plan.platform -or (Get-GnInstallScope $package) -cne $plan.install_scope -or $package.engine -cne 'source-built-git-next-native-core') { throw 'The protected candidate manifest identity is invalid.' }
+    return [pscustomobject]@{plan=$plan;package=$package;transaction=$Transaction;backup=$backup;scope=$plan.install_scope;machine=$machine;root=$root;updates=(Join-Path $root ('updates/'+$plan.platform));migrations=$plan.state_root;config=$configuration}
+}
+
+function Test-GnTakeoverMsiInstalled([string]$ProductCode) {
+    if ($ProductCode -cnotmatch '^\{[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}\}$') { throw 'The rollback MSI product identity is invalid.' }
+    $installer = New-Object -ComObject WindowsInstaller.Installer
+    try {
+        $state = $installer.ProductState($ProductCode)
+        if ($state -notin @(-1,5)) { throw 'The rollback MSI product is not in an installed or removed state.' }
+        return $state -eq 5
+    } finally { [void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($installer) }
+}
+
+function Assert-GnTakeoverCurrentMsi([string]$InstallRoot,$Package) {
+    if ($Package.schema_version -ne 1 -or $Package.product -cne 'git-next' -or $Package.install_kind -cne 'msi' -or $Package.engine -cne 'source-built-git-next-native-core' -or -not $Package.complete_git_parity -or -not $Package.release_eligible -or -not (Test-GnTakeoverMsiInstalled $Package.product_code)) { throw 'An exact installed native MSI is required for controlled rollback.' }
+    [void](Get-GnScopeContext $InstallRoot $Package)
+    $hive = if ((Get-GnInstallScope $Package) -eq 'machine') { 'LocalMachine' } else { 'CurrentUser' }
+    $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$hive,[Microsoft.Win32.RegistryView]::Registry64)
+    try {
+        $key = $base.OpenSubKey('Software\git-next\MSI\'+$Package.platform)
+        if (-not $key) { throw 'The owned MSI registration is missing.' }
+        try { $registered = $key.GetValue('InstallRoot') } finally { $key.Dispose() }
+        if (-not $registered -or [IO.Path]::GetFullPath($registered).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')) { throw 'The owned MSI registration belongs to a different root.' }
+    } finally { $base.Dispose() }
+}
+
+function Get-GnTakeoverOriginalRecovery($Recovery) {
+    $plan = $Recovery.plan
+    if ($plan.PSObject.Properties['original_snapshot'] -and $plan.original_snapshot) {
+        $binding = $plan.original_snapshot
+        $snapshot = Read-GnOriginalSnapshot $binding.manifest $binding.sha256 $plan.original_root
+    } else {
+        $path = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'recovery-source.json')
+        Assert-GnScopedFile $path
+        $attachment = Get-Content -LiteralPath $path -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($attachment.schema_version -ne 1 -or $attachment.product -cne 'git-next' -or $attachment.kind -cne 'operator-recovery-source' -or $attachment.transaction_id -cne $plan.transaction_id -or $attachment.user_sid -cne $plan.user_sid -or $attachment.original_candidate_package_sha256 -cne $plan.package_sha256 -or $attachment.preserved_journal_sha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'The explicit operator recovery attachment is invalid.' }
+        $preserved = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'transaction-before-operator-recovery.json')
+        Assert-GnScopedFile $preserved
+        if ((Get-FileHash -LiteralPath $preserved -Algorithm SHA256).Hash.ToLowerInvariant() -cne $attachment.preserved_journal_sha256) { throw 'The original operator recovery journal evidence changed.' }
+        $old = Get-Content -LiteralPath $preserved -Raw -Encoding UTF8 | ConvertFrom-Json
+        if ($old.transaction_id -cne $plan.transaction_id -or $old.package_sha256 -cne $plan.package_sha256 -or $old.user_sid -cne $plan.user_sid -or $old.original_root -ine $plan.original_root) { throw 'The preserved journal belongs to another migration.' }
+        $snapshot = Read-GnOriginalSnapshot $attachment.snapshot_manifest $attachment.snapshot_sha256 $plan.original_root -AllowOperator
+        if ($snapshot.kind -cne 'operator-recovery-original-git' -or $snapshot.original_git_sha256 -cne $attachment.original_git_expected_sha256 -or -not $snapshot.PSObject.Properties['metadata_provenance']) { throw 'Operator recovery must state its distinct original-byte and metadata provenance.' }
+        foreach ($name in @('files','file_access','registry','paths','related','root_acl','old_update_tasks')) {
+            if (-not $snapshot.metadata_provenance.PSObject.Properties[$name] -or -not $snapshot.metadata_provenance.$name) { throw 'Operator recovery metadata provenance is incomplete.' }
+        }
+        $binding = [pscustomobject]@{manifest=$attachment.snapshot_manifest;sha256=$attachment.snapshot_sha256}
+    }
+    if ($snapshot.candidate_package_sha256 -cne $plan.package_sha256 -or $snapshot.platform -cne $plan.platform -or $snapshot.install_scope -cne $plan.install_scope) { throw 'The original snapshot belongs to another migration candidate.' }
+    $root = [IO.Path]::GetDirectoryName($binding.manifest)
+    foreach ($file in @($snapshot.files)) {
+        $source = Assert-GnOwnedPath $root (Join-Path $root ('original/'+$file.relative))
+        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $file.sha256) { throw 'Protected original recovery bytes changed; MSI removal was not authorized.' }
+    }
+    return [pscustomobject]@{binding=$binding;snapshot=$snapshot;root=$root}
+}
+
+function Initialize-GnTakeoverRecoveryTools($Recovery,$Package,[string]$PackagePath) {
+    $plan = $Recovery.plan
+    $tools = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'recovery-tools')
+    if (-not [IO.Directory]::Exists($tools)) { New-GnPrivateDirectory $tools -Machine:$Recovery.machine }
+    if ($Recovery.machine) { Assert-GnProtectedObject $tools }
+    $hashes = [ordered]@{}
+    foreach ($name in @('migration/takeover.ps1','migration/Takeover.Core.psm1','updater/Update.Core.psm1','updater/Scope.Core.ps1','updater/Scope.Native.cs','updater/Runtime.Configuration.ps1','updater/messages.zh-CN.json')) {
+        $property = $Package.files.PSObject.Properties[$name]
+        if (-not $property -or $property.Value -cnotmatch '^[a-f0-9]{64}$') { throw 'The current MSI lacks an exact recovery tool.' }
+        $source = Assert-GnOwnedPath $plan.install_root (Join-Path $plan.install_root $name)
+        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $property.Value) { throw 'A recovery tool differs from its current MSI manifest.' }
+        $item = Get-Item -LiteralPath $source -Force
+        Copy-GnMigrationFile $plan.install_root $tools ([pscustomobject]@{relative=$name;sha256=$property.Value;attributes=[int]$item.Attributes;access=''})
+        $hashes[$name] = $property.Value
+    }
+    $control = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'rollback-package.json')
+    $controlHash = (Get-FileHash -LiteralPath $PackagePath -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ([IO.File]::Exists($control)) {
+        if ((Get-FileHash -LiteralPath $control -Algorithm SHA256).Hash.ToLowerInvariant() -cne $controlHash) { throw 'A different current MSI already owns the rollback authorization.' }
+    } else {
+        $source = [IO.File]::OpenRead($PackagePath)
+        $output = $null
+        try { $output = Open-GnNewFile $control; $source.CopyTo($output); $output.Flush($true) } finally { if ($output) { $output.Dispose() }; $source.Dispose() }
+    }
+    $plan | Add-Member -NotePropertyName rollback_package_sha256 -NotePropertyValue $controlHash -Force
+    $plan | Add-Member -NotePropertyName rollback_product_code -NotePropertyValue $Package.product_code -Force
+    $plan | Add-Member -NotePropertyName rollback_tools -NotePropertyValue ([pscustomobject]$hashes) -Force
+    if (-not ('GitNext.ScopeNative' -as [type])) { Add-Type -Path (Join-Path $tools 'updater/Scope.Native.cs') }
+    Write-GnTakeoverJournal $Recovery.transaction $plan
+}
+
+function Assert-GnTakeoverRecoveryTools($Recovery) {
+    $plan = $Recovery.plan
+    if (-not $plan.PSObject.Properties['rollback_package_sha256'] -or $plan.rollback_package_sha256 -cnotmatch '^[a-f0-9]{64}$' -or -not $plan.PSObject.Properties['rollback_tools']) { throw 'The protected rollback authorization is incomplete.' }
+    $control = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'rollback-package.json')
+    Assert-GnScopedFile $control
+    if ((Get-FileHash -LiteralPath $control -Algorithm SHA256).Hash.ToLowerInvariant() -cne $plan.rollback_package_sha256) { throw 'The authorized current MSI manifest changed.' }
+    $package = Get-Content -LiteralPath $control -Raw -Encoding UTF8 | ConvertFrom-Json
+    if ($package.product -cne 'git-next' -or $package.platform -cne $plan.platform -or (Get-GnInstallScope $package) -cne $plan.install_scope -or $package.product_code -cne $plan.rollback_product_code) { throw 'The authorized rollback MSI identity differs.' }
+    $tools = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'recovery-tools')
+    $names = @('migration/takeover.ps1','migration/Takeover.Core.psm1','updater/Update.Core.psm1','updater/Scope.Core.ps1','updater/Scope.Native.cs','updater/Runtime.Configuration.ps1','updater/messages.zh-CN.json')
+    if (@($plan.rollback_tools.PSObject.Properties).Count -ne $names.Count) { throw 'The recovery tool allowlist differs.' }
+    foreach ($name in $names) {
+        $pin = $plan.rollback_tools.PSObject.Properties[$name]
+        $expected = $package.files.PSObject.Properties[$name]
+        if (-not $pin -or -not $expected -or $pin.Value -cne $expected.Value) { throw 'A protected recovery tool is not owned by the authorized current MSI.' }
+        $path = Assert-GnOwnedPath $tools (Join-Path $tools $name)
+        Assert-GnScopedFile $path
+        if ((Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $pin.Value) { throw 'A protected recovery tool changed.' }
+    }
+    return $package
+}
+
+function Invoke-GnTakeoverMsiRemoval($Recovery) {
+    $plan = $Recovery.plan
+    $hostDirectory = if (-not [Environment]::Is64BitProcess -and [Environment]::Is64BitOperatingSystem) { 'Sysnative' } else { 'System32' }
+    $msi = Join-Path $env:SystemRoot ($hostDirectory+'/msiexec.exe')
+    $log = Assert-GnOwnedPath $Recovery.transaction (Join-Path $Recovery.transaction 'rollback-msi.log')
+    $process = Start-Process -FilePath $msi -WindowStyle Hidden -ArgumentList ('/x '+$plan.rollback_product_code+' /qn /norestart REBOOT=ReallySuppress MSIRESTARTMANAGERCONTROL=Disable /l*v "'+$log+'"') -PassThru
+    $plan | Add-Member -NotePropertyName rollback_msi_pid -NotePropertyValue $process.Id -Force
+    $plan | Add-Member -NotePropertyName rollback_msi_start_identity -NotePropertyValue ('ticks:'+$process.StartTime.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)) -Force
+    Write-GnTakeoverJournal $Recovery.transaction $plan
+    if (-not $process.WaitForExit(1800000)) { throw 'The authorized MSI removal is still running; resume this protected transaction after it exits.' }
+    if ($process.ExitCode -ne 0) { throw ('The authorized MSI removal did not complete without restart; exit '+$process.ExitCode+'. The protected rollback transaction is retained.') }
+}
+
+function Assert-GnTakeoverRegistryRecovery($Original,$PostInstall) {
+    $current = Get-GnRegistrySnapshot $Original.hive $Original.path
+    $allowed = @{}
+    foreach ($snapshot in @($Original,$PostInstall)) {
+        if (-not $snapshot) { continue }
+        if ($snapshot.hive -cne $Original.hive -or $snapshot.path -cne $Original.path) { throw 'Recovery registry baselines refer to different keys.' }
+        foreach ($key in $snapshot.keys) {
+            if (-not $allowed.ContainsKey($key.relative)) { $allowed[$key.relative] = @{} }
+            foreach ($entry in $key.values) {
+                if (-not $allowed[$key.relative].ContainsKey($entry.name)) { $allowed[$key.relative][$entry.name] = @() }
+                $allowed[$key.relative][$entry.name] += ($entry | ConvertTo-Json -Depth 5 -Compress)
+            }
+        }
+    }
+    foreach ($key in $current.keys) {
+        if (-not $allowed.ContainsKey($key.relative)) { throw 'A registry key changed outside this takeover; recovery preserved it.' }
+        foreach ($entry in $key.values) {
+            $ours = $Original.path -ceq 'Software\GitForWindows' -and $entry.name -ceq 'CurrentVersion' -and $entry.value -ceq '2.54.0.git-next'
+            if (-not $ours -and (-not $allowed[$key.relative].ContainsKey($entry.name) -or ($entry | ConvertTo-Json -Depth 5 -Compress) -cnotin $allowed[$key.relative][$entry.name])) { throw 'A registry value changed outside this takeover; recovery preserved it.' }
+        }
+    }
+}
+
+function Restore-GnTakeoverOriginalIntegration($Original,$Plan) {
+    $post = @{}
+    foreach ($record in $Plan.related) { $post[$record.source] = $record }
+    foreach ($record in $Original.snapshot.related) {
+        if (-not [IO.File]::Exists($record.source)) { continue }
+        [void](Assert-GnOwnedPath ([IO.Path]::GetDirectoryName($record.source)) $record.source)
+        $current = (Get-FileHash -LiteralPath $record.source -Algorithm SHA256).Hash.ToLowerInvariant()
+        $access = (Get-Acl -LiteralPath $record.source).GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
+        $allowed = $post[$record.source]
+        if ($access -cne $record.access -and (-not $allowed -or $access -cne $allowed.access)) { throw 'An integration file access rule changed; recovery preserved it.' }
+        if ($current -ceq $record.sha256) { Restore-GnFileAccess $record.source $record.access; continue }
+        if (-not $allowed -or $current -cne $allowed.sha256) { throw 'An integration file changed outside this takeover; recovery preserved it.' }
+        if ((Get-FileHash -LiteralPath $record.source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $current) { throw 'An integration file changed during recovery; it was preserved.' }
+        Remove-Item -LiteralPath $record.source -Force
+    }
+    Copy-GnRelatedIntegration (Join-Path $Original.root 'integration') $Original.snapshot.related $true
+}
+
+function Restore-GnTakeover([string]$Transaction,[switch]$PrepareOnly) {
+    $recovery = Get-GnTakeoverRecoveryContext $Transaction
+    $plan = $recovery.plan
+    $Transaction = $recovery.transaction
+    if ($plan.status -eq 'rolled-back') {
+        if ([IO.File]::Exists($plan.pointer)) { [IO.File]::Delete((Assert-GnOwnedPath $recovery.config $plan.pointer)) }
+        return
     }
     if ($plan.uninstaller_pid) {
         $pending = Get-Process -Id $plan.uninstaller_pid -ErrorAction SilentlyContinue
         if ($pending -and ('ticks:' + $pending.StartTime.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)) -ceq $plan.uninstaller_start_identity) { throw 'The original uninstaller is still running; rollback was deferred.' }
     }
     if ((Test-GnBusy $plan.install_root) -or (Test-GnBusy $plan.original_root)) { throw 'A Git/runtime process is active; rollback was deferred.' }
-    if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory) {
-        # git-default-v2 owns the official directory itself, so the payload must be gone before
-        # the original Git can be restored into it. The protected backup is retained meanwhile.
-        if ([IO.File]::Exists((Join-Path $plan.install_root 'package.json'))) { throw 'The git-default-v2 installation still occupies the official Git directory. Remove its MSI first, then replay this protected backup to restore the original Git.' }
+    $same = $plan.PSObject.Properties['same_directory'] -and $plan.same_directory
+    $original = $null
+    $package = $recovery.package
+    if ($same) {
+        $original = Get-GnTakeoverOriginalRecovery $recovery
+        if ($plan.PSObject.Properties['rollback_msi_pid'] -and $plan.rollback_msi_pid) {
+            $pending = Get-Process -Id $plan.rollback_msi_pid -ErrorAction SilentlyContinue
+            if ($pending -and ('ticks:'+$pending.StartTime.ToUniversalTime().Ticks.ToString([Globalization.CultureInfo]::InvariantCulture)) -ceq $plan.rollback_msi_start_identity) { throw 'The authorized MSI removal is still running; rollback was deferred.' }
+        }
+        $live = Assert-GnOwnedPath $plan.install_root (Join-Path $plan.install_root 'package.json')
+        if ($plan.status -ne 'rolling-back') {
+            $package = Get-Content -LiteralPath $live -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($package.platform -cne $plan.platform -or (Get-GnInstallScope $package) -cne $plan.install_scope) { throw 'The current MSI differs from the selected rollback scope.' }
+            Assert-GnTakeoverCurrentMsi $plan.install_root $package
+            Initialize-GnTakeoverRecoveryTools $recovery $package $live
+        } else { $package = Assert-GnTakeoverRecoveryTools $recovery }
+        if ($PrepareOnly) { return (Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'recovery-tools/migration/takeover.ps1')) }
     }
-    $backup = Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'original')
-    if ($plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration) {
-        $package = Get-Content -LiteralPath (Join-Path $plan.install_root 'package.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    $runtimePending = $plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration -and (-not $plan.PSObject.Properties['runtime_configuration_rolled_back'] -or -not $plan.runtime_configuration_rolled_back)
+    if ($runtimePending) {
+        if ([IO.Path]::GetFullPath($plan.runtime_configuration).TrimEnd('\','/') -ine (Join-Path $Transaction 'runtime-configuration')) { throw 'The runtime configuration journal is outside this takeover.' }
         Restore-GnRuntimeConfigTransaction $plan.install_root $package $plan.runtime_configuration
+        if ($same) {
+            Complete-GnRuntimeConfigTransaction $plan.install_root $package $plan.runtime_configuration
+            $plan | Add-Member -NotePropertyName runtime_configuration_rolled_back -NotePropertyValue $true -Force
+            Write-GnTakeoverJournal $Transaction $plan
+        }
     }
-    foreach ($record in $plan.registry) { Assert-GnRegistryCanRestore $record }
+    if ($same) {
+        $msiPresent = Test-GnTakeoverMsiInstalled $plan.rollback_product_code
+        if ($msiPresent) { Assert-GnInstalledFiles $plan.install_root $package }
+        if (-not [IO.File]::Exists($plan.pointer)) {
+            if ($plan.status -notin @('backed-up','recovery-required') -or -not $msiPresent) { throw 'The active migration pointer is missing; MSI removal was not authorized.' }
+            Write-GnJson $plan.pointer @{schema_version=1;product='git-next';install_root=$plan.install_root;install_scope=$plan.install_scope;original_root=$plan.original_root;transaction=$Transaction;transaction_id=$plan.transaction_id}
+        }
+        $plan.status = 'rolling-back'; Write-GnTakeoverJournal $Transaction $plan
+        if ($msiPresent) {
+            if ((Test-GnBusy $plan.install_root) -or (Test-GnBusy $plan.original_root)) { throw 'A Git/runtime process became active; rollback was deferred.' }
+            Invoke-GnTakeoverMsiRemoval $recovery
+        }
+        if ((Test-GnTakeoverMsiInstalled $plan.rollback_product_code) -or [IO.File]::Exists((Join-Path $plan.install_root 'package.json'))) { throw 'The MSI still owns the installation; original bytes were not restored.' }
+    }
+    $restoreRegistry = if ($same) { @($original.snapshot.registry) } else { @($plan.registry) }
+    $postRegistry = @{}
+    foreach ($record in $plan.registry) { $postRegistry[$record.hive+'/'+$record.path] = $record }
+    foreach ($record in $restoreRegistry) {
+        if ($same) { Assert-GnTakeoverRegistryRecovery $record $postRegistry[$record.hive+'/'+$record.path] }
+        else { Assert-GnRegistryCanRestore $record }
+    }
     foreach ($record in $plan.bridges) {
         $path = Assert-GnOwnedPath $plan.original_root (Join-Path $plan.original_root $record.relative)
         if ([IO.File]::Exists($path)) {
             $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            $original = @($plan.files | Where-Object { $_.relative -ceq $record.relative })[0]
-            if ($hash -cne $record.sha256 -and $hash -cne $original.sha256) { throw 'A legacy entry changed after migration; rollback preserves it for review.' }
+            $bridgeOriginal = @($plan.files | Where-Object { $_.relative -ceq $record.relative })[0]
+            if ($hash -cne $record.sha256 -and $hash -cne $bridgeOriginal.sha256) { throw 'A legacy entry changed after migration; rollback preserves it for review.' }
         }
     }
     if ($plan.system_config_sha256 -and [IO.File]::Exists($plan.system_config)) {
         if ((Get-FileHash -LiteralPath $plan.system_config -Algorithm SHA256).Hash.ToLowerInvariant() -cne $plan.system_config_sha256) { throw 'The migrated system configuration changed; rollback preserves it for review.' }
         [IO.File]::Delete($plan.system_config)
     }
-    [void][IO.Directory]::CreateDirectory($plan.original_root)
-    $restoreFiles = if ($plan.PSObject.Properties['same_directory'] -and $plan.same_directory) { @($plan.files | Where-Object { $relative = $_.relative.Replace('\','/'); @($plan.stale | Where-Object { $_.relative.Replace('\','/') -ceq $relative }).Count -eq 1 }) } else { @($plan.files) }
+    $backup = $recovery.backup
+    if ($same) {
+        $backup = Join-Path $original.root 'original'
+        if ([IO.Directory]::Exists($plan.original_root)) {
+            $rootAccess = (Get-Acl -LiteralPath $plan.original_root).Sddl
+            if ($rootAccess -cne $plan.root_acl -and $rootAccess -cne $original.snapshot.root_acl) { throw 'The installation root access changed outside takeover; recovery preserved it.' }
+            if ($rootAccess -cne $original.snapshot.root_acl) {
+                $security = [Security.AccessControl.DirectorySecurity]::new(); $security.SetSecurityDescriptorSddlForm($original.snapshot.root_acl)
+                Set-Acl -LiteralPath $plan.original_root -AclObject $security
+            }
+        } else { Restore-GnTakeoverRoot ([pscustomobject]@{original_root=$plan.original_root;root_acl=$original.snapshot.root_acl}) }
+    } else { Restore-GnTakeoverRoot $plan }
+    $restoreFiles = if ($same) { @($original.snapshot.files) } else { @($plan.files) }
+    $postFiles = Get-GnMigrationFileIndex $plan.files
+    $bridgeFiles = Get-GnMigrationFileIndex $plan.bridges
     foreach ($file in $restoreFiles) {
         $path = Assert-GnOwnedPath $plan.original_root (Join-Path $plan.original_root $file.relative)
+        $replacement = if ($bridgeFiles.ContainsKey($file.relative)) { $bridgeFiles[$file.relative] } else { $null }
         if ([IO.File]::Exists($path)) {
             $hash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-            $bridged = @($plan.bridges | Where-Object { $_.relative -ceq $file.relative -and $_.sha256 -ceq $hash })
-            if ($hash -cne $file.sha256 -and -not $bridged.Count) { throw 'A retained installation file changed; rollback will not overwrite it.' }
+            if ($hash -cne $file.sha256 -and (-not $replacement -or $replacement.sha256 -cne $hash)) { throw 'A retained installation file changed; rollback will not overwrite it.' }
+            if ($same -and $original.snapshot.kind -ceq 'pre-msi-original-git') {
+                $access = (Get-Acl -LiteralPath $path).GetSecurityDescriptorSddlForm([Security.AccessControl.AccessControlSections]::Access)
+                $postFile = if ($postFiles.ContainsKey($file.relative)) { $postFiles[$file.relative] } else { $null }
+                if ($access -cne $file.access -and (-not $postFile -or $access -cne $postFile.access)) { throw 'An original file access rule changed; recovery preserved it.' }
+            }
         }
-        $replacement = @($plan.bridges | Where-Object { $_.relative -ceq $file.relative })
-        Copy-GnMigrationFile $backup $plan.original_root $file $(if ($replacement.Count) { $replacement[0].sha256 } else { '' }) -RestoreAccess
+        $exactAccess = -not $same -or $original.snapshot.kind -ceq 'pre-msi-original-git'
+        Copy-GnMigrationFile $backup $plan.original_root $file $(if ($replacement) { $replacement.sha256 } else { '' }) -RestoreAccess:$exactAccess
+        if ($same -and $exactAccess) { Restore-GnFileAccess $path $file.access }
     }
     foreach ($record in $plan.bridges) { Set-GnBridgeRegistration $plan $record $true }
-    foreach ($record in $plan.registry) { Restore-GnRegistrySnapshot $record }
-    Set-GnOldUpdateTasks $plan.old_update_tasks $true
-    Copy-GnRelatedIntegration (Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'integration')) $plan.related $true
-    Restore-GnMigrationPath $plan 'Machine'
-    Restore-GnMigrationPath $plan 'User'
-    if ([IO.File]::Exists($plan.pointer)) { [IO.File]::Delete($plan.pointer) }
-    if ($plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration) { Complete-GnRuntimeConfigTransaction $plan.install_root $package $plan.runtime_configuration }
+    foreach ($record in $restoreRegistry) { Restore-GnRegistrySnapshot $record }
+    if ($same) {
+        Set-GnOldUpdateTasks $original.snapshot.old_update_tasks $true
+        Restore-GnTakeoverOriginalIntegration $original $plan
+        $pathPlan = [pscustomobject]@{user_path=$original.snapshot.user_path;machine_path=$original.snapshot.machine_path;original_root=$plan.original_root;install_root=$plan.install_root;install_scope=$plan.install_scope;platform=$plan.platform}
+        Restore-GnMigrationPath $pathPlan 'Machine'
+        Restore-GnMigrationPath $pathPlan 'User'
+    } else {
+        Set-GnOldUpdateTasks $plan.old_update_tasks $true
+        Copy-GnRelatedIntegration (Assert-GnOwnedPath $Transaction (Join-Path $Transaction 'integration')) $plan.related $true
+        Restore-GnMigrationPath $plan 'Machine'
+        Restore-GnMigrationPath $plan 'User'
+        if ($plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration) { Complete-GnRuntimeConfigTransaction $plan.install_root $package $plan.runtime_configuration }
+    }
     $plan.status = 'rolled-back'; Write-GnTakeoverJournal $Transaction $plan
+    if ([IO.File]::Exists($plan.pointer)) {
+        [void](Get-GnTakeoverRecoveryContext $Transaction)
+        [IO.File]::Delete((Assert-GnOwnedPath $recovery.config $plan.pointer))
+    }
 }
 
 function Assert-GnTakeoverRemoval([string]$InstallRoot) {
@@ -705,7 +1201,48 @@ function Assert-GnTakeoverRemoval([string]$InstallRoot) {
     Assert-GnScopedFile $pointer
     $state = Get-Content -LiteralPath $pointer -Raw -Encoding UTF8 | ConvertFrom-Json
     if ($state.schema_version -ne 1 -or $state.product -cne 'git-next') { throw 'The migration state is invalid; preserve the current installation for recovery.' }
-    if ([IO.Path]::GetFullPath($state.install_root).TrimEnd('\','/') -ieq [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')) { throw 'Rollback the active Git takeover before uninstalling its MSI. The original Git, login data and caller paths will be restored from the protected transaction.' }
+    if ([IO.Path]::GetFullPath($state.install_root).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')) { return }
+    $recovery = Get-GnTakeoverRecoveryContext $state.transaction
+    $plan = $recovery.plan
+    if (-not $plan.PSObject.Properties['same_directory'] -or -not $plan.same_directory -or $plan.status -cne 'rolling-back') { throw 'Rollback the active Git takeover before uninstalling its MSI. The original Git, login data and caller paths will be restored from the protected transaction.' }
+    $authorized = Assert-GnTakeoverRecoveryTools $recovery
+    $packagePath = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot 'package.json')
+    if ((Get-FileHash -LiteralPath $packagePath -Algorithm SHA256).Hash.ToLowerInvariant() -cne $plan.rollback_package_sha256 -or $package.product_code -cne $authorized.product_code) { throw 'The MSI removal is not bound to this protected rollback.' }
+    [void](Get-GnTakeoverOriginalRecovery $recovery)
+    if ($plan.PSObject.Properties['runtime_configuration'] -and $plan.runtime_configuration -and (-not $plan.PSObject.Properties['runtime_configuration_rolled_back'] -or -not $plan.runtime_configuration_rolled_back)) { throw 'The runtime configuration must be restored before controlled MSI removal.' }
+    $guardWorker = Get-GnTakeoverGuardWorker $InstallRoot $authorized
+    if (Test-GnTakeoverRemovalBusy $InstallRoot $authorized $guardWorker) { throw 'An owned Git/runtime process is active; controlled MSI removal was deferred.' }
 }
 
-Export-ModuleMember -Function Get-GnTakeoverPlan,Start-GnTakeover,Restore-GnTakeover,Assert-GnTakeoverRemoval
+function Get-GnTakeoverGuardWorker([string]$InstallRoot,$Package) {
+    $pin = $Package.files.PSObject.Properties['updater/msi-worker.exe']
+    if (-not $pin -or $pin.Value -cnotmatch '^[a-f0-9]{64}$') { return $null }
+    $expected = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot 'updater/msi-worker.exe')
+    if ((Get-FileHash -LiteralPath $expected -Algorithm SHA256).Hash.ToLowerInvariant() -cne $pin.Value) { throw 'The MSI guard worker differs from its current manifest.' }
+    try {
+        $self = Get-CimInstance -ClassName Win32_Process -Filter ('ProcessId='+$PID) -ErrorAction Stop
+        $parent = Get-CimInstance -ClassName Win32_Process -Filter ('ProcessId='+[uint32]$self.ParentProcessId) -ErrorAction Stop
+        $worker = Get-Process -Id $parent.ProcessId -ErrorAction Stop
+        $command = '^(?:"'+[regex]::Escape($expected)+'"|'+[regex]::Escape($expected)+')\s+-Mode\s+GuardRemoval\s*$'
+        if ($worker.MainModule.FileName -ine $expected -or $parent.ExecutablePath -ine $expected -or $parent.CommandLine -cnotmatch $command) { return $null }
+        return [pscustomobject]@{id=$worker.Id;start_ticks=$worker.StartTime.ToUniversalTime().Ticks;path=$expected}
+    } catch { return $null }
+}
+
+function Test-GnTakeoverRemovalBusy([string]$InstallRoot,$Package,$GuardWorker) {
+    if (-not $GuardWorker) { return Test-GnBusy $InstallRoot }
+    $prefix = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\')+'\'
+    $names = @('git','git-next','git-terminal','git-lfs','git-next-lfs-filter')
+    $names += @($Package.files.PSObject.Properties | Where-Object { $_.Name.EndsWith('.exe',[StringComparison]::OrdinalIgnoreCase) } | ForEach-Object { [IO.Path]::GetFileNameWithoutExtension($_.Name) })
+    $patterns = @($names | Sort-Object -Unique | ForEach-Object { [WildcardPattern]::Escape($_) })
+    foreach ($process in @(Get-Process -Name $patterns -ErrorAction SilentlyContinue)) {
+        try {
+            $path = $process.MainModule.FileName
+            if ($process.Id -eq $GuardWorker.id -and $process.StartTime.ToUniversalTime().Ticks -eq $GuardWorker.start_ticks -and $path -ieq $GuardWorker.path) { continue }
+        } catch { return $true }
+        if (-not $path -or $path.StartsWith($prefix,[StringComparison]::OrdinalIgnoreCase)) { return $true }
+    }
+    return $false
+}
+
+Export-ModuleMember -Function Get-GnTakeoverPlan,Start-GnTakeover,Restore-GnTakeover,Assert-GnTakeoverRemoval,New-GnPreinstallSnapshot,Get-GnTakeoverRecoveryContext

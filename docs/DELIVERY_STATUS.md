@@ -1,8 +1,8 @@
 # git-next 固定交付清单与进度
 
-## 当前交付范围 · 1.0.3 本地门禁完成（2026-10-24）
+## 当前交付范围 · R7 恢复完成，R8 修复待验收（2026-10-24）
 
-本轮完成 Python 工具链退役及声明范围内的本地正确性、成对性能门禁，准备一次整合发布。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。此源码快照的 release staging、工作站安装/更新、push 和发布仍为 pending；预计的 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 不表示这些动作已发生。
+本轮完成 Python 工具链退役，R7 已完成声明范围内的本地正确性、成对性能门禁和 release staging，随后实际工作站接管失败。精确恢复已核验，R8 安装修复及其最终门禁仍在进行，1.0.3 尚未发布。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。最近一次已记录的官方 latest 查询（2026-10-23）返回 v1.0.1；1.0.2 是打包检查点，不作为已确认的当前稳定发布。预计的 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 不表示发布已经发生。
 
 115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前不存在 `tests/legacy_cli/`，Rust 的 100 场景也不代表全部历史断言逐条等量迁移。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
 
@@ -17,15 +17,17 @@
 
 Windows 默认值对照保留原 `true/0` 配置在第 21 轮只返回 3,999/4,000 文件的失败证据，保持完整输出断言。该对照没有证明内部根因或性能优势；用户、仓库和命令行显式配置仍有正常优先级。POSIX 包不消费此 Windows defaults fragment，现有已验收 POSIX 归档字节保持不变。[公开对照回执](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-read-safety-20261023.json)。
 
-**本地门禁完成。** 最终 R7 correctness 为 18 lane 中 **16 通过、2 项用户豁免**，耗时 **249.801 秒**；同一冻结矩阵的 paired performance 为 **5/5 通过、668.849 秒**，覆盖 1k/10k/100k 文件和 loopback HTTPS，各 10 对样本，含冻结输入回读。性能通过表示完整批次与输出校验完成，不表示所有场景更快；两批次均未达到全批次 60 秒目标。实现提交为 `e849f9c2fce0b99ee85b8ee52f44a803af12f607`，冻结矩阵为 `final-matrix-r7.json`，SHA-256 `f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c`。[公开总证据](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md)及其 [JSON](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)记录原始回执身份和历史失败。
+**R7 本地门禁检查点。** R7 correctness 为 18 lane 中 **16 通过、2 项用户豁免**，耗时 **249.801 秒**；同一冻结矩阵的 paired performance 为 **5/5 通过、668.849 秒**，覆盖 1k/10k/100k 文件和 loopback HTTPS，各 10 对样本，含冻结输入回读。性能通过表示完整批次与输出校验完成，不表示所有场景更快；两批次均未达到全批次 60 秒目标。实现提交为 `e849f9c2fce0b99ee85b8ee52f44a803af12f607`，冻结矩阵为 `final-matrix-r7.json`，SHA-256 `f6cb2f74082e31f8bf6f2f5ad4a4b890a13ed9330534043137f34f20d6ce5d1c`。[固定源码的 R7 总证据](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.md)及其 [JSON](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.json)记录原始回执和失败，JSON SHA-256 为 `f40f624c676908eab39906ec3e6500623a83c6aec9d7b1af9a930ae8755ecafa`。这些通过不适用于尚待验收的 R8 脚本变更。
 
-Windows x64 MSI 用户级实际通过 **27 项、622.690 秒**，机器级通过 **25 项、473.217 秒**，包含安装、修复、升级、注入失败回滚、拒绝降级和卸载。R7 只在不可变输入及严格限定的工具变化校验通过后复用这些真实回执；249.801 秒不是把完整 MSI 事务重新执行一遍的总耗时。Windows ARM64 的两个 MSI 只有编译、表及静态检查，不声明硬件生命周期验收。这些隔离生命周期通过也不表示最终工作站安装已发生。
+Windows x64 MSI 用户级实际通过 **27 项、622.690 秒**，机器级通过 **25 项、473.217 秒**，包含安装、修复、升级、注入失败回滚、拒绝降级和卸载。R7 只在不可变输入及严格限定的工具变化校验通过后复用这些真实回执；249.801 秒不是把完整 MSI 事务重新执行一遍的总耗时。Windows ARM64 的两个 MSI 只有编译、表及静态检查，不声明硬件生命周期验收。R7 后续工作站流程实际失败，不能以隔离生命周期通过代替；R8 新输入也须重新满足适用门禁。
 
-用户豁免只覆盖 `terminal-rust-contracts` 与 `terminal-native-desktop`，结果保留为 `waived`，不计作通过。`terminal-waiver-r7.json` 的 SHA-256 为 `e18894e31b2fe2f705d5f7dcf209fba23ccf86d23455a503fef3f02da116c236`，绑定同一 R6 矩阵及两个架构的确切终端字节。R4 的 GUI startup/MSI rollback 失败、R5b 因主控缺少 Go PATH 导致的四个 Docker lane 失败和 R5c 的 100k grep 失败均保留。R6 修复 benchmark 超时分类并将 100k 单命令 deadline 调为 120 秒，完整输出、退出码、fsck 和 3 次 warmup + 10 对实测校验保留；原 R5c 失败根因仍未确定，不改写为已证明的超时。
+用户豁免只覆盖 `terminal-rust-contracts` 与 `terminal-native-desktop`，结果保留为 `waived`，不计作通过。`terminal-waiver-r7.json` 的 SHA-256 为 `e18894e31b2fe2f705d5f7dcf209fba23ccf86d23455a503fef3f02da116c236`，绑定同一 R7 矩阵及两个架构的确切终端字节；R8 必须重新绑定其最终矩阵，不扩大豁免范围。R4 的 GUI startup/MSI rollback 失败、R5b 因主控缺少 Go PATH 导致的四个 Docker lane 失败和 R5c 的 100k grep 失败均保留。R6 修复 benchmark 超时分类并将 100k 单命令 deadline 调为 120 秒，完整输出、退出码、fsck 和 3 次 warmup + 10 对实测校验保留；原 R5c 失败根因仍未确定，不改写为已证明的超时。
 
 **R6 与 stage 失败历史。** R6 曾完成 16 通过、2 项豁免的正确性（246.204 秒）和 5/5 性能（691.251 秒），当时的公开报告保留于[固定源码检查点](https://github.com/neko233-com/git-next/blob/36d7b9d2e5772b5fb93ebd476d881b919ca115ef/docs/benchmarks/native-python-retirement-20261023.json)。后续 release 复制的硬链接使 Windows ARM64 暂存 metadata/docs 写入影响源字节，严格不可变输入检查拒绝下一次执行，未发布。随后从冻结的 r5b MSI 只读解出 CAB，将 25 个文档/metadata 文件恢复到新 inode；9,005 个冻结文件校验差异为 0，896 个 EXE/DLL 校验差异为 0，未写 runtime 二进制或执行 MSI/终端。恢复回执 SHA-256 为 fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461。R7 使用修复后的独立复制和新矩阵实际重跑非终端正确性与性能；R6 通过不代替新输入的验收。
 
-**后续交付动作：pending。** 最终 release staging、暂存产物校验和及配置的签名验证、工作站安装/更新与配置回读、push 和一次整合发布尚未发生或尚未形成最终回执。发布后的动作与远端资产回读由 release 资产和后续文档记录；此源码快照不预先声明本轮 10/10、工作站接管完成或 1.0.3 已发布。[机器可读状态](https://github.com/neko233-com/git-next/blob/main/docs/DELIVERY_STATUS.json) 中 `current_release_evidence` 分开记录本地门禁与交付动作。
+**R7 工作站失败及恢复。** R7 stage 已完成，源码为 `33269276902e1d3c52fab176516f14db908b7570`；实际 bootstrap 在 **1,127.534 秒**后于完成阶段失败，Apply 曾返回 active，但清理将自身 `package.json` 误判为 stale，旧卸载器还删除了共享的 `bin/git.exe`，Complete 和 rollback 因缺少清单而要求恢复。随后以受保护备份和 MSI 清单核对原字节，使用 `CreateNew` 精确恢复这两个文件。独立只读回验 **10,696/10,696** 个声明的不可变文件、**1,362,591,995** 字节全部一致；安装树共检查 **10,712** 文件、Python 项 **0**，空 PATH 的两路 owned P4 入口通过，**12** 个个人配置文件对首次安装前的 fresh baseline **0 变化**。这属于恢复完成，`release_gate=false`，不表示完整安装、回滚生命周期或发布门禁通过。[公开恢复记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json)的 SHA-256 为 `f83b233ecba706f6f500728cc8dbc885697947e4529a0a759b88caddd449203f`，原失败与先前未归因的 known_hosts 漂移记录保留。
+
+**R8 修复与后续交付：pending。** 源码正补入 MSI 前的完整原安装快照、候选 MSI/package/快照 SHA 绑定、SameDirectory 归属清理与受保护回滚；32 位 bootstrap 自动先转发至原生 64 位 PowerShell，再按机器级范围请求 UAC。固定 7 模块从已核验的 MSI 内嵌 CAB 定向提取并逐项校验，无 Go/Python/WiX 安装依赖；失败保留快照路径和预先钉住的 SHA。API 与恢复边界见[安装说明](INSTALLATION.md)。这些实现与定向契约不替代 R8 最终正确性、性能、stage、适用 MSI 生命周期及实际工作站流程；git-next push 和一次整合发布也仍待完成。此记录不声明本轮 10/10、工作站接管成功或 1.0.3 已发布。[机器可读状态](https://github.com/neko233-com/git-next/blob/main/docs/DELIVERY_STATUS.json) 分开保存 R7 检查点、失败恢复及 R8 待办。
 
 ## 历史已发布版本 · v0.3.0（2026-10-21）
 

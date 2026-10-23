@@ -11,6 +11,119 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $env:PSModulePath = (Join-Path $PSHOME 'Modules') + ';' + $env:PSModulePath
+$script:GnBootstrapScriptPath = $PSCommandPath
+
+function Initialize-GnBootstrapNative {
+    if ('GitNext.BootstrapNative' -as [type]) { return }
+    Add-Type -TypeDefinition @'
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+namespace GitNext {
+ public static class BootstrapNative {
+  [StructLayout(LayoutKind.Sequential)] struct SecurityAttributes { public int length; public IntPtr descriptor; public int inherit; }
+  [DllImport("advapi32.dll", CharSet=CharSet.Unicode, SetLastError=true)] static extern bool ConvertStringSecurityDescriptorToSecurityDescriptor(string text, uint revision, out IntPtr descriptor, out uint size);
+  [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)] static extern bool CreateDirectory(string path, ref SecurityAttributes attributes);
+  [DllImport("kernel32.dll")] static extern IntPtr LocalFree(IntPtr memory);
+  [DllImport("msi.dll", CharSet=CharSet.Unicode)] static extern uint MsiOpenDatabase(string path, IntPtr persist, out uint database);
+  [DllImport("msi.dll", CharSet=CharSet.Unicode)] static extern uint MsiDatabaseOpenView(uint database, string sql, out uint view);
+  [DllImport("msi.dll")] static extern uint MsiViewExecute(uint view, uint record);
+  [DllImport("msi.dll")] static extern uint MsiViewFetch(uint view, out uint record);
+  [DllImport("msi.dll")] static extern uint MsiRecordGetFieldCount(uint record);
+  [DllImport("msi.dll", CharSet=CharSet.Unicode)] static extern uint MsiRecordGetString(uint record, uint field, StringBuilder text, ref uint length);
+  [DllImport("msi.dll")] static extern uint MsiRecordReadStream(uint record, uint field, byte[] data, ref uint count);
+  [DllImport("msi.dll")] static extern uint MsiCloseHandle(uint handle);
+  static void Check(uint code) { if (code != 0) throw new Win32Exception((int)code); }
+  static uint Open(string path) { uint database; Check(MsiOpenDatabase(path, IntPtr.Zero, out database)); return database; }
+  public static void CreatePrivateDirectory(string path, string sddl) {
+   IntPtr descriptor; uint size;
+   if (!ConvertStringSecurityDescriptorToSecurityDescriptor(sddl, 1, out descriptor, out size)) throw new Win32Exception(Marshal.GetLastWin32Error());
+   try { var attributes = new SecurityAttributes { length=Marshal.SizeOf(typeof(SecurityAttributes)), descriptor=descriptor };
+    if (!CreateDirectory(path, ref attributes)) throw new Win32Exception(Marshal.GetLastWin32Error());
+   } finally { LocalFree(descriptor); }
+  }
+  public static string[][] Query(string path, string sql) {
+   uint database=Open(path), view=0;
+   try { Check(MsiDatabaseOpenView(database, sql, out view)); Check(MsiViewExecute(view, 0)); var rows=new List<string[]>();
+    while (true) { uint record; uint code=MsiViewFetch(view, out record); if (code==259) break; Check(code);
+     try { uint fields=MsiRecordGetFieldCount(record) & 0xffff; if (fields==0 || fields>32 || rows.Count>=75000) throw new InvalidDataException("MSI table exceeds bootstrap limits.");
+      var row=new string[fields]; for (uint field=1;field<=fields;field++) { uint length=4096; var value=new StringBuilder(4097); Check(MsiRecordGetString(record,field,value,ref length)); row[field-1]=value.ToString(); } rows.Add(row);
+     } finally { MsiCloseHandle(record); }
+    } return rows.ToArray();
+   } finally { if(view!=0) MsiCloseHandle(view); MsiCloseHandle(database); }
+  }
+  public static void ExportCabinet(string path, string name, string destination) {
+   if (name.Length>120 || !System.Text.RegularExpressions.Regex.IsMatch(name,@"^[A-Za-z0-9_.-]+$")) throw new InvalidDataException("Unsafe embedded cabinet name.");
+   uint database=Open(path),view=0,record=0;
+   try { Check(MsiDatabaseOpenView(database,"SELECT `Data` FROM `_Streams` WHERE `Name`='"+name+"'",out view)); Check(MsiViewExecute(view,0)); Check(MsiViewFetch(view,out record));
+    using(var target=new FileStream(destination,FileMode.CreateNew,FileAccess.Write,FileShare.None)) { byte[] buffer=new byte[1048576]; long total=0;
+     while(true) { uint count=(uint)buffer.Length; Check(MsiRecordReadStream(record,1,buffer,ref count)); if(count==0) break; total+=count; if(total>1073741824) throw new InvalidDataException("Embedded cabinet exceeds bootstrap limit."); target.Write(buffer,0,(int)count); }
+     if(total==0) throw new InvalidDataException("Embedded cabinet is empty.");
+    }
+   } finally { if(record!=0) MsiCloseHandle(record); if(view!=0) MsiCloseHandle(view); MsiCloseHandle(database); }
+  }
+ }
+}
+'@
+}
+function New-GnBootstrapPrivateDirectory([string]$Path,[string]$InstallScope) {
+    Initialize-GnBootstrapNative
+    $full=[IO.Path]::GetFullPath($Path)
+    if($InstallScope -eq 'machine'){
+        $common=[Environment]::GetFolderPath([Environment+SpecialFolder]::CommonApplicationData).TrimEnd('\')
+        if(-not $common -or -not $full.StartsWith($common+'\',[StringComparison]::OrdinalIgnoreCase)){throw 'A machine bootstrap cache must be beneath the native common application-data directory.'}
+    }
+    $ancestor=[IO.Path]::GetDirectoryName($full)
+    while ($ancestor) {
+        if (-not [IO.Directory]::Exists($ancestor) -or ([IO.File]::GetAttributes($ancestor) -band [IO.FileAttributes]::ReparsePoint)) { throw 'Bootstrap cache ancestors must be existing regular directories.' }
+        if($InstallScope -eq 'machine'){
+            $acl=Get-Acl -LiteralPath $ancestor
+            $trusted=@('S-1-5-18','S-1-5-32-544','S-1-5-80-956008885-3418522649-1831038044-1853292631-2271478464')
+            if($acl.GetOwner([Security.Principal.SecurityIdentifier]).Value -notin $trusted){throw 'A machine bootstrap cache ancestor has an untrusted owner.'}
+            $unsafeRights=[Security.AccessControl.FileSystemRights]::Delete -bor [Security.AccessControl.FileSystemRights]::DeleteSubdirectoriesAndFiles -bor [Security.AccessControl.FileSystemRights]::ChangePermissions -bor [Security.AccessControl.FileSystemRights]::TakeOwnership
+            foreach($rule in $acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier])){
+                if($rule.AccessControlType -eq [Security.AccessControl.AccessControlType]::Allow -and -not ($rule.PropagationFlags -band [Security.AccessControl.PropagationFlags]::InheritOnly) -and $rule.IdentityReference.Value -notin $trusted -and ($rule.FileSystemRights -band $unsafeRights)){throw 'A machine bootstrap cache ancestor grants an untrusted replacement permission.'}
+            }
+        }
+        $ancestor=[IO.Path]::GetDirectoryName($ancestor)
+    }
+    $sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+    $sddl=if($InstallScope -eq 'machine'){'O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)'}else{'O:'+ $sid +'G:'+ $sid +'D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)(A;OICI;FA;;;'+$sid+')'}
+    [GitNext.BootstrapNative]::CreatePrivateDirectory($full,$sddl)
+    return $full
+}
+function Get-GnBootstrapForwardArguments {
+    $arguments=@{Scope=$Scope}
+    foreach($name in @('Version','PackagePath','ExpectedSha256','TlsArchive')) { $value=Get-Variable -Name $name -ValueOnly; if($value){$arguments[$name]=[string]$value} }
+    if ($Plan) { $arguments.Plan=$true }
+    return $arguments
+}
+function Get-GnBootstrapRelayCode([string]$ScriptPath,[string]$ScriptSha256,[hashtable]$Arguments,[string]$ResultPath='') {
+    $payload=@{path=[IO.Path]::GetFullPath($ScriptPath);sha256=$ScriptSha256;arguments=$Arguments;result=$ResultPath} | ConvertTo-Json -Depth 5 -Compress
+    $encoded=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($payload))
+    # A read lease prevents script replacement between the digest check and invocation.
+    return '$ErrorActionPreference="Stop"; if(-not [Environment]::Is64BitProcess){throw "Native 64-bit PowerShell is required."}; $v=[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String("'+$encoded+'"))|ConvertFrom-Json; $lease=[IO.File]::Open($v.path,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read); try { if((Get-FileHash -LiteralPath $v.path -Algorithm SHA256).Hash.ToLowerInvariant() -cne $v.sha256.ToLowerInvariant()){throw "Installer changed before native forwarding."}; $a=@{}; $v.arguments.PSObject.Properties|ForEach-Object{$a[$_.Name]=$_.Value}; $exitCode=0; try{$value=(& $v.path @a|Out-String)}catch{$value=[pscustomobject]@{status="failed";message=$_.Exception.Message}|ConvertTo-Json; $exitCode=1}; if($v.result){$bytes=[Text.UTF8Encoding]::new($false).GetBytes($value); $file=[IO.File]::Open($v.result,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None); try{$file.Write($bytes,0,$bytes.Length)}finally{$file.Dispose()}}else{Write-Output $value}; if($exitCode){exit $exitCode} } finally {$lease.Dispose()}'
+}
+function Invoke-GnBootstrapNativeRelay([string]$ScriptPath,[string]$ScriptSha256,[hashtable]$Arguments) {
+    $code=Get-GnBootstrapRelayCode $ScriptPath $ScriptSha256 $Arguments
+    $start=[Diagnostics.ProcessStartInfo]::new()
+    $start.FileName=Join-Path $env:SystemRoot 'Sysnative\WindowsPowerShell\v1.0\powershell.exe'
+    $start.Arguments='-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand '+[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($code))
+    $start.UseShellExecute=$false;$start.CreateNoWindow=$true;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
+    $process=[Diagnostics.Process]::new();$process.StartInfo=$start
+    try {
+        if(-not $process.Start()){throw 'Native PowerShell forwarding did not start.'}
+        $output=$process.StandardOutput.ReadToEndAsync();$errors=$process.StandardError.ReadToEndAsync()
+        if(-not $process.WaitForExit(3600000)){$process.Kill();throw 'Native PowerShell forwarding timed out.'}
+        $value=$output.GetAwaiter().GetResult();$errorText=$errors.GetAwaiter().GetResult()
+        if($process.ExitCode){throw ('Native PowerShell forwarding failed. '+$value+' '+$errorText)}
+        if(-not $value.Trim()){throw 'Native PowerShell forwarding returned no status.'}
+        Write-Output $value
+    } finally {$process.Dispose()}
+}
 
 function Get-GnBootstrapArchitecture {
     $architecture = [Environment]::GetEnvironmentVariable('PROCESSOR_ARCHITEW6432')
@@ -175,6 +288,139 @@ function Get-GnBootstrapMsiVersion([string]$Package) {
         return $version
     } finally { foreach($item in @($record,$view,$database,$installer)){if($item){[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($item)}} }
 }
+function Get-GnBootstrapMsiRows([string]$Package,[string]$Sql) {
+    Initialize-GnBootstrapNative
+    foreach($row in [GitNext.BootstrapNative]::Query($Package,$Sql)){[pscustomobject]@{values=$row}}
+}
+function Get-GnBootstrapSupportPaths {
+    @('package.json','migration/takeover.ps1','migration/Takeover.Core.psm1','updater/Update.Core.psm1','updater/Scope.Core.ps1','updater/Scope.Native.cs','updater/Runtime.Configuration.ps1','updater/messages.zh-CN.json')
+}
+function Get-GnBootstrapMsiName([string]$Name) {
+    $target=($Name -split ':',2)[0]
+    $target=($target -split '\|')[-1]
+    if($target -eq '.'){return ''}
+    if(-not $target -or $target -in @('..',' ') -or $target -match '[\\/:\x00-\x1f]' -or $target.EndsWith('.') -or $target.EndsWith(' ')){throw 'Unsafe MSI target name.'}
+    return $target
+}
+function Resolve-GnBootstrapMsiDirectory([string]$Id,[hashtable]$Directories,[hashtable]$Seen,[int]$Depth=0) {
+    if($Id -ceq 'INSTALLFOLDER'){return ''}
+    if($Depth -ge 64 -or $Seen.ContainsKey($Id) -or -not $Directories.ContainsKey($Id)){throw 'MSI payload directory is outside the bounded installation tree.'}
+    $Seen[$Id]=$true
+    try {
+        $row=$Directories[$Id]
+        $parent=Resolve-GnBootstrapMsiDirectory $row[1] $Directories $Seen ($Depth+1)
+        $name=Get-GnBootstrapMsiName $row[2]
+        return (@($parent,$name)|Where-Object{$_}) -join '/'
+    } finally {$Seen.Remove($Id)}
+}
+function Get-GnBootstrapSupportMap([string]$Package) {
+    $directories=@{};$components=@{};$wanted=@{};$selected=@{}
+    foreach($path in Get-GnBootstrapSupportPaths){$wanted[$path]=$path}
+    foreach($item in Get-GnBootstrapMsiRows $Package 'SELECT `Directory`,`Directory_Parent`,`DefaultDir` FROM `Directory`'){
+        $row=$item.values;if($directories.ContainsKey($row[0])){throw 'Ambiguous MSI directory.'};$directories[$row[0]]=$row
+    }
+    foreach($item in Get-GnBootstrapMsiRows $Package 'SELECT `Component`,`Directory_` FROM `Component`'){
+        $row=$item.values;if($components.ContainsKey($row[0])){throw 'Ambiguous MSI component.'};$components[$row[0]]=$row[1]
+    }
+    $media=@();$last=0L
+    foreach($item in Get-GnBootstrapMsiRows $Package 'SELECT `DiskId`,`LastSequence`,`Cabinet` FROM `Media` ORDER BY `DiskId`'){
+        $row=$item.values;$bound=0L
+        if(-not [long]::TryParse($row[1],[ref]$bound) -or $bound -le $last -or $row[2] -cnotmatch '^#[A-Za-z0-9_.-]{1,120}$'){throw 'Only bounded embedded MSI cabinets are supported.'}
+        $media+=,[pscustomobject]@{first=$last+1;last=$bound;cabinet=$row[2].Substring(1)};$last=$bound
+    }
+    foreach($item in Get-GnBootstrapMsiRows $Package 'SELECT `File`,`Component_`,`FileName`,`FileSize`,`Sequence` FROM `File`'){
+        $row=$item.values
+        if(-not $components.ContainsKey($row[1])){throw 'MSI file references an unknown component.'}
+        $directory=Resolve-GnBootstrapMsiDirectory $components[$row[1]] $directories @{}
+        $name=Get-GnBootstrapMsiName $row[2]
+        $path=(@($directory,$name)|Where-Object{$_}) -join '/'
+        if(-not $wanted.ContainsKey($path)){continue}
+        $canonical=$wanted[$path]
+        $size=0L;$sequence=0L
+        if($selected.ContainsKey($canonical) -or $row[0] -cnotmatch '^[A-Za-z_][A-Za-z0-9_.]{0,119}$' -or $row[0].EndsWith('.') -or -not [long]::TryParse($row[3],[ref]$size) -or $size -le 0 -or $size -gt 33554432 -or -not [long]::TryParse($row[4],[ref]$sequence)){throw 'Invalid or ambiguous MSI bootstrap member.'}
+        $cabinet=@($media|Where-Object{$sequence -ge $_.first -and $sequence -le $_.last})
+        if($cabinet.Count -ne 1){throw 'MSI bootstrap member has no unique embedded cabinet.'}
+        $selected[$canonical]=[pscustomobject]@{path=$canonical;id=$row[0];bytes=$size;cabinet=$cabinet[0].cabinet}
+    }
+    if($selected.Count -ne $wanted.Count){throw 'Verified MSI is missing a required preinstall support member.'}
+    return $selected
+}
+function Export-GnBootstrapCabinet([string]$Package,[string]$Name,[string]$Destination) {
+    Initialize-GnBootstrapNative
+    [GitNext.BootstrapNative]::ExportCabinet($Package,$Name,$Destination)
+}
+function Expand-GnBootstrapCabinetMember([string]$Cabinet,[string]$Id,[string]$Directory) {
+    if($Id -cnotmatch '^[A-Za-z_][A-Za-z0-9_.]{0,119}$' -or $Id.EndsWith('.')){throw 'Unsafe cabinet member selector.'}
+    $start=[Diagnostics.ProcessStartInfo]::new()
+    $start.FileName=Join-Path $env:SystemRoot 'System32\expand.exe'
+    $start.Arguments='"'+$Cabinet+'" -F:'+ $Id +' "'+$Directory+'"'
+    $start.UseShellExecute=$false;$start.CreateNoWindow=$true;$start.RedirectStandardOutput=$true;$start.RedirectStandardError=$true
+    $process=[Diagnostics.Process]::new();$process.StartInfo=$start
+    try {
+        if(-not $process.Start()){throw 'Embedded cabinet extraction did not start.'}
+        $output=$process.StandardOutput.ReadToEndAsync();$errors=$process.StandardError.ReadToEndAsync()
+        if(-not $process.WaitForExit(30000)){$process.Kill();throw 'Embedded cabinet extraction timed out.'}
+        [void]$output.GetAwaiter().GetResult();$failure=$errors.GetAwaiter().GetResult()
+        if($process.ExitCode){throw ('Embedded cabinet extraction failed. '+$failure)}
+    } finally {$process.Dispose()}
+    $members=@([IO.Directory]::GetFileSystemEntries($Directory))
+    if($members.Count -ne 1 -or [IO.Path]::GetFileName($members[0]) -cne $Id -or -not [IO.File]::Exists($members[0]) -or ([IO.File]::GetAttributes($members[0]) -band [IO.FileAttributes]::ReparsePoint)){throw 'Cabinet extraction did not produce exactly the requested regular member.'}
+    return $members[0]
+}
+function Get-GnBootstrapFileSha256([string]$Path) { return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.ToLowerInvariant() }
+function Assert-GnBootstrapCandidate($Selection,$Manifest,[string]$TargetVersion) {
+    if($Manifest.schema_version -ne 1 -or $Manifest.product -cne 'git-next' -or $Manifest.install_kind -cne 'msi' -or $Manifest.version -cne $TargetVersion -or $Manifest.platform -cne $Selection.platform -or $Manifest.install_scope -cne $Selection.scope -or $Manifest.installation_layout -cne 'git-default-v2' -or $Manifest.release_eligible -ne $true -or $Manifest.complete_git_parity -ne $true){throw 'The verified MSI must contain the selected complete native package identity.'}
+}
+function Expand-GnBootstrapSupport([string]$Package,[string]$ExpectedMsiSha256,[string]$Destination,$Selection,[string]$TargetVersion) {
+    if($ExpectedMsiSha256 -cnotmatch '^[a-f0-9]{64}$'){throw 'A verified MSI SHA256 is required before support extraction.'}
+    $lease=[IO.File]::Open($Package,[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::Read)
+    try {
+        if((Get-GnBootstrapFileSha256 $Package) -cne $ExpectedMsiSha256){throw 'MSI changed before preinstall support extraction.'}
+        $map=Get-GnBootstrapSupportMap $Package
+        $total=0L;foreach($entry in $map.Values){$total+=$entry.bytes};if($total -gt 67108864){throw 'Preinstall support exceeds the extraction limit.'}
+        [void](New-GnBootstrapPrivateDirectory $Destination $Selection.scope)
+        $support=Join-Path $Destination 'support';[void][IO.Directory]::CreateDirectory($support)
+        $cabinets=@{}
+        foreach($entry in @($map.Values|Sort-Object path)){
+            if(-not $cabinets.ContainsKey($entry.cabinet)){
+                $cab=Join-Path $Destination ('cabinet-'+$cabinets.Count+'.cab')
+                Export-GnBootstrapCabinet $Package $entry.cabinet $cab;$cabinets[$entry.cabinet]=$cab
+            }
+            $scratch=Join-Path $Destination ('member-'+[Guid]::NewGuid().ToString('N'));[void][IO.Directory]::CreateDirectory($scratch)
+            $member=Expand-GnBootstrapCabinetMember $cabinets[$entry.cabinet] $entry.id $scratch
+            if((Get-Item -LiteralPath $member).Length -ne $entry.bytes){throw 'Embedded support member size differs from the MSI File table.'}
+            $target=Join-Path $support $entry.path;[void][IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($target));[IO.File]::Move($member,$target);[IO.Directory]::Delete($scratch)
+        }
+        $packageManifest=Join-Path $support 'package.json';$manifest=[IO.File]::ReadAllText($packageManifest)|ConvertFrom-Json
+        Assert-GnBootstrapCandidate $Selection $manifest $TargetVersion
+        foreach($path in Get-GnBootstrapSupportPaths){
+            if($path -ceq 'package.json'){continue}
+            $property=@($manifest.files.PSObject.Properties|Where-Object{$_.Name -ceq $path})
+            if($property.Count -ne 1){throw ('Package manifest does not bind bootstrap member: '+$path)}
+            $hash=[string]$property[0].Value;$file=Join-Path $support $path
+            if($hash -cnotmatch '^[a-f0-9]{64}$' -or (Get-GnBootstrapFileSha256 $file) -cne $hash){throw ('Bootstrap module checksum mismatch: '+$path)}
+        }
+        foreach($cab in $cabinets.Values){[IO.File]::Delete($cab)}
+        return [pscustomobject]@{root=$support;manifest_path=$packageManifest;manifest=$manifest;package_sha256=(Get-GnBootstrapFileSha256 $packageManifest);msi_sha256=$ExpectedMsiSha256}
+    } finally {$lease.Dispose()}
+}
+function New-GnBootstrapOriginalSnapshot($Selection,$Support,[string]$SnapshotRoot,[string]$BindingPath) {
+    Import-Module (Join-Path $Support.root 'updater\Update.Core.psm1') -Force -DisableNameChecking
+    Import-Module (Join-Path $Support.root 'migration\Takeover.Core.psm1') -Force -DisableNameChecking
+    $returned=@(New-GnPreinstallSnapshot -OriginalGitRoot $Selection.original_root -SnapshotRoot $SnapshotRoot -CandidatePackagePath $Support.manifest_path -CandidateMsiSha256 $Support.msi_sha256)
+    $expected=Join-Path ([IO.Path]::GetFullPath($SnapshotRoot)) 'snapshot.json'
+    if($returned.Count -ne 1 -or $returned[0] -isnot [string] -or [IO.Path]::GetFullPath($returned[0]) -cne $expected -or -not [IO.File]::Exists($expected) -or ([IO.File]::GetAttributes($expected) -band [IO.FileAttributes]::ReparsePoint)){throw 'Preinstall snapshot did not return its expected protected manifest.'}
+    $binding=[ordered]@{schema=1;candidate_msi_sha256=$Support.msi_sha256;candidate_package_sha256=$Support.package_sha256;original_root=[IO.Path]::GetFullPath($Selection.original_root);install_root=[IO.Path]::GetFullPath($Selection.root);owner_sid=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value;snapshot_path=$expected;snapshot_sha256=(Get-GnBootstrapFileSha256 $expected)}
+    $bytes=[Text.UTF8Encoding]::new($false).GetBytes(($binding|ConvertTo-Json -Depth 5)+[Environment]::NewLine)
+    $file=[IO.File]::Open($BindingPath,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::None)
+    try{$file.Write($bytes,0,$bytes.Length)}finally{$file.Dispose()}
+    return [pscustomobject]$binding
+}
+function Invoke-GnBootstrapApply($Selection,[string]$PreparedTls,$Binding) {
+    if((Get-GnBootstrapFileSha256 $Binding.snapshot_path) -cne $Binding.snapshot_sha256){throw 'The original-Git snapshot changed after the pre-MSI checkpoint.'}
+    if((Get-GnBootstrapFileSha256 (Join-Path $Selection.root 'package.json')) -cne $Binding.candidate_package_sha256){throw 'The installed package does not match the pre-MSI snapshot candidate.'}
+    return (& (Join-Path $Selection.root 'migration\takeover.ps1') -Mode Apply -OriginalGitRoot $Selection.original_root -TlsArchive $PreparedTls -OriginalSnapshot $Binding.snapshot_path -OriginalSnapshotSha256 $Binding.snapshot_sha256 | Out-String) | ConvertFrom-Json
+}
 function Assert-GnBootstrapPayload($Selection,$Manifest,[string]$TargetVersion) {
     if ($Manifest.version -cne $TargetVersion) { throw 'The installed manifest does not match the selected MSI version.' }
     if (-not $Manifest.PSObject.Properties['installation_layout'] -or $Manifest.installation_layout -cne 'git-default-v2') { throw 'The git-default-v2 layout is required so the official Git entry points resolve to the git-next payload.' }
@@ -241,51 +487,45 @@ function Complete-GnBootstrap($Selection,[string]$NewTransaction) {
     }
 }
 function Invoke-GnBootstrapMain {
+    if(-not [Environment]::Is64BitProcess -and [Environment]::Is64BitOperatingSystem){
+        Invoke-GnBootstrapNativeRelay $script:GnBootstrapScriptPath (Get-GnBootstrapFileSha256 $script:GnBootstrapScriptPath) (Get-GnBootstrapForwardArguments)
+        return
+    }
     $selection=Get-GnBootstrapSelection $Scope
     if ($Plan) { $selection | Add-Member NoteProperty changes_applied $false -PassThru | ConvertTo-Json; return }
     $principal=New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
     $elevated=$principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if ($selection.scope -eq 'machine' -and -not $elevated) {
-        $arguments=@{Scope=$Scope}
-        foreach($name in @('Version','PackagePath','ExpectedSha256','TlsArchive')) { $value=Get-Variable -Name $name -ValueOnly; if($value){$arguments[$name]=[string]$value} }
-        $json=$arguments | ConvertTo-Json -Compress
-        $encoded=[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($json))
-        $resultPath=[IO.Path]::GetTempFileName()
-        $resultLiteral=$resultPath.Replace("'","''")
-        $scriptPath=$PSCommandPath.Replace("'","''")
-        $scriptSha=(Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash
-        $code='$ErrorActionPreference="Stop"; $p=' + "'"+$scriptPath+"'" + '; if((Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash -cne "'+$scriptSha+'") { throw "Installer changed before elevation." }; $a=@{}; ([Text.Encoding]::UTF8.GetString([Convert]::FromBase64String("'+$encoded+'")) | ConvertFrom-Json).PSObject.Properties | ForEach-Object { $a[$_.Name]=$_.Value }; try { $value=(& $p @a | Out-String); [IO.File]::WriteAllText(' + "'"+$resultLiteral+"'" + ',$value,[Text.UTF8Encoding]::new($false)) } catch { $value=[pscustomobject]@{status="failed";message=$_.Exception.Message}|ConvertTo-Json; [IO.File]::WriteAllText(' + "'"+$resultLiteral+"'" + ',$value,[Text.UTF8Encoding]::new($false)); exit 1 }'
+        $resultDirectory=New-GnBootstrapPrivateDirectory (Join-Path $env:LOCALAPPDATA ('git-next-elevation-'+[Guid]::NewGuid().ToString('N'))) 'user'
+        $resultPath=Join-Path $resultDirectory 'result.json'
+        $code=Get-GnBootstrapRelayCode $script:GnBootstrapScriptPath (Get-GnBootstrapFileSha256 $script:GnBootstrapScriptPath) (Get-GnBootstrapForwardArguments) $resultPath
         $command=[Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($code))
         $nativeShell=Join-Path $env:SystemRoot 'System32\WindowsPowerShell\v1.0\powershell.exe'
-        if (-not [Environment]::Is64BitProcess -and [Environment]::Is64BitOperatingSystem) { $nativeShell=Join-Path $env:SystemRoot 'Sysnative\WindowsPowerShell\v1.0\powershell.exe' }
         try {
             $child=Start-Process -FilePath $nativeShell -Verb RunAs -WindowStyle Hidden -ArgumentList ('-NoProfile -NonInteractive -ExecutionPolicy Bypass -EncodedCommand '+$command) -Wait -PassThru
             $result=Get-Content -LiteralPath $resultPath -Raw
             if ($child.ExitCode) { $failure=$result | ConvertFrom-Json; throw ('Elevated installation failed. '+$failure.message) }
             if (-not $result) { throw 'Elevated installation returned no verified status.' }
             Write-Output $result
-        } finally { if([IO.File]::Exists($resultPath)){[IO.File]::Delete($resultPath)} }
+        } finally { if([IO.File]::Exists($resultPath)){[IO.File]::Delete($resultPath)};[IO.Directory]::Delete($resultDirectory) }
         return
     }
-    $cacheBase=if($selection.scope -eq 'machine'){$env:ProgramData}else{$env:LOCALAPPDATA}
-    $cache=Join-Path $cacheBase ('git-next-bootstrap-'+[Guid]::NewGuid().ToString('N'))
-    [void][IO.Directory]::CreateDirectory($cache)
-    if ($selection.scope -eq 'machine') {
-        $acl=New-Object Security.AccessControl.DirectorySecurity
-        $acl.SetSecurityDescriptorSddlForm('O:BAG:BAD:P(A;OICI;FA;;;SY)(A;OICI;FA;;;BA)')
-        Set-Acl -LiteralPath $cache -AclObject $acl
-    }
+    $cacheBase=if($selection.scope -eq 'machine'){[Environment]::GetFolderPath([Environment+SpecialFolder]::CommonApplicationData)}else{[Environment]::GetFolderPath([Environment+SpecialFolder]::LocalApplicationData)}
+    $cache=New-GnBootstrapPrivateDirectory (Join-Path $cacheBase ('git-next-bootstrap-'+[Guid]::NewGuid().ToString('N'))) $selection.scope
     $package=Join-Path $cache 'git-next.msi'
     $preparedTls=$null
     $newTransaction=$null
+    $originalBinding=$null
     try {
         if ($PackagePath) {
             if ($ExpectedSha256 -cnotmatch '^[a-f0-9]{64}$') { throw 'Local MSI installation requires -ExpectedSha256 from trusted release metadata.' }
             Copy-Item -LiteralPath ([IO.Path]::GetFullPath($PackagePath)) -Destination $package
             if ((Get-FileHash -LiteralPath $package -Algorithm SHA256).Hash.ToLowerInvariant() -cne $ExpectedSha256) { throw 'Local MSI checksum mismatch.' }
+            $verifiedMsiSha256=$ExpectedSha256
         } else {
             $release=Get-GnBootstrapRelease $selection.platform $selection.scope $Version
             Save-GnBootstrapPackage $release $package
+            $verifiedMsiSha256=$release.sha256
         }
         $preparedTls=$null
         if ($selection.original_root) {
@@ -302,8 +542,15 @@ function Invoke-GnBootstrapMain {
             }
         }
         $targetVersion=Get-GnBootstrapMsiVersion $package
+        if($Version -and $targetVersion -cne $Version){throw 'The verified MSI version differs from the requested version.'}
+        if($selection.original_root){
+            $support=Expand-GnBootstrapSupport $package $verifiedMsiSha256 (Join-Path $cache 'preinstall') $selection $targetVersion
+            $originalBinding=New-GnBootstrapOriginalSnapshot $selection $support (Join-Path $cache 'original-snapshot') (Join-Path $cache 'preinstall-binding.json')
+        }
+        if((Get-GnBootstrapFileSha256 $package) -cne $verifiedMsiSha256){throw 'The verified MSI changed before installation.'}
         $msiExit=Invoke-GnBootstrapMsi $package (Join-Path $cache 'install.log') $selection.root
         $manifest=Get-Content -LiteralPath (Join-Path $selection.root 'package.json') -Raw | ConvertFrom-Json
+        if($originalBinding -and (Get-GnBootstrapFileSha256 (Join-Path $selection.root 'package.json')) -cne $originalBinding.candidate_package_sha256){throw 'The installed package differs from the protected pre-MSI candidate.'}
         if ($manifest.product -cne 'git-next' -or $manifest.platform -cne $selection.platform -or $manifest.install_scope -cne $selection.scope -or -not $manifest.release_eligible -or -not $manifest.complete_git_parity) { throw 'An accepted complete native MSI is required before Git takeover.' }
         try { Assert-GnBootstrapPayload $selection $manifest $targetVersion }
         catch { if ($msiExit -eq 3010) { throw 'Windows Installer requires a restart and new payload activation is not verified. Restart Windows and rerun; original Git was not removed by this invocation.' };throw }
@@ -312,12 +559,16 @@ function Invoke-GnBootstrapMain {
         Remove-GnBootstrapLegacyInstall $selection
         if ($selection.original_root) {
             [void](Get-GnBootstrapTerminalVersion (Join-Path $selection.root 'bin/git-terminal.exe'))
-            $handoff=(& (Join-Path $selection.root 'migration\takeover.ps1') -Mode Apply -OriginalGitRoot $selection.original_root -TlsArchive $preparedTls | Out-String) | ConvertFrom-Json
+            if(-not $originalBinding){throw 'The original Git must be snapshotted before MSI installation.'}
+            $handoff=Invoke-GnBootstrapApply $selection $preparedTls $originalBinding
             if ($handoff.status -cne 'active' -or -not $handoff.transaction) { throw 'Takeover did not return a recoverable transaction.' }
             $newTransaction=[string]$handoff.transaction
         }
         $command=Complete-GnBootstrap $selection $newTransaction
         [pscustomobject]@{product='git-next';status='installed';version=$manifest.version;platform=$selection.platform;scope=$selection.scope;git=$command.Source;terminal=Join-Path $selection.root 'bin\git-terminal.exe';native_lfs=$true;repositories_modified=$false;credential_vault_exported=$false;log_directory=$cache} | ConvertTo-Json
+    } catch {
+        if($originalBinding){throw ('Installation did not complete. The protected pre-MSI original-Git snapshot is retained at '+$originalBinding.snapshot_path+' (SHA256 '+$originalBinding.snapshot_sha256+'). '+$_.Exception.Message)}
+        throw
     } finally {
         if ([IO.File]::Exists($package)) { [IO.File]::Delete($package) }
         if ($preparedTls -and [IO.File]::Exists($preparedTls)) { [IO.File]::Delete($preparedTls) }

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "status": "r7-release-rejected-workstation-recovered-pending-r8",
+  "release_gate": false,
+  "source_commit": "33269276902e1d3c52fab176516f14db908b7570",
+  "platform": "windows-x64",
+  "install_scope": "machine",
+  "msi_sha256": "8cd85948a57a70912bcca8a2b27a824ad894e9e7d9813def257eb5566c10ca42",
+  "failure": {
+    "rollback_attempt": "recovery-required",
+    "self_manifest_marked_stale": true,
+    "bootstrap_completion": "failed",
+    "elapsed_seconds": 1127.534,
+    "protected_apply_returned": "active",
+    "shared_bin_entry_missing_after_uninstaller_and_cleanup": true,
+    "raw_failure_sha256": "a4764364eed776dba9f1d09399713f2d110a6d36504dd4a6064097b12f370302"
+  },
+  "recovery": {
+    "python_entry_count": 0,
+    "personal_profile_files": 12,
+    "files": [
+      {
+        "sha256": "67cd2050ce3bbab4e52cf97f451200f65cdc7eeec6bb717f022b172f6b18497a",
+        "path": "package.json"
+      },
+      {
+        "sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+        "path": "bin/git.exe"
+      }
+    ],
+    "repositories_modified_by_recovery": false,
+    "immutable_bytes_verified": 1362591995,
+    "personal_profile_files_changed": 0,
+    "credential_vault_exported": false,
+    "method": "verified protected transaction backup; CreateNew only; original failed reports retained",
+    "earlier_unattributed_known_hosts_drift_preserved": true,
+    "immutable_declared_files_verified": 10696,
+    "installation_tree_files_inspected": 10712,
+    "personal_profile_baseline": "fresh hashes captured before the first final MSI attempt"
+  },
+  "runtime_readback": {
+    "external_git_fallback": false,
+    "terminal_functional_tests_executed": false,
+    "owned_p4_empty_path": true,
+    "external_ssh_fallback": false,
+    "native_identity": "git-next 1.0.3",
+    "owned_p4_entrypoints_passed": 2,
+    "rust_only_install_verify_not_available_in_native_cli": true
+  },
+  "evidence": [
+    {
+      "asset": "live-installed-immutable-public-live-installed-immutable-20261023T174740Z-156440a4ccc8e49b2dc21122.json",
+      "sha256": "236c127ff59b983d7323ef9170bd41f0046cd1e3f04f1f6bb12bab29f5a8526d"
+    },
+    {
+      "asset": "live-installed-python-public-20261023T174906Z-c1cb6d16560643cab8dd72447a0f2b9d.json",
+      "sha256": "c4910cf3357ff1dea139231e7580ebfccef86a9d9e3d6cc73097e1bd02617618"
+    },
+    {
+      "asset": "workstation-p4-dispatch-recovered-r7.json",
+      "sha256": "d14d2991f79733e84e1c1be3782668196a5a4cbb96f1ef97d5d6b562424d7cf8"
+    }
+  ],
+  "next_required_gate": "Fix pre-MSI snapshot, SameDirectory ownership and protected rollback; rerun applicable R8 local gates and actual installation before release"
+}

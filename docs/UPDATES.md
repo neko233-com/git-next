@@ -32,6 +32,106 @@ The source CLI exposes `git update check|apply|status|enable|disable [--json]`. 
 
 ## Compatibility, storage and rollback report
 
+### Same-directory takeover recovery · R8 candidate
+
+The R7 workstation attempt exposed two failures after the official Git uninstaller:
+the self manifest `package.json` was incorrectly considered stale, and the old
+uninstaller removed the shared `bin/git.exe` that MSI had just installed. The
+protected R7 backups allowed those exact files to be restored; the installation
+subsequently passed a full owned-file hash audit. That operational repair does
+not turn the failed workstation takeover into a passed release gate. The R8
+changes below require new MSI lifecycle and workstation evidence before release.
+
+The standalone installer now verifies the downloaded MSI, extracts only its
+manifest and the seven allowlisted migration/updater source files, and checks
+their hashes before running `New-GnPreinstallSnapshot`. For a same-directory
+replacement, this snapshot captures the original Git **before MSI writes its
+payload**: original files and access rules, root ACL, selected registration,
+PATH, related integrations and updater tasks. The installer pins the snapshot
+manifest SHA256 before invoking MSI. Apply receives both `-OriginalSnapshot`
+and `-OriginalSnapshotSha256`; it separately checks the candidate package binding.
+It refuses a directory already overlaid by an MSI as a new original snapshot.
+A real `.git` directory/worktree pointer or bare `HEAD` + `objects` + `refs`
+repository inside the selected installation causes migration to stop without
+following or deleting repository data. Ordinary `.gitignore` and `.gitmodules`
+files are permitted.
+
+The post-MSI payload backup and the pre-MSI original backup have different roles.
+After the official uninstaller exits, Apply restores only missing MSI-owned files
+from its protected payload backup, including the self manifest pinned by
+`Plan.package_sha256`. Existing mismatched files are preserved and rejected.
+Missing-file copies use `CreateNew`; an intervening third-party file is never
+deleted to make room. Authorized legacy bridge replacements lock and recheck
+the existing destination before writing. Stale lookup uses an exact indexed
+inventory, and `package.json` is never stale. Apply verifies the complete
+installed payload before recording `active`.
+
+If a snapshot completed but MSI or activation failed before Apply, retain its
+private path and the SHA256 recorded **before installation**. Repair the same
+trusted MSI, then explicitly resume with the installed script:
+
+```powershell
+& '<InstallRoot>/migration/takeover.ps1' -Mode Apply `
+  -OriginalGitRoot '<OriginalGitRoot>' `
+  -OriginalSnapshot '<PrivateSnapshot>/snapshot.json' `
+  -OriginalSnapshotSha256 '<SHA256 recorded before MSI>'
+```
+
+This still requires the original Git registration, matching candidate package
+hash, complete accepted payload, no active transaction and idle owned processes.
+Do not recapture an already overlaid directory or substitute a SHA first computed
+after MSI. An existing transaction must instead be resumed through its exact
+protected rollback journal.
+
+Same-directory rollback prepares an allowlisted, hash-verified runner outside the
+MSI root. The entrypoint releases its first preparation lock, starts the runner
+with the native Windows PowerShell host, and the runner reacquires the same
+exclusive update lock and validates the transaction again. Its protected journal
+binds the original candidate manifest independently from the currently installed
+MSI manifest and ProductCode, so a verified repair can supply the current recovery
+code without inventing new original bytes. Runtime configuration rollback is
+completed while MSI registration is still present. Only a valid `rolling-back`
+transaction with matching owner, pointer, original backup and seven pinned
+runner files authorizes ordinary `msiexec /x`. The guard excludes only its exact
+current parent `msi-worker.exe` with matching path, file hash, command, PID and
+start identity; every other owned runtime process continues to block removal.
+There is no global uninstall bypass and the migration pointer stays present
+until recovery completes.
+
+After Windows Installer confirms that the current MSI is absent and its live
+manifest is gone, the runner restores verified original bytes and selected
+integration state. It never directly removes MSI-owned files. Unknown file,
+registry or access-rule changes stop recovery and preserve the journal. An
+existing old-updater task must match its captured XML and account; a missing
+task is registered with create-only semantics, so a same-named third-party or
+concurrently created task is preserved. The
+protected runner can resume an interrupted removal even when the live
+`package.json` and installed scripts no longer exist:
+
+```powershell
+& '<Transaction>/recovery-tools/migration/takeover.ps1' `
+  -Mode Rollback -Transaction '<Transaction>'
+```
+
+Legacy separate-directory migration retains its existing bridge and restore
+contract. Legacy same-directory journals without a real pre-MSI snapshot fail
+closed. The affected R7 workstation has an independently protected pre-MSI
+manual backup, so its operator recovery uses a separate, explicit attachment:
+the original journal bytes and hash are preserved, original file bytes are
+inventoried from that backup and anchored to the earlier backup receipt, and
+every metadata field states its provenance. Its selected registry/PATH/tasks and
+root ACL came from the later post-MSI journal; original per-file ACLs were not
+captured and cannot be claimed as exactly restored. Such recovery uses safe
+inherited permissions and is not accepted as a normal pre-MSI snapshot. Without
+verified original bytes it does not uninstall the MSI.
+
+The additional snapshot uses bounded installation-only storage (at most 100,000
+files and 4 GiB); it does not copy credential vaults or alter repository, Git
+object, LFS object or user profile storage. It adds one pre-MSI file/metadata
+readback and a protected copy; stale purge and restore use indexed lookup rather
+than repeatedly scanning the full inventory. These are implementation and
+isolated-fixture guarantees; real R8 lifecycle/takeover results remain pending.
+
 The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. The `git-default-v2` layout installs into `%ProgramFiles%/Git` for machine scope and `%LOCALAPPDATA%/Programs/Git` for user scope, so the primary IDE entry point `cmd\git.exe` is the owned git-next payload rather than a bridge forwarder. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.
 
 The package adds client binaries, an updater and a checksummed `package.json`. It does not move, rewrite, repack or renormalize existing repositories, refs, indexes, objects or LFS bytes. It does not rewrite `.gitconfig`, SSH files, known_hosts, credential helpers or credential-vault data. Explicit LF exceptions remain authoritative. Installing an MSI does not remove the original Git.

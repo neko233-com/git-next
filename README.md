@@ -1,6 +1,6 @@
 # git-next
 
-The 1.0.3 distribution uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. Local correctness and paired performance gates are complete within the recorded scope. Release staging, workstation activation, push and publication are tracked separately in [delivery status](docs/DELIVERY_STATUS.md).
+The unpublished 1.0.3 candidate uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. R7 completed its recorded local gates and release staging, but the subsequent workstation takeover failed. Exact-byte recovery is verified; the R8 installer fix, final gates and delivery remain pending. [Delivery status](docs/DELIVERY_STATUS.md).
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
@@ -8,11 +8,13 @@ Go now owns build, packaging, documentation, fixtures, benchmarks and release to
 
 The independent Rust client is a preview with its own [Rust acceptance runner](docs/GIT_NEXT_ACCEPTANCE.md). Windows x64 and real macOS ARM64 each pass full's 100 scoped scenarios; L0 covers 39 commands. These reports describe the Rust client, while the native C distribution has separate package, runtime and installer gates. `complete_git_parity` remains false, and the Rust suite does not claim a one-for-one port of every historical assertion. [Compatibility](docs/COMPATIBILITY.md).
 
-Current native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. R7 correctness records 16 passed lanes and two user-waived terminal lanes in 249.801 seconds; paired performance passes all five lanes in 668.849 seconds. Windows x64 user/machine MSI lifecycles pass 27/25 checks; those exact-input receipts are reused by the final batch. Waived terminal checks and earlier failures remain explicit. [Evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
+Recorded native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. The R7 checkpoint records 16 passed correctness lanes and two user-waived terminal lanes in 249.801 seconds, with all five paired-performance lanes passing in 668.849 seconds. Windows x64 user/machine MSI lifecycles pass 27/25 checks; the R7 batch reused those exact-input receipts. These passes do not establish the R8 fix's acceptance. [Fixed R7 evidence](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
+
+R7 workstation completion failed after 1,127.534 seconds. Recovery restored `package.json` and `bin/git.exe` from verified backups, then checked all 10,696 declared immutable files, inspected 10,712 files with zero Python entries, and passed both owned P4 dispatches. Twelve personal profile files remained unchanged. This is recovery evidence with `release_gate=false`, not a completed installation or permission to publish. [Recovery record](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json).
 
 ## Native packages
 
-Download published packages and checksums from [GitHub Releases](https://github.com/neko233-com/git-next/releases). The planned [v1.0.3 release page](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) does not establish publication; the source-time delivery snapshot records pending delivery actions. Windows packages include the owned runtime and require no Rust compiler.
+Download published packages and checksums from [GitHub Releases](https://github.com/neko233-com/git-next/releases). The last recorded official latest lookup (2026-10-23) returned v1.0.1; 1.0.2 is a recorded packaging checkpoint, and v1.0.3 remains unpublished. The planned [v1.0.3 release page](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) does not establish publication. Windows packages include the owned runtime and require no Rust compiler.
 
 | Platform | Package | Boundary |
 | --- | --- | --- |
@@ -20,7 +22,7 @@ Download published packages and checksums from [GitHub Releases](https://github.
 | Linux x64 / ARM64 | Complete tar.gz with install.sh | Debian 12 / glibc 2.36 or compatible system |
 | macOS Apple Silicon | Complete tar.gz with install.sh | macOS 15.5+; real ARM64 runtime acceptance and independent package/Mach-O/shell checks; CPU-affinity constraints unsupported |
 
-Use the [native installation and removal guide](docs/INSTALLATION.md). The root `install.ps1` installs the accepted native MSI and automatically takes over registered Git for Windows (with UAC for machine installations); it preserves repository/profile data and provides a verified recovery backup. [Takeover procedure](docs/TAKEOVER.md).
+Use the [native installation and removal guide](docs/INSTALLATION.md). The R8 bootstrap source saves a protected complete original-Git snapshot before MSI writes, pins its manifest digest and binds post-MSI takeover to that snapshot. Its full installation/rollback gate is pending. [Takeover procedure](docs/TAKEOVER.md).
 
 ## Commands and defaults
 
@@ -57,7 +59,7 @@ The preview packages the independent Rust client. Go tooling also builds the nat
 
 ## Windows one-click installation
 
-After obtaining the official release's `install.ps1`, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`. **This automatically replaces registered Git for Windows**, preserves configuration/login/repositories and records a protected rollback transaction. `-Plan` inspects the selection without changes. Offline MSI/TLS material and checksum requirements are documented in [installation](docs/INSTALLATION.md).
+After obtaining a matching published release's `install.ps1`, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`. **The bootstrap selects registered Git for Windows for replacement.** R8 source first relays a 32-bit PowerShell process to native 64-bit PowerShell without elevation, then requests UAC if machine scope requires it. It snapshots the original installation before MSI writes and retains the protected snapshot path/SHA on failure. `-Plan` only inspects selection. Installation needs no Go, Python or WiX. The R8 full lifecycle remains pending; see [installation](docs/INSTALLATION.md) for compatibility and recovery boundaries.
 
 Windows MSI installs the independent Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md) beside Git-next, with tabs, Unicode/IME, copy/paste, scrollback and owned Bash plus PowerShell/CMD profiles. It replaces the Git Bash desktop entry and adds no Git GUI menu. [Built-in LFS and game profiles](docs/GAME_PROJECTS.md) cover Unity/Tuanjie and Unreal; no separate LFS installer is needed.
 
