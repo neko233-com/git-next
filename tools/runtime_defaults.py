@@ -59,6 +59,15 @@ def tail():
     )
 
 
+def block_text():
+    """The whole fragment as a configuration block, comments removed.
+
+    This is what an installer writes into a configuration file, and what
+    tools/native_msi_evidence.py expects a packaged payload to end with.
+    """
+    return "[core]\n" + core_body() + tail()
+
+
 def powershell_literal():
     """The double-quoted PowerShell literal the migration writes, without its quotes.
 

@@ -128,13 +128,23 @@ starting a thousand copies. Three layers cover that:
   *newest* excess because the oldest processes are the ones a person is waiting for.
   `--daemons` handles the slower leak described above.
 
-## Verifying
+## Verifying and installing
 
 ```
 python tools/check_runtime_defaults.py                  # agreement and behaviour
 python tools/check_runtime_defaults.py --agreement-only # in a Linux container
+python tools/install_runtime_defaults.py                # put them on this machine
+python tools/install_runtime_defaults.py --plan         # show what is still missing
+python tools/verify_repo_contract.py                    # every rule in AGENTS.md
 ```
 
 The agreement half runs anywhere; the behavioural half needs a real binary. The last
 check in the run is the one that guards the incident this document came out of: after
 three repositories are used with the shipped defaults, no Git process is left behind.
+
+`install_runtime_defaults.py` is the other half of shipping a default. It writes the
+migrated system configuration, relaunching itself elevated because that file is an
+administrator's; if consent is refused it falls back to the user's global configuration
+rather than leaving the defaults unapplied. It never overwrites a value a person chose,
+and it verifies by asking Git what each key resolves to afterwards, so "installed" means
+Git reports the value rather than a file having been written.

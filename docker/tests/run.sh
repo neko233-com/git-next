@@ -7,6 +7,7 @@
 #
 #   docker/tests/run.sh              unit and integration tests
 #   docker/tests/run.sh defaults     the runtime defaults agreement check
+#   docker/tests/run.sh contract     every rule in AGENTS.md
 #   docker/tests/run.sh stress       the same image, concurrent invocation burst
 #   docker/tests/run.sh shell        a shell inside the image, for debugging
 set -eu
@@ -44,21 +45,27 @@ stress)
         -v "$root:/src" -v "git-next-target:/src/target" -w /src "$image" \
         sh docker/tests/stress.sh
     ;;
-defaults)
+defaults|contract)
     # The behavioural half needs a real Windows binary, so the container proves the half
-    # that can be proven anywhere: that every consumer of the defaults agrees. It needs
-    # Python and nothing else, so it uses its own image instead of the build image and
-    # costs a pull rather than a Rust toolchain.
+    # that can be proven anywhere: that every consumer of the defaults agrees, and that
+    # the repository still follows the contract. Both need Python and nothing else, so
+    # they use their own image instead of the build image and cost a pull rather than a
+    # Rust toolchain. Rules that need git are skipped rather than failed: this image has
+    # no git, and a rule that cannot be evaluated is not a broken rule.
+    if [ "$mode" = contract ]; then
+        command="python tools/verify_repo_contract.py"
+    else
+        command="python tools/check_runtime_defaults.py --agreement-only"
+    fi
     docker run --rm --init --pids-limit "$pids" --memory "$memory" --cpus "$cpus" \
-        -v "$root:/src" -w /src python:3.13-alpine \
-        python tools/check_runtime_defaults.py --agreement-only
+        -v "$root:/src" -w /src python:3.13-alpine $command
     ;;
 shell)
     docker run --rm -it --init --pids-limit "$pids" --memory "$memory" --cpus "$cpus" \
         -v "$root:/src" -v "git-next-target:/src/target" -w /src "$image" sh
     ;;
 *)
-    echo "usage: $0 [test|stress|shell]" >&2
+    echo "usage: $0 [test|defaults|contract|stress|shell]" >&2
     exit 2
     ;;
 esac
