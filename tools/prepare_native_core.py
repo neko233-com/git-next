@@ -82,7 +82,10 @@ def main():
                 data = source.read(info)
                 target.write_bytes(data)
                 if os_name_is_unix():
-                    target.chmod(stat.S_IMODE(info.external_attr >> 16))
+                    # Codeload archives store a zero Unix mode. Applying it makes the
+                    # tree unreadable and the later symlink copy fails. 0644 is the
+                    # same fallback the Linux build uses for those members.
+                    target.chmod(stat.S_IMODE(info.external_attr >> 16) or 0o644)
                 files[relative.as_posix()] = hashlib.sha256(data).hexdigest()
     for relative, resolved in links:
         source_path = destination.joinpath(*resolved.parts)
