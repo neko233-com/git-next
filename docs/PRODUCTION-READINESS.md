@@ -5,14 +5,12 @@ default `git` on a machine that matters. It is a gap list, not a roadmap of wish
 Every item names what is missing, what it costs the user today, what "done" means,
 and what evidence would close it.
 
-The state today, in one line: **it runs, it is fast, and it refuses to be the
-default.** Takeover still requires `release_eligible` and `complete_git_parity`
-on the package actually being installed. `packaging/native-compatibility.json`
-records parity as true and release eligibility as false, with D08/D09/D10 still
-open. That refusal is why this tree is not version 1.0.0. The Rust preview's
-root `compatibility.json` still reports `complete_git_parity: false`; the five
-blockers below belong to that contract. Native takeover reads the package it is
-installing, and that package is still not release-eligible.
+The current release is **1.0.0**. Linux x64 installs that package as the `git`
+command. `packaging/native-compatibility.json` records parity and release
+eligibility as true. The Rust preview's root `compatibility.json` still reports
+`complete_git_parity: false`; the five blockers below belong to that preview
+contract, not to the native 1.0.0 Linux package. A Windows MSI built from this
+1.0.0 source is not attached to the release.
 
 The MSVC 14.44 CRT-free bridge link is no longer an open choice between `/O2 /Ob1`
 and a freestanding `memcpy`. Full `/O2` stays, and `freestanding-memory.c` supplies

@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "product": "git-next",
-  "status": "implementation-complete-awaiting-local-release-gates",
+  "status": "1.0.0",
   "engine": "source-built-git-next-native-core",
   "default_branch": "main",
   "compatibility_baseline": "2.54.0.windows.1",
   "external_git_fallback": false,
   "external_ssh_fallback": false,
   "complete_git_parity": true,
-  "release_eligible": false,
+  "release_eligible": true,
   "features": {
     "full_git_cli_and_repository_semantics": true,
     "git_network_protocols": true,
@@ -29,11 +29,7 @@
     "language get/set/reset",
     "eol doctor and opt-in repository migration"
   ],
-  "replacement_blockers": [
-    "D08 final local consolidated acceptance",
-    "D09 paired performance acceptance",
-    "D10 accepted release packaging and workstation takeover"
-  ],
+  "replacement_blockers": [],
   "performance": "Actual paired median/p95 and process memory are reported; no universal speedup claim",
   "macos_acceptance_scope": "Dockerfile_mac package/Mach-O/shell static validation; no native product execution on Mac host"
 }

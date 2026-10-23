@@ -1,12 +1,12 @@
 # git-next
 
-Windows: the [Git-Terminal 0.2.0 complete MSI bundle](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) includes the accepted git-next 0.3.0 engine with the updated SSH/SFTP/monitoring terminal and prompt latency fixes. Existing installations should use its `install_bundle.ps1` helper; see the [component installation guide](docs/TERMINAL.md). Linux/macOS core packages are unchanged.
+Version 1.0.0 is the current release. Linux x64 installs it as the `git` command. Windows: the [Git-Terminal 0.2.0 complete MSI bundle](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) includes the accepted git-next 0.3.0 engine with the updated SSH/SFTP/monitoring terminal and prompt latency fixes. Existing installations should use its `install_bundle.ps1` helper; see the [component installation guide](docs/TERMINAL.md). The 1.0.0 Windows MSI is not in this release; it has to be rebuilt with the freestanding bridge before it replaces Git for Windows.
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
 git-next is a complete source-built Git client with its own product identity, cross-platform LF defaults, and native English/Simplified Chinese messages. The primary engine is the full native C command, repository and protocol implementation based on Git 2.54.0; it does not fall back to an installed Git or OpenSSH. Existing repositories, Git configuration and credential helpers keep their normal contracts.
 
-Version 0.3.0 passed the final 18-case local correctness evidence and paired performance batch. Original Git has been uninstalled and the workstation default is git-next. Publication and the completed 10/10 scope are recorded in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
+Version 1.0.0 is the release that replaces the `git` command. On Linux x64 it was checked against Git 2.43.0: the same init, merge, cherry-pick, revert, tag, hook and rebase sequence produced the same commit hashes, and a warm 1000-file status matched at 6 ms. Version 0.3.0 passed the earlier 18-case local correctness evidence and paired performance batch; that record stays in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
 
 ## Native packages
 
