@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · MSI and updates</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>MSI and automatic updates</h1>
-<h2>Current 1.0.3 validation scope · 2026-10-24</h2>
+<h2>Published v1.0.3 validation scope · 2026-10-24</h2>
 <p>Local native correctness R8 completed with 16 passed lanes and two explicitly
 user-waived Git-Terminal lanes in 1,229.320 seconds. Actual Windows x64 MSI
 lifecycles ran afresh: 27 user-scope checks in 530.630 seconds and 26 machine-scope
@@ -8,11 +8,23 @@ table and static evidence, not hardware lifecycle acceptance. Real Apple Silicon
 macOS 15.5 passed 51 native runtime scenarios and two owned-Git/P4 dispatch checks,
 in addition to package/Mach-O/shell validation. This does not establish full Mac
 installation, launchd scheduling or an automatic upgrade on that host.</p>
-<p>R8 paired performance passed all five lanes in 649.350 seconds. Release staging,
-workstation activation and publication remain separate; exact artifact bindings belong to
-<a href="delivery-status.html">delivery status</a>. Dated implementation-only and v0.3.0 notes
-below preserve their historical scope rather than asserting that no installer or
-Mac product has run in the current delivery.</p>
+<p>R8 paired performance passed all five lanes in 649.347 seconds. Final staging and
+scoped Windows x64 machine workstation acceptance are complete. The bootstrap
+completed in 1,075.391 seconds; independent readback matched 10,698 immutable files
+(1,362,711,981 bytes), inspected 10,714 files with Python 0, passed both owned P4
+dispatches, confirmed the SYSTEM updater task and found twelve personal profiles
+unchanged. Exactly <code>terminal-rust-contracts</code> and <code>terminal-native-desktop</code> remain
+waived, rather than passed.</p>
+<p><a href="https://github.com/neko233-com/git-next/releases/tag/v1.0.3">v1.0.3</a> is officially
+published and latest, at <code>2026-10-23T20:44:12Z</code>, from source
+<code>05dac2a938784ce03a2de219349c4d381a637ab5</code>. All 28 remote asset hashes match the
+local release; 27 assets are checksummed, and SHA256SUMS plus the acceptance proof
+were actually downloaded and verified. The four MSIs are <code>NotSigned</code>; this is not
+cryptographic signature verification. <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json">Completion evidence</a>
+records these later actions separately from the retirement report's unchanged
+source-time pending flags. <a href="delivery-status.html">Delivery status</a> preserves the R6/R7
+failures and recovery. Dated implementation-only and v0.3.0 notes below retain
+their historical scope.</p>
 <h2>Delivery contract</h2>
 <p>The Windows updater supports the built-in Windows PowerShell 5.1 even when launched from PowerShell 7: its child process selects the Windows module directory, MSI property reads suppress COM method return values, and atomic JSON/configuration replacement passes a true null backup path. First-time runtime configuration copies preserve a null destination state rather than converting it to an empty string. Task lookup distinguishes an absent task using its HRESULT, including PowerShell's wrapped file-not-found exception. POSIX directory creation accepts a root-owned sticky ancestor such as <code>/tmp</code> while continuing to reject writable or foreign-owned installation leaves and symlink traversal. Candidate refreshes use checksum-pinned archives and matching compiled-updater receipts; they do not rebuild unchanged C cores or reuse earlier acceptance for changed bytes.</p>
 <p>The requested final delivery includes Windows x64/ARM64 MSI packages, background automatic updates, official GitHub release discovery and automatic selection of a usable download mirror. These are part of the one consolidated release gate. Source implementation and an MSI that compiles do not establish installation, update, rollback or complete Git compatibility.</p>
@@ -108,8 +120,9 @@ files and 4 GiB); it does not copy credential vaults or alter repository, Git
 object, LFS object or user profile storage. It adds one pre-MSI file/metadata
 readback and a protected copy; stale purge and restore use indexed lookup rather
 than repeatedly scanning the full inventory. These are implementation and
-isolated-fixture guarantees with fresh R8 MSI lifecycle passes; final workstation
-takeover remains pending.</p>
+isolated-fixture guarantees with fresh R8 MSI lifecycle passes. The final standard
+bootstrap and scoped Windows x64 machine workstation readback subsequently passed;
+the legacy recovery record remains separate historical evidence.</p>
 <p>The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. The <code>git-default-v2</code> layout installs into <code>%ProgramFiles%/Git</code> for machine scope and <code>%LOCALAPPDATA%/Programs/Git</code> for user scope, so the primary IDE entry point <code>cmd\git.exe</code> is the owned git-next payload rather than a bridge forwarder. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.</p>
 <p>The package adds client binaries, an updater and a checksummed <code>package.json</code>. It does not move, rewrite, repack or renormalize existing repositories, refs, indexes, objects or LFS bytes. It does not rewrite <code>.gitconfig</code>, SSH files, known_hosts, credential helpers or credential-vault data. Explicit LF exceptions remain authoritative. Installing an MSI does not remove the original Git.</p>
 <p>Windows Installer performs major upgrades after <code>InstallExecute</code>, within its rollback transaction. Stable component identities let the new package replace shared files before the old registration is removed; an installation failure retains the previous product. Uninstall removes owned package files, its PATH entry, shortcut and updater task. Repositories, credentials and updater diagnostic state remain. The rollback custom actions restore the prior owned scheduled-task definition. Unrelated tasks with a colliding name cause rejection. An interrupted or failed MSI transaction must pass old-file and old-task recovery tests before release. A successfully installed version is not silently downgraded by the automatic updater; deliberate post-upgrade rollback requires the separately verified migration/recovery procedure.</p>

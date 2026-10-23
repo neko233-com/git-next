@@ -43,15 +43,54 @@
         "snapshot_sha256"
       ],
       "snapshot_api": "New-GnPreinstallSnapshot -OriginalGitRoot -SnapshotRoot -CandidatePackagePath -CandidateMsiSha256",
-      "status": "r8-source-and-applicable-local-gates-pass-final-workstation-pending"
+      "status": "r8-pre-msi-snapshot-bootstrap-and-independent-workstation-readback-pass"
     },
     "current_gate_generation": "r8",
     "failed_candidate_evidence_preserved": true,
     "final_gates": {
       "checksums_and_configured_signatures": {
-        "receipt": null,
-        "sha256": null,
-        "status": "pending-final-r8-delivery"
+        "checksum_assets": 27,
+        "checksum_manifest": {
+          "asset": "SHA256SUMS",
+          "bytes": 2656,
+          "sha256": "1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/SHA256SUMS"
+        },
+        "cryptographic_signature_verified": false,
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "msi_signature_states": [
+          {
+            "asset": "git-next-1.0.3-windows-arm64.msi",
+            "cryptographic_signature_verified": false,
+            "signer_present": false,
+            "status": "NotSigned"
+          },
+          {
+            "asset": "git-next-1.0.3-windows-arm64-user.msi",
+            "cryptographic_signature_verified": false,
+            "signer_present": false,
+            "status": "NotSigned"
+          },
+          {
+            "asset": "git-next-1.0.3-windows-x64.msi",
+            "cryptographic_signature_verified": false,
+            "signer_present": false,
+            "status": "NotSigned"
+          },
+          {
+            "asset": "git-next-1.0.3-windows-x64-user.msi",
+            "cryptographic_signature_verified": false,
+            "signer_present": false,
+            "status": "NotSigned"
+          }
+        ],
+        "signature_policy_result": "not-required-no-signer-configured",
+        "status": "pass-configured-checksum-policy-unsigned-msi"
       },
       "correctness": {
         "elapsed_seconds": 1229.32,
@@ -71,14 +110,47 @@
         "waived_lanes": 2
       },
       "five_platform_final_artifact_audit": {
-        "receipt": null,
-        "sha256": null,
-        "status": "pending-final-r8-delivery"
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "msi_layout": {
+          "asset": "native-msi-layout-final-r8.json",
+          "bytes": 6864,
+          "sha256": "845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-msi-layout-final-r8.json"
+        },
+        "msi_package_count": 4,
+        "platform_count": 5,
+        "python_audit": {
+          "asset": "native-product-python-final-r8.json",
+          "bytes": 7642,
+          "sha256": "1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-product-python-final-r8.json"
+        },
+        "python_entry_count": 0,
+        "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+        "status": "pass"
       },
       "one_consolidated_release": {
-        "receipt": null,
-        "sha256": null,
-        "status": "pending-final-r8-delivery"
+        "asset_count": 28,
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "latest": true,
+        "published_at_utc": "2026-10-23T20:44:12Z",
+        "release_id": 422290807,
+        "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+        "status": "pass",
+        "tag": "v1.0.3",
+        "tag_object_sha": "0a9a548ab69ee42e1e4ee8f8e6ffc57b865d9d20",
+        "tag_peeled_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+        "url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.3"
       },
       "paired_performance": {
         "elapsed_seconds": 649.347,
@@ -99,13 +171,51 @@
         "universal_speedup_claim": false
       },
       "push": {
-        "remote_commit": null,
-        "status": "pending"
+        "checkpoint_scope": "Release source remote readback; later docs commits are outside this snapshot",
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "source_checkpoints": {
+          "git_next": {
+            "commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+            "remote_commit": "05dac2a938784ce03a2de219349c4d381a637ab5"
+          },
+          "git_terminal": {
+            "commit": "f6eb01a42971aee0c885e6c2065151068e872503",
+            "remote_commit": "f6eb01a42971aee0c885e6c2065151068e872503"
+          },
+          "parent": {
+            "commit": "37e29edc6112a1baa27efbd2f0061b88bc37dc34",
+            "remote_commit": "37e29edc6112a1baa27efbd2f0061b88bc37dc34"
+          }
+        },
+        "status": "pass"
       },
       "release_stage": {
-        "receipt": null,
-        "sha256": null,
-        "status": "pending-final-r8-delivery"
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "integrity": {
+          "asset": "native-staged-integrity-r8.json",
+          "bytes": 14444,
+          "sha256": "c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-staged-integrity-r8.json"
+        },
+        "publication_manifest_sha256": "0bef0482f4ab0cc9d0abd549cf60ec5ca38ecbb4af7c35fcdde038c6b67751f4",
+        "release_acceptance": {
+          "asset": "native-release-acceptance.json",
+          "bytes": 2414,
+          "sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-release-acceptance.json"
+        },
+        "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+        "status": "pass"
       },
       "windows_four_msi_lifecycle": {
         "actual_lifecycle_architectures": [
@@ -129,9 +239,30 @@
         }
       },
       "workstation_install_update_and_profile_readback": {
-        "receipt": null,
-        "sha256": null,
-        "status": "pending-final-r8-delivery"
+        "evidence": {
+          "bytes": 16657,
+          "path": "docs/benchmarks/native-publication-20261024.json",
+          "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+          "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+        },
+        "immutable_matching_files": 10698,
+        "install_scope": "machine",
+        "msi_sha256": "76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7",
+        "owned_p4_dispatch_entrypoints": 2,
+        "platform": "windows-x64",
+        "profile_changes": 0,
+        "profile_file_count": 12,
+        "python_entry_count": 0,
+        "receipt": {
+          "asset": "native-workstation-acceptance.json",
+          "bytes": 4677,
+          "sha256": "16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-workstation-acceptance.json"
+        },
+        "release_gate": true,
+        "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+        "status": "pass",
+        "updater_task_principal": "SYSTEM"
       }
     },
     "git_p4_equivalence": {
@@ -165,9 +296,18 @@
       }
     },
     "latest_published_release_checked": {
+      "checked_at_utc": "2026-10-23T20:48:38Z",
       "checked_on": "2026-10-23",
-      "url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.1",
-      "version": "1.0.1"
+      "evidence": {
+        "bytes": 16657,
+        "path": "docs/benchmarks/native-publication-20261024.json",
+        "sha256": "305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b",
+        "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json"
+      },
+      "published_at_utc": "2026-10-23T20:44:12Z",
+      "tag": "v1.0.3",
+      "url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.3",
+      "version": "1.0.3"
     },
     "local_acceptance_complete_in_declared_scope": true,
     "local_gate_checkpoints": [
@@ -524,7 +664,7 @@
       "release_version": "0.3.0",
       "scope_id": "git-next-complete-replacement-20261020"
     },
-    "published": false,
+    "published": true,
     "python_retirement": {
       "direct_python_execution_entrypoints": 0,
       "files": 115,
@@ -568,7 +708,7 @@
       "unique_paths": 115
     },
     "r7_local_acceptance_complete_in_declared_scope": true,
-    "release_eligible": false,
+    "release_eligible": true,
     "release_stage_failure_history": [
       {
         "id": "r6-hardlink-source-aliasing",
@@ -622,9 +762,10 @@
       "native_source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
       "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
       "public_evidence_sha256": "cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7",
+      "release_source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
       "verification_commit": "00d2b405c04a03acb186b92850c1f90a78e915ae"
     },
-    "status": "r8-local-gates-complete-final-delivery-pending",
+    "status": "r8-published-workstation-accepted-in-declared-scope",
     "terminal_validation_waiver": {
       "authorization_file": "target/go-native-release-1.0.3/terminal-waiver-r8.json",
       "authorization_sha256": "9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f",
@@ -644,11 +785,11 @@
       "status": "user-authorized-and-r8-matrix-bound",
       "waived_is_passed": false
     },
-    "updated_on": "2026-10-24",
+    "updated_on": "2026-10-23",
     "version": "1.0.3",
     "windows_r4_stable_defaults": {
       "authoritative_fragment": "packaging/runtime-defaults/gitconfig",
-      "final_package_and_installation_binding": "r8-local-read-thread-pass-final-workstation-acceptance-pending",
+      "final_package_and_installation_binding": "r8-final-package-and-installed-immutable-profile-readback-pass",
       "internal_cause_established": false,
       "isolated_same_core_control": {
         "complete_grep_status_rounds": 30,
@@ -691,7 +832,7 @@
         "status": "recovered-release-rejected-r8-pending"
       }
     ],
-    "workstation_installed_and_accepted_for_this_release": false
+    "workstation_installed_and_accepted_for_this_release": true
   },
   "deliverables": [
     {

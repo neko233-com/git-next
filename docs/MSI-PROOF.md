@@ -4,14 +4,33 @@ This page separates native MSI lifecycle evidence, workstation recovery and the
 independent Rust preview's verification command. A compiled MSI, an isolated lifecycle
 pass and a completed workstation takeover are different acceptance layers.
 
-## Current 1.0.3 checkpoint: R8 local gates passed, delivery pending
+## Published v1.0.3: R8 local gates and scoped workstation acceptance complete
 
 R8 correctness passed 16 lanes with exactly two user-waived terminal lanes in
-1,229.320 seconds. Paired performance passed 5/5 in 649.350 seconds. Both Windows
+1,229.320 seconds. Paired performance passed 5/5 in 649.347 seconds. Both Windows
 x64 MSI lifecycles ran afresh, passing 27 user checks in 530.630 seconds and 26
-machine checks in 453.501 seconds. No MSI receipt was reused. Final release staging,
-workstation installation and publication remain separate pending steps.
+machine checks in 453.501 seconds. No MSI receipt was reused. Final release staging
+and scoped Windows x64 machine workstation acceptance are complete.
 [R8 local evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json).
+
+The final standard bootstrap completed in **1,075.391 seconds**. Its independent
+workstation readback matched **10,698/10,698 immutable files, 1,362,711,981 bytes**,
+inspected **10,714 files with Python 0**, passed both owned P4 dispatches, confirmed
+the SYSTEM updater task and found **12 personal profile files unchanged**. Exactly
+`terminal-rust-contracts` and `terminal-native-desktop` remain user-waived.
+Windows ARM64 has build/table/static evidence; this does not claim hardware MSI
+lifecycle acceptance. Mac CLI/runtime proof does not establish a full host
+installation or update-service lifecycle.
+
+[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) is published
+and official latest at `2026-10-23T20:44:12Z`, from source
+`05dac2a938784ce03a2de219349c4d381a637ab5` (release ID `422290807`). All 28 remote
+asset hashes match local release bytes; 27 assets are checksummed, with actual
+public downloads of SHA256SUMS and the acceptance proof independently verified.
+All four MSIs are actually **`NotSigned`**; no cryptographic signature verification
+is claimed. The [completion record](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json)
+records these actions without rewriting the retirement report's source-time
+pending flags or historical failures.
 
 ### Preserved R7 failure and recovery
 
@@ -41,7 +60,9 @@ Git files through ordinary guarded MSI removal; registration and migration point
 are absent and twelve private profiles are unchanged. This operator recovery is
 not a normal pre-MSI snapshot or final installation acceptance.
 [R8 recovery](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r8-legacy-recovery-20261024.json).
-Actual final installation is still required before publication. See [installation](INSTALLATION.md).
+The later standard R8 installation and independent scoped workstation readback
+passed as recorded above. This does not rewrite the legacy recovery's
+`release_gate=false`. See [installation](INSTALLATION.md).
 
 ## Current native verification entrypoints
 
@@ -54,8 +75,8 @@ go -C tools/devtool run . migration-product-audit --package <installed-root-or-a
 ```
 
 This checks package identity and Python interpreters/libraries/scripts. It is not an
-all-file immutable SHA audit or proof that installation completed. The recovery record
-above binds those separate full-hash results. Go is needed to run source verification
+all-file immutable SHA audit or proof that installation completed. The completion
+record above binds those separate full-hash results. Go is needed to run source verification
 tools, not to install the native product.
 
 Exact-input reuse of already completed MSI lifecycle receipts has a separate verifier:
@@ -198,7 +219,8 @@ installer that wrote it:
 - **Uninstalling a taken-over installation.** Refused by design; exercising the
   rollback needed PowerShell, whose launch failed in that historical session. That
   environment limitation does not describe the later R7 run. R7 did execute takeover
-  but its completion/rollback failed as recorded above; R8 must verify the repaired path.
+  but its completion/rollback failed as recorded above. The later standard R8
+  bootstrap and scoped workstation readback passed with separate evidence.
 - **Upgrade from a real previous release.** The archived `0.2.999` fixture predates the
   current launch conditions and refuses to install beside an official Git. A synthetic
   0.3.1 built by bumping the version was rejected by the runtime manifest check - which

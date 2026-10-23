@@ -1,6 +1,6 @@
 # MSI and automatic updates
 
-## Current 1.0.3 validation scope · 2026-10-24
+## Published v1.0.3 validation scope · 2026-10-24
 
 Local native correctness R8 completed with 16 passed lanes and two explicitly
 user-waived Git-Terminal lanes in 1,229.320 seconds. Actual Windows x64 MSI
@@ -11,11 +11,24 @@ macOS 15.5 passed 51 native runtime scenarios and two owned-Git/P4 dispatch chec
 in addition to package/Mach-O/shell validation. This does not establish full Mac
 installation, launchd scheduling or an automatic upgrade on that host.
 
-R8 paired performance passed all five lanes in 649.350 seconds. Release staging,
-workstation activation and publication remain separate; exact artifact bindings belong to
-[delivery status](DELIVERY_STATUS.md). Dated implementation-only and v0.3.0 notes
-below preserve their historical scope rather than asserting that no installer or
-Mac product has run in the current delivery.
+R8 paired performance passed all five lanes in 649.347 seconds. Final staging and
+scoped Windows x64 machine workstation acceptance are complete. The bootstrap
+completed in 1,075.391 seconds; independent readback matched 10,698 immutable files
+(1,362,711,981 bytes), inspected 10,714 files with Python 0, passed both owned P4
+dispatches, confirmed the SYSTEM updater task and found twelve personal profiles
+unchanged. Exactly `terminal-rust-contracts` and `terminal-native-desktop` remain
+waived, rather than passed.
+
+[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) is officially
+published and latest, at `2026-10-23T20:44:12Z`, from source
+`05dac2a938784ce03a2de219349c4d381a637ab5`. All 28 remote asset hashes match the
+local release; 27 assets are checksummed, and SHA256SUMS plus the acceptance proof
+were actually downloaded and verified. The four MSIs are `NotSigned`; this is not
+cryptographic signature verification. [Completion evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json)
+records these later actions separately from the retirement report's unchanged
+source-time pending flags. [Delivery status](DELIVERY_STATUS.md) preserves the R6/R7
+failures and recovery. Dated implementation-only and v0.3.0 notes below retain
+their historical scope.
 
 ## Delivery contract
 
@@ -132,8 +145,9 @@ files and 4 GiB); it does not copy credential vaults or alter repository, Git
 object, LFS object or user profile storage. It adds one pre-MSI file/metadata
 readback and a protected copy; stale purge and restore use indexed lookup rather
 than repeatedly scanning the full inventory. These are implementation and
-isolated-fixture guarantees with fresh R8 MSI lifecycle passes; final workstation
-takeover remains pending.
+isolated-fixture guarantees with fresh R8 MSI lifecycle passes. The final standard
+bootstrap and scoped Windows x64 machine workstation readback subsequently passed;
+the legacy recovery record remains separate historical evidence.
 
 The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. The `git-default-v2` layout installs into `%ProgramFiles%/Git` for machine scope and `%LOCALAPPDATA%/Programs/Git` for user scope, so the primary IDE entry point `cmd\git.exe` is the owned git-next payload rather than a bridge forwarder. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.
 

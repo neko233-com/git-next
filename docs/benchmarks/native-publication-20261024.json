@@ -1,0 +1,403 @@
+{
+  "all_remote_asset_digests_match": true,
+  "asset_count": 28,
+  "assets": [
+    {
+      "bytes": 2656,
+      "github_digest": "sha256:1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c",
+      "name": "SHA256SUMS",
+      "remote_state": "uploaded",
+      "sha256": "1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c"
+    },
+    {
+      "bytes": 142067374,
+      "github_digest": "sha256:e389df9a22a9991a893aa2ffe5c4c8e0c84336af965955f6ca7bd9cb5ce6e1bf",
+      "name": "git-next-1.0.3-linux-arm64.tar.gz",
+      "remote_state": "uploaded",
+      "sha256": "e389df9a22a9991a893aa2ffe5c4c8e0c84336af965955f6ca7bd9cb5ce6e1bf"
+    },
+    {
+      "bytes": 147035072,
+      "github_digest": "sha256:5873aee2726d201499931becc62e33b57e32f6c2a462ff439d937b175a3879e6",
+      "name": "git-next-1.0.3-linux-x64.tar.gz",
+      "remote_state": "uploaded",
+      "sha256": "5873aee2726d201499931becc62e33b57e32f6c2a462ff439d937b175a3879e6"
+    },
+    {
+      "bytes": 132602790,
+      "github_digest": "sha256:da5ba9c120a6660eaa61d548e603379feae2e3a0adc4b6f1a920aafe17815c8c",
+      "name": "git-next-1.0.3-macos-arm64.tar.gz",
+      "remote_state": "uploaded",
+      "sha256": "da5ba9c120a6660eaa61d548e603379feae2e3a0adc4b6f1a920aafe17815c8c"
+    },
+    {
+      "bytes": 189907284,
+      "github_digest": "sha256:2490d18b298d4f6cc200ac8fc8530a8aa9286136435f1562be832d5e35cd1fa0",
+      "name": "git-next-1.0.3-windows-arm64-user.msi",
+      "remote_state": "uploaded",
+      "sha256": "2490d18b298d4f6cc200ac8fc8530a8aa9286136435f1562be832d5e35cd1fa0"
+    },
+    {
+      "bytes": 190545723,
+      "github_digest": "sha256:fb95c7d09a4bd9099852b80483003209642ac625c6d60cca87bce0f5b89449fa",
+      "name": "git-next-1.0.3-windows-arm64.msi",
+      "remote_state": "uploaded",
+      "sha256": "fb95c7d09a4bd9099852b80483003209642ac625c6d60cca87bce0f5b89449fa"
+    },
+    {
+      "bytes": 146285064,
+      "github_digest": "sha256:f38c7c7231f1576745bb17a7acbaf3777293d9fc5296ba88dd54a408a517f433",
+      "name": "git-next-1.0.3-windows-x64-user.msi",
+      "remote_state": "uploaded",
+      "sha256": "f38c7c7231f1576745bb17a7acbaf3777293d9fc5296ba88dd54a408a517f433"
+    },
+    {
+      "bytes": 146820593,
+      "github_digest": "sha256:76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7",
+      "name": "git-next-1.0.3-windows-x64.msi",
+      "remote_state": "uploaded",
+      "sha256": "76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7"
+    },
+    {
+      "bytes": 161029026,
+      "github_digest": "sha256:712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab",
+      "name": "git-next-corresponding-sources-core-and-producer-recipes.zip",
+      "remote_state": "uploaded",
+      "sha256": "712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab"
+    },
+    {
+      "bytes": 366235738,
+      "github_digest": "sha256:7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68",
+      "name": "git-next-corresponding-sources-debian.zip",
+      "remote_state": "uploaded",
+      "sha256": "7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68"
+    },
+    {
+      "bytes": 205445362,
+      "github_digest": "sha256:791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a",
+      "name": "git-next-corresponding-sources-homebrew.zip",
+      "remote_state": "uploaded",
+      "sha256": "791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a"
+    },
+    {
+      "bytes": 774880829,
+      "github_digest": "sha256:a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6",
+      "name": "git-next-corresponding-sources-msys2.zip",
+      "remote_state": "uploaded",
+      "sha256": "a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6"
+    },
+    {
+      "bytes": 5110,
+      "github_digest": "sha256:340a70a3ca62da471150da70ba67902df64701600e12b240e99c4b960a8a8c81",
+      "name": "git-next-update.json",
+      "remote_state": "uploaded",
+      "sha256": "340a70a3ca62da471150da70ba67902df64701600e12b240e99c4b960a8a8c81"
+    },
+    {
+      "bytes": 46748,
+      "github_digest": "sha256:807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3",
+      "name": "install.ps1",
+      "remote_state": "uploaded",
+      "sha256": "807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3"
+    },
+    {
+      "bytes": 1282,
+      "github_digest": "sha256:fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461",
+      "name": "native-arm64-byte-recovery-summary.json",
+      "remote_state": "uploaded",
+      "sha256": "fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461"
+    },
+    {
+      "bytes": 6843,
+      "github_digest": "sha256:4e8cc6827407ed3a8592a7eacdc3961880af50e1e0db424e4c08c3329afc0b2f",
+      "name": "native-correctness.json",
+      "remote_state": "uploaded",
+      "sha256": "4e8cc6827407ed3a8592a7eacdc3961880af50e1e0db424e4c08c3329afc0b2f"
+    },
+    {
+      "bytes": 6864,
+      "github_digest": "sha256:845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49",
+      "name": "native-msi-layout-final-r8.json",
+      "remote_state": "uploaded",
+      "sha256": "845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49"
+    },
+    {
+      "bytes": 3456,
+      "github_digest": "sha256:2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f",
+      "name": "native-performance.json",
+      "remote_state": "uploaded",
+      "sha256": "2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f"
+    },
+    {
+      "bytes": 7642,
+      "github_digest": "sha256:1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812",
+      "name": "native-product-python-final-r8.json",
+      "remote_state": "uploaded",
+      "sha256": "1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812"
+    },
+    {
+      "bytes": 192584,
+      "github_digest": "sha256:cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7",
+      "name": "native-python-retirement-20261023.json",
+      "remote_state": "uploaded",
+      "sha256": "cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7"
+    },
+    {
+      "bytes": 2414,
+      "github_digest": "sha256:869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1",
+      "name": "native-release-acceptance.json",
+      "remote_state": "uploaded",
+      "sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1"
+    },
+    {
+      "bytes": 14444,
+      "github_digest": "sha256:c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8",
+      "name": "native-staged-integrity-r8.json",
+      "remote_state": "uploaded",
+      "sha256": "c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8"
+    },
+    {
+      "bytes": 1375,
+      "github_digest": "sha256:9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f",
+      "name": "native-terminal-waiver.json",
+      "remote_state": "uploaded",
+      "sha256": "9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f"
+    },
+    {
+      "bytes": 4677,
+      "github_digest": "sha256:16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e",
+      "name": "native-workstation-acceptance.json",
+      "remote_state": "uploaded",
+      "sha256": "16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e"
+    },
+    {
+      "bytes": 5731,
+      "github_digest": "sha256:dc1d9b630434addab5915d14d701094f8c04fc76c72242c9ccb39934e800ac67",
+      "name": "performance-1000.json",
+      "remote_state": "uploaded",
+      "sha256": "dc1d9b630434addab5915d14d701094f8c04fc76c72242c9ccb39934e800ac67"
+    },
+    {
+      "bytes": 5753,
+      "github_digest": "sha256:fc3dfaa354e5000bf44aac2bc50b8d259164a59dd2a73c66a35c2e7ce8d599fe",
+      "name": "performance-10000.json",
+      "remote_state": "uploaded",
+      "sha256": "fc3dfaa354e5000bf44aac2bc50b8d259164a59dd2a73c66a35c2e7ce8d599fe"
+    },
+    {
+      "bytes": 5770,
+      "github_digest": "sha256:5345e856c6e718bf6984461a9eff91187e5eb1ed0442f982428ce5ff8ba07887",
+      "name": "performance-100000.json",
+      "remote_state": "uploaded",
+      "sha256": "5345e856c6e718bf6984461a9eff91187e5eb1ed0442f982428ce5ff8ba07887"
+    },
+    {
+      "bytes": 4555,
+      "github_digest": "sha256:be35b31890cb66ba7526fd0e5d86059b3bf5f114b8de7a9e7030cbc8042a6dd0",
+      "name": "performance-network.json",
+      "remote_state": "uploaded",
+      "sha256": "be35b31890cb66ba7526fd0e5d86059b3bf5f114b8de7a9e7030cbc8042a6dd0"
+    }
+  ],
+  "checked_at_utc": "2026-10-23T20:48:38Z",
+  "checksum_assets": 27,
+  "draft": false,
+  "generator_boundary": "Target-only JSON/Markdown projection from read-only inputs; no Git, network, build, installer, product or terminal execution; raw logs, private profile paths and credentials are not exported.",
+  "input_receipts": {
+    "delivery_before": {
+      "bytes": 44983,
+      "sha256": "57ec90e29fc5eea144089651964b9d93662070e09bf2193481808e1a07c0c6c6"
+    },
+    "local_publication_manifest": {
+      "bytes": 8454,
+      "sha256": "0bef0482f4ab0cc9d0abd549cf60ec5ca38ecbb4af7c35fcdde038c6b67751f4"
+    },
+    "publication": {
+      "bytes": 10335,
+      "sha256": "2a49c3e29a106ef645fdf7da413f97c8955eab890ae0f8d90024036244bb7693"
+    },
+    "retirement_checkpoint": {
+      "bytes": 192584,
+      "sha256": "cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7"
+    },
+    "workstation": {
+      "bytes": 4677,
+      "sha256": "16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e"
+    }
+  },
+  "latest": true,
+  "matrix_sha256": "df69c4bd7600b2bfd2ac1f5c7021c5a04c4c828b4f6e2d08668055db59a81ae2",
+  "prerelease": false,
+  "preservation": {
+    "r6_r7_local_gate_checkpoints_unchanged": true,
+    "release_stage_failure_history_unchanged": true,
+    "retirement_inventory_115_unchanged": true,
+    "source_time_checkpoint_pending_flags_unchanged": true,
+    "top_level_history_unchanged": true,
+    "workstation_failure_history_unchanged": true
+  },
+  "product": "git-next",
+  "publication_manifest_sha256": "0bef0482f4ab0cc9d0abd549cf60ec5ca38ecbb4af7c35fcdde038c6b67751f4",
+  "published": true,
+  "published_at_utc": "2026-10-23T20:44:12Z",
+  "release_acceptance_sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1",
+  "release_id": 422290807,
+  "release_url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.3",
+  "schema_version": 1,
+  "scope": "Actual consolidated remote publication plus scoped Windows x64 machine workstation acceptance; two terminal lanes remain explicitly waived; Windows ARM64 runtime/installer hardware acceptance is not claimed.",
+  "small_asset_downloads": [
+    {
+      "actual_download_verified": true,
+      "bytes": 2656,
+      "name": "SHA256SUMS",
+      "sha256": "1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c"
+    },
+    {
+      "actual_download_verified": true,
+      "bytes": 2414,
+      "name": "native-release-acceptance.json",
+      "sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1"
+    }
+  ],
+  "source_checkpoint_policy": "Release source and remote readback checkpoints; later documentation-only commits may advance repository HEAD without changing these artifact identities.",
+  "source_checkpoints": {
+    "git_next": {
+      "commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+      "remote_commit": "05dac2a938784ce03a2de219349c4d381a637ab5"
+    },
+    "git_terminal": {
+      "commit": "f6eb01a42971aee0c885e6c2065151068e872503",
+      "remote_commit": "f6eb01a42971aee0c885e6c2065151068e872503"
+    },
+    "parent": {
+      "commit": "37e29edc6112a1baa27efbd2f0061b88bc37dc34",
+      "remote_commit": "37e29edc6112a1baa27efbd2f0061b88bc37dc34"
+    }
+  },
+  "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+  "source_time_checkpoint": {
+    "asset": "native-python-retirement-20261023.json",
+    "flags_rewritten": false,
+    "implementation_commit": "00d2b405c04a03acb186b92850c1f90a78e915ae",
+    "inventory_entries": 115,
+    "sha256": "cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7"
+  },
+  "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+  "stage": {
+    "accepted_platform_count": 5,
+    "cryptographic_signature_verification_claimed": false,
+    "integrity": {
+      "asset": "native-staged-integrity-r8.json",
+      "bytes": 14444,
+      "sha256": "c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8",
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-staged-integrity-r8.json"
+    },
+    "msi_layout": {
+      "asset": "native-msi-layout-final-r8.json",
+      "bytes": 6864,
+      "sha256": "845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49",
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-msi-layout-final-r8.json"
+    },
+    "msi_packages": 4,
+    "msi_signature_states": [
+      {
+        "asset": "git-next-1.0.3-windows-arm64.msi",
+        "cryptographic_signature_verified": false,
+        "signer_present": false,
+        "status": "NotSigned"
+      },
+      {
+        "asset": "git-next-1.0.3-windows-arm64-user.msi",
+        "cryptographic_signature_verified": false,
+        "signer_present": false,
+        "status": "NotSigned"
+      },
+      {
+        "asset": "git-next-1.0.3-windows-x64.msi",
+        "cryptographic_signature_verified": false,
+        "signer_present": false,
+        "status": "NotSigned"
+      },
+      {
+        "asset": "git-next-1.0.3-windows-x64-user.msi",
+        "cryptographic_signature_verified": false,
+        "signer_present": false,
+        "status": "NotSigned"
+      }
+    ],
+    "python_free_products": {
+      "asset": "native-product-python-final-r8.json",
+      "bytes": 7642,
+      "sha256": "1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812",
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-product-python-final-r8.json"
+    },
+    "signature_policy_result": "not-required-no-signer-configured",
+    "status": "pass"
+  },
+  "status": "pass",
+  "tag": "v1.0.3",
+  "tag_object_sha": "0a9a548ab69ee42e1e4ee8f8e6ffc57b865d9d20",
+  "tag_peeled_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+  "version": "1.0.3",
+  "workstation": {
+    "evidence": {
+      "asset": "native-workstation-acceptance.json",
+      "bytes": 4677,
+      "sha256": "16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e",
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-workstation-acceptance.json"
+    },
+    "gui_tests_executed": false,
+    "immutable_bytes_hashed": 1362711981,
+    "immutable_files_hashed": 10698,
+    "immutable_matching_files": 10698,
+    "install_scope": "machine",
+    "msi_sha256": "76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7",
+    "owned_p4_dispatch_entrypoints": 2,
+    "platform": "windows-x64",
+    "profile_changes": 0,
+    "profile_file_count": 12,
+    "python_entry_count": 0,
+    "python_files_inspected": 10714,
+    "release_gate": true,
+    "required_results": [
+      {
+        "case": "installed-immutable",
+        "elapsed_seconds": 41.0773571,
+        "exit_code": 0,
+        "receipt": "live-installed-immutable-public-live-installed-immutable-20261023T203334Z-b49f346c7be9081cff6bee47.json",
+        "sha256": "5f500ae1641f48ff57fbbd21b130769031911dd8d4239eb3c18cf6889ba643e5",
+        "status": "pass"
+      },
+      {
+        "case": "installed-python0",
+        "elapsed_seconds": 3.6742265,
+        "exit_code": 0,
+        "receipt": "live-installed-python-public-20261023T203719Z-7b40bba8cc1947df9848a44b6c85f2db.json",
+        "sha256": "9ce8d011fe1114b47ff721c224c73e3fc702bca722a06a1fb8e44c717bc190a1",
+        "status": "pass"
+      },
+      {
+        "case": "installed-owned-p4-dispatch",
+        "elapsed_seconds": 0.5870902,
+        "exit_code": 0,
+        "receipt": "installed-p4-dispatch.json",
+        "sha256": "d14d2991f79733e84e1c1be3782668196a5a4cbb96f1ef97d5d6b562424d7cf8",
+        "status": "pass"
+      },
+      {
+        "case": "installed-task-profiles",
+        "elapsed_seconds": 0.6282999,
+        "exit_code": 0,
+        "receipt": "installed-task-profiles.json",
+        "sha256": "8f59b2284adddc328b7f3f1afecce39f4dab11685d7a9349e6dda7fa45e62bc2",
+        "status": "pass"
+      }
+    ],
+    "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+    "status": "pass",
+    "terminal_functional_tests_executed": false,
+    "updater_task_enabled": true,
+    "updater_task_principal": "SYSTEM",
+    "updater_task_xml_sha256": "b2653b9d58edd4949bb5ca083301afbfd7ef5787ecece0042d48bbdfd484b540"
+  }
+}

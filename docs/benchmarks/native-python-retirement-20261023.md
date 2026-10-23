@@ -1,6 +1,8 @@
 # Python retirement: R8 local gate checkpoint
 
-R8 correctness: 16 pass / 2 user-waived terminal lanes, 1229.320 seconds. Paired performance: 5/5 pass, 649.347 seconds. Source: `00d2b405c04a03acb186b92850c1f90a78e915ae`. Final release staging, workstation installation/activation, push and publication remain pending; candidate repair/control is not final installation proof. No universal speed or memory claim is made.
+This is the source-time migration checkpoint. The subsequent consolidated [v1.0.3 release](https://github.com/neko233-com/git-next/releases/tag/v1.0.3), final workstation acceptance and remote asset readback are recorded separately in the [publication completion report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json). The checkpoint JSON and its pending flags retain their original bytes.
+
+R8 correctness: 16 pass / 2 user-waived terminal lanes, 1229.320 seconds. Paired performance: 5/5 pass, 649.347 seconds. Source: `00d2b405c04a03acb186b92850c1f90a78e915ae`. At this checkpoint, final release staging, workstation installation/activation, push and publication remained pending; candidate repair/control was not final installation proof. No universal speed or memory claim is made.
 
 R7 local gates and stage completed, but workstation completion failed after 1,127.534 seconds. Verified recovery is `release_gate=false`; the original failure remains recorded. [Recovery](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json). [Fixed R7 proof](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.json), SHA256 `f40f624c676908eab39906ec3e6500623a83c6aec9d7b1af9a930ae8755ecafa`.
 
