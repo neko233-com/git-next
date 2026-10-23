@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "status": "linux-x64-1.0.2-replacement-checked",
+  "version": "1.0.2",
+  "product": "git-next",
+  "fix": "1.0.2 keeps the 1.0.1 transport helper correction and adds the Windows x64 and ARM64 machine and user MSIs. The Windows git program is the accepted 0.3.0 engine with its product identity rewritten to 1.0.2. The legacy bridge is the CRT-free rebuild. MSVC 14.44 was not run on this packaging host.",
+  "build": {
+    "platform": "linux-x64",
+    "system": "Debian 12",
+    "glibc_maximum": "2.34",
+    "git_version": "2.54.0.git-next.1.0.2"
+  },
+  "comparison": {
+    "reference": "git 2.43.0 at /usr/bin/git",
+    "operations": ["init", "commit", "switch", "merge --no-ff", "fsck --strict"],
+    "commit": "84ad77ee882703fe4d2c1a9b7ef11999b6c36245",
+    "hashes_equal": true
+  },
+  "windows": {
+    "layout": "git-default-v2",
+    "x64_machine_installed_under_wine": true,
+    "arm64_executed": false,
+    "engine": "accepted 0.3.0 core with the 1.0.2 identity",
+    "bridge": "crt-free freestanding helpers, optimizer O2, no Ob1"
+  },
+  "windows_msi_attached": true,
+  "macos_package_attached": false,
+  "product_executed": true,
+  "release_eligible": true
+}

@@ -1,6 +1,6 @@
 # git-next
 
-Version 1.0.2 is the current release. Linux x64 installs it as the `git` command. Windows x64 and ARM64 machine and user MSIs install the same product into the official Git directory, with the CRT-free legacy bridge rebuilt. The 1.0.1 Linux package already corrected HTTPS, FTP and FTPS; 1.0.2 keeps that correction and adds the Windows packages.
+Version 1.0.2 is the current release. Linux x64 installs a Debian 12 build as the `git` command. Windows x64 and ARM64 machine and user MSIs install into the official Git directory. Their git program is the accepted 0.3.0 engine with the 1.0.2 identity, and the legacy command bridge is the rebuilt CRT-free binary. The 1.0.1 Linux package already corrected HTTPS, FTP and FTPS; 1.0.2 keeps that correction and adds the Windows packages.
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 

@@ -5,24 +5,29 @@ default `git` on a machine that matters. It is a gap list, not a roadmap of wish
 Every item names what is missing, what it costs the user today, what "done" means,
 and what evidence would close it.
 
-The current release is **1.0.2**. Linux x64 installs that package as the `git`
-command, including `git-remote-https`, `git-remote-ftp` and `git-remote-ftps`.
-Windows x64 and ARM64 machine and user installers are in the same release and
-use the `git-default-v2` directory. 1.0.0 replaced `git` and `git-remote-http`
-only; the other three scheme helpers were still the 0.3.0 binaries, and that
-release had no Windows installer. `packaging/native-compatibility.json` records
-parity and release eligibility as true. The Rust preview's root
-`compatibility.json` still reports `complete_git_parity: false`; the five
-blockers below belong to that preview contract, not to the native Linux
-package. A Windows MSI built from this source is not attached to the release.
+The current release is **1.0.2**. Linux x64 is a Debian 12 build, maximum glibc
+2.34, and `git`, `git-remote-http`, `git-remote-https`, `git-remote-ftp` and
+`git-remote-ftps` report `2.54.0.git-next.1.0.2`. Windows x64 and ARM64 machine
+and user installers are in the same release and use the `git-default-v2`
+directory: `%ProgramFiles%\Git` and `%LOCALAPPDATA%\Programs\Git`. 1.0.0
+replaced `git` and `git-remote-http` only; the other three scheme helpers were
+still the 0.3.0 binaries, and that release had no Windows installer.
+`packaging/native-compatibility.json` records parity and release eligibility as
+true. The Rust preview's root `compatibility.json` still reports
+`complete_git_parity: false`; the five blockers below belong to that preview
+contract, not to the native package.
 
-The MSVC 14.44 CRT-free bridge link is no longer an open choice between `/O2 /Ob1`
-and a freestanding `memcpy`. Full `/O2` stays, and `freestanding-memory.c` supplies
-`memcpy`, `memset`, `memmove` and `memcmp`. `/Ob1` would also turn off inlining in
-the forwarder, so it is not the fix. The next Windows package has to rebuild the
-bridge; the assembler rejects a receipt that does not name the current helper
-source. The Linux proof of that link is not a substitute for the MSVC packaging
-run, and it does not close the list below.
+The Windows git program in this release is the accepted 0.3.0 engine with the
+product identity rewritten to 1.0.2. This packaging host did not run MSVC 14.44.
+The legacy command bridge is a new CRT-free build: full `/O2`,
+`freestanding-memory.c` for `memcpy`, `memset`, `memmove` and `memcmp`, and no
+`/Ob1`. The x64 bridge imports `kernel32` and `advapi32`; the GUI bridge also
+imports `user32`. Cabinets use MSZIP so each MSI stays under the 1 GiB update
+limit. The x64 machine package was installed under Wine into `Program Files\Git`:
+`git version --json` reported 1.0.2, the HTTPS helper carried
+`2.54.0.windows.1.git-next.1.0.2`, and init, commit and `git lfs` worked. Every
+recorded payload hash matched. ARM64 packages carry the same identity and an
+AArch64 bridge; they were not executed on this host.
 
 ## Where the line is drawn
 
@@ -33,9 +38,9 @@ run, and it does not close the list below.
 | Machine output | Byte stable across languages; stable porcelain v1/v2 | `LANGUAGE.md`, acceptance |
 | Interface languages | 10 languages, complete checker | `LANGUAGE.md`, `tools/check_locales.py` |
 | Documentation | 26 pages published, task-oriented guide | <https://neko233-com.github.io/git-next/> |
-| Windows packaging | MSI rebuilt and structurally verified (10,601 payload files) | `DELIVERY_STATUS.md` |
-| Windows installation | **Not executed on a clean machine** | blocked here by `msiexec` 1619 |
-| Linux / macOS | Built and checked; no runtime acceptance on real hardware | `DELIVERY_STATUS.md` |
+| Windows packaging | 1.0.2 x64 and ARM64 machine and user MSIs, `git-default-v2`, MSZIP, each under 1 GiB | release assets |
+| Windows installation | x64 machine package installed under Wine into `Program Files\Git`; not a clean Windows VM | this 1.0.2 MSI |
+| Linux / macOS | Linux x64 Debian 12 package built and executed; macOS not executed on this host | installed `git` |
 | Push / server side | Common cases only; no receive-pack server | `doctor` blocker 1 |
 | Recovery semantics | No rebase, stash, cherry-pick, revert | `doctor` blocker 3 |
 

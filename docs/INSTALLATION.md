@@ -21,7 +21,7 @@ A compatible independent OpenSSL provider is prepared **before installation/remo
 For an offline installation, obtain the architecture/scope-matching accepted MSI and the pinned TLS archive identified in `packaging/tls-providers.lock.json` beforehand:
 
 ```powershell
-.\install.ps1 -PackagePath .\git-next-0.3.0-windows-x64.msi -ExpectedSha256 <trusted-release-sha256> -TlsArchive .\Git-2.54.0-64-bit.tar.bz2
+.\install.ps1 -PackagePath .\git-next-1.0.2-windows-x64.msi -ExpectedSha256 <trusted-release-sha256> -TlsArchive .\Git-2.54.0-64-bit.tar.bz2
 ```
 
 The TLS archive is needed for takeover of registered Git; a new installation using the default Windows TLS backend does not need it. Offline takeover without the material is refused before MSI installation. `-TlsArchive` accepts a predownloaded, checksum-matching archive. Downloads are staged and verified before the original Git uninstaller can run. Configuration, credentials, SSH files and repositories remain in place; recovery records preserve the selected original installation. Failures during takeover attempt verified rollback rather than leaving an unrecorded partial replacement.
@@ -33,7 +33,7 @@ After completion, reopen existing terminals. `git --version` identifies git-next
 Direct MSI installation is available for managed deployment:
 
 ```powershell
-msiexec.exe /i .\git-next-0.3.0-windows-x64.msi
+msiexec.exe /i .\git-next-1.0.2-windows-x64.msi
 ```
 
 The `git-default-v2` layout installs into `%ProgramFiles%\Git` (machine scope) and

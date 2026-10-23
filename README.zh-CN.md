@@ -1,6 +1,6 @@
 # git-next
 
-当前发布版本是 1.0.2。Linux x64 安装后默认 `git` 就是 git-next。Windows x64 与 ARM64 的机器版和用户版 MSI 会装进官方 Git 目录，并带上重新编译的 CRT-free 旧入口桥接。1.0.1 已修正 HTTPS、FTP、FTPS；1.0.2 保留这个修正并补上 Windows 包。Windows 终端组件仍可参考 [Git-Terminal 0.2.0](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) 和[组件安装说明](docs/TERMINAL.md)。
+当前发布版本是 1.0.2。Linux x64 是 Debian 12 构建，安装后默认 `git` 就是 git-next。Windows x64 与 ARM64 的机器版和用户版 MSI 会装进官方 Git 目录。其中的 git 程序是已验收的 0.3.0 引擎，产品身份改为 1.0.2，旧命令桥接则是重新链接的 CRT-free 程序。1.0.1 已修正 HTTPS、FTP、FTPS；1.0.2 保留这个修正并补上 Windows 包。Windows 终端组件仍可参考 [Git-Terminal 0.2.0](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) 和[组件安装说明](docs/TERMINAL.md)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
