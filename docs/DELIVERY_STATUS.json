@@ -569,7 +569,7 @@
       "matrix": "target/go-native-release-1.0.3/final-matrix-r6.json",
       "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
       "public_evidence": "docs/benchmarks/native-python-retirement-20261023.json",
-      "public_evidence_sha256": "bdd73a156b6830746d7778102ed8fc2b81578114fda6cf373aa5759c68cfc745",
+      "public_evidence_sha256": "135a4b31532fb9f50d87391bfe5818e05ed834013caf8d69df24e4355416a97e",
       "delivery_actions_recorded_separately": true
     }
   }

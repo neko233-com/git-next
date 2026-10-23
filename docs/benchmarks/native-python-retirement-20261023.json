@@ -1877,9 +1877,9 @@
     "feature_limit": 1600,
     "late_removal": "InstallExecute=6500 \u003c RemoveExistingProducts=6501 \u003c InstallFinalize=6600",
     "layout_evidence": {
-      "bytes": 4430,
+      "bytes": 4427,
       "path": "target/go-native-release-1.0.3/msi-candidates-r5b-layout.json",
-      "sha256": "c714870cd6f89629d4855a8fbc4be29a22e925a88d36ac1c97eb3dcd8aa76518"
+      "sha256": "bc82ddf5ffaed179e20b359098f9e42e283fc61cda492fcc798b05ce3f90b10b"
     },
     "machine_lifecycle": {
       "case": "msi-machine",
