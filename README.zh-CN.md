@@ -1,6 +1,6 @@
 # git-next
 
-1.0.3 仍为未发布候选。原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。R7 已完成声明范围的本地门禁与 release staging，随后实际工作站接管失败。精确字节恢复已核验，R8 安装修复、最终门禁和交付仍待完成。[交付进度](docs/DELIVERY_STATUS.md)。
+1.0.3 仍为未发布候选。原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。R8 最终本地正确性、配对性能和两种 Windows x64 MSI 生命周期已通过；最终打包、工作站正式安装和发布仍分别待完成。[交付进度](docs/DELIVERY_STATUS.md)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
@@ -8,9 +8,11 @@
 
 独立 Rust 客户端继续作为 preview，使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md) 验收。Windows x64 与真实 macOS ARM64 的 full 各通过 100 个范围化场景，L0 覆盖 39 个命令。Rust 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Rust 场景不宣称逐条等量覆盖全部历史断言。[兼容性说明](docs/COMPATIBILITY.md)。
 
-已记录的 native 产品证据包括真实 Apple Silicon macOS 15.5 的 51 场景、Linux 两个 Docker 目标各 52 场景，以及每个 POSIX 目标的两路包内 Git/P4 入口检查。Windows ARM64 已有交叉编译、PE 和包静态检查，尚无真实 ARM64 运行验收。Windows 默认关闭 fscache/fsmonitor/preload，index/grep 使用单线程读取。R7 检查点的正确性为 16 lane 通过、2 项用户豁免，耗时 249.801 秒；成对性能 5/5 通过，耗时 668.849 秒。Windows x64 用户级/机器级 MSI 实际生命周期各通过 27/25 项，R7 绑定相同输入复用这些回执；这些通过不代表 R8 修复已经验收。[固定 R7 证据](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.md) · [默认配置](docs/DEFAULTS.md) · [性能边界](docs/PERFORMANCE.md)。
+已记录的 native 产品证据包括真实 Apple Silicon macOS 15.5 的 51 场景、Linux 两个 Docker 目标各 52 场景，以及每个 POSIX 目标的两路包内 Git/P4 入口检查。Windows ARM64 已有交叉编译、PE 和包静态检查，尚无真实 ARM64 运行验收。Windows 默认关闭 fscache/fsmonitor/preload，index/grep 使用单线程读取。R8 正确性为 16 lane 通过、2 项用户豁免，耗时 1,229.320 秒；成对性能 5/5 通过，耗时 649.350 秒。Windows x64 用户级/机器级 MSI 实际重跑通过 27/26 项，没有复用旧 MSI 回执。[R8 本地证据](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md) · [默认配置](docs/DEFAULTS.md) · [性能边界](docs/PERFORMANCE.md)。
 
 R7 工作站流程在 1,127.534 秒后于完成阶段失败。随后从核验过的备份精确恢复 `package.json` 和 `bin/git.exe`，核对全部 10,696 个声明的不可变文件，检查 10,712 个文件且 Python 项为 0，两路包内 P4 入口通过，12 个个人配置文件保持不变。这是 `release_gate=false` 的恢复证据，不表示完整安装成功或已经满足发布条件。[恢复记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json)。
+
+R8 随后通过受保护的恢复控制和正常 MSI 卸载恢复全部 9,625 个原 Git 文件，移除 MSI 注册与迁移指针，12 个个人配置文件 0 变化。这是旧事务恢复，不冒充正常的 MSI 前快照或精确历史逐文件 ACL 恢复。[R8 恢复边界](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r8-legacy-recovery-20261024.json)。
 
 ## 原生安装包
 
@@ -22,7 +24,7 @@ R7 工作站流程在 1,127.534 秒后于完成阶段失败。随后从核验过
 | Linux x64 / ARM64 | 含 install.sh 的完整 tar.gz | Debian 12 / glibc 2.36 或兼容系统 |
 | macOS Apple Silicon | 含 install.sh 的完整 tar.gz | macOS 15.5+；真实 ARM64 运行验收及独立包/Mach-O/shell 检查；CPU affinity 约束不支持 |
 
-参见[安装与卸载](docs/INSTALLATION.md)。R8 bootstrap 源码在 MSI 写入前保存受保护的原 Git 完整快照，钉住快照清单哈希，并在 MSI 后将接管绑定到该快照；完整安装/回滚门禁仍待完成。[接管说明](docs/TAKEOVER.md)。
+参见[安装与卸载](docs/INSTALLATION.md)。R8 bootstrap 在 MSI 写入前保存受保护的原 Git 完整快照，钉住快照清单哈希，并在 MSI 后将接管绑定到该快照；适用的隔离安装/回滚门禁已通过，最终工作站验收仍待完成。[接管说明](docs/TAKEOVER.md)。
 
 ## 命令与默认行为
 
@@ -59,7 +61,7 @@ Rust CLI 统一使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)，提供 L0
 
 ## Windows 一键安装
 
-取得与已发布 MSI 匹配的 `install.ps1` 后执行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`。**bootstrap 默认选择已注册的官方 Git for Windows 进行替换。** R8 源码先将 32 位 PowerShell 非提权转发到原生 64 位，再按机器级范围请求 UAC；在 MSI 写入前保存原安装快照，失败时保留受保护快照路径和 SHA。`-Plan` 只查看选择，不作修改。安装不依赖 Go、Python 或 WiX，R8 完整生命周期仍待验证；兼容和恢复边界见[安装说明](docs/INSTALLATION.md)。
+取得与已发布 MSI 匹配的 `install.ps1` 后执行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`。**bootstrap 默认选择已注册的官方 Git for Windows 进行替换。** R8 先将 32 位 PowerShell 非提权转发到原生 64 位，再按机器级范围请求 UAC；在 MSI 写入前保存原安装快照，失败时保留受保护快照路径和 SHA。`-Plan` 只查看选择，不作修改。安装不依赖 Go、Python 或 WiX；隔离生命周期已通过，最终工作站验收仍待完成，兼容和恢复边界见[安装说明](docs/INSTALLATION.md)。
 
 Windows MSI 同时安装独立 Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md)，支持标签页、Unicode/IME、复制粘贴、历史滚动及自有 Bash、PowerShell/CMD 配置。它替代 Git Bash 桌面入口，不添加 Git GUI 菜单。[内置 LFS 与游戏项目模板](docs/GAME_PROJECTS.md)覆盖 Unity/Tuanjie、Unreal，无需另外安装 LFS。
 

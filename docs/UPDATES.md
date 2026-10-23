@@ -2,17 +2,16 @@
 
 ## Current 1.0.3 validation scope · 2026-10-24
 
-Local native correctness R7 completed with 16 passed lanes and two explicitly
-user-waived Git-Terminal lanes in 249.801 seconds. Actual Windows x64 MSI
-lifecycles passed 27 user-scope checks in 622.690 seconds and 25 machine-scope
-checks in 473.217 seconds; the final batch reuses those receipts only after
-checking their immutable inputs. Windows ARM64's two MSI flavors have compilation,
+Local native correctness R8 completed with 16 passed lanes and two explicitly
+user-waived Git-Terminal lanes in 1,229.320 seconds. Actual Windows x64 MSI
+lifecycles ran afresh: 27 user-scope checks in 530.630 seconds and 26 machine-scope
+checks in 453.501 seconds, without receipt reuse. Windows ARM64's two MSI flavors have compilation,
 table and static evidence, not hardware lifecycle acceptance. Real Apple Silicon
 macOS 15.5 passed 51 native runtime scenarios and two owned-Git/P4 dispatch checks,
 in addition to package/Mach-O/shell validation. This does not establish full Mac
 installation, launchd scheduling or an automatic upgrade on that host.
 
-R7 paired performance passed all five lanes in 668.849 seconds. Release staging,
+R8 paired performance passed all five lanes in 649.350 seconds. Release staging,
 workstation activation and publication remain separate; exact artifact bindings belong to
 [delivery status](DELIVERY_STATUS.md). Dated implementation-only and v0.3.0 notes
 below preserve their historical scope rather than asserting that no installer or
@@ -32,7 +31,7 @@ The source CLI exposes `git update check|apply|status|enable|disable [--json]`. 
 
 ## Compatibility, storage and rollback report
 
-### Same-directory takeover recovery · R8 candidate
+### Same-directory takeover recovery · R8 local gates passed
 
 The R7 workstation attempt exposed two failures after the official Git uninstaller:
 the self manifest `package.json` was incorrectly considered stale, and the old
@@ -40,7 +39,8 @@ uninstaller removed the shared `bin/git.exe` that MSI had just installed. The
 protected R7 backups allowed those exact files to be restored; the installation
 subsequently passed a full owned-file hash audit. That operational repair does
 not turn the failed workstation takeover into a passed release gate. The R8
-changes below require new MSI lifecycle and workstation evidence before release.
+changes below have fresh isolated MSI lifecycle passes; final workstation evidence
+is still required before release.
 
 The standalone installer now verifies the downloaded MSI, extracts only its
 manifest and the seven allowlisted migration/updater source files, and checks
@@ -132,7 +132,8 @@ files and 4 GiB); it does not copy credential vaults or alter repository, Git
 object, LFS object or user profile storage. It adds one pre-MSI file/metadata
 readback and a protected copy; stale purge and restore use indexed lookup rather
 than repeatedly scanning the full inventory. These are implementation and
-isolated-fixture guarantees; real R8 lifecycle/takeover results remain pending.
+isolated-fixture guarantees with fresh R8 MSI lifecycle passes; final workstation
+takeover remains pending.
 
 The native MSI uses an architecture/scope-specific stable UpgradeCode, a Start menu entry and a scoped PATH entry. The `git-default-v2` layout installs into `%ProgramFiles%/Git` for machine scope and `%LOCALAPPDATA%/Programs/Git` for user scope, so the primary IDE entry point `cmd\git.exe` is the owned git-next payload rather than a bridge forwarder. The existing script installation has a different prefix; migration between installation managers must be accepted before final activation. The historical Rust preview keeps its Git alias outside PATH. Native candidates contain the owned Git entrypoints, but installing a candidate does not authorize takeover or remove the original Git. MSI parameters cannot override the incomplete-parity takeover gate. Existing applications selecting absolute original-Git paths still need migration acceptance.
 

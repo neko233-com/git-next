@@ -4,7 +4,16 @@ This page separates native MSI lifecycle evidence, workstation recovery and the
 independent Rust preview's verification command. A compiled MSI, an isolated lifecycle
 pass and a completed workstation takeover are different acceptance layers.
 
-## Current 1.0.3 checkpoint: R7 rejected, R8 pending
+## Current 1.0.3 checkpoint: R8 local gates passed, delivery pending
+
+R8 correctness passed 16 lanes with exactly two user-waived terminal lanes in
+1,229.320 seconds. Paired performance passed 5/5 in 649.350 seconds. Both Windows
+x64 MSI lifecycles ran afresh, passing 27 user checks in 530.630 seconds and 26
+machine checks in 453.501 seconds. No MSI receipt was reused. Final release staging,
+workstation installation and publication remain separate pending steps.
+[R8 local evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json).
+
+### Preserved R7 failure and recovery
 
 R7 local correctness completed with 16 passed lanes and two user-waived terminal
 lanes in 249.801 seconds; its paired performance passed 5/5 in 668.849 seconds and
@@ -26,9 +35,13 @@ has SHA-256 `dbee9b0ea14b8bb499cb64c094c82e0feb531f9defe8f0633171344b6c9f1c17`.
 
 R8 source adds a protected complete snapshot before MSI can overwrite original
 `cmd`/`bin` bytes, pins the snapshot manifest SHA before MSI, and supplies that pin
-to post-MSI Apply. Same-directory cleanup and protected rollback are being repaired.
-These source changes require new applicable gates and actual installation before
-publication; R7's passes and recovery do not validate them. See [installation](INSTALLATION.md).
+to post-MSI Apply. Same-directory cleanup and protected rollback pass the new
+applicable local gates. Verified recovery control then restored all 9,625 original
+Git files through ordinary guarded MSI removal; registration and migration pointer
+are absent and twelve private profiles are unchanged. This operator recovery is
+not a normal pre-MSI snapshot or final installation acceptance.
+[R8 recovery](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r8-legacy-recovery-20261024.json).
+Actual final installation is still required before publication. See [installation](INSTALLATION.md).
 
 ## Current native verification entrypoints
 

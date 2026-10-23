@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "validation_round": "R8",
+  "status": "legacy-r7-transaction-recovered-original-git-restored",
+  "source_commit": "00d2b405c04a03acb186b92850c1f90a78e915ae",
+  "release_gate": false,
+  "final_workstation_installation_accepted": false,
+  "scope": "Recovery of an already overlaid R7 installation; not a normal R8 pre-MSI snapshot or final installation acceptance",
+  "candidate_msi_sha256": "2c6c8fb8c997fdeab34b2838e7e1e3af6686ed91896c4a326fb1bd5fa785c232",
+  "candidate_release_eligible": false,
+  "candidate_used_only_as_verified_recovery_control": true,
+  "first_repair_attempt": {
+    "msi_exit_code": 1603,
+    "elapsed_seconds": 11.344,
+    "reason": "Local recovery launcher cached the MSI under a filename different from its registered source name; standard Windows Installer source resolution refused before payload changes",
+    "failed_evidence_preserved": true,
+    "package_or_policy_bypassed": false
+  },
+  "successful_repair": {
+    "msi_exit_code": 0,
+    "elapsed_seconds": 68.961,
+    "raw_receipt_sha256": "88bb1fa5502cba4ab7ea7c3083260dfff8ec29ae3f53023d5b9dcd7aed804a40",
+    "only_launcher_cache_filename_corrected": true,
+    "product_source_changed": false
+  },
+  "operator_original_snapshot": {
+    "status": "prepared-not-rolled-back",
+    "elapsed_seconds": 306.439,
+    "original_files": 9625,
+    "original_bytes": 429548904,
+    "manifest_sha256": "95f4c6eecefaffe1b8b45ca8dc989b3af0a9d4686ab8fdfa114ac9d1f48f6d99",
+    "raw_receipt_sha256": "bdc43084daa01892ea3c36e6d6541d6bf18914be56e1dc7ce7937e8d910415b8",
+    "origin": "Independent protected manual backup captured before the first final MSI and legacy Git retirement",
+    "original_per_file_acl_captured": false,
+    "restoration_acl_boundary": "Validated protected installation inheritance; exact historical per-file ACL restoration is not claimed",
+    "metadata_origin": "Protected legacy transaction captured after MSI overlay and before original Git uninstaller",
+    "normal_pre_msi_snapshot_claimed": false
+  },
+  "protected_rollback": {
+    "status": "rolled-back-original-bytes-verified",
+    "elapsed_seconds": 354.604,
+    "ordinary_guarded_msi_uninstall": true,
+    "msi_exit_code": 0,
+    "original_files_verified": 9625,
+    "original_command_sha256": "3b64043b9e4dc225225f43ff9c1173b57493ff72e5b729accfae051eb160cca3",
+    "original_version": "2.56.0.windows.3",
+    "msi_product_state": -1,
+    "msi_registration_absent": true,
+    "migration_pointer_absent": true,
+    "raw_receipt_sha256": "897daae0fbfd7b2a981fd6eaa6d640d173a70e7ea6238a55ed247eeba0962853"
+  },
+  "private_profile_files": 12,
+  "private_profile_changed_count": 0,
+  "comparison_baseline": "First fresh pre-final-installation snapshot; historical earlier unattributed drift remains recorded",
+  "terminal_functional_tests_executed": false,
+  "publication_performed": false
+}

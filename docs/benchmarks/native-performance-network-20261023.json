@@ -1,8 +1,8 @@
 {
   "acceptance_batch": {
-    "bytes": 3454,
-    "path": "target/go-native-release-1.0.3/final-performance-r7/batch.json",
-    "sha256": "b22eb08be3aff72fa71cfd084103d323e5950652248374f0c14ccfec4c81282f"
+    "bytes": 3456,
+    "path": "target/go-native-release-1.0.3/final-performance-r8/batch.json",
+    "sha256": "2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f"
   },
   "arch": "amd64",
   "authenticated_request_counts": {
@@ -97,7 +97,7 @@
   "http_response_protocol": "HTTP/1.1",
   "incremental_file_edits": 10,
   "initial_worktree_bytes": 270259,
-  "measured_at_utc": "2026-10-23T16:47:14.9215795Z",
+  "measured_at_utc": "2026-10-23T19:46:22.2646926Z",
   "memory_scope": "Windows primary process peak working set; queried after latency interval; transport/child processes excluded",
   "os": "Windows-10.0.26300",
   "packet_bytes_or_object_reuse_proven": false,
@@ -110,55 +110,55 @@
   "results": {
     "clone": {
       "git": {
-        "median_ms": 728.93,
-        "min_ms": 677.183,
-        "p95_ms": 771.395,
-        "peak_working_set_median_bytes": 6930432,
-        "peak_working_set_p95_bytes": 6942720,
+        "median_ms": 730.658,
+        "min_ms": 701.938,
+        "p95_ms": 746.75,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6922240,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 1051.06,
-        "min_ms": 990.61,
-        "p95_ms": 1181.805,
-        "peak_working_set_median_bytes": 12840960,
-        "peak_working_set_p95_bytes": 12873728,
+        "median_ms": 1060.512,
+        "min_ms": 1032.948,
+        "p95_ms": 1103.927,
+        "peak_working_set_median_bytes": 12843008,
+        "peak_working_set_p95_bytes": 12894208,
         "peak_working_set_samples": 10
       }
     },
     "fetch": {
       "git": {
-        "median_ms": 432.197,
-        "min_ms": 392.031,
-        "p95_ms": 451.336,
-        "peak_working_set_median_bytes": 6930432,
-        "peak_working_set_p95_bytes": 6934528,
+        "median_ms": 452.305,
+        "min_ms": 439.268,
+        "p95_ms": 478.143,
+        "peak_working_set_median_bytes": 6909952,
+        "peak_working_set_p95_bytes": 6914048,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 410.538,
-        "min_ms": 384.522,
-        "p95_ms": 444.398,
-        "peak_working_set_median_bytes": 12656640,
+        "median_ms": 428.416,
+        "min_ms": 418.602,
+        "p95_ms": 437.368,
+        "peak_working_set_median_bytes": 12673024,
         "peak_working_set_p95_bytes": 12705792,
         "peak_working_set_samples": 10
       }
     },
     "pull_ff_only": {
       "git": {
-        "median_ms": 597.053,
-        "min_ms": 542.762,
-        "p95_ms": 608.425,
-        "peak_working_set_median_bytes": 6930432,
-        "peak_working_set_p95_bytes": 6934528,
+        "median_ms": 599.263,
+        "min_ms": 523.208,
+        "p95_ms": 619.138,
+        "peak_working_set_median_bytes": 6914048,
+        "peak_working_set_p95_bytes": 6918144,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 585.1,
-        "min_ms": 528.873,
-        "p95_ms": 601.374,
-        "peak_working_set_median_bytes": 12812288,
-        "peak_working_set_p95_bytes": 12861440,
+        "median_ms": 578.135,
+        "min_ms": 526.451,
+        "p95_ms": 606.572,
+        "peak_working_set_median_bytes": 12818432,
+        "peak_working_set_p95_bytes": 12840960,
         "peak_working_set_samples": 10
       }
     }
@@ -168,9 +168,9 @@
   "schema_version": 1,
   "scope": "loopback smart HTTPS, temporary private CA and static fixture authorization; clone/fetch/ff-only pull",
   "source_report": {
-    "bytes": 4550,
-    "path": "target/go-native-release-1.0.3/final-performance-r7/performance-network.json",
-    "sha256": "df838cc796eb80dac74c7327775cc4e61a9ecff1332d30f3d27ea7947d7f29f4"
+    "bytes": 4555,
+    "path": "target/go-native-release-1.0.3/final-performance-r8/performance-network.json",
+    "sha256": "be35b31890cb66ba7526fd0e5d86059b3bf5f114b8de7a9e7030cbc8042a6dd0"
   },
   "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
   "status": "pass",

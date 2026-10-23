@@ -1,8 +1,8 @@
 {
   "acceptance_batch": {
-    "bytes": 3454,
-    "path": "target/go-native-release-1.0.3/final-performance-r7/batch.json",
-    "sha256": "b22eb08be3aff72fa71cfd084103d323e5950652248374f0c14ccfec4c81282f"
+    "bytes": 3456,
+    "path": "target/go-native-release-1.0.3/final-performance-r8/batch.json",
+    "sha256": "2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f"
   },
   "actual_data_directories": 1000,
   "arch": "amd64",
@@ -34,145 +34,145 @@
   "results": {
     "cat_file": {
       "git": {
-        "median_ms": 31.916,
-        "min_ms": 27.579,
-        "p95_ms": 66.671,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6955008,
+        "median_ms": 27.698,
+        "min_ms": 25.653,
+        "p95_ms": 28.579,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6926336,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 19.037,
-        "min_ms": 17.532,
-        "p95_ms": 22.397,
+        "median_ms": 16.861,
+        "min_ms": 15.696,
+        "p95_ms": 18.379,
         "peak_working_set_median_bytes": 11251712,
-        "peak_working_set_p95_bytes": 11280384,
+        "peak_working_set_p95_bytes": 11276288,
         "peak_working_set_samples": 10
       }
     },
     "diff_clean": {
       "git": {
-        "median_ms": 190.149,
-        "min_ms": 178.801,
-        "p95_ms": 212.941,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
+        "median_ms": 172.206,
+        "min_ms": 168.253,
+        "p95_ms": 180.864,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6922240,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 178.62,
-        "min_ms": 161.282,
-        "p95_ms": 215.503,
-        "peak_working_set_median_bytes": 13105152,
-        "peak_working_set_p95_bytes": 13127680,
+        "median_ms": 162.025,
+        "min_ms": 156.314,
+        "p95_ms": 169.375,
+        "peak_working_set_median_bytes": 13103104,
+        "peak_working_set_p95_bytes": 13131776,
         "peak_working_set_samples": 10
       }
     },
     "grep_files": {
       "git": {
-        "median_ms": 930.96,
-        "min_ms": 859.037,
-        "p95_ms": 1243.645,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6946816,
+        "median_ms": 766.226,
+        "min_ms": 752.243,
+        "p95_ms": 822.754,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6922240,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 977.826,
-        "min_ms": 835.075,
-        "p95_ms": 1371.733,
-        "peak_working_set_median_bytes": 13156352,
-        "peak_working_set_p95_bytes": 13193216,
+        "median_ms": 756.386,
+        "min_ms": 718.798,
+        "p95_ms": 842.66,
+        "peak_working_set_median_bytes": 13154304,
+        "peak_working_set_p95_bytes": 13189120,
         "peak_working_set_samples": 10
       }
     },
     "log_metadata": {
       "git": {
-        "median_ms": 31.232,
-        "min_ms": 27.423,
-        "p95_ms": 54.627,
-        "peak_working_set_median_bytes": 6942720,
-        "peak_working_set_p95_bytes": 6946816,
+        "median_ms": 26.79,
+        "min_ms": 24.739,
+        "p95_ms": 27.738,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6938624,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 19.211,
-        "min_ms": 17.126,
-        "p95_ms": 28.057,
-        "peak_working_set_median_bytes": 12017664,
-        "peak_working_set_p95_bytes": 12046336,
+        "median_ms": 16.482,
+        "min_ms": 15.824,
+        "p95_ms": 17.323,
+        "peak_working_set_median_bytes": 12019712,
+        "peak_working_set_p95_bytes": 12034048,
         "peak_working_set_samples": 10
       }
     },
     "rev_parse": {
       "git": {
-        "median_ms": 29.054,
-        "min_ms": 27.211,
-        "p95_ms": 47.196,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6959104,
+        "median_ms": 26.885,
+        "min_ms": 23.332,
+        "p95_ms": 29.151,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6922240,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 16.684,
-        "min_ms": 14.976,
-        "p95_ms": 18.105,
-        "peak_working_set_median_bytes": 10930176,
-        "peak_working_set_p95_bytes": 10944512,
+        "median_ms": 15.774,
+        "min_ms": 14.322,
+        "p95_ms": 18.322,
+        "peak_working_set_median_bytes": 10934272,
+        "peak_working_set_p95_bytes": 10952704,
         "peak_working_set_samples": 10
       }
     },
     "show_metadata": {
       "git": {
-        "median_ms": 33.867,
-        "min_ms": 31.454,
-        "p95_ms": 43.516,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
+        "median_ms": 31.679,
+        "min_ms": 29.981,
+        "p95_ms": 34.668,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6922240,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 23.725,
-        "min_ms": 21.301,
-        "p95_ms": 27.424,
-        "peak_working_set_median_bytes": 15491072,
-        "peak_working_set_p95_bytes": 15536128,
+        "median_ms": 22.164,
+        "min_ms": 21.248,
+        "p95_ms": 23.771,
+        "peak_working_set_median_bytes": 15511552,
+        "peak_working_set_p95_bytes": 15540224,
         "peak_working_set_samples": 10
       }
     },
     "status_clean": {
       "git": {
-        "median_ms": 232.69,
-        "min_ms": 213.643,
-        "p95_ms": 253.85,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6946816,
+        "median_ms": 194.464,
+        "min_ms": 186.214,
+        "p95_ms": 209.214,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6938624,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 208.153,
-        "min_ms": 193.554,
-        "p95_ms": 267.964,
-        "peak_working_set_median_bytes": 14098432,
+        "median_ms": 183.737,
+        "min_ms": 177.364,
+        "p95_ms": 194.328,
+        "peak_working_set_median_bytes": 14102528,
         "peak_working_set_p95_bytes": 14114816,
         "peak_working_set_samples": 10
       }
     },
     "version": {
       "git": {
-        "median_ms": 27.765,
-        "min_ms": 25.843,
-        "p95_ms": 31.816,
-        "peak_working_set_median_bytes": 6946816,
-        "peak_working_set_p95_bytes": 6950912,
+        "median_ms": 25.15,
+        "min_ms": 22.503,
+        "p95_ms": 30.459,
+        "peak_working_set_median_bytes": 6918144,
+        "peak_working_set_p95_bytes": 6934528,
         "peak_working_set_samples": 10
       },
       "git_next": {
-        "median_ms": 16.038,
-        "min_ms": 12.7,
-        "p95_ms": 16.635,
-        "peak_working_set_median_bytes": 10502144,
-        "peak_working_set_p95_bytes": 10547200,
+        "median_ms": 14.396,
+        "min_ms": 12.577,
+        "p95_ms": 15.566,
+        "peak_working_set_median_bytes": 10504192,
+        "peak_working_set_p95_bytes": 10510336,
         "peak_working_set_samples": 10
       }
     }
@@ -183,9 +183,9 @@
   "scope": "process creation + command + captured output; local disposable SHA-1 repository",
   "source_hash_origin": "recorded checkpoint verified against binary hash",
   "source_report": {
-    "bytes": 5752,
-    "path": "target/go-native-release-1.0.3/final-performance-r7/performance-10000.json",
-    "sha256": "3fa9d7824753216db8a404612bd2993a348532a9335b3bcc2669ebce8533d21d"
+    "bytes": 5753,
+    "path": "target/go-native-release-1.0.3/final-performance-r8/performance-10000.json",
+    "sha256": "fc3dfaa354e5000bf44aac2bc50b8d259164a59dd2a73c66a35c2e7ce8d599fe"
   },
   "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
   "system_configuration": "enabled conventional filesystem paths",

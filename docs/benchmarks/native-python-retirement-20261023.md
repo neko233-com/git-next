@@ -1,3 +1,13 @@
+# Python retirement: R8 local gate checkpoint
+
+R8 correctness: 16 pass / 2 user-waived terminal lanes, 1229.320 seconds. Paired performance: 5/5 pass, 649.347 seconds. Source: `00d2b405c04a03acb186b92850c1f90a78e915ae`. Final release staging, workstation installation/activation, push and publication remain pending; candidate repair/control is not final installation proof. No universal speed or memory claim is made.
+
+R7 local gates and stage completed, but workstation completion failed after 1,127.534 seconds. Verified recovery is `release_gate=false`; the original failure remains recorded. [Recovery](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-workstation-r7-recovery-20261024.json). [Fixed R7 proof](https://github.com/neko233-com/git-next/blob/33269276902e1d3c52fab176516f14db908b7570/docs/benchmarks/native-python-retirement-20261023.json), SHA256 `f40f624c676908eab39906ec3e6500623a83c6aec9d7b1af9a930ae8755ecafa`.
+
+The JSON retains all 115 retirement mappings, R6/R7 checkpoints and original failed candidates. R8 uses fresh x64 user/machine MSI lifecycle execution; Windows ARM64 remains compilation/table/static evidence. The two terminal lanes are waived, not passed.
+
+## Historical R7 report (unchanged text follows)
+
 # Python 工具链退役证据
 
 报告开始日：2026-10-23；最终本地门禁完成日：2026-10-24。R7 correctness 为 16 pass / 2 waived，249.801 秒；performance 为 5 pass，668.849 秒。本报告是源码检查点：当时 release staging、工作站更新和 push/publish 尚 pending；后续完成动作由独立公开 release-completion asset 与 main 的正常文档提交记录，不重写已接受包中的本报告。被拒候选与用户豁免均保留，waived 不计为 pass。
