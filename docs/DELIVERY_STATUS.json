@@ -88,8 +88,12 @@
         "remote_files_changed": false,
         "evidence": {
           "path": "docs/benchmarks/native-macos-host-preflight-20261024.json",
-          "sha256": "483ac731e2ee4ee0e4c377034ddae1aba7b5d364c145c8702dee55806f0f7f0c",
-          "bytes": 1807
+          "sha256": "968171cb8114ec1a11f44e22ce2529896d5b608fbced383a31d0b591dbbdf93e",
+          "bytes": 1758,
+          "representation": "public-git-blob-lf",
+          "local_raw_receipt_sha256": "483ac731e2ee4ee0e4c377034ddae1aba7b5d364c145c8702dee55806f0f7f0c",
+          "local_raw_receipt_bytes": 1807,
+          "local_raw_receipt_preserved": true
         }
       }
     },
