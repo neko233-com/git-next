@@ -1,6 +1,6 @@
 # git-next
 
-1.0.3 当前处于最终交付验收阶段。原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。最终本地门禁和发布尚待完成；2026-10-23 核验的最新已发布版本为 [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1)。
+1.0.3 distribution 已完成声明范围内的本地正确性与成对性能门禁。原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。Release staging、工作站安装/更新、push 和发布状态单独记录于[交付进度](docs/DELIVERY_STATUS.md)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
@@ -8,15 +8,15 @@
 
 独立 Rust 客户端继续作为 preview，使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md) 验收。Windows x64 与真实 macOS ARM64 的 full 各通过 100 个范围化场景，L0 覆盖 39 个命令。Rust 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Rust 场景不宣称逐条等量覆盖全部历史断言。[兼容性说明](docs/COMPATIBILITY.md)。
 
-当前 native 产品证据包括真实 Apple Silicon macOS 15.5 的 51 场景、Linux 两个 Docker 目标各 52 场景，以及每个 POSIX 目标的两路包内 Git/P4 入口检查。Windows ARM64 已有交叉编译、PE 和包静态检查，尚无真实 ARM64 运行验收。Windows 默认关闭 fscache/fsmonitor/preload，index/grep 使用单线程读取。最终正确性、成对性能、安装与工作站验收、发布仍单独追踪；用户已豁免后续 Git-Terminal 专项验证，已有失败记录保留。[交付进度](docs/DELIVERY_STATUS.md) · [默认配置](docs/DEFAULTS.md) · [性能边界](docs/PERFORMANCE.md)。
+当前 native 产品证据包括真实 Apple Silicon macOS 15.5 的 51 场景、Linux 两个 Docker 目标各 52 场景，以及每个 POSIX 目标的两路包内 Git/P4 入口检查。Windows ARM64 已有交叉编译、PE 和包静态检查，尚无真实 ARM64 运行验收。Windows 默认关闭 fscache/fsmonitor/preload，index/grep 使用单线程读取。R6 正确性为 16 lane 通过、2 项用户豁免，耗时 246.204 秒；成对性能 5/5 通过，耗时 691.251 秒。Windows x64 用户级/机器级 MSI 实际生命周期各通过 27/25 项，最终批次绑定相同输入复用这些回执；终端豁免与此前失败均明确保留。[验收证据](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md) · [默认配置](docs/DEFAULTS.md) · [性能边界](docs/PERFORMANCE.md)。
 
 ## 原生安装包
 
-从 [GitHub Releases](https://github.com/neko233-com/git-next/releases) 获取最终验收包。Windows MSI 内含完整自有运行时，无需安装 Rust 编译器。候选构建产物尚不代表获准接管本机。
+从 [GitHub Releases](https://github.com/neko233-com/git-next/releases) 获取已发布的安装包与校验和。预计的 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 不表示发布已经发生，源码快照中的后续交付动作仍单独追踪。Windows MSI 内含完整自有运行时，无需安装 Rust 编译器。
 
 | 平台 | 安装包 | 环境范围 |
 | --- | --- | --- |
-| Windows x64 / ARM64 | 机器级或用户级 MSI | 机器级安装需要管理员权限 |
+| Windows x64 / ARM64 | 机器级或用户级 MSI | 机器级安装需要管理员权限；x64 有实际生命周期证据，ARM64 为构建/表/静态检查 |
 | Linux x64 / ARM64 | 含 install.sh 的完整 tar.gz | Debian 12 / glibc 2.36 或兼容系统 |
 | macOS Apple Silicon | 含 install.sh 的完整 tar.gz | macOS 15.5+；真实 ARM64 运行验收及独立包/Mach-O/shell 检查；CPU affinity 约束不支持 |
 

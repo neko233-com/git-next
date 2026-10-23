@@ -104,7 +104,7 @@
 </tr>
 <tr>
 <td>安装与更新</td>
-<td>两种 MSI 范围的安装/修复/升级/注入失败回滚/拒绝降级/卸载，包身份/哈希、并发配置保护、镜像损坏回退</td>
+<td>Windows x64 两种 MSI 范围实际完成安装/修复/升级/注入失败回滚/拒绝降级/卸载：用户级 27 项、机器级 25 项；复用须绑定相同不可变输入。ARM64 两种 MSI 仅编译、表和静态检查，未作硬件生命周期验收</td>
 </tr>
 <tr>
 <td>Bootstrap</td>
@@ -112,11 +112,11 @@
 </tr>
 <tr>
 <td>原生终端</td>
-<td>peer Git-Terminal 的 Rust/ConPTY 与桌面键盘测试，多 tab、目录继承、分支、配色、剪贴板、中文输入</td>
+<td>历史证据保留原 Rust/ConPTY 与桌面范围及失败；本轮用户明确豁免后续 <code>terminal-rust-contracts</code>、<code>terminal-native-desktop</code> 两个专项 lane，单列 waived，不计作通过</td>
 </tr>
 <tr>
 <td>平台</td>
-<td>Windows x64 和 Linux x64/ARM64 运行契约；Windows ARM64 为交叉编译/PE 检查；macOS 为本机编译加 Dockerfile_mac 包/Mach-O/shell 静态检查，不执行 Mac 产品</td>
+<td>Windows x64 执行运行契约；Linux x64 与模拟 ARM64 各 52 场景及两路 owned Git/P4 入口；真实 macOS ARM64 51 场景及两路入口，另有独立包/Mach-O/shell 检查。Windows ARM64 仅交叉编译/PE/包静态检查，Darwin CPU affinity 约束不支持</td>
 </tr>
 <tr>
 <td>性能</td>
@@ -128,11 +128,11 @@
 </tr>
 </tbody>
 </table>
-<p>通过上述范围不表示验证 Git 所有参数组合、所有 IDE/服务商或物理 ARM64/Mac 产品运行。每份证据绑定实际二进制、源码和测试指纹；修改后只复验受影响范围，保留旧证据原身份。功能测试并行，Windows Installer 事务串行。完整 MSI 和大型性能验收不承诺一分钟完成。</p>
+<p>通过上述范围不表示验证 Git 所有参数组合、所有 IDE/服务商、物理 Linux/Windows ARM64 或全部 Mac 安装/登录/服务生命周期。真实 Mac CLI/runtime 证据不能推定完整 Keychain/服务商登录或 launchd 更新验收。每份证据绑定实际二进制、源码和测试指纹；修改后只复验受影响范围，保留旧证据原身份。功能测试并行，Windows Installer 事务串行。完整 MSI 和大型性能验收不承诺一分钟完成。</p>
 <h2>复现</h2>
 <pre><code class="language-powershell">go -C tools/devtool run . native-common-cli-acceptance &lt;git-next/bin/git.exe&gt; --reference &lt;reference-git.exe&gt; --output &lt;new-result.json&gt;
 # 定位修复时只运行受影响场景；完整发布仍使用组合验收清单。
 go -C tools/devtool run . native-common-cli-acceptance &lt;git-next/bin/git.exe&gt; --reference &lt;reference-git.exe&gt; --case stash_untracked --output &lt;new-result.json&gt;
 </code></pre>
-<p>当前状态见 <a href="delivery-status.html">交付清单</a>，历史大样本性能见 <a href="performance.html">性能说明</a>。正式发布必须全部本地门禁通过，且只有一次综合版本发布。</p>
+<p>当前状态见 <a href="delivery-status.html">交付清单</a>，历史大样本性能见 <a href="performance.html">性能说明</a>。正式发布必须所有未豁免的本地门禁通过，明确授权的豁免与失败历史单列，且只有一次综合版本发布。</p>
 </main></html>

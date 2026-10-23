@@ -35,14 +35,14 @@ SHA-256 的 stash 存储曾因十六进制缓冲区缺少 NUL 结束符空间触
 | Windows 读取稳定性 | go -C tools/devtool run . native-read-threads-acceptance：索引/grep 默认与覆盖、宽目录多轮完整输出、仓库文件不变 |
 | 游戏资产/LFS | go -C tools/devtool run . native-game-project-acceptance 与 go -C tools/devtool run . native-integrations-acceptance：自带过滤器、模板、游戏配置、失败路径与签名 |
 | 登录迁移 | 隔离 DPAPI fixture；Docker 生成 HTTPS/SSH 私有仓库账号，校验旧数据/认证失败保护；不读取个人密码 |
-| 安装与更新 | 两种 MSI 范围的安装/修复/升级/注入失败回滚/拒绝降级/卸载，包身份/哈希、并发配置保护、镜像损坏回退 |
+| 安装与更新 | Windows x64 两种 MSI 范围实际完成安装/修复/升级/注入失败回滚/拒绝降级/卸载：用户级 27 项、机器级 25 项；复用须绑定相同不可变输入。ARM64 两种 MSI 仅编译、表和静态检查，未作硬件生命周期验收 |
 | Bootstrap | bootstrap_acceptance.ps1 对真实 MSI 的版本读取只允许一个字符串；特殊进程名 `[`、`?` 必须按字面量检测 |
-| 原生终端 | peer Git-Terminal 的 Rust/ConPTY 与桌面键盘测试，多 tab、目录继承、分支、配色、剪贴板、中文输入 |
-| 平台 | Windows x64 和 Linux x64/ARM64 运行契约；Windows ARM64 为交叉编译/PE 检查；macOS 为本机编译加 Dockerfile_mac 包/Mach-O/shell 静态检查，不执行 Mac 产品 |
+| 原生终端 | 历史证据保留原 Rust/ConPTY 与桌面范围及失败；本轮用户明确豁免后续 `terminal-rust-contracts`、`terminal-native-desktop` 两个专项 lane，单列 waived，不计作通过 |
+| 平台 | Windows x64 执行运行契约；Linux x64 与模拟 ARM64 各 52 场景及两路 owned Git/P4 入口；真实 macOS ARM64 51 场景及两路入口，另有独立包/Mach-O/shell 检查。Windows ARM64 仅交叉编译/PE/包静态检查，Darwin CPU affinity 约束不支持 |
 | 性能 | 独立批次覆盖 1k/10k/100k 文件和本地 HTTPS；配对次数、实际耗时和每轮输出校验写入报告。不得并发基准造成资源争抢后宣称性能提升 |
 | 实际接管 | 新进程 PATH 默认 git、所有入口身份与哈希、原配置/SSH 文件指纹、安装快捷方式和真实新版窗口 |
 
-通过上述范围不表示验证 Git 所有参数组合、所有 IDE/服务商或物理 ARM64/Mac 产品运行。每份证据绑定实际二进制、源码和测试指纹；修改后只复验受影响范围，保留旧证据原身份。功能测试并行，Windows Installer 事务串行。完整 MSI 和大型性能验收不承诺一分钟完成。
+通过上述范围不表示验证 Git 所有参数组合、所有 IDE/服务商、物理 Linux/Windows ARM64 或全部 Mac 安装/登录/服务生命周期。真实 Mac CLI/runtime 证据不能推定完整 Keychain/服务商登录或 launchd 更新验收。每份证据绑定实际二进制、源码和测试指纹；修改后只复验受影响范围，保留旧证据原身份。功能测试并行，Windows Installer 事务串行。完整 MSI 和大型性能验收不承诺一分钟完成。
 
 ## 复现
 
@@ -52,4 +52,4 @@ go -C tools/devtool run . native-common-cli-acceptance <git-next/bin/git.exe> --
 go -C tools/devtool run . native-common-cli-acceptance <git-next/bin/git.exe> --reference <reference-git.exe> --case stash_untracked --output <new-result.json>
 ```
 
-当前状态见 [交付清单](DELIVERY_STATUS.md)，历史大样本性能见 [性能说明](PERFORMANCE.md)。正式发布必须全部本地门禁通过，且只有一次综合版本发布。
+当前状态见 [交付清单](DELIVERY_STATUS.md)，历史大样本性能见 [性能说明](PERFORMANCE.md)。正式发布必须所有未豁免的本地门禁通过，明确授权的豁免与失败历史单列，且只有一次综合版本发布。

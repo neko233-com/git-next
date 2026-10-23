@@ -1,0 +1,187 @@
+{
+  "acceptance_batch": {
+    "bytes": 3454,
+    "path": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
+    "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd"
+  },
+  "arch": "amd64",
+  "authenticated_request_counts": {
+    "clone": {
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "fetch": {
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    },
+    "pull_ff_only": {
+      "git": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "git_next": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "certificate_verification": "enabled; private fixture CA and loopback IP SAN; no user trust store changes",
+  "cpu_count": 32,
+  "files": 1000,
+  "fixture_contents": "16 repeated LF text lines per data file; one attribute policy; next commit edits 10 files",
+  "full_git_parity": false,
+  "harness_sha256": "e3bbf4330830579db57b0b2f2705f6fff1d38127ed14a04889d1b1cecfb3575f",
+  "http_fixture_sha256": "b80b8ac05990dab94637eb6d550fd51f4d5bf711952e5503592127f2e92c57df",
+  "http_response_protocol": "HTTP/1.1",
+  "incremental_file_edits": 10,
+  "initial_worktree_bytes": 270259,
+  "measured_at_utc": "2026-10-23T16:10:18.2821993Z",
+  "memory_scope": "Windows primary process peak working set; queried after latency interval; transport/child processes excluded",
+  "os": "Windows-10.0.26300",
+  "packet_bytes_or_object_reuse_proven": false,
+  "performance_accepted": true,
+  "protocol_scope": "fixture default smart HTTP; no v2 packet or object-reuse acceptance",
+  "public_export_scope": "Exact original paired report fields selected by an explicit allowlist; no private paths, profile listings or log bodies",
+  "randomized_order_generator": "Go math/rand Source",
+  "randomized_order_seed": 233,
+  "real_provider_login_verified": false,
+  "results": {
+    "clone": {
+      "git": {
+        "median_ms": 753.106,
+        "min_ms": 712.419,
+        "p95_ms": 784.315,
+        "peak_working_set_median_bytes": 6932480,
+        "peak_working_set_p95_bytes": 6942720,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 1078.937,
+        "min_ms": 1036.525,
+        "p95_ms": 1166.181,
+        "peak_working_set_median_bytes": 12830720,
+        "peak_working_set_p95_bytes": 12865536,
+        "peak_working_set_samples": 10
+      }
+    },
+    "fetch": {
+      "git": {
+        "median_ms": 451.569,
+        "min_ms": 440.182,
+        "p95_ms": 469.257,
+        "peak_working_set_median_bytes": 6930432,
+        "peak_working_set_p95_bytes": 6934528,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 439.677,
+        "min_ms": 421.984,
+        "p95_ms": 468.387,
+        "peak_working_set_median_bytes": 12677120,
+        "peak_working_set_p95_bytes": 12701696,
+        "peak_working_set_samples": 10
+      }
+    },
+    "pull_ff_only": {
+      "git": {
+        "median_ms": 627.105,
+        "min_ms": 563.85,
+        "p95_ms": 782.475,
+        "peak_working_set_median_bytes": 6930432,
+        "peak_working_set_p95_bytes": 6938624,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 622.031,
+        "min_ms": 521.614,
+        "p95_ms": 749.229,
+        "peak_working_set_median_bytes": 12828672,
+        "peak_working_set_p95_bytes": 12849152,
+        "peak_working_set_samples": 10
+      }
+    }
+  },
+  "runs_per_client_per_command": 10,
+  "runtime_git_ssh_on_path": false,
+  "schema_version": 1,
+  "scope": "loopback smart HTTPS, temporary private CA and static fixture authorization; clone/fetch/ff-only pull",
+  "source_report": {
+    "bytes": 4555,
+    "path": "target/go-native-release-1.0.3/final-performance-r6/performance-network.json",
+    "sha256": "b69cf0656b439195189d47fbe54dc8f5246622dc04f1db5592eda79a2fa80998"
+  },
+  "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+  "status": "pass",
+  "system_configuration": "disabled with isolated profiles and explicit input/LF fixture policy",
+  "tls_backends": {
+    "git": "Schannel",
+    "git_next": "Schannel"
+  },
+  "verification": "each trial verifies HEAD/tracking refs, all worktree bytes, staged IDs, fsck and unchanged source object bytes; fetch preserves HEAD/index/worktree",
+  "versions": {
+    "git": "git version 2.56.0.windows.3",
+    "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+  }
+}

@@ -1,27 +1,69 @@
-# Native 1.0.3 measurement status · 2026-10-23
+# Native 1.0.3 measurements · 2026-10-24
 
-The current candidate's correctness batch completed with 16 passed lanes and two
-terminal lanes explicitly waived by the user. The paired performance batch is
-still pending. Those waivers do not cover any performance, MSI, CLI, transport or
-package check. No current-version latency or memory advantage is claimed before
-its own final measurements complete. See the
-[artifact-bound migration and gate evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json).
+The exact R6 correctness batch completed **16 passed / 2 user-waived lanes** in
+**246.204 seconds**. All **five performance lanes passed** in **691.251 seconds**:
+three file scales, loopback HTTPS and frozen-input readback. Neither batch met
+the 60-second orchestration target; no checks were skipped for that target.
+The terminal waiver covers only its two named terminal test lanes. MSI, native
+CLI, transport, package and performance checks retain their full requirements.
+The [artifact-bound source checkpoint](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
+records local gates as complete, with staging, workstation update and publication
+pending at that checkpoint. Later release completion is recorded separately.
 
-The first current 100,000-file attempt was rejected when native `grep` exited 1
-without stderr. It produced no valid latency report for that scale. Smaller
-completed workloads do not replace this failed gate; diagnosis and a complete
-accepted paired batch are still required.
+These Windows x64 measurements compare native
+`2.54.0.windows.1.git-next.1.0.3` with reference `2.56.0.windows.3` on
+Windows 10.0.26300, AMD64 Family 26 Model 68 Stepping 0, 32 logical CPUs.
+Each command has **10 randomized pairs**, three warm-ups and warm OS cache.
+Both clients use the declared five-setting Windows read-safety profile.
+The full reports pin binary/source/harness hashes and verify complete output,
+refs, worktree bytes and fsck. A ten-pair p95 is exploratory.
 
-The follow-up harness distinguishes a context deadline from an ordinary exit 1
-and gives only the 100,000-file workload 120 seconds per command, within its
-unchanged 1,800-second case bound. The rejected attempt is preserved, and its
-root cause remains unproved. This budget change retains the full output, exit,
-fsck and repeated-pair requirements; it does not turn an incomplete result into
-a timing sample.
+| Files | Operation | git-next median / p95 ms | Reference median / p95 ms |
+| --- | --- | --- | --- |
+| 1000 | version | 13.244 / 15.000 | 23.441 / 26.556 |
+| 1000 | status_clean | 35.494 / 38.400 | 46.786 / 49.630 |
+| 1000 | diff_clean | 30.575 / 31.692 | 39.916 / 45.847 |
+| 1000 | show_metadata | 17.739 / 19.511 | 27.746 / 30.012 |
+| 1000 | grep_files | 93.581 / 103.897 | 101.352 / 123.449 |
+| 10000 | version | 14.571 / 15.477 | 25.278 / 31.582 |
+| 10000 | status_clean | 196.824 / 240.385 | 207.301 / 224.013 |
+| 10000 | diff_clean | 173.333 / 200.685 | 184.457 / 201.101 |
+| 10000 | show_metadata | 23.311 / 25.279 | 33.504 / 34.522 |
+| 10000 | grep_files | 785.654 / 845.520 | 807.518 / 841.718 |
+| 100000 | version | 14.118 / 15.234 | 25.228 / 37.548 |
+| 100000 | status_clean | 1656.999 / 1738.231 | 1666.073 / 1736.873 |
+| 100000 | diff_clean | 1640.182 / 1714.801 | 1674.215 / 1864.504 |
+| 100000 | show_metadata | 72.212 / 79.799 | 83.850 / 89.714 |
+| 100000 | grep_files | 9698.981 / 12116.947 | 10391.285 / 11732.632 |
 
-The reports below retain their original dates, binaries, reference versions and
-sample counts. They are historical measurements, not measurements of 1.0.3 or a
-comparison with a newer reference Git.
+Full reports: [1000 files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-1000-20261023.json),
+[10000 files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-10000-20261023.json),
+[100000 files](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-100000-20261023.json).
+
+| Loopback HTTPS | git-next median / p95 ms | Reference median / p95 ms |
+| --- | --- | --- |
+| clone | 1078.937 / 1166.181 | 753.106 / 784.315 |
+| fetch | 439.677 / 468.387 | 451.569 / 469.257 |
+| pull_ff_only | 622.031 / 749.229 | 627.105 / 782.475 |
+
+The [network report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-network-20261023.json)
+uses HTTP/1.1, Schannel on both clients, a private fixture CA and static fixture
+authorization. Clone is slower here. This is not WAN/provider authentication or
+GitSSS throughput evidence. Full scans remain a latency limit: the 100,000-file
+grep median is about 9.7 seconds. Primary-process peak working set excludes
+children; its 100,000-file status median is 33,423,360 bytes for git-next versus
+6,944,768 for reference Git. These results establish no universal speed or memory
+advantage.
+
+The rejected R5c 100,000-file attempt remains recorded: native `grep` exited 1
+without stderr and produced no valid timing for that failed operation. A separate
+forced one-second probe reproduced exit 1 with a real deadline and partial output;
+the old attempt's root cause remains unproved. R6 distinguishes deadlines from
+ordinary exit 1 and gives only this scale 120 seconds per command, within the
+unchanged 1,800-second case bound. Output, exit, fsck and sample checks remain
+unchanged; the accepted R6 reports do not overwrite the failed attempt.
+
+The sections below retain their historical dates, binaries and sample counts.
 
 # Historical matched-artifact Windows measurements · 2026-10-21
 

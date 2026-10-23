@@ -1,0 +1,4206 @@
+{
+  "architecture": {
+    "cli_conformance": "accept-runner",
+    "opaque_corresponding_source_archives": "Upstream Python source may remain as immutable license materials, never an executable product/tool dependency.",
+    "orchestration": "tools/devtool",
+    "perforce_helper": "tools/git-p4",
+    "python_required_by_final_products": false,
+    "python_required_by_owned_checkout": false,
+    "retained_native_platform_code": [
+      "native-core",
+      "PowerShell integration scripts",
+      "POSIX integration scripts"
+    ]
+  },
+  "benchmark_deadline_harness_repair": {
+    "exit_one_and_context_deadline_distinguished": true,
+    "large_scale_command_timeout_seconds": 120,
+    "msi_reuse_boundary": "Current measured-process source must match the new frozen hash; removing exactly one fixed added context-error block must restore the previous frozen hash. Only the new exact test filename is additionally allowed; process/MSI inputs remain pinned.",
+    "original_failure_preserved": true,
+    "other_local_command_timeout_seconds": 30,
+    "output_exit_fsck_or_sample_checks_relaxed": false,
+    "scope": "Benchmark harness only; native product bytes unchanged",
+    "whole_case_timeout_seconds": 1800
+  },
+  "checkpoint": {
+    "false_release_flags_scope": "The release_eligible, published and workstation_installed_and_accepted flags describe this source checkpoint; they do not negate completed local gates.",
+    "kind": "source-time-checkpoint",
+    "local_correctness_complete": true,
+    "local_performance_complete": true,
+    "release_actions_state": "pending-at-this-source-checkpoint",
+    "subsequent_completion_record": "Record actual staging, workstation acceptance and publication in a separate public release-completion asset and a normal later main documentation commit; do not rewrite this accepted package checkpoint."
+  },
+  "current_paired_performance": {
+    "batch": {
+      "bytes": 3454,
+      "path": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
+      "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd"
+    },
+    "local_pairs_per_command": 10,
+    "memory_boundary": "Primary-process peak working set only; child processes excluded",
+    "network_boundary": "Loopback HTTPS fixture only; no WAN/provider/login or GitSSS throughput claim",
+    "network_pairs_per_operation": 10,
+    "platform": "windows-x64",
+    "reports": [
+      {
+        "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+        "evidence": {
+          "bytes": 6296,
+          "path": "docs/benchmarks/native-performance-1000-20261023.json",
+          "sha256": "4b0cf40d66cebc4ee04ecc6c91dae44cee66e048e327f60181d62dd7362cf437"
+        },
+        "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded",
+        "runs_per_client_per_command": 10,
+        "source_report": {
+          "bytes": 5726,
+          "path": "target/go-native-release-1.0.3/final-performance-r6/performance-1000.json",
+          "sha256": "444fe1f83f440896e7e67d31059aee359ddf51f057f27bd5285a2ddecd79ff2d"
+        },
+        "versions": {
+          "git": "git version 2.56.0.windows.3",
+          "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+        },
+        "workload": "1000"
+      },
+      {
+        "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+        "evidence": {
+          "bytes": 6322,
+          "path": "docs/benchmarks/native-performance-10000-20261023.json",
+          "sha256": "c9ce131ead1d03248c0077b371ec537b1df354c265e945353557b5e7cddefa45"
+        },
+        "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded",
+        "runs_per_client_per_command": 10,
+        "source_report": {
+          "bytes": 5751,
+          "path": "target/go-native-release-1.0.3/final-performance-r6/performance-10000.json",
+          "sha256": "fd6e4004b338a9702cea67b07d098b5a82a2d27cd7f38980d5a5d34372d44fce"
+        },
+        "versions": {
+          "git": "git version 2.56.0.windows.3",
+          "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+        },
+        "workload": "10000"
+      },
+      {
+        "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+        "evidence": {
+          "bytes": 6347,
+          "path": "docs/benchmarks/native-performance-100000-20261023.json",
+          "sha256": "50df8e0ef7fde622f3901ea272631c6b3ded546d6b23c96e4748cd987109c88b"
+        },
+        "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded",
+        "runs_per_client_per_command": 10,
+        "source_report": {
+          "bytes": 5775,
+          "path": "target/go-native-release-1.0.3/final-performance-r6/performance-100000.json",
+          "sha256": "95c33fee4b591f169e12d3f0f0f0cd73add7a2e7f30111d886d5cc714af386a8"
+        },
+        "versions": {
+          "git": "git version 2.56.0.windows.3",
+          "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+        },
+        "workload": "100000"
+      },
+      {
+        "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+        "evidence": {
+          "bytes": 5128,
+          "path": "docs/benchmarks/native-performance-network-20261023.json",
+          "sha256": "1cb5df42193e3a12fd793bb57a2e482f4f1242b078e571fe80d85f6442cbc108"
+        },
+        "memory_scope": "Windows primary process peak working set; queried after latency interval; transport/child processes excluded",
+        "runs_per_client_per_command": 10,
+        "source_report": {
+          "bytes": 4555,
+          "path": "target/go-native-release-1.0.3/final-performance-r6/performance-network.json",
+          "sha256": "b69cf0656b439195189d47fbe54dc8f5246622dc04f1db5592eda79a2fa80998"
+        },
+        "versions": {
+          "git": "git version 2.56.0.windows.3",
+          "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+        },
+        "workload": "network"
+      }
+    ],
+    "statistical_boundary": "A ten-pair p95 is exploratory; no universal speed or memory claim",
+    "status": "pass"
+  },
+  "evidence_scope_notes": [
+    "Private raw receipts remain local; only explicit relative paths, cryptographic hashes, counts and capability summaries are copied into this draft.",
+    "Source preparation, compiler success, legacy artifact oracle success and final native product acceptance are distinct.",
+    "No discarded historical receipt becomes acceptance evidence for changed final bytes.",
+    "Benchmark measurement migrations preserve operation validation, not random-number streams or timing equality."
+  ],
+  "final_product_gates": {
+    "accepted_correctness": {
+      "elapsed_seconds": 246.204,
+      "evidence": {
+        "bytes": 7501,
+        "path": "target/go-native-release-1.0.3/final-correctness-r6/batch.json",
+        "sha256": "d8db3596c3e3691955aa6ac7f75e821017ef3cf00fb6a935001f063612b9d4e6"
+      },
+      "msi_scopes_reusing_unchanged_passed_evidence": [
+        "msi-machine",
+        "msi-user"
+      ],
+      "passed_lanes": 16,
+      "status": "pass-with-user-waiver",
+      "waived_lanes": 2,
+      "wall_clock_target_met": false,
+      "wall_clock_target_seconds": 60
+    },
+    "accepted_performance": {
+      "checks_skipped_to_meet_time_target": false,
+      "elapsed_seconds": 691.251,
+      "evidence": {
+        "bytes": 3454,
+        "path": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
+        "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd"
+      },
+      "passed_lanes": 5,
+      "status": "pass",
+      "wall_clock_target_met": false,
+      "wall_clock_target_seconds": 60
+    },
+    "environment_failed_correctness_attempt": {
+      "candidate": "r5b",
+      "evidence": {
+        "bytes": 7145,
+        "path": "target/go-native-release-1.0.3/final-correctness-r5b/batch.json",
+        "sha256": "90b0131471d67a76a869f7f21cb5bad347f7e0b2fbe47657fc30da067fe4993e"
+      },
+      "failed_cases": [
+        "linux-x64",
+        "linux-arm64",
+        "macos-arm64",
+        "docker-login-migration"
+      ],
+      "failed_lanes": 4,
+      "failure_logs": [
+        {
+          "bytes": 56,
+          "path": "target/go-native-release-1.0.3/final-correctness-r5b/linux-x64.log",
+          "sha256": "0b36a3dba97dac20547bbb60be841da2db33148dab73e3309a4758c0e30ed411"
+        },
+        {
+          "bytes": 56,
+          "path": "target/go-native-release-1.0.3/final-correctness-r5b/linux-arm64.log",
+          "sha256": "0b36a3dba97dac20547bbb60be841da2db33148dab73e3309a4758c0e30ed411"
+        },
+        {
+          "bytes": 56,
+          "path": "target/go-native-release-1.0.3/final-correctness-r5b/macos-arm64.log",
+          "sha256": "0b36a3dba97dac20547bbb60be841da2db33148dab73e3309a4758c0e30ed411"
+        },
+        {
+          "bytes": 56,
+          "path": "target/go-native-release-1.0.3/final-correctness-r5b/docker-login-migration.log",
+          "sha256": "0b36a3dba97dac20547bbb60be841da2db33148dab73e3309a4758c0e30ed411"
+        }
+      ],
+      "frozen_input_readback": "pass",
+      "matrix": {
+        "bytes": 4811173,
+        "path": "target/go-native-release-1.0.3/final-matrix-r5b.json",
+        "scope": "R5b exact package inputs; R5c rerun fixes only the launching environment PATH and reuses the same passed installer inputs. Final correctness/performance remain pending.",
+        "sha256": "cdc1c5794bdeb28111f617728c4b05d008b171fdf69ecb930baf75ba05a0f5d7"
+      },
+      "original_report_preserved": true,
+      "passed_lanes": 12,
+      "planned_lanes": 18,
+      "reason": "Go toolchain directory was absent from the orchestrator PATH; all four Docker-facing lanes failed before their intended fixture execution",
+      "status": "failed-environment-not-accepted",
+      "waived_lanes": 2
+    },
+    "exact_archives_match_runtime_receipts": true,
+    "final_candidate_generation": "Final exact matrix accepted with explicit user terminal waiver; release staging, workstation acceptance and publication remain pending",
+    "frozen_matrix": {
+      "bytes": 4811296,
+      "path": "target/go-native-release-1.0.3/final-matrix-r6.json",
+      "sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260"
+    },
+    "initial_correctness_attempt": {
+      "candidate": "r3",
+      "evidence": {
+        "path": "target/go-native-release-1.0.3/final-correctness/batch.json",
+        "sha256": "a7b1f4922a2bec60ad65f57629f446333d5563d88182cc985900fd7821eda0a1"
+      },
+      "failed_execution_lanes": 5,
+      "failed_lanes": 6,
+      "frozen_input_readback_failures": 1,
+      "known_corrective_work": [
+        "Windows shipped defaults true/0 omitted grep results in a 30-round repetition; stable documented false/1 configuration and r4 packaging are being validated.",
+        "GUI showed externally induced cursor movement; owned input/capture handshake repair is being validated.",
+        "Historical 0.2.999 MSI base was rebuilt from its complete original payload with current Go/WiX recipe and explicit replacement guard; user/machine lifecycle rerun remains pending."
+      ],
+      "passed_lanes": 12,
+      "planned_lanes": 18,
+      "readback": "Failed lanes and subsequent readback are retained; passing Mac/Linux/transport/Rust slices do not erase failed consolidated gates.",
+      "status": "failed-rejected"
+    },
+    "latest_rejected_correctness_attempt": {
+      "candidate": "r4",
+      "earlier_failed_report_preserved": true,
+      "evidence": {
+        "bytes": 4706,
+        "path": "target/go-native-release-1.0.3/final-correctness-r4/batch.json",
+        "sha256": "34173f9fd9e6a68debeed0ec37676c2429ebb62233fc53d3d7d1c5eb25a24865"
+      },
+      "failed_cases": [
+        "terminal-native-desktop",
+        "msi-user"
+      ],
+      "failed_lanes": 2,
+      "failure_scope": [
+        "GUI owned-native-window startup assertion",
+        "user MSI injected-failure rollback did not restore old registration; cleanup PATH assertion also failed"
+      ],
+      "frozen_input_readback": "pass",
+      "matrix": {
+        "bytes": 4810824,
+        "path": "target/go-native-release-1.0.3/final-matrix-r4.json",
+        "sha256": "9fcd0de24350305175b7d74433831053b932777063d9d5daf3c762846c8cb8c4"
+      },
+      "passed_lanes": 16,
+      "planned_lanes": 18,
+      "results": [
+        {
+          "case": "terminal-native-desktop",
+          "exit_code": 1,
+          "status": "fail"
+        },
+        {
+          "case": "windows-bootstrap-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-update-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-dpapi-migration",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-game-lfs-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "macos-arm64",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-core-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "posix-updater-race-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-owned-integrations",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "linux-x64",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-common-cli-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "windows-read-thread-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "docker-login-migration",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "terminal-rust-contracts",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "linux-arm64",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "msi-user",
+          "exit_code": 1,
+          "status": "fail"
+        },
+        {
+          "case": "msi-machine",
+          "exit_code": 0,
+          "status": "pass"
+        },
+        {
+          "case": "frozen-input-readback",
+          "status": "pass"
+        }
+      ],
+      "status": "failed-rejected"
+    },
+    "pending": [
+      "Release staging with exact accepted inputs and checksums",
+      "Workstation update and actual installed-product acceptance",
+      "Repository push and consolidated release publication"
+    ],
+    "planned_correctness_lanes": 18,
+    "planned_performance_lanes": 5,
+    "platforms": [
+      "windows-x64",
+      "windows-arm64",
+      "linux-x64",
+      "linux-arm64",
+      "macos-arm64"
+    ],
+    "published": false,
+    "rejected_performance_attempt": {
+      "candidate": "r5c",
+      "evidence": {
+        "bytes": 3452,
+        "path": "target/go-native-release-1.0.3/final-performance-r5c/batch.json",
+        "sha256": "c2932d890efeea71b31b73b8132fe9f49f53f9f529dd2cb25d56319f9df9d866"
+      },
+      "failed_cases": [
+        "performance-100000"
+      ],
+      "failed_lanes": 1,
+      "failure_log_refs": [
+        {
+          "bytes": 912,
+          "path": "target/go-native-release-1.0.3/final-performance-r5c/performance-100000.log",
+          "sha256": "dcd6ef50ec278f1e347239a0bc151421901c966d916eed72bd8ab6fcc4cb7cda"
+        }
+      ],
+      "known_boundary": "The native 100000-file grep process exited 1 without stderr; that failed operation produced no valid latency report. The exact failure stage/root cause must be stated only from diagnostic evidence.",
+      "matrix_sha256": "cdc1c5794bdeb28111f617728c4b05d008b171fdf69ecb930baf75ba05a0f5d7",
+      "original_failed_report_preserved": true,
+      "passed_lanes": 4,
+      "results": [
+        {
+          "case": "performance-1000",
+          "exit_code": 0,
+          "seconds": 9.033,
+          "status": "pass"
+        },
+        {
+          "case": "performance-10000",
+          "exit_code": 0,
+          "seconds": 41.722,
+          "status": "pass"
+        },
+        {
+          "case": "performance-100000",
+          "exit_code": 2,
+          "seconds": 211.776,
+          "status": "fail"
+        },
+        {
+          "case": "performance-network",
+          "exit_code": 0,
+          "seconds": 162.15,
+          "status": "pass"
+        },
+        {
+          "case": "frozen-input-readback",
+          "status": "pass"
+        }
+      ],
+      "status": "failed-rejected"
+    },
+    "release_eligible": false,
+    "status": "correctness-and-performance-complete-with-user-terminal-waiver-release-actions-pending",
+    "terminal_validation_waiver": {
+      "authorization": "用户指令：不用再测试 git-terminal 了，其他没问题就可以帮我进行全部 push 和发布了。空白归一化引用：不用再测试git-terminal了",
+      "authorized_by": "user",
+      "cases": [
+        "terminal-rust-contracts",
+        "terminal-native-desktop"
+      ],
+      "evidence": {
+        "bytes": 1375,
+        "path": "target/go-native-release-1.0.3/terminal-waiver-r6.json",
+        "sha256": "0286de6e4fba224269c28e8f75fe8c4327f30b004b3ac31d23fd80ca2b4d41f7"
+      },
+      "matrix_sha256": "685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260",
+      "reason": "按用户“不用再测试 git-terminal 了”的明确要求，停止后续终端专项验证，保留既有失败记录；仅豁免两个指定 lane。空白归一化引用：不用再测试git-terminal了",
+      "status": "bound-exact-user-waiver",
+      "terminal_binaries": {
+        "windows-arm64": {
+          "files": {
+            "bin/git-terminal-shell.exe": "c17068abdd10605499deca2863faeb5541998d299a72e1cad8991b93042feaa6",
+            "bin/git-terminal.exe": "406586d0a36de990a6609e2915954d7d38c23bbcd132d152e228baa8cb63fce5"
+          },
+          "source_commit": "f6eb01a42971aee0c885e6c2065151068e872503"
+        },
+        "windows-x64": {
+          "files": {
+            "bin/git-terminal-shell.exe": "59bc03b7e19528a83b98366f757d2adff85ebd46da0dc6d739a8b6a23a071622",
+            "bin/git-terminal.exe": "eb50bc4cb477d117a130dad04df69bd0e231fccd09fa82f0050351dfaf78bbd3"
+          },
+          "source_commit": "f6eb01a42971aee0c885e6c2065151068e872503"
+        }
+      },
+      "waived_is_not_passed": true
+    },
+    "updates_by": "Root adds only actual completed results and exact artifact/receipt hashes.",
+    "workstation_installed_and_accepted": false
+  },
+  "git_p4": {
+    "assertions_per_implementation": 395,
+    "evidence": [
+      {
+        "bytes": 28104,
+        "path": "target/git-p4-upstream-fixture/linux/migration-receipt.json",
+        "sha256": "5ad9f4a71272c6825ec1b059af79cadc745d3eabcf94763c3b70a69234e9dd2c"
+      },
+      {
+        "bytes": 20854,
+        "path": "target/git-p4-upstream-fixture/linux/differential-final.json",
+        "sha256": "7218a955d3a0b9026ab260db26083529cb13c015e1fb15fa5916ec337d0974d4"
+      },
+      {
+        "bytes": 442,
+        "path": "target/git-p4-upstream-fixture/linux/cleanup-receipt.json",
+        "sha256": "d7b4461b4eb375c5a123faf81d3333670dad51b62aa5db222ac49614e2d1c00d"
+      }
+    ],
+    "external_dependency": "Perforce p4 client remains optional external integration dependency; official P4/P4D r24.2 are isolated test fixtures.",
+    "fixture_pins": {
+      "p4_sha256": "8a3293231e0df8dbc414587bfa99372e8f6fb7fc13f4b03532d5f7c1430bb839",
+      "p4d_sha256": "f70b991a2d08a627db17c3cc87346ec3d19fa459a660a43bfc4c5e023792e534",
+      "reference_git": "2.39.5"
+    },
+    "go_candidate": {
+      "binary_sha256": "4f1cc3b94ee1cc7d31a5ed73739d32844becf2f86ef3b339c89fcb6a57907646",
+      "improved_known_breakages": 3,
+      "known_breakages": 13,
+      "passed": 382,
+      "unexpected_failures": 0
+    },
+    "improved_known_breakages": [
+      {
+        "capability": "subset branch",
+        "case": 18,
+        "suite": "t9801"
+      },
+      {
+        "capability": "two labels on one changelist",
+        "case": 3,
+        "suite": "t9804"
+      },
+      {
+        "capability": "invalid UTF-16 recovery",
+        "case": 4,
+        "suite": "t9825"
+      }
+    ],
+    "launcher_boundary": "Only the Go t9836 launcher prerequisite was adapted to execute the compiled helper. All 12 original behavior assertions remain.",
+    "module": "tools/git-p4",
+    "owned_git_boundary_review": {
+      "cases": 2,
+      "evidence": {
+        "bytes": 501,
+        "path": "target/go-migration/p4-runtime-review.json",
+        "sha256": "7e1ea85b7e4e43e59a91943f46237db93252e58687d8333248d76b4f356c696b"
+      },
+      "platform": "linux-x64",
+      "skipped": 0,
+      "status": "pass"
+    },
+    "python_baseline": {
+      "known_breakages": 16,
+      "passed": 379,
+      "unexpected_failures": 0
+    },
+    "python_required": false,
+    "raw_commit_oracle": {
+      "commit_hashes": [
+        "d6073423daa37a98d8492889f91ae2c663302829",
+        "dd87ccd96f958e6adf7009473bcc7b4b8133904f"
+      ],
+      "evidence": {
+        "bytes": 351,
+        "path": "target/go-packaging-oracle/git-p4.json",
+        "sha256": "efa695df993c009fb0c232812ca0b089a27cdedeb3a3af3e3dfb98f2b73fd7cb"
+      },
+      "status": "pass"
+    },
+    "raw_exit_boundary": "The three improved known-breakage cases are XPASS; their upstream suite exit codes remain nonzero. Acceptance compares TAP assertions to the original baseline and does not relabel raw exits.",
+    "same_environment_comparison": true,
+    "skip_boundary": "t9835 is specific to Python 2 and skipped because no Python 2 interpreter was installed.",
+    "source_files": [
+      {
+        "bytes": 5615,
+        "path": "tools/git-p4/advanced_test.go",
+        "sha256": "e7605fa4fefdfc1f4df2e6f3a78414205dd00a9104341a8f092e2362b5873962"
+      },
+      {
+        "bytes": 7242,
+        "path": "tools/git-p4/branches.go",
+        "sha256": "40c2dd21f9c4a3b2cf6b7b02bc63d36f4991c30772375deb36f456d984e467e8"
+      },
+      {
+        "bytes": 2797,
+        "path": "tools/git-p4/changes.go",
+        "sha256": "2401ce4952de304d9348792d8d6ca582f70996e84003be06bd119c995ca4266e"
+      },
+      {
+        "bytes": 456,
+        "path": "tools/git-p4/child_unix.go",
+        "sha256": "e935b31d3d97404da064b81b57dac995c6b817a3ae899e1264ff6edb8e67ae40"
+      },
+      {
+        "bytes": 1526,
+        "path": "tools/git-p4/child_windows.go",
+        "sha256": "5f5831feab4aff8ae85ca19e797ef00105809738d3f3c7ef23f703a2f90dbbda"
+      },
+      {
+        "bytes": 7007,
+        "path": "tools/git-p4/compatibility_test.go",
+        "sha256": "e936d04c4b244be74aa8c4ced13a5c068c0484000591af7c0345ff879250a769"
+      },
+      {
+        "bytes": 11542,
+        "path": "tools/git-p4/driver.go",
+        "sha256": "a8b1aa2b50370dec9e6851492f1d58c9b6b02bc8e048d33af62f5006b08cdbbe"
+      },
+      {
+        "bytes": 1498,
+        "path": "tools/git-p4/encoding.go",
+        "sha256": "68b804eede27d0ead1a6a1540026893b610010b23463257c24ef15f4b24213fc"
+      },
+      {
+        "bytes": 4786,
+        "path": "tools/git-p4/export_test.go",
+        "sha256": "d1c53b7562ec9dc7294ed7166f8a44b9343bde600ecb43709520ea6f911ed7da"
+      },
+      {
+        "bytes": 30467,
+        "path": "tools/git-p4/export.go",
+        "sha256": "f45e2b15ed36f1d037e23068d65e5b3c655e7c3668f25b1b43aa7c913da17565"
+      },
+      {
+        "bytes": 129,
+        "path": "tools/git-p4/go.mod",
+        "sha256": "c0c30f2c844a0160a8688eb683b065bb9af8acb1aa10cf8b7dd5fcbf1107459a"
+      },
+      {
+        "bytes": 308,
+        "path": "tools/git-p4/go.sum",
+        "sha256": "21b442b11514b3d69dd19609bcdd690726d1c417857b4effdc9ff025db21bc11"
+      },
+      {
+        "bytes": 27886,
+        "path": "tools/git-p4/import.go",
+        "sha256": "bb4f1df605c41d7ca89373e8c54c98b4d417ccfc3d69abe043bcb9393ed707de"
+      },
+      {
+        "bytes": 1877,
+        "path": "tools/git-p4/internal/marshal/marshal_test.go",
+        "sha256": "d0a87700b20a0c85a88f8044132b0ec5ea0d92063a7720b8d1e1caef66d7f212"
+      },
+      {
+        "bytes": 6987,
+        "path": "tools/git-p4/internal/marshal/marshal.go",
+        "sha256": "3862a0225865e5facf44824b047b73cea547978a0521055690c30d0711b14bff"
+      },
+      {
+        "bytes": 5916,
+        "path": "tools/git-p4/largefiles.go",
+        "sha256": "10bd2f9d05e466c38351d98a9b63c1f80ae1bde6d474446fcc665956332d1bab"
+      },
+      {
+        "bytes": 1245,
+        "path": "tools/git-p4/LICENSE",
+        "sha256": "5f3fbfab2711815bd3b4253b9510f29dddb715cdbd04c73b0192e46ba37f98f4"
+      },
+      {
+        "bytes": 7738,
+        "path": "tools/git-p4/live_test.go",
+        "sha256": "0194bc7e18a999945b3f60bcc8e0309808b08c4bf1868795f9d726068a1c94ee"
+      },
+      {
+        "bytes": 6192,
+        "path": "tools/git-p4/main.go",
+        "sha256": "19dde55d00e56727df31cb77a0444dcb9b9db96f067e2ba2d8adb781b8ac5d1e"
+      },
+      {
+        "bytes": 2834,
+        "path": "tools/git-p4/origin.go",
+        "sha256": "bfe3246b448a11010caa1f1ba2af93258ce480f44a24c0687d661f4a36163c10"
+      },
+      {
+        "bytes": 6629,
+        "path": "tools/git-p4/README.md",
+        "sha256": "8045f22acb8c9aa3e8eafe11ff5b2288ad65b0eaa4fb4a4033ac400b2c8c18cc"
+      },
+      {
+        "bytes": 10898,
+        "path": "tools/git-p4/review_regression_test.go",
+        "sha256": "e1f09d17df5a7e778bdd09432331b66fd3906631cdc456585b692b44962a2711"
+      },
+      {
+        "bytes": 1413,
+        "path": "tools/git-p4/review_runtime_test.go",
+        "sha256": "3d14be460f764d9ba849a1ea5c0c425d274ac9c0c9bd585446f425819057cedf"
+      },
+      {
+        "bytes": 2222,
+        "path": "tools/git-p4/runtime_test.go",
+        "sha256": "b3830be27d34f985bd402e2d0c0b405fe842a4051c3a606bdf919cf997d95a98"
+      }
+    ],
+    "suite_summaries": [
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "bebda788dcd4ea4d896fa9fa5a0fafe67c68cb09797c9cc8cb6243fdb0c9fcb6",
+        "passed": 27,
+        "suite": "t9800",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "baseline",
+        "log_sha256": "91aa00434ad519fd7c72e3c30e71bd26d2061ecb868610327f6f5de1881b76d1",
+        "passed": 31,
+        "suite": "t9801",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "9480dc4eed50bcaa3dc8f0f5702c29b01653e04465e3043690183bc8b92d8786",
+        "passed": 16,
+        "suite": "t9802",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "3426c4803d3e75df99c751bc1341bdcdc4152585307ef547b18cb177b98c0d26",
+        "passed": 5,
+        "suite": "t9803",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "baseline",
+        "log_sha256": "d5b0fc775f92287908caa1dfb42710ac2d272ebc2580906983a8086378fcbe90",
+        "passed": 2,
+        "suite": "t9804",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "e9c583894c45567bf255bf62d0bbde434acbac6159b1350901a98df56df484f2",
+        "passed": 7,
+        "suite": "t9805",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "600507561213441501848dea63bc64190de2f3e3cac0572516b2a46424eade9d",
+        "passed": 19,
+        "suite": "t9806",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "405c1b9592173f05396083fd46a4e4f714674d7a42e920575f57750e9cae5881",
+        "passed": 26,
+        "suite": "t9807",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "77dbf7c22fe8e516988fcb45ede1a717b8479ae52fcbe59816b2e1d74bd40574",
+        "passed": 6,
+        "suite": "t9808",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 5,
+        "lane": "baseline",
+        "log_sha256": "9007ae2c450b6ab628ffdf10d24b4ac2ac0973dfb2739ef93c3e9a2a198fde21",
+        "passed": 52,
+        "suite": "t9809",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "baseline",
+        "log_sha256": "196a0de4d2f2aa714b3a7174c66bdc679c99e4c552ff6efb7fbb236f814ed586",
+        "passed": 16,
+        "suite": "t9810",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "2f958a4f27b1e3de226e3aabff53ec2f6696710b5e1eb41b03815a65b1d38a64",
+        "passed": 8,
+        "suite": "t9811",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "65f2049f420cdbf14d62f0ebdedcdb5aa97759793a4b3addfa146c4c8891eaf7",
+        "passed": 10,
+        "suite": "t9812",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "73d10f966021151bcefd0a9624e686392978afe5d9b5d7765b4940d3649ea97a",
+        "passed": 6,
+        "suite": "t9813",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "3120e8cafe92f7925ea268057d9c0e0acb3044620c136990a44c886048a1c9ef",
+        "passed": 6,
+        "suite": "t9814",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "0e85e551eb4a01c0dcb9b0f9e4fe5c4b0d689690f3408ed8c44a423c42f0b766",
+        "passed": 21,
+        "suite": "t9815",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 4,
+        "lane": "baseline",
+        "log_sha256": "e7de00f10e4be0094086d022c96faab98534646f2cb65afdd07a642f5835d1d0",
+        "passed": 5,
+        "suite": "t9816",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "9610aec4d3d5d831c02468d37fab28d05a778d6aa98026a9a63db9a4cd94e883",
+        "passed": 7,
+        "suite": "t9817",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "e0dba4a22318b963c2a78ac91eaa8dd38a08df647fc40e8d8f72893d8c94ca4f",
+        "passed": 14,
+        "suite": "t9818",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 2,
+        "lane": "baseline",
+        "log_sha256": "a95d79b0f3054261c8f3787a2acd2df3fc7635d6562ff952c17a55570dd53edb",
+        "passed": 4,
+        "suite": "t9819",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "455e0cda684c20f9d6d5e754b22cac77282386a3abd0795e33aa86ebac3aab21",
+        "passed": 3,
+        "suite": "t9820",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "b277cfdcd6106681270732ef108dd5f583cafe51bccb983f1cc234486b311e11",
+        "passed": 9,
+        "suite": "t9821",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "baseline",
+        "log_sha256": "f23b3a074e829e0625fa6cf8b3cac1d8c16020fc2c4d2212e4d45adbe4ed2713",
+        "passed": 4,
+        "suite": "t9822",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "40f70f0db7844570592ee6733a3778de92e5b244a13b2cb6969958497af4d165",
+        "passed": 7,
+        "suite": "t9823",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "73387920cbcffba7884d56c4600f5d6b8b2ba3588f1120e04e9c89d9d6b2dc92",
+        "passed": 9,
+        "suite": "t9824",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "baseline",
+        "log_sha256": "ddefe84a7f268f3576ba2ada5db9801a855f7a9c7fc081f1ca682494961b6182",
+        "passed": 3,
+        "suite": "t9825",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "7dd928fbac0c4a70084d77c3337ce5ec27f5fd1b596da157fad29c28304e6e6c",
+        "passed": 5,
+        "suite": "t9826",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "b180e9ea3156fd58fa456eb1e324a4c2cbfd044011b9ebf2dd5ce53d500c4d42",
+        "passed": 4,
+        "suite": "t9827",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "e071b002087302729ac70ea9d69d700b965f18ba91a96cbb8c99dc155602f022",
+        "passed": 3,
+        "suite": "t9828",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "336b5f106090b8557044f686e9e816e6795c5e8103a64021ce119025c9a20f41",
+        "passed": 8,
+        "suite": "t9829",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "974edfdbd5f0db3c99bb6b1e0102a18d536b4ee1d6e0187335512d3bebd53ede",
+        "passed": 2,
+        "suite": "t9830",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "2e99c15cb90373788868ff83f29a06eba8198ce76d5ae3d4a9d8549a82db0cf6",
+        "passed": 5,
+        "suite": "t9831",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "81a78c1cbb94750ed1f638ec8bd965fc77797282fcb0cd42b07037a53373b7b4",
+        "passed": 8,
+        "suite": "t9832",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "57c9b21b5eceef18091973a01c63c541263ed97d81b056c6310ce028b60695ed",
+        "passed": 4,
+        "suite": "t9833",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "9ef59dd8079d135ea59d6c323f9cc73972ffbe72fc61a4179d911971aaaa9897",
+        "passed": 5,
+        "suite": "t9834",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "d8a4ecbd51bf061e4af70c2e8efa3d4c5cd54096d030748b53cc1913d127474f",
+        "passed": 0,
+        "suite": "t9835",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "baseline",
+        "log_sha256": "2020d750dfda711f5a3be45411e0fff6637d23a5969a6d5425692c42e8065081",
+        "passed": 12,
+        "suite": "t9836",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "f50fa3f126a7110af1ac87dc704f8820ea0788c1b10c77693d14ebe53a6039e4",
+        "passed": 27,
+        "suite": "t9800",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 1,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "2a1693b4dfca756f8310e8efe45144e406ed2e8b56383e7c1b50e3209600d0ed",
+        "passed": 32,
+        "suite": "t9801",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "bc535106bed0b58ba44c9e560bb928a06b0ceb817b0216b0da575f02d74296fe",
+        "passed": 16,
+        "suite": "t9802",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "d47f2ccea077ff630d7a3a4c7f91914d4cc61f587b7d387d56c143aea93d2a10",
+        "passed": 5,
+        "suite": "t9803",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 1,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "e4e8ab128cb0d0040cc22d54228cd102263a83417b9c1359c4e99d7ed867367d",
+        "passed": 3,
+        "suite": "t9804",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "5683d37aa09c749999de7bc9dbee2d20dc6d25b1022046f0c043cde3d05f9ec2",
+        "passed": 7,
+        "suite": "t9805",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "c7b6e004a6e434d9292e3e233dca4f7b04938b88465041ecad2fbdf9f267c1c8",
+        "passed": 19,
+        "suite": "t9806",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "1ba395937a976e2572aa840222f126b0884cd6b77c785ad6aece3a5e638410e9",
+        "passed": 26,
+        "suite": "t9807",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "577ffd653526674242d12ac71d3c7e04f117370b7db58ff3c5dcabd3f2ed216c",
+        "passed": 6,
+        "suite": "t9808",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 5,
+        "lane": "go",
+        "log_sha256": "77f8295e86cbbbed2936a7c21918efb60ee5dffc374906123c3344a037b7f096",
+        "passed": 52,
+        "suite": "t9809",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "go",
+        "log_sha256": "c7b6d6e9f011048c28c3a6616d190f0b4bc384f1cb212dddef69d033d94a4b54",
+        "passed": 16,
+        "suite": "t9810",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "9b1b396b63107521220feeaba965300374e6a0a361f27e08225c79438bc97d19",
+        "passed": 8,
+        "suite": "t9811",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "58ca6f03a5684a6e3caf0fd71c1c15c691ff627e4c0224e125970f602effb94e",
+        "passed": 10,
+        "suite": "t9812",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "aca5c2ee486b12486adf81879840c340b27526fb6a477cf042729437e0816d86",
+        "passed": 6,
+        "suite": "t9813",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "456a3b4ebcab8c351e69e9483201a6925794f22ec4ec1a66c5562b353a3379da",
+        "passed": 6,
+        "suite": "t9814",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "862d9c79a37c9882e0946b211c23442fc3191325dbf976ecc0674e2d3217d682",
+        "passed": 21,
+        "suite": "t9815",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 4,
+        "lane": "go",
+        "log_sha256": "4d22f93b4c48f603c5401e0fc42d6d0e9e47abc6e54406134d1b5c5451ab976f",
+        "passed": 5,
+        "suite": "t9816",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "dfc30583a2faae4cb11ef22d6ef1257bf4c83455d88a2138e9cc67c12a6b074d",
+        "passed": 7,
+        "suite": "t9817",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "8803808cbcea01a9e16cb901de0a41eeda344c44756528143c60bb36f3f7bc20",
+        "passed": 14,
+        "suite": "t9818",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 2,
+        "lane": "go",
+        "log_sha256": "123f8d2a41310dae101e3517ec78e260d1ebd2402da55f896425052d3145dbd2",
+        "passed": 4,
+        "suite": "t9819",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "022172886c6202eb1e07262485d79455ecdb80a5ede57392e3ae0aacbfc68c17",
+        "passed": 3,
+        "suite": "t9820",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "7320302cd0a0ea9f4eb44692cb64bf246640c3fb00e91b88f5ace2a4bc795f86",
+        "passed": 9,
+        "suite": "t9821",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 1,
+        "lane": "go",
+        "log_sha256": "c4b4887c676ca7aa93314531d4d8d2fe785ab1c3f72675b98e9e2ec7bfa9ed7a",
+        "passed": 4,
+        "suite": "t9822",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "99d615059b4655ce22b2dde31b16ce767a0e3591f784d55fb47c9a3565f24b5c",
+        "passed": 7,
+        "suite": "t9823",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "e463513a88894e84abcf3511cd810e16826345da4fb0e5d69aea25b4b2b1e13a",
+        "passed": 9,
+        "suite": "t9824",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 1,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "db37f643f01542bb6d9e12b3ec7651900ad3ecf6a883dd995dbf3f59aff1a34c",
+        "passed": 4,
+        "suite": "t9825",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "875b20bb146bb799d0f79b084438a0e0ed81c83dcdb239e0a7259acacb1b7ec4",
+        "passed": 5,
+        "suite": "t9826",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "9d2c928cdf42b791f71f011cbd6cd40af1d32824f7f12701ba42c43982b5d384",
+        "passed": 4,
+        "suite": "t9827",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "21d776e09d531ec6f7f4f3b9b08d994b7875f6477aa9fd34d2c53728337baa2e",
+        "passed": 3,
+        "suite": "t9828",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "d0051661f57ef6fabb5881c09e856f68ad255f2565973de9c85bf66543f73faa",
+        "passed": 8,
+        "suite": "t9829",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "4361a09a3b3a050718c626350d49c9b740531d0a523f7ae9891d0c75de1b4fa4",
+        "passed": 2,
+        "suite": "t9830",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "5ab40a08ab8bf1d01e5b433d96f27b1fc7f29a8e24e7dcdc5b4af5d3cf5ec799",
+        "passed": 5,
+        "suite": "t9831",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "1e79c10b022956670c242b18dd6fb2e983b8a3314faf8f235427c0bdf0fcc4be",
+        "passed": 8,
+        "suite": "t9832",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "783523b9e36b4a585101afc184176fcdc6e73575f1145304185a728cbdb11bd8",
+        "passed": 4,
+        "suite": "t9833",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "b1349ba318b2e49d440fe3a085d12d0361be7701c78c01cd937d5ed56dd7bb8e",
+        "passed": 5,
+        "suite": "t9834",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "d8a4ecbd51bf061e4af70c2e8efa3d4c5cd54096d030748b53cc1913d127474f",
+        "passed": 0,
+        "suite": "t9835",
+        "unexpected_failures": 0
+      },
+      {
+        "improved_known_breakages": 0,
+        "known_breakages": 0,
+        "lane": "go",
+        "log_sha256": "fa1f3d37bc2e1ed59a3494507f44c7aa789a260714c165862d8751f1bfe5bb61",
+        "passed": 12,
+        "suite": "t9836",
+        "unexpected_failures": 0
+      }
+    ],
+    "suites_executed_per_implementation": 36,
+    "suites_invoked_per_implementation": 37,
+    "windows_live": {
+      "evidence": {
+        "bytes": 4296,
+        "path": "target/go-packaging-oracle/git-p4-live-final.log",
+        "sha256": "cc890b657870a419b5f525311e6993a4e5c66cfca131aa0e784f836d6b3e37a1"
+      },
+      "external_alias_tests": "Two Windows symlink-privilege skips, with both exact boundary cases separately passed on Linux.",
+      "failed": 0,
+      "passed_top_level_tests": 26,
+      "vet": "pass"
+    }
+  },
+  "go_tooling_snapshot_checks": {
+    "current_final_harness_checks": {
+      "cross_compilation": {
+        "bytes": 13661,
+        "path": "target/go-native-release-1.0.3/devtool-final-r6/builds.json",
+        "sha256": "0a1f8414fcbf9766478a0a0201b188dc8c18d9f9e327753468c022daade7b137"
+      },
+      "cross_compilation_boundary": "Build products for five targets; this receipt does not establish runtime execution.",
+      "cross_compiled_targets": 5,
+      "module": "tools/devtool",
+      "owned_python_audit": {
+        "bytes": 472,
+        "path": "target/go-native-release-1.0.3/owned-python-r6.json",
+        "sha256": "7bd7ca086e1b583caa92db38fd6a3a51e32cf2aef839bb1c0b7add59b07c63fc"
+      },
+      "python_execution_entrypoints": 0,
+      "race": {
+        "bytes": 59,
+        "path": "target/go-native-release-1.0.3/go-race-r6.log",
+        "sha256": "3db297d2277a6602125b215fcf4f0fb58f1e9908b5d4b55b00c7e937e1dc0bea"
+      },
+      "remaining_python_files": 0,
+      "repository_contract": {
+        "bytes": 2097,
+        "path": "target/go-native-release-1.0.3/repo-contract-r6.log",
+        "sha256": "5b232ab9262a8a990ad807dff309a11c3edaee9af77e0ac482d5db49a8528513"
+      },
+      "repository_contract_failed": 0,
+      "repository_contract_rules": 29,
+      "runtime_defaults": {
+        "evidence": {
+          "bytes": 2329,
+          "path": "target/go-native-release-1.0.3/default-behavior-final-quiet-r5b.json",
+          "sha256": "987f593555131589bb82fe6f8a48e01decee3f336ff964aaa0ccb98be34564cb"
+        },
+        "failed_checks": 0,
+        "no_process_left_behind": true,
+        "no_process_left_behind_derived_from_check": {
+          "name": "no-process-left-behind",
+          "ok": true
+        },
+        "passed_checks": 17,
+        "prior_transient_global_observer_failures_retained": true,
+        "status": "pass"
+      },
+      "scope": "Final benchmark deadline-classification/budget repair; all Go unit tests/vet/race, contract and five-target cross-compilation passed; native runtime and Rust acceptance retain their own exact artifact evidence.",
+      "status": "pass",
+      "tooling_implementation_commit": "f2e5c1b0f9966f18c08dff1718e759833e9ff819",
+      "unit_tests": {
+        "bytes": 59,
+        "path": "target/go-native-release-1.0.3/go-tests-r6.log",
+        "sha256": "41e43d68b0b2784d40ee38d9d2d3dfbe324a0c31f988f9a8411ee57f7abf888b"
+      },
+      "vet": {
+        "bytes": 0,
+        "path": "target/go-native-release-1.0.3/go-vet-r6.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "evidence": {
+      "path": "target/go-acceptance-equivalence/verification.json",
+      "sha256": "c9102303e2d1a60316804c0a9ee18d393fa8cc3bc1fa29363252aed146a42327"
+    },
+    "module": "tools/devtool",
+    "prior_final_harness_checks": {
+      "cross_compilation": {
+        "bytes": 13470,
+        "path": "target/go-native-release-1.0.3/devtool-final-r5b/builds.json",
+        "sha256": "b9c6c2d14f8c0d3004adde4bc963cc8df01168a3152b98be0f0f743a87134235"
+      },
+      "cross_compilation_boundary": "Build products for five targets; this receipt does not establish runtime execution.",
+      "cross_compiled_targets": 5,
+      "module": "tools/devtool",
+      "owned_python_audit": {
+        "bytes": 472,
+        "path": "target/go-native-release-1.0.3/owned-python-r5b.json",
+        "sha256": "7bd7ca086e1b583caa92db38fd6a3a51e32cf2aef839bb1c0b7add59b07c63fc"
+      },
+      "python_execution_entrypoints": 0,
+      "race": {
+        "bytes": 59,
+        "path": "target/go-native-release-1.0.3/go-race-r5b.log",
+        "sha256": "b153b4ee046dda6f074c73fec7ccec6aaa6f0d0087ce2bd50d4b224cd178fbce"
+      },
+      "remaining_python_files": 0,
+      "repository_contract": {
+        "bytes": 2096,
+        "path": "target/go-native-release-1.0.3/repo-contract-r5b.log",
+        "sha256": "afaac4807240c4981f2e20af4b20437162e26fe0353933baff7e94cb68a9f29e"
+      },
+      "repository_contract_failed": 0,
+      "repository_contract_rules": 29,
+      "runtime_defaults": {
+        "evidence": {
+          "bytes": 2329,
+          "path": "target/go-native-release-1.0.3/default-behavior-final-quiet-r5b.json",
+          "sha256": "987f593555131589bb82fe6f8a48e01decee3f336ff964aaa0ccb98be34564cb"
+        },
+        "failed_checks": 0,
+        "no_process_left_behind": true,
+        "no_process_left_behind_derived_from_check": {
+          "name": "no-process-left-behind",
+          "ok": true
+        },
+        "passed_checks": 17,
+        "prior_transient_global_observer_failures_retained": true,
+        "status": "pass"
+      },
+      "status": "pass",
+      "tooling_implementation_commit": "16934c307fc06aa5bea243eb418c8955b875c8e0",
+      "unit_tests": {
+        "bytes": 59,
+        "path": "target/go-native-release-1.0.3/go-tests-r5b.log",
+        "sha256": "6fcc48fa24fe6b8b3de2ab63b8a0dbe9171faa1cf5ed38fa0bbb9b2b91bf8f3d"
+      },
+      "vet": {
+        "bytes": 0,
+        "path": "target/go-native-release-1.0.3/go-vet-r5b.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "race": {
+      "compiler": "LLVM mingw GCC",
+      "evidence": {
+        "bytes": 59,
+        "path": "target/go-acceptance-equivalence/go-race.log",
+        "sha256": "1e4bdbc6fd7bd884b37a88bbe69f5905177b1b225d59615aa3ac33593aeee4a7"
+      },
+      "platform": "windows-x64",
+      "status": "pass"
+    },
+    "scope": "Migration-oracle snapshot; later packaging/harness changes reopen final checks.",
+    "unit_tests": "pass",
+    "vet": "pass"
+  },
+  "golden_equivalence": [
+    {
+      "different_source_files": 0,
+      "evidence": {
+        "bytes": 760,
+        "path": "target/go-build-equivalence/native-source-equivalence.json",
+        "sha256": "7a934f9e448fd192bcaf13f74246781ad65840a61f33909160bcd719e285aa65"
+      },
+      "go_source_tree_sha256": "82391a16ba6524502698b6986e04621eb0fa75182c09c8783a59c23dd1faf626",
+      "name": "Native source prepare/integrate",
+      "receipts_semantically_equal": {
+        "git-next-integration-receipt.json": true,
+        "git-next-source-receipt.json": true
+      },
+      "source_files": 4919,
+      "source_tree_sha256": "82391a16ba6524502698b6986e04621eb0fa75182c09c8783a59c23dd1faf626",
+      "status": "pass"
+    },
+    {
+      "evidence": {
+        "bytes": 1340,
+        "path": "target/go-migration/runtime-abi-equivalence.json",
+        "sha256": "fb5b34ffc56b9cadcc7ab9c5efd4321d376f450d3d60206ba1093053db336c74"
+      },
+      "name": "Pinned Windows runtime and ABI inputs",
+      "normalization": "COFF object/archive timestamps only; unconsumed .exp intermediates excluded; no claim of raw import-library byte equality.",
+      "results": [
+        {
+          "case": "runtime-x64",
+          "receipt_equal": true
+        },
+        {
+          "case": "iconv-x64",
+          "equal_files": 4,
+          "excluded_intermediate": "lib/*.exp is not consumed or distributed",
+          "library_normalization": "only archive-member and COFF-object timestamps zeroed",
+          "receipt_equal_except_actual_import_library_hash": true
+        },
+        {
+          "case": "psl-x64",
+          "equal_files": 8,
+          "excluded_intermediate": "lib/*.exp is not consumed or distributed",
+          "library_normalization": "only archive-member and COFF-object timestamps zeroed",
+          "receipt_equal_except_actual_import_library_hash": true
+        },
+        {
+          "case": "runtime-arm64",
+          "receipt_equal": true
+        },
+        {
+          "case": "iconv-arm64",
+          "equal_files": 4,
+          "excluded_intermediate": "lib/*.exp is not consumed or distributed",
+          "library_normalization": "only archive-member and COFF-object timestamps zeroed",
+          "receipt_equal_except_actual_import_library_hash": true
+        },
+        {
+          "case": "psl-arm64",
+          "equal_files": 8,
+          "excluded_intermediate": "lib/*.exp is not consumed or distributed",
+          "library_normalization": "only archive-member and COFF-object timestamps zeroed",
+          "receipt_equal_except_actual_import_library_hash": true
+        }
+      ],
+      "status": "pass"
+    },
+    {
+      "evidence": {
+        "bytes": 355,
+        "path": "target/go-migration/tls-equivalence.json",
+        "sha256": "45b89d5ca88e158843a2bc84c7f9b6b62d71b4886680a1f778454640a029fc49"
+      },
+      "header_bytes_equal": true,
+      "header_sha256": "5435210c2ec2dfd37e76e348bbcb4799e44c274e86e3b0eb6d0dfc6682e433c0",
+      "lock_sha256": "86185ab0b9dc7851f7f741f8dd9085b63dcc854f481839df0d7c2e4a0f106b84",
+      "lock_structurally_equal": true,
+      "name": "Pinned TLS provider",
+      "platforms": 2,
+      "provider_files_per_platform": 17,
+      "status": "pass"
+    },
+    {
+      "different_files": 0,
+      "evidence": {
+        "bytes": 123,
+        "path": "target/go-build-equivalence/llvm-equivalence.json",
+        "sha256": "ea1aa4897022381f87ae50d69d171b701b62284580d7a78601dfb40527584a05"
+      },
+      "files": 9053,
+      "name": "LLVM SDK",
+      "source_pin_equal": true,
+      "status": "pass"
+    },
+    {
+      "evidence": {
+        "bytes": 521,
+        "path": "target/go-build-equivalence/helpers-updater-equivalence.json",
+        "sha256": "7919b9021bc0089655fc6136e0d640a54b51ff12817c208bcfecf5fac57074a4"
+      },
+      "helpers": {
+        "linux-arm64": {
+          "bytes_equal": true,
+          "files": 5,
+          "receipt_equal": true
+        },
+        "linux-x64": {
+          "bytes_equal": true,
+          "files": 5,
+          "receipt_equal": true
+        },
+        "macos-arm64": {
+          "bytes_equal": true,
+          "files": 239,
+          "receipt_equal": true
+        }
+      },
+      "name": "Pinned POSIX helpers and updater",
+      "status": "pass",
+      "updater": {
+        "binaries_equal": true,
+        "compiler": "go version go1.27.2 windows/amd64",
+        "receipt_equal": true
+      }
+    },
+    {
+      "bridge_arm64": {
+        "binaries_equal": true,
+        "receipt_except_output_paths_equal": true
+      },
+      "evidence": {
+        "bytes": 402,
+        "path": "target/go-build-equivalence/bridge-worker-equivalence.json",
+        "sha256": "81ebc054ef8ae0b18c3f7a4f3aba706478231e22546de08be349cb5cda961ce2"
+      },
+      "freestanding_receipt_equal": true,
+      "name": "Freestanding bridge and MSI worker",
+      "status": "pass",
+      "worker": {
+        "windows-arm64": {
+          "binary_bytes_equal": true,
+          "receipt_equal": true
+        },
+        "windows-x64": {
+          "binary_bytes_equal": true,
+          "receipt_equal": true
+        }
+      }
+    },
+    {
+      "all_member_bytes_match": true,
+      "evidence": [
+        {
+          "bytes": 341,
+          "path": "target/go-packaging-oracle/verification.json",
+          "sha256": "1521a81eed5e8611b3cc2e4650b91efb0cad2eae7dbf6e79a39ae09a73167c2b"
+        },
+        {
+          "bytes": 349424,
+          "path": "target/go-packaging-oracle/shared-assets-r2/git-next-shared-runtime.json",
+          "sha256": "9e9ef8ef977c5c5b3598107009a31ac7c55ebc40af2b80295f0c9785e1a1965f"
+        }
+      ],
+      "file_record_mismatches": 0,
+      "files": 1398,
+      "inputs": {
+        "manual_archive_sha256": "292062d18f3a215213ea8317ed22b94f02ad9572520b9293164d7db3eb888953",
+        "manual_metadata_sha256": "651650b65a26b27d1bcbc150c700cd23353060a0e8ad22d261c8ff993430397d",
+        "portable_archive_sha256": "e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd"
+      },
+      "name": "Shared Git manuals and GUI data",
+      "status": "pass"
+    },
+    {
+      "bundles": [
+        {
+          "bytes": 161029026,
+          "components": 21,
+          "name": "git-next-corresponding-sources-core-and-producer-recipes.zip",
+          "sha256": "712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab"
+        },
+        {
+          "bytes": 366235738,
+          "components": 272,
+          "name": "git-next-corresponding-sources-debian.zip",
+          "sha256": "7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68"
+        },
+        {
+          "bytes": 205445362,
+          "components": 28,
+          "name": "git-next-corresponding-sources-homebrew.zip",
+          "sha256": "791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a"
+        },
+        {
+          "bytes": 774880829,
+          "components": 138,
+          "name": "git-next-corresponding-sources-msys2.zip",
+          "sha256": "a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6"
+        }
+      ],
+      "components": 459,
+      "evidence": [
+        {
+          "bytes": 341,
+          "path": "target/go-packaging-oracle/verification.json",
+          "sha256": "1521a81eed5e8611b3cc2e4650b91efb0cad2eae7dbf6e79a39ae09a73167c2b"
+        },
+        {
+          "bytes": 1074,
+          "path": "target/go-packaging-oracle/corresponding-sources/sources.json",
+          "sha256": "1bf7ec9618d94c988f4ce608fda5d9b912d661a6b7f7b6e80b0cd0caa53b0287"
+        }
+      ],
+      "groups": 4,
+      "lock_sha256": "c4a32831cc18c7babc28e25a9bff91d931f0f9d1c68765d3a852d9ce11b00a0c",
+      "name": "Corresponding source archive groups",
+      "opaque_members_hash_verified": 459,
+      "status": "pass",
+      "upstream_archives_extracted": false
+    },
+    {
+      "checks": 13,
+      "client_image_python_present": false,
+      "evidence": {
+        "bytes": 830,
+        "path": "target/go-migration/migration-equivalence.json",
+        "sha256": "1196e19eccf48c2a777da66787c6d9304d75eddccd7eaca3e2c5cec4f8a67d4e"
+      },
+      "gcm_archive_sha256": "c7935c3e1b22681d56011b580086aeb6d60f3f0aaf6ef9c581480356988ff804",
+      "name": "Migration authentication/SSH/LF fixtures",
+      "native_binary_sha256": "9e343be63994172d809723f08faabfacdf8a36319329e349718299526a800b83",
+      "note": "Old reference Git 2.47.3, Go fixture reference Git 2.39.5; assertions preserved, therefore not a byte-identical reference environment.",
+      "reference_versions_differ": true,
+      "status": "pass"
+    },
+    {
+      "benchmark_timings": "No timing equality or final latency acceptance claimed.",
+      "evidence": {
+        "bytes": 12354,
+        "path": "target/go-acceptance-equivalence/verification.json",
+        "sha256": "c9102303e2d1a60316804c0a9ee18d393fa8cc3bc1fa29363252aed146a42327"
+      },
+      "linux_native_container_lanes": 4,
+      "linux_read_threads_applicable_cases": 5,
+      "name": "Platform acceptance and benchmarks",
+      "native_common_cases": 32,
+      "native_contract_cases": 13,
+      "old_artifacts_only": true,
+      "reference_wide_diagnostic": {
+        "candidate_transient_nonempty_statuses": 2,
+        "python_transient_nonempty_statuses": 0,
+        "status": "diagnostic-only-no-stability-acceptance"
+      },
+      "status": "migration-equivalence-scoped",
+      "windows_game_project_cases": 6,
+      "windows_native_integrations_cases": 3,
+      "windows_read_threads_cases": 6
+    },
+    {
+      "evidence": {
+        "bytes": 3920,
+        "path": "target/go-migration/retired-python-root.json",
+        "sha256": "8c2e91c1b4cd46e322038683c01f9407a99b547f06c74b13b0e65b8ab81ddb09"
+      },
+      "msi_tests_passed": 18,
+      "name": "Historical MSI/repair evidence tests",
+      "obsolete_msi_literal_assertion_failed": 1,
+      "reason": "An old hard-coded default count is stale relative to packaging/runtime-defaults/gitconfig; the Go fixture renders the authoritative fragment. This is not a claim that every old test passed.",
+      "repair_tests_passed": 9,
+      "replacement": "tools/devtool/evidence_test.go",
+      "status": "scoped"
+    }
+  ],
+  "historical_msi_base_fixture_rebuild": {
+    "core_version_actually_executed": "0.2.999",
+    "evidence": {
+      "path": "target/go-native-release-1.0.3/msi-base-rebuilt-r1/rebuild-verification.json",
+      "sha256": "1b60302ca1bef61d7ce032a3da6d904257e45bd5153c49ba60dfd8ea54e27fc7"
+    },
+    "fixture_only": true,
+    "launch_condition": "Installed OR NOT OFFICIALGIT OR REPLACEGIT = \"1\"",
+    "msi_file_rows": 9933,
+    "msis": [
+      {
+        "asset": "git-next-0.2.999-windows-x64-user.msi",
+        "bytes": 126726424,
+        "installation_runtime_accepted": false,
+        "product_code": "{FEF1CDFB-26BA-5FFA-9427-FBC587C4CD55}",
+        "scope": "user",
+        "sha256": "d607e148eff891f04e4a87ec8bac898d70cf41a2344d1abd07e7b0bcf0f02f76",
+        "upgrade_code": "{981F8880-E13B-4D22-A36E-A1B166601663}"
+      },
+      {
+        "asset": "git-next-0.2.999-windows-x64.msi",
+        "bytes": 127402450,
+        "installation_runtime_accepted": false,
+        "product_code": "{DF6D6F49-3693-5CB2-B5FB-E287A16E9104}",
+        "scope": "machine",
+        "sha256": "3a077a80ce88054b1d757d67c0095562e8e46fffd1fab16e07cd64b87fb9e614",
+        "upgrade_code": "{8C7712E8-6254-59D7-9AF9-5E5488927D43}"
+      }
+    ],
+    "official_git_registry_mutated": false,
+    "old_msi_bytes_unchanged": true,
+    "original_files_removed": 0,
+    "payload_files_after": 9931,
+    "payload_files_before": 9930,
+    "replacegit_default": "0",
+    "scope": "Historical test fixture retains full old payload and only updates current-required installer integration plus a version-correct worker. It is not a current Python-free release package.",
+    "status": "formally-rebuilt-metadata-verified-lifecycle-pending",
+    "version": "0.2.999"
+  },
+  "implementation_commit": "3a8ccb52cf02991de9fc766b7f722ba83ceccf9c",
+  "installer_recipe_repair": {
+    "current_layout": [
+      {
+        "all_components_assigned_once": true,
+        "asset": "git-next-1.0.3-windows-arm64-user.msi",
+        "bytes": 189878420,
+        "changed_common_components": [],
+        "common_old_components": 0,
+        "component_rows": 10210,
+        "expected_file_rows": 9006,
+        "feature_rows": 65,
+        "file_rows": 9006,
+        "install_execute": 6500,
+        "install_finalize": 6600,
+        "install_initialize": 1500,
+        "maximum_components_per_feature": 189,
+        "old_layout_component_rows": 0,
+        "remove_existing_products": 6501,
+        "sha256": "e4ed146a948f38795493593bbe3d0b095822df8f881b61c5c1810655292a299a"
+      },
+      {
+        "all_components_assigned_once": true,
+        "asset": "git-next-1.0.3-windows-arm64.msi",
+        "bytes": 190514838,
+        "changed_common_components": [],
+        "common_old_components": 0,
+        "component_rows": 10216,
+        "expected_file_rows": 9006,
+        "feature_rows": 65,
+        "file_rows": 9006,
+        "install_execute": 6500,
+        "install_finalize": 6600,
+        "install_initialize": 1500,
+        "maximum_components_per_feature": 189,
+        "old_layout_component_rows": 0,
+        "remove_existing_products": 6501,
+        "sha256": "decaa7343c95d1d6dc23c4fed4a2a4083463e125f2525603153a76ff7b406e9b"
+      },
+      {
+        "all_components_assigned_once": true,
+        "asset": "git-next-1.0.3-windows-x64-user.msi",
+        "bytes": 146182472,
+        "changed_common_components": [],
+        "common_old_components": 10808,
+        "component_rows": 11954,
+        "expected_file_rows": 10691,
+        "feature_rows": 65,
+        "file_rows": 10691,
+        "install_execute": 6500,
+        "install_finalize": 6600,
+        "install_initialize": 1500,
+        "maximum_components_per_feature": 231,
+        "old_layout_component_rows": 10811,
+        "remove_existing_products": 6501,
+        "sha256": "1aaf3fb8aeec6b796277fea8ca944fd957a61deee667abf95e05ef19d650ac1b"
+      },
+      {
+        "all_components_assigned_once": true,
+        "asset": "git-next-1.0.3-windows-x64.msi",
+        "bytes": 146715980,
+        "changed_common_components": [],
+        "common_old_components": 10814,
+        "component_rows": 11960,
+        "expected_file_rows": 10691,
+        "feature_rows": 65,
+        "file_rows": 10691,
+        "install_execute": 6500,
+        "install_finalize": 6600,
+        "install_initialize": 1500,
+        "maximum_components_per_feature": 231,
+        "old_layout_component_rows": 10817,
+        "remove_existing_products": 6501,
+        "sha256": "0c098e598e1b9390c3268a1bb9386add34af480939a48e19978a3064459cbfe5"
+      }
+    ],
+    "feature_layout": "64 stable SHA256 buckets below ProductFeature",
+    "feature_limit": 1600,
+    "late_removal": "InstallExecute=6500 \u003c RemoveExistingProducts=6501 \u003c InstallFinalize=6600",
+    "layout_evidence": {
+      "bytes": 4430,
+      "path": "target/go-native-release-1.0.3/msi-candidates-r5b-layout.json",
+      "sha256": "c714870cd6f89629d4855a8fbc4be29a22e925a88d36ac1c97eb3dcd8aa76518"
+    },
+    "machine_lifecycle": {
+      "case": "msi-machine",
+      "checks": 25,
+      "evidence": {
+        "bytes": 7145,
+        "path": "target/go-native-release-1.0.3/final-correctness-r5b/batch.json",
+        "sha256": "90b0131471d67a76a869f7f21cb5bad347f7e0b2fbe47657fc30da067fe4993e"
+      },
+      "lifecycle_log": {
+        "bytes": 4132,
+        "path": "target/go-native-release-1.0.3/final-correctness-r5b/msi-machine-elevated.log",
+        "sha256": "30e6a052f2722cd2581882d7586f6a2a558ff60950bd71c6ea3907b12f88b81a"
+      },
+      "scope": "Actual elevated machine install/repair/upgrade/injected-failure rollback/downgrade refusal/uninstall; original Git retained",
+      "seconds": 473.217,
+      "status": "pass"
+    },
+    "rejected_unlinked_fragment": {
+      "candidate": "r5",
+      "observed_msi_bytes": [
+        40960,
+        45056
+      ],
+      "old_outputs_retained": true,
+      "reason": "Reverse FeatureRef did not link payload Fragment; fixed with positive FeatureGroupRef and mandatory actual MSI table validation before receipt creation",
+      "status": "rejected-before-installation"
+    },
+    "scope": "Recipe migration only; stable files, paths, component GUIDs/key paths and upgrade families",
+    "status": "compiled-layout-and-real-user-machine-lifecycle-pass",
+    "user_lifecycle": {
+      "checks": 27,
+      "evidence": {
+        "bytes": 1310,
+        "path": "target/go-native-release-1.0.3/msi-user-r5b-reuse/batch.json",
+        "sha256": "d4e9754b1c199999cdd9f63121929c6a100929f6f410cad7fe616736c5dbe770"
+      },
+      "required_checks": 13,
+      "scope": "Actual least privilege user; original single Feature layout base to corrected package",
+      "seconds": 622.69,
+      "status": "pass"
+    }
+  },
+  "large_scale_grep_diagnostic": {
+    "accepted_latency_report": false,
+    "established_mechanism": "A real deadline can produce Windows exit 1 with empty stderr and partial grep output; context state must distinguish it from an ordinary exit 1.",
+    "evidence": [
+      {
+        "bytes": 6580,
+        "path": "target/go-native-release-1.0.3/grep-100k-diagnostic-r1/summary.json",
+        "sha256": "a5a1e0a3107506be2fa5b61d9ab3adbd7af707e2d85c977c5fed088f522ff777"
+      },
+      {
+        "bytes": 16066,
+        "path": "target/go-native-release-1.0.3/grep-100k-diagnostic-r1/diagnostic.json",
+        "sha256": "acc21b0ee3f0787ddd9a02dcf2a9f9a975820d0a5ce0e53fb6db02ac39e24564"
+      },
+      {
+        "bytes": 879,
+        "path": "target/go-native-release-1.0.3/grep-100k-diagnostic-r1/forced-deadline-1s.json",
+        "sha256": "c9aaaaa6410b34401fe6251c0d3b505889835ebf53b9d4ac37749ba2b1f63cf1"
+      }
+    ],
+    "fixture_integrity": {
+      "directories": 1000,
+      "disk_files_containing_pattern": 100000,
+      "disk_files_missing": 0,
+      "disk_files_read": 100000,
+      "disk_files_wrong_bytes": 0,
+      "files": 100000,
+      "final_index_sha256": "54b02a65453e5fbd7bad08a97cd73fe78becc1547366a1bf39bb8e608a1a25da",
+      "index_header_entries": 100000,
+      "index_unchanged": true,
+      "index_version": 2,
+      "initial_index_sha256": "54b02a65453e5fbd7bad08a97cd73fe78becc1547366a1bf39bb8e608a1a25da"
+    },
+    "forced_one_second_deadline": {
+      "context_deadline_exceeded": true,
+      "elapsed_ms": 1003.6499,
+      "error": "context deadline exceeded",
+      "exit_code": 1,
+      "index_after_sha256": "54b02a65453e5fbd7bad08a97cd73fe78becc1547366a1bf39bb8e608a1a25da",
+      "index_before_sha256": "54b02a65453e5fbd7bad08a97cd73fe78becc1547366a1bf39bb8e608a1a25da",
+      "index_unchanged": true,
+      "process_limit": 64,
+      "stderr_bytes": 0,
+      "stdout_bytes": 282624,
+      "stdout_lines": 11859,
+      "stdout_sha256": "0e8d75303b9f70b8014a8a8941ed0fc32630cfa2a065ae4f0663d1c2d712d37c",
+      "timeout_seconds": 1
+    },
+    "full_output_observations": [
+      {
+        "case": "reference-grep-30",
+        "context_deadline_exceeded": false,
+        "elapsed_ms": 8728.0669,
+        "exit_code": 0,
+        "stdout_bytes": 2390000,
+        "stdout_lines": 100000,
+        "stdout_sha256": "c24b75ac2c586b680c2ea6b582f1a1575aed87b1772bb2941c16b4b62fbdccf1"
+      },
+      {
+        "case": "native-grep-30",
+        "context_deadline_exceeded": false,
+        "elapsed_ms": 26674.2696,
+        "exit_code": 0,
+        "stdout_bytes": 2390000,
+        "stdout_lines": 100000,
+        "stdout_sha256": "c24b75ac2c586b680c2ea6b582f1a1575aed87b1772bb2941c16b4b62fbdccf1"
+      },
+      {
+        "case": "native-grep-120",
+        "context_deadline_exceeded": false,
+        "elapsed_ms": 7435.0059,
+        "exit_code": 0,
+        "stdout_bytes": 2390000,
+        "stdout_lines": 100000,
+        "stdout_sha256": "c24b75ac2c586b680c2ea6b582f1a1575aed87b1772bb2941c16b4b62fbdccf1"
+      }
+    ],
+    "native_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+    "original_failure_root_cause": "not established; the original failure did not capture context state and is retained as rejected",
+    "production_binary_unchanged": true,
+    "reference_sha256": "3b64043b9e4dc225225f43ff9c1173b57493ff72e5b729accfae051eb160cca3",
+    "scope": "Retained 100000-file fixture diagnostics only; not randomized accepted performance samples"
+  },
+  "local_gate_completion_date": "2026-10-24",
+  "native_compile": {
+    "evidence": {
+      "bytes": 3735,
+      "path": "target/go-native-release-1.0.3/native-compile-matrix.json",
+      "sha256": "cfc471c4ef2acddfd1de067b2c17cfb65fb75372fe9ac8e2ec5ca3e71bd80e0d"
+    },
+    "platforms": [
+      {
+        "artifact_sha256": null,
+        "platform": "windows-x64",
+        "receipt_sha256": "2c2ba746315084a9101bbb757c7fe02741aa8ad70d4c720225457c97dfdeca21",
+        "scope": "compiler receipt; runtime evidence is separate"
+      },
+      {
+        "artifact_sha256": null,
+        "platform": "windows-arm64",
+        "receipt_sha256": "3b104cf4d941b5dc77dc276c997f55c8c210ccead62e2b99cf29c917a4b371f5",
+        "scope": "compiler receipt; runtime evidence is separate"
+      },
+      {
+        "artifact_sha256": "30d0788a31af0540f0090a893a6b88f0e06825f1d1784da0ff9558e9e4c951c2",
+        "platform": "linux-x64",
+        "receipt_sha256": "9c313885ee118b18c8366fe6432befbf85d0dfce3dd0bf7d67f9e9f44d3362bf",
+        "scope": "compiler receipt; runtime evidence is separate"
+      },
+      {
+        "artifact_sha256": "bd00ecbe8f11b362505dd68c862d1fac6d56830e7b28a4431dfa1a8c13ecd44c",
+        "platform": "linux-arm64",
+        "receipt_sha256": "d0f923b2dadf57a5989525534f03d30167b1fd4f2a6e9975a6b39e1428c60ca0",
+        "scope": "compiler receipt; runtime evidence is separate"
+      },
+      {
+        "artifact_sha256": "3262fc087881bfe4ed27b29a023963e7087776ea8f48913b08668f93d9200b5a",
+        "platform": "macos-arm64",
+        "receipt_sha256": "f207bce7041c354f9384b694ec3df69279a3c21550c3221174201ef4aa8bf6e0",
+        "scope": "compiler receipt; runtime evidence is separate"
+      }
+    ],
+    "product_version": "1.0.3",
+    "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+    "status": "five-platform-core-compiled-not-runtime-accepted"
+  },
+  "native_runtime_results": [
+    {
+      "archive_sha256": "56c22e9a02a9e37df84a4cd72923445a598f03a61f6a9cce1d0a3c390f1331e7",
+      "cleanup": {
+        "container_absent": true,
+        "image_absent": true
+      },
+      "empty_path": true,
+      "environment": "owned Linux Docker runtime",
+      "evidence": [
+        {
+          "bytes": 791,
+          "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/linux-native.json",
+          "sha256": "f6297018c536e0b7dd4a1b23747122624870e1c3820b25f49960eaad863105b9"
+        },
+        {
+          "bytes": 308,
+          "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/docker.json",
+          "sha256": "272f818195c22d4f7f43f709eefdb64e77f1bdd14bd8f179063324ecf9b10ec0"
+        },
+        {
+          "bytes": 524,
+          "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/git-p4-dispatch.json",
+          "sha256": "a44c022b61ce16169bf515e8ffd1ac650ed0307744f58127faadff7269184b57"
+        }
+      ],
+      "files_verified": 4273,
+      "git_override_present": false,
+      "git_p4_dispatch_cases": 2,
+      "git_p4_dispatch_status": "pass",
+      "lanes": [
+        {
+          "cases": 13,
+          "evidence": {
+            "bytes": 1573,
+            "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/native-contracts.json",
+            "sha256": "57c9e4503d268b248a29ce22a19035a11f5981e405907a2d57f29dc821f772bd"
+          },
+          "lane": "native-contracts",
+          "status": "pass"
+        },
+        {
+          "cases": 32,
+          "evidence": {
+            "bytes": 5399,
+            "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/native-common-cli.json",
+            "sha256": "8b9ce3a85829cb97a76ccd1088577bea9cdad071e54206b29e35044d04461a5c"
+          },
+          "lane": "native-common-cli",
+          "status": "pass"
+        },
+        {
+          "cases": 2,
+          "evidence": {
+            "bytes": 360,
+            "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/native-integrations.json",
+            "sha256": "c95823cafd6865e34cad92c8b7e64d84d4187f289762fd54420ec4987d464149"
+          },
+          "lane": "native-integrations",
+          "status": "pass"
+        },
+        {
+          "cases": 5,
+          "evidence": {
+            "bytes": 998,
+            "path": "target/go-native-release-1.0.3/linux-x64-acceptance-r2/native-read-threads.json",
+            "sha256": "eb2dc741450d17d51d16c3b6568561955779b1992c69fb8afba6b3549859ea6a"
+          },
+          "lane": "native-read-threads",
+          "status": "pass"
+        }
+      ],
+      "native_cases": 52,
+      "package_manifest_sha256": "2c39e58766cbe88cef36881cbfce2d662a986c90534297b3cea875da467aeac0",
+      "platform": "linux-x64",
+      "status": "pass"
+    },
+    {
+      "archive_sha256": "cd85d751a2890a1cefb3437bb1a1203974539bc7efed2c298642bd372d920376",
+      "cleanup": {
+        "container_absent": true,
+        "image_absent": true
+      },
+      "empty_path": true,
+      "environment": "owned Linux Docker runtime",
+      "evidence": [
+        {
+          "bytes": 793,
+          "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/linux-native.json",
+          "sha256": "29ea7843c32efdd077f7ac4009102211169e2e90d50a1eecff7cf3935b4aedb3"
+        },
+        {
+          "bytes": 310,
+          "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/docker.json",
+          "sha256": "b8eb5283255ee67e89ee0deea8433eb660a494f47dc12c6d1c579bf3ff6f0408"
+        },
+        {
+          "bytes": 524,
+          "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/git-p4-dispatch.json",
+          "sha256": "a44c022b61ce16169bf515e8ffd1ac650ed0307744f58127faadff7269184b57"
+        }
+      ],
+      "files_verified": 4280,
+      "git_override_present": false,
+      "git_p4_dispatch_cases": 2,
+      "git_p4_dispatch_status": "pass",
+      "lanes": [
+        {
+          "cases": 13,
+          "evidence": {
+            "bytes": 1573,
+            "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/native-contracts.json",
+            "sha256": "ab0f119601b978876d4670c6ead5fb90fa8e5c0b5ca0738af553df18327528d4"
+          },
+          "lane": "native-contracts",
+          "status": "pass"
+        },
+        {
+          "cases": 32,
+          "evidence": {
+            "bytes": 5415,
+            "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/native-common-cli.json",
+            "sha256": "b4ce2853165dbc6844028cdde7e1c9245a92050593674438bf3a3c4051f5f6e9"
+          },
+          "lane": "native-common-cli",
+          "status": "pass"
+        },
+        {
+          "cases": 2,
+          "evidence": {
+            "bytes": 360,
+            "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/native-integrations.json",
+            "sha256": "c95823cafd6865e34cad92c8b7e64d84d4187f289762fd54420ec4987d464149"
+          },
+          "lane": "native-integrations",
+          "status": "pass"
+        },
+        {
+          "cases": 5,
+          "evidence": {
+            "bytes": 998,
+            "path": "target/go-native-release-1.0.3/linux-arm64-acceptance-r2/native-read-threads.json",
+            "sha256": "8f639304060cb8b98621c35ab2f8f4855cc07fc17645759f6e4db75164e47f24"
+          },
+          "lane": "native-read-threads",
+          "status": "pass"
+        }
+      ],
+      "native_cases": 52,
+      "package_manifest_sha256": "d3646c9be8bfa9568cb1ff2efdc4a923dee9a76ec6a9804597512dc5e61aecda",
+      "platform": "linux-arm64",
+      "status": "pass"
+    },
+    {
+      "archive_bytes": 127031662,
+      "archive_sha256": "ff65a4bbe9d7c38dedcb0c6235649c15044ed5445c4f866f38c477348000bad2",
+      "cpu_affinity_constraint_supported": false,
+      "current_runtime_evidence": {
+        "bytes": 42991,
+        "path": "target/go-native-release-1.0.3/macos/runtime-refresh-receipts-r5/native-runtime.json",
+        "sha256": "9ad8db310b2cc705105ea95c23ffa32e2d3a591253d7c8f7784623ee59bfe9c7"
+      },
+      "current_source_inputs_evidence": {
+        "bytes": 72152,
+        "path": "target/go-native-release-1.0.3/macos/runtime-refresh-receipts-r5/source-inputs.json",
+        "sha256": "e252dd6fe282ba37c96c9e4ac9063d6e34c4d870a472af2c53a7b9d3a29261c7"
+      },
+      "darwin_bare_argv0_probe": "HAVE_NS_GET_EXECUTABLE_PATH enabled in Mac builder; actual shell PATH dispatch verified.",
+      "empty_path": true,
+      "environment": "actual Apple Silicon hardware",
+      "evidence": [
+        {
+          "bytes": 43006,
+          "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/native-runtime.json",
+          "sha256": "8ab5bc3d20d8cd7cf64626691e5eb60cb20d777b87206d71cae0513bcd64a149"
+        },
+        {
+          "bytes": 52410,
+          "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/core-build.json",
+          "sha256": "f207bce7041c354f9384b694ec3df69279a3c21550c3221174201ef4aa8bf6e0"
+        },
+        {
+          "bytes": 34,
+          "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/bare-argv0-version.txt",
+          "sha256": "865a7667aab7f4b711b600ca813cc8afe02b8a7c5e2ac53be7d6a04418dcc065"
+        }
+      ],
+      "git_override_present": false,
+      "git_p4_dispatch_cases": 2,
+      "git_p4_dispatch_status": "pass",
+      "harness_hashes_before_after_equal": true,
+      "lanes": [
+        {
+          "cases": 32,
+          "exit_code": 0,
+          "lane": "common",
+          "report_sha256": "4ca96bb03242a6f348a59c6bc26e1deb37b67cc89f76a36edd156061cb74c09a",
+          "status": "pass"
+        },
+        {
+          "cases": 13,
+          "exit_code": 0,
+          "lane": "contracts",
+          "report_sha256": "48e73a5a2eb505f2a9503961a4a3a6c8b4c0663557aa8ae5b78bc4098f152120",
+          "status": "pass"
+        },
+        {
+          "cases": 2,
+          "exit_code": 0,
+          "lane": "integrations",
+          "report_sha256": "c95823cafd6865e34cad92c8b7e64d84d4187f289762fd54420ec4987d464149",
+          "status": "pass"
+        },
+        {
+          "cases": 4,
+          "exit_code": 0,
+          "lane": "read-threads",
+          "report_sha256": "3bb6d40fef40b0a0cc7a83c27690e35358237dedea2530d6864a25491fb9f854",
+          "status": "pass"
+        }
+      ],
+      "native_cases": 51,
+      "platform": "macos-arm64",
+      "previous_runtime_snapshot": {
+        "archive_bytes": 127031662,
+        "archive_sha256": "ff65a4bbe9d7c38dedcb0c6235649c15044ed5445c4f866f38c477348000bad2",
+        "cpu_affinity_constraint_supported": false,
+        "darwin_bare_argv0_probe": "HAVE_NS_GET_EXECUTABLE_PATH enabled in Mac builder; actual shell PATH dispatch verified.",
+        "empty_path": true,
+        "environment": "actual Apple Silicon hardware",
+        "evidence": [
+          {
+            "bytes": 43006,
+            "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/native-runtime.json",
+            "sha256": "8ab5bc3d20d8cd7cf64626691e5eb60cb20d777b87206d71cae0513bcd64a149"
+          },
+          {
+            "bytes": 52410,
+            "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/core-build.json",
+            "sha256": "f207bce7041c354f9384b694ec3df69279a3c21550c3221174201ef4aa8bf6e0"
+          },
+          {
+            "bytes": 34,
+            "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/bare-argv0-version.txt",
+            "sha256": "865a7667aab7f4b711b600ca813cc8afe02b8a7c5e2ac53be7d6a04418dcc065"
+          }
+        ],
+        "git_override_present": false,
+        "git_p4_dispatch_cases": 2,
+        "git_p4_dispatch_status": "pass",
+        "harness_hashes_before_after_equal": true,
+        "lanes": [
+          {
+            "cases": 32,
+            "exit_code": 0,
+            "lane": "common",
+            "report_sha256": "df77d16413fb182f63fdbad43e3d10235ca7d9cd027d275b2e9193e1431ae6b6",
+            "status": "pass"
+          },
+          {
+            "cases": 13,
+            "exit_code": 0,
+            "lane": "contracts",
+            "report_sha256": "48e73a5a2eb505f2a9503961a4a3a6c8b4c0663557aa8ae5b78bc4098f152120",
+            "status": "pass"
+          },
+          {
+            "cases": 2,
+            "exit_code": 0,
+            "lane": "integrations",
+            "report_sha256": "c95823cafd6865e34cad92c8b7e64d84d4187f289762fd54420ec4987d464149",
+            "status": "pass"
+          },
+          {
+            "cases": 4,
+            "exit_code": 0,
+            "lane": "read-threads",
+            "report_sha256": "9831eade7c161ee208eb486e339cb47b50cf28afca93810b6a3147e7ef910383",
+            "status": "pass"
+          }
+        ],
+        "native_cases": 51,
+        "platform": "macos-arm64",
+        "status": "pass"
+      },
+      "status": "pass"
+    }
+  ],
+  "product_python_audits": {
+    "candidate_scope": "Windows counts bind exact r4 artifacts (10690/9005 files); the r4 correctness rejection remains recorded. Mac audit binds the unchanged exact archive also used by the fresh r5 runtime receipt. Any subsequent product repack requires a fresh matching audit.",
+    "mac_exact_archive": {
+      "archive_sha256": "ff65a4bbe9d7c38dedcb0c6235649c15044ed5445c4f866f38c477348000bad2",
+      "complete": true,
+      "evidence": {
+        "bytes": 699,
+        "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/archive-product-audit.json",
+        "sha256": "90cf8f06d8032d0552f427c6aa2a5cf23d959bfa2cd6ebd1c342be14c6cd0b7d"
+      },
+      "files_inspected": 9282,
+      "python_entry_count": 0
+    },
+    "platform_count": 5,
+    "previous_windows_audits": [
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 539,
+          "path": "target/go-native-release-1.0.3/windows-arm64-product-audit-r3.json",
+          "sha256": "fe51dd4fb6809928e6be4e7dfbee90be9385d983878f3d11572ff76126955cad"
+        },
+        "files_inspected": 9004,
+        "platform": "windows-arm64",
+        "python_entry_count": 0,
+        "source_tree_sha256": null
+      },
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 536,
+          "path": "target/go-native-release-1.0.3/windows-x64-product-audit-r3.json",
+          "sha256": "9e4fcf703c6c54ece489d38e58ac68198a8a458b3715d343dece7cc737357d54"
+        },
+        "files_inspected": 10689,
+        "platform": "windows-x64",
+        "python_entry_count": 0,
+        "source_tree_sha256": null
+      }
+    ],
+    "python_entry_count": 0,
+    "results": [
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 690,
+          "path": "target/go-native-release-1.0.3/linux-arm64-product-audit-final.json",
+          "sha256": "173d8c6a8c35f2e8c27c87c144f4b06d1c84c9ef9dba10a6b17300b89c0413c7"
+        },
+        "files_inspected": 4282,
+        "platform": "linux-arm64",
+        "python_entry_count": 0,
+        "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad"
+      },
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 645,
+          "path": "target/go-native-release-1.0.3/linux-x64-product-audit-final.json",
+          "sha256": "7e7a656eb271623df2408396c59a7c39fd659caa260db319bc0d3fd7914a1ecf"
+        },
+        "files_inspected": 4275,
+        "platform": "linux-x64",
+        "python_entry_count": 0,
+        "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad"
+      },
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 652,
+          "path": "target/go-native-release-1.0.3/macos/final-receipts-r4/product-audit.json",
+          "sha256": "5f551513d591c8565206b5271bf2e57b77e45145a3cd60a88a47280e1238bd6a"
+        },
+        "files_inspected": 9282,
+        "platform": "macos-arm64",
+        "python_entry_count": 0,
+        "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad"
+      },
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 633,
+          "path": "target/go-native-release-1.0.3/windows-arm64-product-audit-r4.json",
+          "sha256": "4a6f77b926ca7f101d0ca6d202276c2255bf55b1e0e088bbb04ff8cb0671e592"
+        },
+        "files_inspected": 9005,
+        "platform": "windows-arm64",
+        "python_entry_count": 0,
+        "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad"
+      },
+      {
+        "complete": true,
+        "evidence": {
+          "bytes": 630,
+          "path": "target/go-native-release-1.0.3/windows-x64-product-audit-r4.json",
+          "sha256": "cabf1188865569c4fb4f193edacebbd466dd01cd0df2b010b7c141388ad2c891"
+        },
+        "files_inspected": 10690,
+        "platform": "windows-x64",
+        "python_entry_count": 0,
+        "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad"
+      }
+    ],
+    "status": "pass"
+  },
+  "public_data_policy": {
+    "connection_addresses_or_accounts_included": false,
+    "copied_raw_private_receipts": false,
+    "private_log_bodies_included": false,
+    "private_profile_inventory_included": false,
+    "repository_relative_paths_only": true,
+    "user_absolute_paths_included": false
+  },
+  "report_date": "2026-10-23",
+  "retirement": {
+    "current_batch_files": 115,
+    "current_batch_groups": [
+      {
+        "files": 24,
+        "group": "runtime-maintenance-evidence",
+        "inventory_receipt": {
+          "bytes": 3920,
+          "path": "target/go-migration/retired-python-root.json",
+          "sha256": "8c2e91c1b4cd46e322038683c01f9407a99b547f06c74b13b0e65b8ab81ddb09"
+        }
+      },
+      {
+        "files": 19,
+        "group": "native-build-batch",
+        "inventory_receipt": {
+          "bytes": 5423,
+          "path": "target/go-migration/retired-python-build.json",
+          "sha256": "7ab39c6b4ef8f81107bf244e28aab395bbc179e3b5f0fec381528ac8a3a7debb"
+        }
+      },
+      {
+        "files": 17,
+        "group": "packaging-release",
+        "inventory_receipt": {
+          "bytes": 4231,
+          "path": "target/go-packaging-oracle/retired-python.json",
+          "sha256": "2dbcc7aad3f2c4af8721e4c708b4dedf3d782d070c5ab920104b0e6cc449a0cb"
+        }
+      },
+      {
+        "files": 55,
+        "group": "acceptance-fixtures-benchmarks",
+        "inventory_receipt": {
+          "bytes": 8053,
+          "path": "target/go-acceptance-equivalence/retired-python.json",
+          "sha256": "8ab2ac33db6247af4c0434702b11db2f51dfb030630221d781e7c510abb2d58f"
+        }
+      }
+    ],
+    "historical_cli_archive_commit": "3609553",
+    "historical_cli_scope": "Retirement of duplicate Python gate; scoped Rust coverage does not claim every original assertion was reproduced.",
+    "historical_cli_suites_archived": 30,
+    "historical_primary_migration": {
+      "evidence": {
+        "bytes": 2135,
+        "path": "target/go-migration/verification.json",
+        "sha256": "308ce7998b96ea0ec7a4cc88c2202ff746bc382c0ce522e347ef63f19496d7db"
+      },
+      "file_names_pending": true,
+      "note": "Old receipt reports six migrated entrypoints but its complete file inventory is unverified. Four historical docs/check Python tools are independently verified from Git history and listed separately; no total of 121 is claimed.",
+      "reported_entrypoints_removed": 6,
+      "verified_historical_python_files": [
+        {
+          "bytes": 11715,
+          "counted_in_current_batch": false,
+          "path": "tools/check_locales.py",
+          "replacement_modules": [
+            "tools/devtool/locales.go"
+          ],
+          "sha256": "fda06bb4bc699d83f240d181146bdc6fadb426b7b4636e482f14044a9b5d29ec",
+          "source_commit": "3609553"
+        },
+        {
+          "bytes": 6750,
+          "counted_in_current_batch": false,
+          "path": "tools/publish_docs.py",
+          "replacement_modules": [
+            "tools/devtool/docs.go"
+          ],
+          "sha256": "9d8d2e470fe17d48078d521792c43174fcc3bbde6a0424e5ae72315f56b82144",
+          "source_commit": "3609553"
+        },
+        {
+          "bytes": 5674,
+          "counted_in_current_batch": false,
+          "path": "tools/render_docs.py",
+          "replacement_modules": [
+            "tools/devtool/docs.go"
+          ],
+          "sha256": "0e535d7c71119c5de713eba5a4704820cfec99fb520e0bd94b4b5bb857ae666a",
+          "source_commit": "3609553"
+        },
+        {
+          "bytes": 11712,
+          "counted_in_current_batch": false,
+          "path": "tools/verify_repo_contract.py",
+          "replacement_modules": [
+            "tools/devtool/contract.go"
+          ],
+          "sha256": "49325427766411060cfbe64efed346e8545f1df3037944916352bd86562a01dd",
+          "source_commit": "3609553"
+        }
+      ],
+      "verified_per_file_inventory": false
+    },
+    "inventory": [
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/prepare_tls_provider.py",
+        "replacement_command": "prepare-tls-provider",
+        "replacement_modules": [
+          "tools/devtool/tls_provider.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "4ea4dca0c9a54095bbc2dbc6adaf253e2a67068529760746d697532f97100fe4"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/fetch_windows_runtime.py",
+        "replacement_command": "fetch-windows-runtime",
+        "replacement_modules": [
+          "tools/devtool/runtime_windows_inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "6bdbd34b03969d6178fa143efcf210e0cdb51eb2f2eef904677d297843ea8f85"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/prepare_windows_runtime.py",
+        "replacement_command": "prepare-windows-runtime",
+        "replacement_modules": [
+          "tools/devtool/runtime_windows_inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "c713cc4ff3b0f3a790b117ce3650c0d0c04b43a803a4ae30a5ca24616bbd27ad"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/prepare_windows_iconv.py",
+        "replacement_command": "prepare-windows-iconv",
+        "replacement_modules": [
+          "tools/devtool/runtime_windows_inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "0f8144ee3e43aabbe7f5e9e1ecb56f5dbfbee5e0d3c8bb894f3ccdf8916019e6"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/prepare_windows_psl.py",
+        "replacement_command": "prepare-windows-psl",
+        "replacement_modules": [
+          "tools/devtool/runtime_windows_inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "695c736d0d45bb4ce017ec653c53d48c2a412f7c8bc7df4b22d51c0e457aca82"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/extract_locale.py",
+        "replacement_command": "extract-locale",
+        "replacement_modules": [
+          "tools/devtool/locales.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "3e0e974b36dd2a607c2992674d2d5891e797dc208760bb4231c52cff91337e29"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/runtime_defaults.py",
+        "replacement_command": "runtime-defaults",
+        "replacement_modules": [
+          "tools/devtool/defaults.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "63805500dfa0786b005b1c00815ec15dd4952462a96329ec233e9af4ad354be6"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/check_runtime_defaults.py",
+        "replacement_command": "check-runtime-defaults",
+        "replacement_modules": [
+          "tools/devtool/defaults.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d3314f54da5a5c54c69332a6559adefcec4e745c473f12e65d80497e5269640a"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/install_runtime_defaults.py",
+        "replacement_command": "install-runtime-defaults",
+        "replacement_modules": [
+          "tools/devtool/defaults.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "03c4baf2ac7d744f49de3765d0ef3453ecd87bd714c16505b573c676f765e579"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/git_process_watchdog.py",
+        "replacement_command": "git-process-watchdog",
+        "replacement_modules": [
+          "tools/devtool/watchdog.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "a9a8ec866f8cd9c80e69f6cd1313d99b5c8b266ee80448b1a164b9dbd51f34cb"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/terminal_runtime_fixture.py",
+        "replacement_command": "terminal-runtime-fixture",
+        "replacement_modules": [
+          "tools/devtool/evidence.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "2fb60b08d0bd9762b18074446ff31c0256cb8b87bfe10e1c6bcd0b76c09f481d"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/native_msi_evidence.py",
+        "replacement_command": "native-msi-evidence",
+        "replacement_modules": [
+          "tools/devtool/evidence.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "31db16766668491ddca853e7014ff5e04ed22087c1d55b287c3db64540d94fc8"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/complete_native_batch.py",
+        "replacement_command": "complete-native-batch",
+        "replacement_modules": [
+          "tools/devtool/evidence_reports.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "a6713dc2933cb96bff2637bd1407a1538f32d38cf9c228bc14a2193d41c0859c"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/complete_native_repair_batch.py",
+        "replacement_command": "complete-native-repair-batch",
+        "replacement_modules": [
+          "tools/devtool/evidence_reports.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e9e7125aa1966b550662696ead1c68a953f9408d267625d9e293de669bd9b484"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/run_native_repair_cases.py",
+        "replacement_command": "run-native-repair-cases",
+        "replacement_modules": [
+          "tools/devtool/evidence_reports.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "7b00f0a16f2df8fcd5e053a4c223df5bc60cd2d15ebc4b1dff2ef5451a0f02a1"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/msi_lifecycle.py",
+        "replacement_command": "msi-lifecycle",
+        "replacement_modules": [
+          "tools/devtool/windows_maintenance.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "2ce1c80388c446740fe6297c9256f9855e213e6c445fd0e1f5a4e326a03ab20c"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/msi_inspect.py",
+        "replacement_command": "msi-inspect",
+        "replacement_modules": [
+          "tools/devtool/msiinspect.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "042ee90a05a658b0a442aab743d603e8fc08c1dea7ad5286a58323395d296fb9"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/repair_windows_entry_points.py",
+        "replacement_command": "repair-windows-entry-points",
+        "replacement_modules": [
+          "tools/devtool/windows_maintenance.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "dffd0aae74361ca3701222c147567c4ca2eb705e01ad6eee29ab4520e319e10d"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tools/verify_windows_bridge_guard.py",
+        "replacement_command": "verify-windows-bridge-guard",
+        "replacement_modules": [
+          "tools/devtool/windows_maintenance.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "4303f35bf192fc2a5b2c1e4d76959eda0ea559c40031dc2044b03630ba6524e5"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tests/containers/migration_host.py",
+        "replacement_command": "migration-host",
+        "replacement_modules": [
+          "tools/devtool/migration_fixture.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "0561205405069383fb01f3239d82bb6f3d421ada5639343efac7bccfa313f664"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tests/containers/migration_server.py",
+        "replacement_command": "migration-server",
+        "replacement_modules": [
+          "tools/devtool/migration_fixture.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "247047deb9bfbb35a591dcb7ec496738cfcb196fd1039a7effe8c4f09c759bdd"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tests/containers/migration_client.py",
+        "replacement_command": "migration-client",
+        "replacement_modules": [
+          "tools/devtool/migration_fixture.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "bc7fc9cae443bfdfe36f4a2e2bff82fa9794c204979efe739096dbd848f5ae5e"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tests/native_msi_evidence_test.py",
+        "replacement_command": null,
+        "replacement_modules": [
+          "tools/devtool/evidence_test.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "7b67c917d08b2615506a0fb7dbfd507f396ec4e65ae951a96ba216707b14fbb0"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "runtime-maintenance-evidence",
+        "path": "tests/native_repair_evidence_test.py",
+        "replacement_command": null,
+        "replacement_modules": [
+          "tools/devtool/evidence_reports_test.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "27552efa1f046375a7605ae404145e56e521676cbc6482454bb87c6309921e2d"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_native_core.py",
+        "replacement_command": "build-native-core",
+        "replacement_modules": [
+          "tools/devtool/build.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "459331fa513ab093aff65fa25f7a63b59f83a8d608ab8f696bc3e244abdcae46"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_native_dependencies.py",
+        "replacement_command": "build-native-dependencies",
+        "replacement_modules": [
+          "tools/devtool/build.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "94420c762f85f091c91f9d0ba53e28e884ed0096f305c85db3b0fcb26be83264"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_native_linux.py",
+        "replacement_command": "build-native-linux",
+        "replacement_modules": [
+          "tools/devtool/build_docker.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "b7af435f307fbdc219daf102df8725b06f1a3ffc79a8261211bdc74850682c79"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_native_posix.py",
+        "replacement_command": "build-native-posix",
+        "replacement_modules": [
+          "tools/devtool/nativeposix.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e1041884974ebbe92ac888296a1549cf3e3450c58fb1a8386eb3f7729f4d0b2f"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_posix_updater.py",
+        "replacement_command": "build-posix-updater",
+        "replacement_modules": [
+          "tools/devtool/inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "7c228a31608aefc929d30fb7f429c56cbd11cbe581f4250a493a9f9aab15d872"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_windows_bridge.py",
+        "replacement_command": "build-windows-bridge",
+        "replacement_modules": [
+          "tools/devtool/build_bridge.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d9b9366b2269658fd0b8123f4ff4451225ffe81e298af2c2c9339660e37b910e"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/build_windows_msi_worker.py",
+        "replacement_command": "build-windows-msi-worker",
+        "replacement_modules": [
+          "tools/devtool/build_bridge.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "866d4e97c20d914b2d4e820c7d0232a7dce55cad01941bbbc5657fbe79a8d185"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/verify_freestanding_bridge.py",
+        "replacement_command": "verify-freestanding-bridge",
+        "replacement_modules": [
+          "tools/devtool/build_bridge.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "bdb20a9458edaad71a7cadaed002b050f0b96c86c2d85d3c7cf220b617367bde"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/prepare_native_core.py",
+        "replacement_command": "prepare-native-core",
+        "replacement_modules": [
+          "tools/devtool/inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "c36b08f5c986c477a7558a290245eef86c72c6a1c044735e257ed3aceab6011a"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/integrate_native_core.py",
+        "replacement_command": "integrate-native-core",
+        "replacement_modules": [
+          "tools/devtool/integrate.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "0386f06435afdae7762bc07dddbfbb64779a3e3c8bd0daf30d8fdb8228e55d74"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/extract_build_archive.py",
+        "replacement_command": "extract-build-archive",
+        "replacement_modules": [
+          "tools/devtool/archive.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "5af1dee0dcb401aa6b71e6c833330ea394b1c71359335de8c5ef34c31261fbb7"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/extract_runtime_archive.py",
+        "replacement_command": "extract-runtime-archive",
+        "replacement_modules": [
+          "tools/devtool/archive.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "753d8bc124890c62f5da85a94f708cd3996c035459b7524e838383f54de45a5e"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/fetch_posix_helpers.py",
+        "replacement_command": "fetch-posix-helpers",
+        "replacement_modules": [
+          "tools/devtool/inputs.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "f0f7ed4779c7958e0cdc94f42968518bc012fd4447901f147bc20703fd1fe91c"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/prepare_llvm_mingw.py",
+        "replacement_command": "prepare-llvm-mingw",
+        "replacement_modules": [
+          "tools/devtool/archive.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d5031dd91b7faca9adf8e250c65d96bfe5395c06a85bea19167abd3c9f0576ad"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/freeze_native_batch.py",
+        "replacement_command": "freeze-native-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_freeze.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "5d7f6e502463462e0d09378b970634cd21a5fbabe960acef3ef325b3dd415e84"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/native_product_batch.py",
+        "replacement_command": "native-product-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "ff58668a373e97ad42c639a04ca95381354fbd51b03642aba8490e05036683e7"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/native_docker_batch.py",
+        "replacement_command": "native-docker-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "b3bb47572b7cb2fe371ca74df98b1771d27fc32ae3e07d51c4a24591e86381fc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/product_batch.py",
+        "replacement_command": "product-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "88490a7485ee0dcc44f4976f41bcae01b7cf3bd4c450dc7b02066f039b251fe5"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "native-build-batch",
+        "path": "tools/native_product.py",
+        "replacement_command": "native-product",
+        "replacement_modules": [
+          "tools/devtool/build_bridge.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "906826cc942f93cac2c13e0c8a361a93117b139587ecba93b92e109a32cc2150"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/assemble_native_windows.py",
+        "replacement_command": "assemble-native-windows",
+        "replacement_modules": [
+          "tools/devtool/packaging_assemble.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "872ec625e7d3898f41faaa696332a908104078a10fe34b456acff5d698412a64"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/assemble_native_posix.py",
+        "replacement_command": "assemble-native-posix",
+        "replacement_modules": [
+          "tools/devtool/packaging_assemble.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "bf6fc2051dcfde47c3200841cd33c7f4beb3641c857b00ebd0290e7340687f9f"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/collect_linux_runtime.py",
+        "replacement_command": "collect-linux-runtime",
+        "replacement_modules": [
+          "tools/devtool/posix_runtime.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "a9994632c09380f7838aed3e5a8e30eeb46a9d4c94b64d3817b5ac0a06637cc5"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/collect_macos_runtime.py",
+        "replacement_command": "collect-macos-runtime",
+        "replacement_modules": [
+          "tools/devtool/posix_runtime.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "9538eb53ed96564cfd91661deebd55ecc06b50f77f18f9514aa381e649ba438f"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/collect_posix_prerequisites.py",
+        "replacement_command": "collect-posix-prerequisites",
+        "replacement_modules": [
+          "tools/devtool/posix_prerequisites.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "f314db70b755f733336b180f748cad9b2c202b88005319fa13b50753516f8bfb"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/prepare_linux_runtime.py",
+        "replacement_command": "prepare-linux-runtime",
+        "replacement_modules": [
+          "tools/devtool/posix_docker.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "3a425dbdcd86cd5788768f2d1985fb6b592e68b4a88742159832f8f951c73bfc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/package_native_linux.py",
+        "replacement_command": "package-native-linux",
+        "replacement_modules": [
+          "tools/devtool/posix_docker.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "5d8d839d955cd8219bccead285152fff92c0020187352c5f06a5621900e020bc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/prepare_native_release.py",
+        "replacement_command": "prepare-native-release",
+        "replacement_modules": [
+          "tools/devtool/release_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "7ae40b6a40964ead9d284a30bccdd344601cb2e4638c29f08baf08e453a5491b"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/refresh_native_posix_defaults.py",
+        "replacement_command": "refresh-native-posix-defaults",
+        "replacement_modules": [
+          "tools/devtool/packaging_tar.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e598baed6a18099608a3c5f6464a8148f63fd27692f55cd5bdf5076ba94336ae"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/refresh_release_bootstrap.py",
+        "replacement_command": "refresh-release-bootstrap",
+        "replacement_modules": [
+          "tools/devtool/packaging_tar.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "2138bda5787524d21af2be9df3d096a5b26644432173dd4bece82cb4ec4a3232"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/repack_posix_updater.py",
+        "replacement_command": "repack-posix-updater",
+        "replacement_modules": [
+          "tools/devtool/packaging_tar.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "81afe6beb04de336b91603e6492573608583c0a6204f6d28926c4a50b87fab7b"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/prepare_corresponding_sources.py",
+        "replacement_command": "prepare-corresponding-sources",
+        "replacement_modules": [
+          "tools/devtool/packaging_assets.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "ee6df35b3f833760402cbb097b11cd66c665b60635939763d6dcd5279aab64ff"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/prepare_git_shared_assets.py",
+        "replacement_command": "prepare-git-shared-assets",
+        "replacement_modules": [
+          "tools/devtool/packaging_assets.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d1a2161db35d71adc31a5e3376ce4a0fa5b5c24a58a2965ffd223060867b57a3"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/prepare_git_terminal.py",
+        "replacement_command": "prepare-git-terminal",
+        "replacement_modules": [
+          "tools/devtool/packaging_assets.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "05b1c76eee9a65d826f3b439847c18d604c48954609140bec11435030072362d"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "tools/posix_images.py",
+        "replacement_command": null,
+        "replacement_modules": [
+          "tools/devtool/posix_images.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "0d6416a35e25c6b391dc24ff16ca312cacf93cc824b9a81f72ba062be2147098"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "packaging/build_msi.py",
+        "replacement_command": "build-msi",
+        "replacement_modules": [
+          "tools/devtool/packaging_msi.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d33bd73fedf0bb01533b60ddb747f4c1393fdd240db5bb2bc4246ac3ad27621c"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "packaging-release",
+        "path": "packaging/native_msi.py",
+        "replacement_command": "native-msi",
+        "replacement_modules": [
+          "tools/devtool/packaging_msi.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "dc05e40e6c8169eca4af4434a95cc1d7fc95619ca7c6e6c6a3555a87bbdf0a06"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/benchmark.py",
+        "replacement_command": "benchmark",
+        "replacement_modules": [
+          "tools/devtool/benchmark_local.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "2605d1990e8d007b54ade6f70defcabf59fb8bacaa5ec5ab35e05984a7deb7dc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/gcm_acceptance.py",
+        "replacement_command": "gcm-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_gcm.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "bf683730ef51cb70a2a9034253e46ee891301aa3b170775d95c331e7e353f377"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/merge_benchmark.py",
+        "replacement_command": "merge-benchmark",
+        "replacement_modules": [
+          "tools/devtool/benchmark_merge.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d8c455afbcc665d6f8adf427bf250b69c5614aaaa6307e63baa7bc7f42093414"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_common_cli_acceptance.py",
+        "replacement_command": "native-common-cli-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_common.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "b7121c9130440e70312f366cfa541e5e7352508943545a5aa3f740f301cfc937"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_contract_acceptance.py",
+        "replacement_command": "native-contract-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "1740a86469471db505b1798dd35057859786d332aab7422f4f6a21e9c0fc719f"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_discovery_acceptance.py",
+        "replacement_command": "native-discovery-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_discovery.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e078462acc73fd3c14c9f0272aa95673cfc4c9fb56102885d14fffc6de33b228"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_discovery_unix_acceptance.py",
+        "replacement_command": "native-discovery-unix-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_discovery.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "d5236601f534ae6dea89c747255a0a5fcb98df5caf6bdf581b6ad9068bae9bbc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_game_project_acceptance.py",
+        "replacement_command": "native-game-project-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_integrations.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "1486a82438467f89d9f0c8e305bb2fb961777df80009d1e2e47e3fe4f13618c9"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_integrations_acceptance.py",
+        "replacement_command": "native-integrations-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_integrations.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "2b8c70af36e0a989dd52a6bb442be24d469f3d7cfac97d4667a6b68c91d7c8a0"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/native_read_threads_acceptance.py",
+        "replacement_command": "native-read-threads-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_threads.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "21a7d7f4a8fb9caed0cd1f23fe6856c8aee263a226aafed587fc129eff312487"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/network_benchmark.py",
+        "replacement_command": "network-benchmark",
+        "replacement_modules": [
+          "tools/devtool/benchmark_network.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e54e34c9285fbea176788222568faf344bdcf28f6597e253be897087839b324a"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/process_measurement.py",
+        "replacement_command": null,
+        "replacement_modules": [
+          "tools/devtool/benchmark_process.go",
+          "tools/devtool/benchmark_memory_windows.go",
+          "tools/devtool/benchmark_memory_unix.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "1eb4e6accbc4bb1ae8c31e138f43b677578b9b0a798a224822d5e39a7b2f3802"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/reference_wide_stability.py",
+        "replacement_command": "reference-wide-stability",
+        "replacement_modules": [
+          "tools/devtool/benchmark_status.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "b06c2ca0454ab98bff44b370989ca43d19a573e39d8fa5e149b15e63c7456f60"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/status_benchmark.py",
+        "replacement_command": "status-benchmark",
+        "replacement_modules": [
+          "tools/devtool/benchmark_status.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "5f10a15534b93d27867a0a0eb17758b5312ba26d40270af51156542df3de62bd"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/terminal_acceptance.py",
+        "replacement_command": "terminal-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_native.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "de2c1a8b2d51187d265e7ba57793ac7c18b95a064a7fa69ebb22cdcdcd1452bc"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/windows_metadata_api_acceptance.py",
+        "replacement_command": "windows-metadata-api-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_metadata_windows.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "13f9957921d2fad17b61da21e443d56bb878a79d10a5e3e2f61ba00a06b06900"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/windows_msi_worker_acceptance.py",
+        "replacement_command": "windows-msi-worker-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_integrations.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "6bc501c3878fa8b43d548754a399043e263c93773f85badba791aa1f2d88fc61"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/containers/host.py",
+        "replacement_command": "native-docker-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_native.go",
+          "tools/devtool/acceptance_containers.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "73d24a2f1f62f4850bc05bbf562473c7e6538e39149b3073984606cee6dd5bfe"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/containers/mac_package_static.py",
+        "replacement_command": "mac-package-static",
+        "replacement_modules": [
+          "tools/devtool/acceptance_containers.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "e970a060fc9ad4fea2428288a3ff3c004a86ba27d0b50fc9f5412cdc8eec2b3c"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/containers/native_run.py",
+        "replacement_command": "native-docker-run",
+        "replacement_modules": [
+          "tools/devtool/acceptance_containers.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "29d4a5e6c524741bdcdce1f5b88e91fd92b577a199ef8bde14c75cf55a6b1ba9"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/containers/package_input.py",
+        "replacement_command": "package-input",
+        "replacement_modules": [
+          "tools/devtool/acceptance_containers.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "82b79633700a2c9ac7948fa929942c4c9b2c0c733d85ca34a0309b8deb5b6a05"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/containers/run.py",
+        "replacement_command": "native-docker-batch",
+        "replacement_modules": [
+          "tools/devtool/batch_native.go",
+          "tools/devtool/acceptance_containers.go"
+        ],
+        "retirement_reason": "共享逻辑或原测试迁至列出的 Go 模块/单元测试；保留调用链能力，删除 Python 模块。",
+        "sha256": "73d24a2f1f62f4850bc05bbf562473c7e6538e39149b3073984606cee6dd5bfe"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "d45a344acc9a16643b97fda447f7c54b707621bfbdabf18ab8f8b8d7813fa0c1"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/add_directory_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "2700a3d7a0bdd705b5bb948c866e25d87ecf2be1f9a2165e3f5310a607675e42"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/commit_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "00e3e19178796b53af9feb1405049ffa7d1d56b65d0d51ebf152cd1c5f456637"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/config_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "c548aaf3f38aa20b60923427a6c83c2ac41b6d29700ba68dfaf3e7f83557eaf6"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/diff_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "5c4004ff626c7a6fbe6a2b05cdbfbfa65176dc6fc57a8c137dc82e96b0fc4b95"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/eol_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "89ab54156d2ef555e0e5fd887fab583b5a007aabdbaa29fc2bae5fc486326922"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/extended_commands_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "05f96c3ba3470ff273b2faeb689feacf64e1390ff99ebee4022dbea861a41877"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/language_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "b95a32a706affcc0ec16a5b3786f71fc3071809b448677074f42d5049ab95025"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/lfs_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "ec38228085b24879113dedf28cb575cf9574e3f5c4f3420694a8da40ce20ee1b"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/lfs_transfer_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "93ac7890e4e1c71fd62115410f7c836df72799438eb6ad99c0868d8e72568c6e"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/merge_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "f17df165ed844a27a61a899de0a8393794bf24bec8d8d254dfb6621e2e7ba5e5"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/merge_message_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "07eaabbd55ecc25bc401b8080a155421d46b470190e71d8512f2514899322fea"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/merge_pending_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "5f4883cb3666825d26d8d9804033b21f6652232ad3041767d9f24047c33109ec"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/plumbing_cli_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "046250da4700bea0359849b0b23a33a0a7a91bdd11c30c50017dd81e425981ea"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/push_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "0e74a085ff48efafc349bb305d260bdd6eb9a82575e6e4409dad009c7173d44b"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/repository_format_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "6fe44479314b8540afcdf3d49463a08d04d97e3b36c457667ff633bd11786e42"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/restore_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "64fd28794b8bab0f14ea26d421905079b456ac4fc5cc45d02c038c1f59433dc7"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/ssh_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "a736d2c87ad0f7c8ff1579fcae66c2616310015ce3cbb17c76b9d294e2164a1f"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_cache_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "6306a9084071f3f6df35df8a6e5b707ea3b99d7006c7b3560538458679f68cc5"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_directory_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "6a16bf1287607b1d508f64d386bb70ecbf61a65de10b5d5110bb0ee60bc7f669"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_format_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "3879e3be397a38fcb66464e25a052f18727f63cd37c6e7a60fbce034814e4431"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_head_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "fe32b544d387c71702cce1aa71b9332f4136b452a5683e8d7a32d0fdd339f1dd"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_head_paths_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "abd40e7837dfcab40432bf3e35dd4b97e1c8bd6eb05be1a0ec40cd4d1562c6e3"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_ignored_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "928b89895947d408a91d33374b03fc3fd7e4cacd9b5b0f68ef8a0d681f5d5039"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_long_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "ecd0aa9b12f27ae227181b74125e9bf3573b0d479c4c052931628cc522d954f9"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_operation_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "aabf0bc4b66ff4c0ad068d2cd7dd787cc07aad927b745e6566f59e1dcdf3afcd"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_v2_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "8c59569db4bd241151200d031362a745bcb6940fab7fce9e29b3871287dd7fcc"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/status_wide_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "7de1c0f7321b5e52bd3d30975d43a657c4c4e94de55bed46bd1ce47dfe0f4a1b"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/tag_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "39c650611c6776b8381f9d2894a53439e5808a309acfbd2e468c0103939c6aa0"
+      },
+      {
+        "coverage": "historical-suite-archived-scoped-rust-gate",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/legacy_cli/worktree_acceptance.py",
+        "replacement_command": "git-next-accept --tier full",
+        "replacement_modules": [
+          "accept-runner/src/main.rs",
+          "accept-runner/src/cli39.rs",
+          "accept-runner/src/suite/mod.rs",
+          "accept-runner/src/suite/local_broad.rs",
+          "accept-runner/src/suite/local_conformance.rs",
+          "accept-runner/src/suite/local_deep.rs",
+          "accept-runner/src/suite/network.rs"
+        ],
+        "retirement_reason": "退役重复的 Python CLI 主门禁；原断言保留于 Git 历史 3609553，Rust 为唯一现行门禁，未声称全部历史断言等量迁入。",
+        "sha256": "85c899fa294e6314cf156746340f04f553ef6a93992482a44ed0b752fbfac5cb"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tools/git_http_fixture.py",
+        "replacement_command": "git-http-fixture",
+        "replacement_modules": [
+          "tools/devtool/fixture_http.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "88039f4a5d852224b15c291beaedf3eb859fbce13825f6b690219fec58b9c093"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tools/benchmark_clone.py",
+        "replacement_command": "benchmark-clone",
+        "replacement_modules": [
+          "tools/devtool/benchmark_clone.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "93baa8089ea39cf9e8507164318a1b5791591fbc0a9e9bbf78c60c18d8cef292"
+      },
+      {
+        "coverage": "go-equivalence-oracle",
+        "deleted_from_current_owned_tree": true,
+        "group": "acceptance-fixtures-benchmarks",
+        "path": "tests/terminal_product_acceptance.py",
+        "replacement_command": "terminal-product-acceptance",
+        "replacement_modules": [
+          "tools/devtool/acceptance_terminal_product.go"
+        ],
+        "retirement_reason": "能力迁至 Go，保留原选项、输入锁、产物/证据布局及适用平台边界。",
+        "sha256": "a1a060062b149c5c5ed5b304ceb8790a20962891bd0629a680ec8d5bdf2c383e"
+      }
+    ],
+    "owned_checkout_audit": {
+      "complete": true,
+      "evidence": {
+        "bytes": 472,
+        "path": "target/go-migration/python-retirement-current.json",
+        "sha256": "7bd7ca086e1b583caa92db38fd6a3a51e32cf2aef839bb1c0b7add59b07c63fc"
+      },
+      "python_execution_entrypoint_count": 0,
+      "remaining_python_files": 0
+    },
+    "unique_current_batch_paths": 115
+  },
+  "rust_cli": {
+    "complete_git_parity": false,
+    "historical_coverage_gaps_preserved": true,
+    "macos_arm64": {
+      "actual_hardware": true,
+      "binary_checksums": [
+        {
+          "path": "target/release/git",
+          "sha256": "838568fe3de813576cf940c40376f5ede1ec1dbe9bc7413c2d35be2b23336b45"
+        },
+        {
+          "path": "accept-runner/target/release/git-next-accept",
+          "sha256": "f3eca32167b0584cea449990b16839f9aa4fbd08b0273930a0e2647654bd57f3"
+        }
+      ],
+      "evidence": [
+        {
+          "bytes": 1095,
+          "path": "target/go-native-release-1.0.3/macos/rust-gate-summary.json",
+          "sha256": "0c51d428497bfb5cdcf5ec234f11bc5c8239fad05dc6aad48f3407534105ea36"
+        },
+        {
+          "bytes": 15875,
+          "path": "target/go-native-release-1.0.3/macos/rust-final-receipts/accept-full.json",
+          "sha256": "92ba31700ba7bd1478bb0560fae8d4a4b8f3ecafa11b3a54a292fdc9d9dbe770"
+        }
+      ],
+      "failed": 0,
+      "full_report_sha256": "92ba31700ba7bd1478bb0560fae8d4a4b8f3ecafa11b3a54a292fdc9d9dbe770",
+      "l0_report_sha256": "ae34af4b4f8e4fc72dd8e32aac61680116ffa5d6d563353263045e95e29e4e51",
+      "passed": 100,
+      "skipped": 0,
+      "source_inputs_sha256": "1875a205adf91085de6b54065679b4b5d5fa3a03e0f66c625c6503c5e57f9221",
+      "tier": "full"
+    },
+    "scope": "Rust client and Rust acceptance runner; independent of native C product release.",
+    "windows_x64": {
+      "binary_hashes_before_and_after_match": true,
+      "client_sha256": "5ebbee081418abaa84011d585ebaecdaae244cd3cc236953cfa8538e9f9349fd",
+      "current_client_and_runner_hashes_verified": true,
+      "evidence": [
+        {
+          "bytes": 6273,
+          "path": "target/go-native-release-1.0.3/rust-windows-final/binding.json",
+          "sha256": "680c04e4854f249bf740b3bf57d6855d8e120927cabc3f57ef5d41f19d69298a"
+        },
+        {
+          "bytes": 15856,
+          "path": "target/go-native-release-1.0.3/rust-windows-final/full.json",
+          "sha256": "b1937d35fffedf491bc2fb4546ad44695302d1c1d4a022c997e812c9a2daff29"
+        },
+        {
+          "bytes": 6236,
+          "path": "target/go-native-release-1.0.3/rust-windows-final/full.log",
+          "sha256": "3ae14bfeec4dbc67f97f742865562727c56c5a42b59bcdd2d5b1b43993f7189d"
+        }
+      ],
+      "failed": 0,
+      "log_sha256": "3ae14bfeec4dbc67f97f742865562727c56c5a42b59bcdd2d5b1b43993f7189d",
+      "passed": 100,
+      "report_sha256": "b1937d35fffedf491bc2fb4546ad44695302d1c1d4a022c997e812c9a2daff29",
+      "runner_sha256": "a63c9da28d6bddd8edb6b129cb1ce66e06dadb35c3294dab3c2a3eb3f59ab8cb",
+      "skipped": 0,
+      "source_files_before_and_after_match": true,
+      "status": "pass",
+      "tier": "full"
+    }
+  },
+  "schema_version": 1,
+  "scope": "Owned Python tooling retirement; Rust CLI acceptance; Go build/package/docs/release/fixture tooling; Go product git-p4. Compiler and oracle evidence do not establish release or workstation acceptance.",
+  "status": "local-gates-complete-with-user-terminal-waiver-release-actions-pending",
+  "windows_arm64_boundary": {
+    "actual_arm64_runtime_accepted": false,
+    "native_core": "built",
+    "pe_architecture": "verified",
+    "python_audit": "pass",
+    "scope": "Build, PE/static package checks only; no real Windows ARM64 execution or installation claim."
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "acceptance_batch": {
+    "bytes": 3454,
+    "path": "target/go-native-release-1.0.3/final-performance-r6/batch.json",
+    "sha256": "bb4f3bbd3eaa93b15175d4b8a9d859a7ffc0f65c0417bcd027149b4c8be16fbd"
+  },
+  "actual_data_directories": 1000,
+  "arch": "amd64",
+  "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+  "cache": "warm after 3 unmeasured runs; OS cache not flushed",
+  "client_core_fscache": "default",
+  "command_timeout_seconds": 120,
+  "configured_data_directories": 1000,
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "cpu_count": 32,
+  "files": 100000,
+  "fixture_layout": "packed",
+  "fixture_local_eol": "input/lf",
+  "fixture_setup_timeout_seconds": 180,
+  "full_git_parity": false,
+  "harness_sha256": "61d0e03070218d6d64ad86f9c4768bfe2c7339482cb439a2fa2cd0c57c53d24e",
+  "memory_scope": "Windows primary process peak working set; queried after latency interval; child processes excluded",
+  "os": "Windows-10.0.26300",
+  "public_export_scope": "Exact original paired report fields selected by an explicit allowlist; no private paths, profile listings or log bodies",
+  "randomized_order_generator": "Go math/rand Source",
+  "randomized_order_seed": 233,
+  "reference_read_safety_overrides": [
+    "core.fscache=false",
+    "core.fsmonitor=false",
+    "core.preloadIndex=false",
+    "index.threads=1",
+    "grep.threads=1"
+  ],
+  "results": {
+    "cat_file": {
+      "git": {
+        "median_ms": 28.455,
+        "min_ms": 27.564,
+        "p95_ms": 31.177,
+        "peak_working_set_median_bytes": 6944768,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 17.674,
+        "min_ms": 15.581,
+        "p95_ms": 19.696,
+        "peak_working_set_median_bytes": 11286528,
+        "peak_working_set_p95_bytes": 11300864,
+        "peak_working_set_samples": 10
+      }
+    },
+    "diff_clean": {
+      "git": {
+        "median_ms": 1674.215,
+        "min_ms": 1540.171,
+        "p95_ms": 1864.504,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 1640.182,
+        "min_ms": 1520.753,
+        "p95_ms": 1714.801,
+        "peak_working_set_median_bytes": 33513472,
+        "peak_working_set_p95_bytes": 33579008,
+        "peak_working_set_samples": 10
+      }
+    },
+    "grep_files": {
+      "git": {
+        "median_ms": 10391.285,
+        "min_ms": 9274.793,
+        "p95_ms": 11732.632,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 9698.981,
+        "min_ms": 9394.721,
+        "p95_ms": 12116.947,
+        "peak_working_set_median_bytes": 33562624,
+        "peak_working_set_p95_bytes": 33591296,
+        "peak_working_set_samples": 10
+      }
+    },
+    "log_metadata": {
+      "git": {
+        "median_ms": 29.94,
+        "min_ms": 27.255,
+        "p95_ms": 40.073,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6946816,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 19.293,
+        "min_ms": 17.863,
+        "p95_ms": 20.663,
+        "peak_working_set_median_bytes": 12017664,
+        "peak_working_set_p95_bytes": 12029952,
+        "peak_working_set_samples": 10
+      }
+    },
+    "rev_parse": {
+      "git": {
+        "median_ms": 27.866,
+        "min_ms": 26.006,
+        "p95_ms": 32.672,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 17.471,
+        "min_ms": 15.596,
+        "p95_ms": 19.083,
+        "peak_working_set_median_bytes": 10930176,
+        "peak_working_set_p95_bytes": 10940416,
+        "peak_working_set_samples": 10
+      }
+    },
+    "show_metadata": {
+      "git": {
+        "median_ms": 83.85,
+        "min_ms": 76.909,
+        "p95_ms": 89.714,
+        "peak_working_set_median_bytes": 6950912,
+        "peak_working_set_p95_bytes": 6955008,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 72.212,
+        "min_ms": 66.911,
+        "p95_ms": 79.799,
+        "peak_working_set_median_bytes": 52094976,
+        "peak_working_set_p95_bytes": 52158464,
+        "peak_working_set_samples": 10
+      }
+    },
+    "status_clean": {
+      "git": {
+        "median_ms": 1666.073,
+        "min_ms": 1527.09,
+        "p95_ms": 1736.873,
+        "peak_working_set_median_bytes": 6944768,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 1656.999,
+        "min_ms": 1537.21,
+        "p95_ms": 1738.231,
+        "peak_working_set_median_bytes": 33423360,
+        "peak_working_set_p95_bytes": 33460224,
+        "peak_working_set_samples": 10
+      }
+    },
+    "version": {
+      "git": {
+        "median_ms": 25.228,
+        "min_ms": 23.127,
+        "p95_ms": 37.548,
+        "peak_working_set_median_bytes": 6946816,
+        "peak_working_set_p95_bytes": 6950912,
+        "peak_working_set_samples": 10
+      },
+      "git_next": {
+        "median_ms": 14.118,
+        "min_ms": 13.475,
+        "p95_ms": 15.234,
+        "peak_working_set_median_bytes": 10508288,
+        "peak_working_set_p95_bytes": 10530816,
+        "peak_working_set_samples": 10
+      }
+    }
+  },
+  "runs_per_client_per_command": 10,
+  "runtime_git_ssh_on_path": false,
+  "schema_version": 1,
+  "scope": "process creation + command + captured output; local disposable SHA-1 repository",
+  "source_hash_origin": "recorded checkpoint verified against binary hash",
+  "source_report": {
+    "bytes": 5775,
+    "path": "target/go-native-release-1.0.3/final-performance-r6/performance-100000.json",
+    "sha256": "95c33fee4b591f169e12d3f0f0f0cd73add7a2e7f30111d886d5cc714af386a8"
+  },
+  "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+  "system_configuration": "enabled conventional filesystem paths",
+  "versions": {
+    "git": "git version 2.56.0.windows.3",
+    "git_next": "git version 2.54.0.windows.1.git-next.1.0.3"
+  }
+}

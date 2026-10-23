@@ -1,8 +1,8 @@
 # git-next 固定交付清单与进度
 
-## 当前交付范围 · 1.0.3 candidate（2026-10-23）
+## 当前交付范围 · 1.0.3 本地门禁完成（2026-10-24）
 
-本轮完成 Python 工具链退役，准备一次整合发布。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。2026-10-23 核验的最新已发布版本为 [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1)，本轮尚未发布。
+本轮完成 Python 工具链退役及声明范围内的本地正确性、成对性能门禁，准备一次整合发布。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。此源码快照的 release staging、工作站安装/更新、push 和发布仍为 pending；预计的 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 不表示这些动作已发生。
 
 115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前不存在 `tests/legacy_cli/`，Rust 的 100 场景也不代表全部历史断言逐条等量迁移。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
 
@@ -13,11 +13,17 @@
 | Linux native | x64、ARM64 Docker 各 52 场景和两路 owned Git/P4 入口通过；产品 Python 扫描为 0。ARM64 为 Windows x64 上 Docker Desktop 执行 ARM64 进程，不宣称真实 ARM64 硬件验收。 |
 | macOS native | 真实 Apple Silicon macOS 15.5 上 51 场景及两路 owned Git/P4 入口通过；同一归档通过独立 Mach-O/shell 静态检查及目录/归档 Python 0 扫描。Darwin CPU affinity 约束明确不支持。 |
 | Windows ARM64 | native core/bridge/helper 交叉编译、PE/导入和包静态检查；尚无真实 ARM64 运行或安装验收。 |
-| Windows r4 默认值 | 权威片段采用 `core.fscache=false`、`core.fsmonitor=false`、`core.preloadIndex=false`、`index.threads=1`、`grep.threads=1`；同一 core 的隔离 4,000 文件对照完成 30 轮 grep/status 和 6 项契约。R4 组合批次的 read-thread lane 已通过，最终安装与工作站状态另行绑定。 |
+| Windows 稳定默认值 | 权威片段采用 `core.fscache=false`、`core.fsmonitor=false`、`core.preloadIndex=false`、`index.threads=1`、`grep.threads=1`；同一 core 的隔离 4,000 文件对照完成 30 轮 grep/status 和 6 项契约。最终 R6 的 read-thread lane 通过，工作站安装状态另行绑定。 |
 
-Windows 默认值对照保留原 `true/0` 配置在第 21 轮只返回 3,999/4,000 文件的失败证据，保持完整输出断言。该对照没有证明内部根因或性能优势；用户、仓库和命令行显式配置仍有正常优先级。POSIX 包不消费此 Windows defaults fragment，现有已验收 POSIX 归档字节保持不变。[公开对照回执](benchmarks/windows-read-safety-20261023.json)。
+Windows 默认值对照保留原 `true/0` 配置在第 21 轮只返回 3,999/4,000 文件的失败证据，保持完整输出断言。该对照没有证明内部根因或性能优势；用户、仓库和命令行显式配置仍有正常优先级。POSIX 包不消费此 Windows defaults fragment，现有已验收 POSIX 归档字节保持不变。[公开对照回执](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/windows-read-safety-20261023.json)。
 
-**最终整合状态：pending。** 已完成的 R4 correctness 原报告为 18 lane 中 16 成功、2 失败：`terminal-native-desktop` 在 GUI startup 失败，`msi-user` 在用户级 rollback 失败；原报告和失败保持不变。用户随后明确豁免后续 Git-Terminal 专项验证，仅覆盖 `terminal-rust-contracts` 与 `terminal-native-desktop`，不将豁免计作通过。豁免授权与最终矩阵/校验和的绑定尚待完成；MSI rollback 修复仍需重新验收。最终正确性、5 个 paired-performance lane、Windows installer lifecycle、工作站安装/更新、校验及配置的签名验证、push 和一次整合发布均以准确产物及 harness SHA 的最终回执收尾。当前不声明本轮 10/10、工作站接管完成或 1.0.3 已发布。[机器可读状态](DELIVERY_STATUS.json) 中 `current_release_evidence` 单列本轮结果与待完成项。
+**本地门禁完成。** 最终 R6 correctness 为 18 lane 中 **16 通过、2 项用户豁免**，耗时 **246.204 秒**；同一冻结矩阵的 paired performance 为 **5/5 通过、691.251 秒**，覆盖 1k/10k/100k 文件和 loopback HTTPS，各 10 对样本，含冻结输入回读。性能通过表示完整批次与输出校验完成，不表示所有场景更快；两批次均未达到全批次 60 秒目标。实现提交为 `f2e5c1b0f9966f18c08dff1718e759833e9ff819`，冻结矩阵为 `final-matrix-r6.json`，SHA-256 `685686ff842eeb32a5343c51930cf2d983f132f80e47430a14ff70c528ad7260`。[公开总证据](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md)及其 [JSON](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)记录原始回执身份和历史失败。
+
+Windows x64 MSI 用户级实际通过 **27 项、622.690 秒**，机器级通过 **25 项、473.217 秒**，包含安装、修复、升级、注入失败回滚、拒绝降级和卸载。R6 只在不可变输入及严格限定的工具变化校验通过后复用这些真实回执；246.204 秒不是把完整 MSI 事务重新执行一遍的总耗时。Windows ARM64 的两个 MSI 只有编译、表及静态检查，不声明硬件生命周期验收。这些隔离生命周期通过也不表示最终工作站安装已发生。
+
+用户豁免只覆盖 `terminal-rust-contracts` 与 `terminal-native-desktop`，结果保留为 `waived`，不计作通过。`terminal-waiver-r6.json` 的 SHA-256 为 `0286de6e4fba224269c28e8f75fe8c4327f30b004b3ac31d23fd80ca2b4d41f7`，绑定同一 R6 矩阵及两个架构的确切终端字节。R4 的 GUI startup/MSI rollback 失败、R5b 因主控缺少 Go PATH 导致的四个 Docker lane 失败和 R5c 的 100k grep 失败均保留。R6 修复 benchmark 超时分类并将 100k 单命令 deadline 调为 120 秒，完整输出、退出码、fsck 和 3 次 warmup + 10 对实测校验保留；原 R5c 失败根因仍未确定，不改写为已证明的超时。
+
+**后续交付动作：pending。** 最终 release staging、暂存产物校验和及配置的签名验证、工作站安装/更新与配置回读、push 和一次整合发布尚未发生或尚未形成最终回执。发布后的动作与远端资产回读由 release 资产和后续文档记录；此源码快照不预先声明本轮 10/10、工作站接管完成或 1.0.3 已发布。[机器可读状态](https://github.com/neko233-com/git-next/blob/main/docs/DELIVERY_STATUS.json) 中 `current_release_evidence` 分开记录本地门禁与交付动作。
 
 ## 历史已发布版本 · v0.3.0（2026-10-21）
 

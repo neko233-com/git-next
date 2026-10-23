@@ -1,6 +1,6 @@
 # git-next
 
-The 1.0.3 delivery candidate uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. Final local gates and publication remain pending. The latest published release checked on 2026-10-23 is [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1).
+The 1.0.3 distribution uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. Local correctness and paired performance gates are complete within the recorded scope. Release staging, workstation activation, push and publication are tracked separately in [delivery status](docs/DELIVERY_STATUS.md).
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
@@ -8,15 +8,15 @@ Go now owns build, packaging, documentation, fixtures, benchmarks and release to
 
 The independent Rust client is a preview with its own [Rust acceptance runner](docs/GIT_NEXT_ACCEPTANCE.md). Windows x64 and real macOS ARM64 each pass full's 100 scoped scenarios; L0 covers 39 commands. These reports describe the Rust client, while the native C distribution has separate package, runtime and installer gates. `complete_git_parity` remains false, and the Rust suite does not claim a one-for-one port of every historical assertion. [Compatibility](docs/COMPATIBILITY.md).
 
-Current native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. Final correctness, paired performance, installer/workstation acceptance and publication remain tracked separately. Further Git-Terminal-specific validation is waived by the user; existing failures remain recorded. [Delivery status](docs/DELIVERY_STATUS.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
+Current native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. R6 correctness records 16 passed lanes and two user-waived terminal lanes in 246.204 seconds; paired performance passes all five lanes in 691.251 seconds. Windows x64 user/machine MSI lifecycles pass 27/25 checks; those exact-input receipts are reused by the final batch. Waived terminal checks and earlier failures remain explicit. [Evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
 
 ## Native packages
 
-Download accepted packages from [GitHub Releases](https://github.com/neko233-com/git-next/releases). Candidate build output is not an installation recommendation. Released Windows packages include the owned runtime and require no Rust compiler.
+Download published packages and checksums from [GitHub Releases](https://github.com/neko233-com/git-next/releases). The planned [v1.0.3 release page](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) does not establish publication; the source-time delivery snapshot records pending delivery actions. Windows packages include the owned runtime and require no Rust compiler.
 
 | Platform | Package | Boundary |
 | --- | --- | --- |
-| Windows x64 / ARM64 | Machine MSI or user MSI | Machine installation requires administrator rights |
+| Windows x64 / ARM64 | Machine MSI or user MSI | Machine installation requires administrator rights; x64 has actual lifecycle evidence, ARM64 has build/table/static checks |
 | Linux x64 / ARM64 | Complete tar.gz with install.sh | Debian 12 / glibc 2.36 or compatible system |
 | macOS Apple Silicon | Complete tar.gz with install.sh | macOS 15.5+; real ARM64 runtime acceptance and independent package/Mach-O/shell checks; CPU-affinity constraints unsupported |
 

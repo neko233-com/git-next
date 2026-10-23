@@ -1,14 +1,35 @@
 # Production readiness
 
-This page answers one question: what is still missing before git-next can be the
-default `git` on a machine that matters. It is a gap list, not a roadmap of wishes.
-Every item names what is missing, what it costs the user today, what "done" means,
-and what evidence would close it.
+## Current 1.0.3 local evidence · 2026-10-24
 
-The current release is **1.0.2**. Linux x64 is a Debian 12 build, maximum glibc
+The native C distribution has completed R6 correctness with 16 passed lanes and
+two explicitly user-waived Git-Terminal lanes in 246.204 seconds. Windows x64
+has actual MSI install/repair/upgrade/failure-rollback/uninstall evidence for
+27 user-scope and 25 machine-scope checks. Real Apple Silicon macOS 15.5 has
+51 native scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated
+ARM64 each have 52 scenarios and two dispatch checks. Windows ARM64 has build,
+PE/table and static-package evidence, not hardware runtime/lifecycle acceptance.
+Performance, staging, workstation activation and publication remain separate;
+[delivery status](DELIVERY_STATUS.md) records their current state. The Rust
+preview's `complete_git_parity: false` and five blockers below do not describe
+the native product's command surface or establish its release eligibility.
+
+## Historical packaging and Rust preview readiness notes
+
+The remainder preserves earlier packaging observations and preview gap lists.
+Their host, version, runtime and installation limitations belong to those
+checkpoints, not the current 1.0.3 native evidence above. Historical source or
+package identities also do not establish that a GitHub release was published.
+
+The historical gap list asked what was missing before git-next could become the
+default `git`. Each item records that checkpoint's missing behavior, user cost,
+completion condition and required evidence; it is not the current native release
+checklist.
+
+An earlier **1.0.2 packaging checkpoint** recorded a Linux x64 Debian 12 build, maximum glibc
 2.34, and `git`, `git-remote-http`, `git-remote-https`, `git-remote-ftp` and
 `git-remote-ftps` report `2.54.0.git-next.1.0.2`. Windows x64 and ARM64 machine
-and user installers are in the same release and use the `git-default-v2`
+and user installers in that checkpoint use the `git-default-v2`
 directory: `%ProgramFiles%\Git` and `%LOCALAPPDATA%\Programs\Git`. 1.0.0
 replaced `git` and `git-remote-http` only; the other three scheme helpers were
 still the 0.3.0 binaries, and that release had no Windows installer.
@@ -17,7 +38,7 @@ true. The Rust preview's root `compatibility.json` still reports
 `complete_git_parity: false`; the five blockers below belong to that preview
 contract, not to the native package.
 
-The Windows git program in this release is the accepted 0.3.0 engine with the
+The Windows git program at that checkpoint is the accepted 0.3.0 engine with the
 product identity rewritten to 1.0.2. This packaging host did not run MSVC 14.44.
 The legacy command bridge is a new CRT-free build: full `/O2`,
 `freestanding-memory.c` for `memcpy`, `memset`, `memmove` and `memcmp`, and no

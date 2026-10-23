@@ -1,12 +1,29 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Production readiness</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Production readiness</h1>
-<p>This page answers one question: what is still missing before git-next can be the
-default <code>git</code> on a machine that matters. It is a gap list, not a roadmap of wishes.
-Every item names what is missing, what it costs the user today, what &quot;done&quot; means,
-and what evidence would close it.</p>
-<p>The current release is <strong>1.0.2</strong>. Linux x64 is a Debian 12 build, maximum glibc
+<h2>Current 1.0.3 local evidence · 2026-10-24</h2>
+<p>The native C distribution has completed R6 correctness with 16 passed lanes and
+two explicitly user-waived Git-Terminal lanes in 246.204 seconds. Windows x64
+has actual MSI install/repair/upgrade/failure-rollback/uninstall evidence for
+27 user-scope and 25 machine-scope checks. Real Apple Silicon macOS 15.5 has
+51 native scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated
+ARM64 each have 52 scenarios and two dispatch checks. Windows ARM64 has build,
+PE/table and static-package evidence, not hardware runtime/lifecycle acceptance.
+Performance, staging, workstation activation and publication remain separate;
+<a href="delivery-status.html">delivery status</a> records their current state. The Rust
+preview's <code>complete_git_parity: false</code> and five blockers below do not describe
+the native product's command surface or establish its release eligibility.</p>
+<h2>Historical packaging and Rust preview readiness notes</h2>
+<p>The remainder preserves earlier packaging observations and preview gap lists.
+Their host, version, runtime and installation limitations belong to those
+checkpoints, not the current 1.0.3 native evidence above. Historical source or
+package identities also do not establish that a GitHub release was published.</p>
+<p>The historical gap list asked what was missing before git-next could become the
+default <code>git</code>. Each item records that checkpoint's missing behavior, user cost,
+completion condition and required evidence; it is not the current native release
+checklist.</p>
+<p>An earlier <strong>1.0.2 packaging checkpoint</strong> recorded a Linux x64 Debian 12 build, maximum glibc
 2.34, and <code>git</code>, <code>git-remote-http</code>, <code>git-remote-https</code>, <code>git-remote-ftp</code> and
 <code>git-remote-ftps</code> report <code>2.54.0.git-next.1.0.2</code>. Windows x64 and ARM64 machine
-and user installers are in the same release and use the <code>git-default-v2</code>
+and user installers in that checkpoint use the <code>git-default-v2</code>
 directory: <code>%ProgramFiles%\Git</code> and <code>%LOCALAPPDATA%\Programs\Git</code>. 1.0.0
 replaced <code>git</code> and <code>git-remote-http</code> only; the other three scheme helpers were
 still the 0.3.0 binaries, and that release had no Windows installer.
@@ -14,7 +31,7 @@ still the 0.3.0 binaries, and that release had no Windows installer.
 true. The Rust preview's root <code>compatibility.json</code> still reports
 <code>complete_git_parity: false</code>; the five blockers below belong to that preview
 contract, not to the native package.</p>
-<p>The Windows git program in this release is the accepted 0.3.0 engine with the
+<p>The Windows git program at that checkpoint is the accepted 0.3.0 engine with the
 product identity rewritten to 1.0.2. This packaging host did not run MSVC 14.44.
 The legacy command bridge is a new CRT-free build: full <code>/O2</code>,
 <code>freestanding-memory.c</code> for <code>memcpy</code>, <code>memset</code>, <code>memmove</code> and <code>memcmp</code>, and no

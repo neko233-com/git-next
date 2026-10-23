@@ -84,6 +84,13 @@ also preserves rejected candidates, the R5b missing-Go-PATH failure and the user
 two terminal-case waivers. <code>waived</code> remains distinct from <code>pass</code>; neither a
 partial installer report nor a successful compilation substitutes for a complete
 artifact-bound product gate.</p>
+<p>The final R6 local checkpoint completed correctness with 16 passed / 2 waived
+lanes in 246.204 seconds, and all five paired-performance lanes in 691.251 seconds.
+The report's false release/installation/publication flags describe actions still
+pending at that source checkpoint; they do not negate those completed gates.
+Actual subsequent staging, workstation acceptance and publication are recorded
+in a separate public release-completion asset and a normal later documentation
+commit, retaining the accepted package's original checkpoint.</p>
 <p>The consolidated 100,000-file paired benchmark uses a 120-second per-command
 budget; its whole-case limit remains 1,800 seconds. Smaller local scales keep
 their 30-second command budget. Context deadlines are reported as deadlines,

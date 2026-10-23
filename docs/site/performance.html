@@ -1,23 +1,167 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Performance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Native 1.0.3 measurement status · 2026-10-23</h1>
-<p>The current candidate's correctness batch completed with 16 passed lanes and two
-terminal lanes explicitly waived by the user. The paired performance batch is
-still pending. Those waivers do not cover any performance, MSI, CLI, transport or
-package check. No current-version latency or memory advantage is claimed before
-its own final measurements complete. See the
-<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">artifact-bound migration and gate evidence</a>.</p>
-<p>The first current 100,000-file attempt was rejected when native <code>grep</code> exited 1
-without stderr. It produced no valid latency report for that scale. Smaller
-completed workloads do not replace this failed gate; diagnosis and a complete
-accepted paired batch are still required.</p>
-<p>The follow-up harness distinguishes a context deadline from an ordinary exit 1
-and gives only the 100,000-file workload 120 seconds per command, within its
-unchanged 1,800-second case bound. The rejected attempt is preserved, and its
-root cause remains unproved. This budget change retains the full output, exit,
-fsck and repeated-pair requirements; it does not turn an incomplete result into
-a timing sample.</p>
-<p>The reports below retain their original dates, binaries, reference versions and
-sample counts. They are historical measurements, not measurements of 1.0.3 or a
-comparison with a newer reference Git.</p>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Performance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Native 1.0.3 measurements · 2026-10-24</h1>
+<p>The exact R6 correctness batch completed <strong>16 passed / 2 user-waived lanes</strong> in
+<strong>246.204 seconds</strong>. All <strong>five performance lanes passed</strong> in <strong>691.251 seconds</strong>:
+three file scales, loopback HTTPS and frozen-input readback. Neither batch met
+the 60-second orchestration target; no checks were skipped for that target.
+The terminal waiver covers only its two named terminal test lanes. MSI, native
+CLI, transport, package and performance checks retain their full requirements.
+The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">artifact-bound source checkpoint</a>
+records local gates as complete, with staging, workstation update and publication
+pending at that checkpoint. Later release completion is recorded separately.</p>
+<p>These Windows x64 measurements compare native
+<code>2.54.0.windows.1.git-next.1.0.3</code> with reference <code>2.56.0.windows.3</code> on
+Windows 10.0.26300, AMD64 Family 26 Model 68 Stepping 0, 32 logical CPUs.
+Each command has <strong>10 randomized pairs</strong>, three warm-ups and warm OS cache.
+Both clients use the declared five-setting Windows read-safety profile.
+The full reports pin binary/source/harness hashes and verify complete output,
+refs, worktree bytes and fsck. A ten-pair p95 is exploratory.</p>
+<table>
+<thead>
+<tr>
+<th>Files</th>
+<th>Operation</th>
+<th>git-next median / p95 ms</th>
+<th>Reference median / p95 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1000</td>
+<td>version</td>
+<td>13.244 / 15.000</td>
+<td>23.441 / 26.556</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>status_clean</td>
+<td>35.494 / 38.400</td>
+<td>46.786 / 49.630</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>diff_clean</td>
+<td>30.575 / 31.692</td>
+<td>39.916 / 45.847</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>show_metadata</td>
+<td>17.739 / 19.511</td>
+<td>27.746 / 30.012</td>
+</tr>
+<tr>
+<td>1000</td>
+<td>grep_files</td>
+<td>93.581 / 103.897</td>
+<td>101.352 / 123.449</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>version</td>
+<td>14.571 / 15.477</td>
+<td>25.278 / 31.582</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>status_clean</td>
+<td>196.824 / 240.385</td>
+<td>207.301 / 224.013</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>diff_clean</td>
+<td>173.333 / 200.685</td>
+<td>184.457 / 201.101</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>show_metadata</td>
+<td>23.311 / 25.279</td>
+<td>33.504 / 34.522</td>
+</tr>
+<tr>
+<td>10000</td>
+<td>grep_files</td>
+<td>785.654 / 845.520</td>
+<td>807.518 / 841.718</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>version</td>
+<td>14.118 / 15.234</td>
+<td>25.228 / 37.548</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>status_clean</td>
+<td>1656.999 / 1738.231</td>
+<td>1666.073 / 1736.873</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>diff_clean</td>
+<td>1640.182 / 1714.801</td>
+<td>1674.215 / 1864.504</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>show_metadata</td>
+<td>72.212 / 79.799</td>
+<td>83.850 / 89.714</td>
+</tr>
+<tr>
+<td>100000</td>
+<td>grep_files</td>
+<td>9698.981 / 12116.947</td>
+<td>10391.285 / 11732.632</td>
+</tr>
+</tbody>
+</table>
+<p>Full reports: <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-1000-20261023.json">1000 files</a>,
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-10000-20261023.json">10000 files</a>,
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-100000-20261023.json">100000 files</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Loopback HTTPS</th>
+<th>git-next median / p95 ms</th>
+<th>Reference median / p95 ms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clone</td>
+<td>1078.937 / 1166.181</td>
+<td>753.106 / 784.315</td>
+</tr>
+<tr>
+<td>fetch</td>
+<td>439.677 / 468.387</td>
+<td>451.569 / 469.257</td>
+</tr>
+<tr>
+<td>pull_ff_only</td>
+<td>622.031 / 749.229</td>
+<td>627.105 / 782.475</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-performance-network-20261023.json">network report</a>
+uses HTTP/1.1, Schannel on both clients, a private fixture CA and static fixture
+authorization. Clone is slower here. This is not WAN/provider authentication or
+GitSSS throughput evidence. Full scans remain a latency limit: the 100,000-file
+grep median is about 9.7 seconds. Primary-process peak working set excludes
+children; its 100,000-file status median is 33,423,360 bytes for git-next versus
+6,944,768 for reference Git. These results establish no universal speed or memory
+advantage.</p>
+<p>The rejected R5c 100,000-file attempt remains recorded: native <code>grep</code> exited 1
+without stderr and produced no valid timing for that failed operation. A separate
+forced one-second probe reproduced exit 1 with a real deadline and partial output;
+the old attempt's root cause remains unproved. R6 distinguishes deadlines from
+ordinary exit 1 and gives only this scale 120 seconds per command, within the
+unchanged 1,800-second case bound. Output, exit, fsck and sample checks remain
+unchanged; the accepted R6 reports do not overwrite the failed attempt.</p>
+<p>The sections below retain their historical dates, binaries and sample counts.</p>
 <h1>Historical matched-artifact Windows measurements · 2026-10-21</h1>
 <p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-integrated-performance-20261021.json">dated matched-artifact batch</a> passes all three file scales and local HTTPS workloads with <strong>10 pairs per operation</strong>, complete output/fixture verification and core identity <code>fb505db8</code> / binary <code>3bc2edf0</code>. Both clients use the same declared Windows read-safety profile; the reference is complete official Git 2.54. The actual batch took <strong>596.63 seconds</strong>, exceeding the 60-second target. No checks were skipped. A 10-sample p95 is exploratory; the previous larger-sample reports below retain their original identities.</p>
 <p>Primary-process memory excludes children. These measurements do not imply universal speed or memory superiority. In particular, HTTPS clone remains slower than the reference; large full scans remain a latency limitation. Fetch and fast-forward pull are comparable in this generated local TLS fixture. This does not measure WAN providers or GitSSS same-branch push throughput.</p>

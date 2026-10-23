@@ -1,4 +1,19 @@
-# Acceptance snapshot · 2026-10-21
+# Acceptance scope and historical snapshots
+
+## Current 1.0.3 local scope · 2026-10-24
+
+Native correctness R6 completed with 16 passed lanes and two user-waived
+Git-Terminal lanes in 246.204 seconds. Actual Windows x64 MSI lifecycle evidence
+covers 27 user-scope and 25 machine-scope checks, reused only with matching
+immutable inputs. macOS ARM64 has real Apple Silicon execution of 51 native
+scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated ARM64 each
+have 52 native scenarios and two dispatch checks. Windows ARM64 remains
+cross-compilation, PE/table and static-package evidence rather than hardware
+runtime/lifecycle acceptance. Performance, release staging, workstation state and
+publication remain separate; see [delivery status](DELIVERY_STATUS.md). The dated
+snapshots below retain their own binaries, scope, failures and limitations.
+
+## Historical acceptance snapshot · 2026-10-21
 
 The [integrated 18-case acceptance](benchmarks/native-integrated-correctness-20261021.json) passes with exact artifact/source dependency checks. [32 common CLI scenarios](benchmarks/native-common-cli-20261021.json) cover 16 groups in SHA-1 and SHA-256 against complete official Git 2.54, including worktree/branch/checkout/revert, stash -u, conflict recovery and rejected-push protection; elapsed 31.482 seconds. Every scenario independently compares index/history and runs both object readers' fsck.
 

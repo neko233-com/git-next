@@ -35,16 +35,45 @@ the scoped read-safety choice, not an internal root-cause or speed claim. Explic
 user/repository/command-line settings retain their normal priority.
 [Defaults](DEFAULTS.md).
 
-## Historical measurements · 2026-10-21
+## Current measurements · 2026-10-24
 
-The 1.0.3 candidate has its own final correctness result: 16 passed lanes and two
-terminal lanes waived by explicit user instruction. Its paired performance
-measurements are still pending, so the table below remains historical. The
-[current evidence report](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
-keeps the exact inputs, failed attempts and waiver boundary; the waiver does not
-cover performance or installer lifecycle checks.
-The first current 100,000-file attempt failed at native `grep` and has no valid
-latency report for that scale; smaller successful runs are not a substitute.
+Native 1.0.3 completed its exact R6 correctness batch with 16 passed lanes and
+two terminal lanes waived by explicit user instruction, in 246.204 seconds.
+All five separate performance lanes passed in 691.251 seconds. The waiver does
+not cover performance, MSI or other product checks. The
+[source checkpoint](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
+records staging, workstation update and publication as pending at that point;
+later completion is recorded separately. Failed candidates remain preserved.
+
+On Windows x64, ten warm paired samples per operation compare native
+`2.54.0.windows.1.git-next.1.0.3` with reference `2.56.0.windows.3`, using matching
+declared read-safety settings. Selected medians are:
+
+| Workload | git-next | Reference Git |
+| --- | --- | --- |
+| 1000-file `version` | 13.244 ms | 23.441 ms |
+| 1000-file clean `status` | 35.494 ms | 46.786 ms |
+| 100000-file clean `status` | 1656.999 ms | 1666.073 ms |
+| 100000-file full `grep` | 9698.981 ms | 10391.285 ms |
+| Loopback HTTPS `clone` | 1078.937 ms | 753.106 ms |
+| Loopback HTTPS `fetch` | 439.677 ms | 451.569 ms |
+| Loopback HTTPS `pull --ff-only` | 622.031 ms | 627.105 ms |
+
+[Performance details](PERFORMANCE.md) retain every selected operation's p95 and
+the full artifact-bound reports. These samples show lower startup latency in
+this fixture, small differences for large scans and a slower HTTPS clone.
+They do not establish universal speed or memory superiority: primary-process
+peak working set excludes children and is larger for native status here.
+The network fixture uses loopback HTTP/1.1, not a WAN or provider login.
+Both complete batches exceeded the 60-second target without skipping checks.
+
+The first 100,000-file attempt failed at native `grep` without a valid latency
+report. A later deadline probe established that a timeout can cause exit 1 with
+empty stderr and partial output; the original failure's root cause remains
+unproved. R6 adds large-scale budget headroom and correct deadline reporting,
+then repeats the complete strict measurements. The failed attempt is retained.
+
+## Historical measurements · 2026-10-21
 
 The following table belongs to the historical native artifact in the
 [matched-artifact batch of 2026-10-21](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-integrated-performance-20261021.json),
