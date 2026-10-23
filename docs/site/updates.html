@@ -70,7 +70,9 @@ with the native Windows PowerShell host, and the runner reacquires the same
 exclusive update lock and validates the transaction again. Its protected journal
 binds the original candidate manifest independently from the currently installed
 MSI manifest and ProductCode, so a verified repair can supply the current recovery
-code without inventing new original bytes. Runtime configuration rollback is
+code without inventing new original bytes. A complete native experimental MSI
+may supply that recovery code; it cannot activate a takeover, whose accepted
+release requirement is unchanged. Runtime configuration rollback is
 completed while MSI registration is still present. Only a valid <code>rolling-back</code>
 transaction with matching owner, pointer, original backup and seven pinned
 runner files authorizes ordinary <code>msiexec /x</code>. The guard excludes only its exact

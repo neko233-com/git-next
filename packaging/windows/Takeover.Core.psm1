@@ -915,15 +915,19 @@ function Test-GnTakeoverMsiInstalled([string]$ProductCode) {
 }
 
 function Assert-GnTakeoverCurrentMsi([string]$InstallRoot,$Package) {
-    if ($Package.schema_version -ne 1 -or $Package.product -cne 'git-next' -or $Package.install_kind -cne 'msi' -or $Package.engine -cne 'source-built-git-next-native-core' -or -not $Package.complete_git_parity -or -not $Package.release_eligible -or -not (Test-GnTakeoverMsiInstalled $Package.product_code)) { throw 'An exact installed native MSI is required for controlled rollback.' }
+    if ($Package.schema_version -ne 1 -or $Package.product -cne 'git-next' -or $Package.install_kind -cne 'msi' -or $Package.engine -cne 'source-built-git-next-native-core' -or -not $Package.complete_git_parity -or -not (Test-GnTakeoverMsiInstalled $Package.product_code)) { throw 'An exact installed native MSI is required for controlled rollback.' }
     [void](Get-GnScopeContext $InstallRoot $Package)
+    $registered = Get-GnTakeoverRegisteredMsiRoot $Package
+    if (-not $registered -or [IO.Path]::GetFullPath($registered).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')) { throw 'The owned MSI registration belongs to a different root.' }
+}
+
+function Get-GnTakeoverRegisteredMsiRoot($Package) {
     $hive = if ((Get-GnInstallScope $Package) -eq 'machine') { 'LocalMachine' } else { 'CurrentUser' }
     $base = [Microsoft.Win32.RegistryKey]::OpenBaseKey([Microsoft.Win32.RegistryHive]::$hive,[Microsoft.Win32.RegistryView]::Registry64)
     try {
         $key = $base.OpenSubKey('Software\git-next\MSI\'+$Package.platform)
         if (-not $key) { throw 'The owned MSI registration is missing.' }
-        try { $registered = $key.GetValue('InstallRoot') } finally { $key.Dispose() }
-        if (-not $registered -or [IO.Path]::GetFullPath($registered).TrimEnd('\','/') -ine [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\','/')) { throw 'The owned MSI registration belongs to a different root.' }
+        try { return $key.GetValue('InstallRoot') } finally { $key.Dispose() }
     } finally { $base.Dispose() }
 }
 

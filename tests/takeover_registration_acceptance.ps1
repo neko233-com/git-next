@@ -75,7 +75,7 @@ try {
     $extra = & $module {
         param($fixture,$sourceRoot,$image)
         $saved=@{}
-        $mockNames=@('Test-GnBusy','Get-GnOriginalGitRegistration','Get-GnRelatedIntegration','Get-GnTakeoverRegistry','Get-GnOldUpdateTasks','Get-GnConfigDirectory','Assert-GnTakeoverCurrentMsi','Test-GnTakeoverMsiInstalled','Invoke-GnTakeoverMsiRemoval','Restore-GnRegistrySnapshot','Set-GnOldUpdateTasks','Restore-GnMigrationPath','New-GnOutputParent')
+        $mockNames=@('Test-GnBusy','Get-GnOriginalGitRegistration','Get-GnRelatedIntegration','Get-GnTakeoverRegistry','Get-GnOldUpdateTasks','Get-GnConfigDirectory','Get-GnTakeoverRegisteredMsiRoot','Test-GnTakeoverMsiInstalled','Invoke-GnTakeoverMsiRemoval','Restore-GnRegistrySnapshot','Set-GnOldUpdateTasks','Restore-GnMigrationPath','New-GnOutputParent')
         foreach($name in $mockNames){$saved[$name]=(Get-Command $name -CommandType Function).ScriptBlock}
         $count=0
         function Expect-Rejection([scriptblock]$Action,[string]$Message){$rejected=$false;try{&$Action|Out-Null}catch{$rejected=$true};if(-not $rejected){throw $Message}}
@@ -91,12 +91,13 @@ try {
             function script:Get-GnTakeoverRegistry([string]$Hive){return @()}
             function script:Get-GnOldUpdateTasks([string]$Root){return @()}
             function script:Get-GnConfigDirectory{return $script:FixtureConfig}
-            function script:Assert-GnTakeoverCurrentMsi([string]$Root,$Package){if(-not $script:FixtureMsi){throw 'Fixture MSI not installed.'}}
+            function script:Get-GnTakeoverRegisteredMsiRoot($Package){return $script:FixtureCurrentRoot}
             function script:Test-GnTakeoverMsiInstalled([string]$Code){return $script:FixtureMsi}
             function script:Restore-GnRegistrySnapshot($Record){throw 'A fixture must not restore real registry entries.'}
             function script:Set-GnOldUpdateTasks($Tasks,[bool]$Restore){if(@($Tasks).Count){throw 'A fixture must not restore real tasks.'}}
             function script:Restore-GnMigrationPath($Plan,[string]$Scope){if($Plan.original_root -notlike ($fixture+'*')){throw 'Fixture path escaped.'}}
             $original=Join-Path $fixture 'snapshot-original'
+            $script:FixtureCurrentRoot=$original
             [void][IO.Directory]::CreateDirectory((Join-Path $original 'cmd'))
             [void][IO.Directory]::CreateDirectory((Join-Path $original 'bin'))
             foreach($name in @('cmd/git.exe','bin/git.exe','unins001.exe')){[IO.File]::WriteAllBytes((Join-Path $original $name),$image)}
@@ -168,8 +169,12 @@ try {
             Expect-Rejection {Restore-GnTakeoverRoot ([pscustomobject]@{original_root=$original;root_acl='changed outside root ACL'})} 'An unrelated existing root ACL was overwritten.';$count++
             # A repair may replace the controlling MSI while the original snapshot retains its first candidate binding.
             $package|Add-Member -NotePropertyName recovery_revision -NotePropertyValue 'new MSI control'
+            $package.release_eligible=$false
             Write-GnJson (Join-Path $original 'package.json') $package
             if((Get-FileHash -LiteralPath (Join-Path $original 'package.json') -Algorithm SHA256).Hash.ToLowerInvariant() -ceq $plan.package_sha256){throw 'Fixture current and original candidate identities were not distinct.'}
+            Assert-GnTakeoverCurrentMsi $original $package
+            $candidatePlan=$plan|ConvertTo-Json -Depth 20|ConvertFrom-Json;$candidatePlan.release_eligible=$false
+            Expect-Rejection {Start-GnTakeover $candidatePlan $state ''} 'An experimental recovery controller was allowed to activate a takeover.';$count++
             $prepared=Restore-GnTakeover $transaction -PrepareOnly
             if($prepared -ine (Join-Path $transaction 'recovery-tools/migration/takeover.ps1') -or $script:FixtureRemovalCalls -ne 0 -or -not [IO.File]::Exists((Join-Path $original 'package.json'))){throw 'Preparing the protected runner performed MSI removal or selected another transaction.'};$count++
             function script:Invoke-GnTakeoverMsiRemoval($Recovery){
@@ -206,7 +211,7 @@ try {
             if([IO.File]::ReadAllText((Join-Path $raceTarget 'collision.dat')) -cne 'concurrent third-party bytes'){throw 'Authorized replacement deleted a changed destination.'};$count++
         } finally {
             foreach($name in $mockNames){Set-Item -Path ('Function:script:'+$name) -Value $saved[$name]}
-            foreach($name in @('FixtureBusy','FixtureMsi','FixtureRemovalCalls','FixtureConfig')){Remove-Variable -Name $name -Scope Script -ErrorAction SilentlyContinue}
+            foreach($name in @('FixtureBusy','FixtureMsi','FixtureRemovalCalls','FixtureConfig','FixtureCurrentRoot')){Remove-Variable -Name $name -Scope Script -ErrorAction SilentlyContinue}
         }
         return $count
     } $fixture (Join-Path $PSScriptRoot '../packaging/windows') $image
