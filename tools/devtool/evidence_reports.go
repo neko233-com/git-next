@@ -515,9 +515,14 @@ func validateDesktopProof(a *app, desktop record, win string) error {
 		}
 		harnesses := object(desktop, "harnesses")
 		expectedHarnesses := wordSet("tools/devtool/desktop.go tools/devtool/desktop_windows.go tools/devtool/clipboard_windows.go tools/devtool/process.go tools/devtool/process_windows.go tools/devtool/files.go tools/devtool/main.go tools/devtool/go.mod tools/devtool/go.sum")
-		if version := number(desktop, "harness_set_version"); version == 2 {
+		switch number(desktop, "harness_set_version") {
+		case 3:
+			expectedHarnesses["tools/devtool/desktop_drag_windows.go"] = true
+			fallthrough
+		case 2:
 			expectedHarnesses["tools/devtool/desktop_lease_windows.go"] = true
-		} else if version != 0 {
+		case 0:
+		default:
 			return fmt.Errorf("unknown desktop harness set")
 		}
 		if len(harnesses) != len(expectedHarnesses) {

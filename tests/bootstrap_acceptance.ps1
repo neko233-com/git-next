@@ -65,6 +65,7 @@ Assert-GnBootstrapPayload $selection $fakeManifest '0.3.0'
 Assert $script:payloadVerified 'Activated payload byte verification was not invoked'
 $results+=@{case='target-version-and-immutable-payload-activation-required-before-takeover';status='pass'}
 $legacyLayoutManifest=[pscustomobject]@{version='0.3.0';installation_layout='git-next-msi'}
+$script:payloadVerified=$false
 $rejected=$false;try { Assert-GnBootstrapPayload $selection $legacyLayoutManifest '0.3.0' } catch { $rejected=$true }
 Assert ($rejected -and -not $script:payloadVerified) 'A payload without the git-default-v2 layout was activated'
 $results+=@{case='git-default-v2-layout-is-mandatory-for-payload-activation';status='pass'}

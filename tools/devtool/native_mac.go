@@ -17,6 +17,7 @@ var macRuntimeLanes = []string{"common", "contracts", "integrations", "read-thre
 
 func init() {
 	register("native-mac-runtime-acceptance", "Execute the exact archive on Apple Silicon with disposable profiles and complete native lanes", "archive reference output", nativeMacRuntimeAcceptance)
+	register("native-p4-dispatch-acceptance", "Verify both packaged Go Perforce entrypoints with an empty PATH and isolated profile", "reference output", nativeP4DispatchAcceptance)
 }
 
 func macRuntimeCaseIDs(lane string) []string {
@@ -159,6 +160,40 @@ func ownedP4Dispatch(binary, reference, temp string) (record, error) {
 		rows = append(rows, record{"entrypoint": entry.name, "status": "pass", "exit_code": r.code, "stdout_sha256": digestBytes(r.stdout)})
 	}
 	return record{"status": "pass", "empty_path": true, "git_override_present": false, "personal_p4_configuration_accessed": false, "results": rows}, nil
+}
+
+func nativeP4DispatchAcceptance(a *app, o options) error {
+	binary, e := acceptBinary(o)
+	if e != nil {
+		return e
+	}
+	if e = o.require("reference", "output"); e != nil {
+		return e
+	}
+	if exists(o.get("output")) {
+		return fmt.Errorf("Perforce dispatch receipt must be new")
+	}
+	reference, e := absolute(o.get("reference"))
+	if e != nil {
+		return e
+	}
+	temp, e := os.MkdirTemp("", "gn-p4-dispatch-")
+	if e != nil {
+		return e
+	}
+	defer os.RemoveAll(temp)
+	report, e := ownedP4Dispatch(binary, reference, temp)
+	if e != nil {
+		return e
+	}
+	report["binary_sha256"], e = digest(binary)
+	if e != nil {
+		return e
+	}
+	if e = writeNewJSON(o.get("output"), report); e != nil {
+		return e
+	}
+	return a.json(report)
 }
 
 func checkedMacRuntimeReceipt(a *app, receiptPath, archive, source, version string) (record, error) {

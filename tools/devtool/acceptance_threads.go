@@ -137,7 +137,17 @@ func nativeReadThreads(a *app, o options) error {
 		acceptCheck(ge["grep-workers"] == budget && goverride["grep-workers"] == 2, "grep budgets")
 		results = append(results, record{"case": "readonly-grep-default-budget-and-explicit-override-consistency", "status": "pass", "default_workers": ge["grep-workers"]})
 		if runtimeOSWindows() {
-			stable := map[string]string{"core.fscache": "false", "core.fsmonitor": "false", "core.preloadindex": "false", "index.threads": "1", "grep.threads": "1"}
+			stable := map[string]string{}
+			required := wordSet("core.fscache core.fsmonitor core.preloadindex index.threads grep.threads")
+			defaults, e := readDefaults(a.root)
+			acceptMust(e)
+			for _, entry := range defaults.entries {
+				key := strings.ToLower(entry.section + "." + entry.key)
+				if required[key] {
+					stable[key] = entry.value
+				}
+			}
+			acceptCheck(len(stable) == len(required), "authoritative shipped read defaults are incomplete")
 			configuration := o.value("system-config", filepath.Join(filepath.Dir(filepath.Dir(binary)), "runtime/etc/gitconfig"))
 			acceptCheck(exists(configuration), "owned shipped runtime configuration missing: %s", configuration)
 			shipped := fixtureEnv(env, map[string]string{"GIT_CONFIG_NOSYSTEM": "0", "GIT_CONFIG_SYSTEM": configuration})
@@ -149,8 +159,9 @@ func nativeReadThreads(a *app, o options) error {
 			shipRun("reset", "--hard", "HEAD")
 			expected := shipRun("ls-files", "-z")
 			for i := 0; i < 30; i++ {
-				acceptEqual(shipRun("grep", "-z", "-l", "-F", "read-fixture"), expected, "shipped complete grep")
-				acceptEqual(shipRun("status", "--porcelain=v1"), nil, "shipped status")
+				actual := shipRun("grep", "-z", "-l", "-F", "read-fixture")
+				acceptEqual(actual, expected, fmt.Sprintf("shipped complete grep round %d (%d of %d files)", i+1, bytes.Count(actual, []byte{0}), bytes.Count(expected, []byte{0})))
+				acceptEqual(shipRun("status", "--porcelain=v1"), nil, fmt.Sprintf("shipped status round %d", i+1))
 			}
 			results = append(results, record{"case": "windows-shipped-read-safety-and-working-tree-completeness", "status": "pass", "defaults": stable, "files": count, "rounds": 30, "configuration_scope": "explicit owned packaged system configuration; ambient machine overrides excluded", "configuration_sha256": acceptHash(configuration)})
 		}

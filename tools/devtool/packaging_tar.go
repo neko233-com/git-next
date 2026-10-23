@@ -30,7 +30,8 @@ func releaseDocuments(a *app) (map[string][]byte, error) {
 			return nil
 		}
 		ext := filepath.Ext(p)
-		if ext == ".md" || ext == ".html" || ext == ".gitignore" || ext == ".gitattributes" || ext == ".json" && strings.HasPrefix(d.Name(), "native-") {
+		publicEvidence := strings.HasPrefix(d.Name(), "native-") || strings.HasPrefix(d.Name(), "windows-read-safety-")
+		if ext == ".md" || ext == ".html" || ext == ".gitignore" || ext == ".gitattributes" || ext == ".json" && publicEvidence {
 			rel, _ := filepath.Rel(a.root, p)
 			names[filepath.ToSlash(rel)] = true
 		}

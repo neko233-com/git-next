@@ -15,8 +15,8 @@
 	autocrlf = input
 	eol = lf
 	longpaths = true
-	fscache = true
-	preloadIndex = true
+	fscache = false
+	preloadIndex = false
 	commitGraph = true
 	quotePath = false
 	fsmonitor = false
@@ -46,6 +46,6 @@
 [tag]
 	sort = version:refname
 [index]
-	threads = 0
+	threads = 1
 [grep]
-	threads = 0
+	threads = 1

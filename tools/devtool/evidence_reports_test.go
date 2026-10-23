@@ -9,7 +9,7 @@ import (
 func TestGoDesktopEvidenceRequiresEveryCaseAndHarness(t *testing.T) {
 	a := &app{root: t.TempDir()}
 	harnesses := record{}
-	for _, name := range []string{"desktop.go", "desktop_windows.go", "clipboard_windows.go", "process.go", "process_windows.go", "files.go", "main.go", "go.mod", "go.sum"} {
+	for _, name := range []string{"desktop.go", "desktop_windows.go", "desktop_lease_windows.go", "desktop_drag_windows.go", "clipboard_windows.go", "process.go", "process_windows.go", "files.go", "main.go", "go.mod", "go.sum"} {
 		path := "tools/devtool/" + name
 		if e := write(a.path(path), []byte(name), 0644); e != nil {
 			t.Fatal(e)
@@ -37,11 +37,22 @@ func TestGoDesktopEvidenceRequiresEveryCaseAndHarness(t *testing.T) {
 	for _, name := range append(append([]string{}, desktopActivityCases...), "original-clipboard-restored", "owned-window-exit-and-process-cleanup") {
 		rows = append(rows, record{"case": name, "status": "pass"})
 	}
-	proof := record{"status": "pass", "scope": "all", "harness_language": "go", "case_set_version": 1, "results": rows, "harnesses": harnesses, "git_sha256": checks["git.exe"], "binary_sha256": checks["git-terminal.exe"]}
+	proof := record{"status": "pass", "scope": "all", "harness_language": "go", "case_set_version": 1, "harness_set_version": 3, "results": rows, "harnesses": harnesses, "git_sha256": checks["git.exe"], "binary_sha256": checks["git-terminal.exe"]}
 	if e := validateDesktopProof(a, proof, win); e != nil {
 		t.Fatal(e)
 	}
-	for _, mode := range []string{"missing case", "duplicate case", "failed case", "missing harness", "changed harness", "unknown schema"} {
+	for _, version := range []int{0, 2} {
+		historical := cloneRecord(t, proof)
+		historical["harness_set_version"] = version
+		delete(object(historical, "harnesses"), "tools/devtool/desktop_drag_windows.go")
+		if version == 0 {
+			delete(object(historical, "harnesses"), "tools/devtool/desktop_lease_windows.go")
+		}
+		if e := validateDesktopProof(a, historical, win); e != nil {
+			t.Fatalf("historical harness set %d: %v", version, e)
+		}
+	}
+	for _, mode := range []string{"missing case", "duplicate case", "failed case", "missing harness", "changed harness", "missing drag harness", "changed drag harness", "unknown harness schema", "unknown schema"} {
 		t.Run(mode, func(t *testing.T) {
 			bad := cloneRecord(t, proof)
 			switch mode {
@@ -56,6 +67,12 @@ func TestGoDesktopEvidenceRequiresEveryCaseAndHarness(t *testing.T) {
 				delete(object(bad, "harnesses"), "tools/devtool/process.go")
 			case "changed harness":
 				object(bad, "harnesses")["tools/devtool/process.go"] = "unverified"
+			case "missing drag harness":
+				delete(object(bad, "harnesses"), "tools/devtool/desktop_drag_windows.go")
+			case "changed drag harness":
+				object(bad, "harnesses")["tools/devtool/desktop_drag_windows.go"] = "unverified"
+			case "unknown harness schema":
+				bad["harness_set_version"] = 4
 			case "unknown schema":
 				bad["case_set_version"] = 2
 			}

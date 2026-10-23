@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "platform": "windows-x64",
+  "scope": "same immutable native core; isolated generated 4000-file repository; explicit owned system configuration; no package or workstation configuration was changed by the control",
+  "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+  "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+  "available_cpus": 32,
+  "former_profile": {
+    "defaults": {
+      "core.fscache": "true",
+      "core.fsmonitor": "false",
+      "core.preloadindex": "true",
+      "index.threads": "0",
+      "grep.threads": "0"
+    },
+    "status": "fail",
+    "failed_round": 21,
+    "expected_files": 4000,
+    "actual_files": 3999,
+    "raw_receipt_sha256": "83a4cbe2b9d6198974f194be83e13bc4be8afd1974735c182e8af0c479df8487"
+  },
+  "stable_control": {
+    "defaults": {
+      "core.fscache": "false",
+      "core.fsmonitor": "false",
+      "core.preloadindex": "false",
+      "index.threads": "1",
+      "grep.threads": "1"
+    },
+    "status": "pass",
+    "files": 4000,
+    "complete_grep_and_status_rounds": 30,
+    "native_contract_cases": 6,
+    "candidate_system_configuration_sha256": "ab83422f9fb81ff0ee16a48e2da0d09d403c5bcad6a3fd80181760cf097fda56",
+    "raw_receipt_sha256": "a77f58a4680545ac8d6faaee5f70c12461a0ba23c243f9479aa5a17b8a399292"
+  },
+  "performance_claim": false,
+  "internal_cause_established": false,
+  "parallel_configuration_remains_available": true
+}

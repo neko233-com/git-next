@@ -482,6 +482,7 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 	}
 	env = append(env, "HOME="+home, "USERPROFILE="+home, "APPDATA="+filepath.Join(home, "appdata"), "LOCALAPPDATA="+filepath.Join(home, "local"), "XDG_CONFIG_HOME="+filepath.Join(home, ".config"), "GIT_CONFIG_GLOBAL="+filepath.Join(home, ".gitconfig"), "GIT_NEXT_CONFIG_HOME="+filepath.Join(home, "git-next"), "SSH_ROOT_PATH="+filepath.Join(home, ".ssh"), "GIT_TERMINAL_PROMPT=0", "GCM_INTERACTIVE=never", "LANG=C.UTF-8", "LC_ALL=C.UTF-8")
 	results := []record{}
+	resizeDiagnostics := record{}
 	var process *desktopProcess
 	var window desktopWindow
 	snapshot := &clipboardSnapshot{}
@@ -828,11 +829,27 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 			time.Sleep(300 * time.Millisecond)
 			return window.activate()
 		})
-		recordCase("border-drag-resizes-window-on-all-four-edges", func() error {
+		recordCase("border-drag-resizes-window-on-all-four-edges", func() (caseErr error) {
 			if e := window.setSize(1120, 720); e != nil {
 				return e
 			}
 			time.Sleep(400 * time.Millisecond)
+			trace, e := startDesktopDragTrace(window)
+			if e != nil {
+				return e
+			}
+			defer func() {
+				events := trace.finish()
+				resizeDiagnostics["method"] = "atomic SendInput absolute move+button; bounded owned capture handshake; exact cursor and directional frame delta checks"
+				if caseErr != nil {
+					name := strings.TrimSuffix(output, filepath.Ext(output)) + "-resize-input.json"
+					resizeDiagnostics["failure_trace"] = name
+					if e := writeJSON(name, record{"window": window.handle, "pid": window.pid, "events": events}); e != nil {
+						resizeDiagnostics["trace_write_error"] = e.Error()
+					}
+				}
+			}()
+			confirmed := []record{}
 			for _, edge := range []struct {
 				name        string
 				hit, dx, dy int
@@ -859,24 +876,14 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 				if hit != uintptr(edge.hit) {
 					return fmt.Errorf("%s border is not a resize handle", edge.name)
 				}
+				trace.sample("edge-begin", record{"edge": edge.name, "target": []int{x, y}, "hit": hit, "delta": []int{edge.dx, edge.dy}})
 				before, e := window.bounds(true)
 				if e != nil {
 					return e
 				}
-				desktopCall(desktopUser, "SetCursorPos", uintptr(x), uintptr(y))
-				time.Sleep(150 * time.Millisecond)
-				if e = window.send([]desktopInput{desktopMouse(2, 0)}); e != nil {
+				if e = window.dragPointer(trace, edge.name, x, y, edge.dx, edge.dy); e != nil {
 					return e
 				}
-				time.Sleep(150 * time.Millisecond)
-				for step := 1; step <= 8; step++ {
-					desktopCall(desktopUser, "SetCursorPos", uintptr(x+edge.dx*step/8), uintptr(y+edge.dy*step/8))
-					time.Sleep(40 * time.Millisecond)
-				}
-				if e = window.send([]desktopInput{desktopMouse(4, 0)}); e != nil {
-					return e
-				}
-				time.Sleep(350 * time.Millisecond)
 				after, e := window.bounds(true)
 				if e != nil {
 					return e
@@ -884,6 +891,22 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 				if before.Size() == after.Size() {
 					return fmt.Errorf("dragging %s did not resize window", edge.name)
 				}
+				expected := before
+				switch edge.name {
+				case "right":
+					expected.Max.X += edge.dx
+				case "left":
+					expected.Min.X += edge.dx
+				case "bottom":
+					expected.Max.Y += edge.dy
+				case "top":
+					expected.Min.Y += edge.dy
+				}
+				if after != expected {
+					return fmt.Errorf("dragging %s resized to %v instead of requested %v", edge.name, after, expected)
+				}
+				confirmed = append(confirmed, record{"edge": edge.name, "before": before, "after": after, "pointer_delta": []int{edge.dx, edge.dy}})
+				resizeDiagnostics["edges"] = confirmed
 				if e = window.setSize(1120, 720); e != nil {
 					return e
 				}
@@ -1132,7 +1155,7 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 		return e
 	}
 	harnesses := record{}
-	for _, name := range []string{"desktop.go", "desktop_windows.go", "clipboard_windows.go", "desktop_lease_windows.go", "process.go", "process_windows.go", "files.go", "main.go", "go.mod", "go.sum"} {
+	for _, name := range []string{"desktop.go", "desktop_windows.go", "desktop_drag_windows.go", "clipboard_windows.go", "desktop_lease_windows.go", "process.go", "process_windows.go", "files.go", "main.go", "go.mod", "go.sum"} {
 		path := "tools/devtool/" + name
 		h, e := digest(a.path(path))
 		if e != nil {
@@ -1145,7 +1168,10 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 		scope = "selected"
 	}
 	report := record{"status": status, "scope": scope, "paste_key": pasteKey, "ctrl_shift_v_registered_elsewhere": hotkeyConflict, "platform": "windows-" + strings.ReplaceAll(runtime.GOARCH, "amd64", "x64"), "renderer": "gpui-fast", "input_delivery": "owned HWND WM_CHAR UTF-16 commits; SendInput keyboard shortcuts", "binary_sha256": binaryHash, "git_sha256": gitHash, "harness_sha256": harness, "clipboard_harness_sha256": clipboardHash, "harness_language": "go", "case_set_version": 1, "harnesses": harnesses, "seconds": roundedSeconds(time.Since(start)), "personal_profile_accessed": false, "terminal_contents_logged": false, "results": results}
-	report["harness_set_version"] = 2
+	report["harness_set_version"] = 3
+	if len(resizeDiagnostics) > 0 {
+		report["resize_input"] = resizeDiagnostics
+	}
 	if e = writeJSON(output, report); e != nil {
 		return e
 	}

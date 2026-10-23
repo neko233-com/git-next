@@ -321,6 +321,13 @@ func writeSystemDefaults(d defaults) (bool, string) {
 	return true, "wrote authoritative block and retained .bak backup"
 }
 func defaultBehavior(a *app, git string, d defaults) ([]check, error) {
+	if strings.ContainsAny(git, `/\`) {
+		resolved, e := absolute(git)
+		if e != nil {
+			return nil, e
+		}
+		git = resolved
+	}
 	root, e := os.MkdirTemp("", "gn-defaults-")
 	if e != nil {
 		return nil, e

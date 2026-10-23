@@ -36,6 +36,14 @@ go -C tools/git-p4 test ./...
 
 ## 验收边界
 
+完整产品包的两个入口可用同一条 Go 命令检查：
+
+```text
+go -C tools/devtool run . native-p4-dispatch-acceptance PACKAGE/bin/git --reference REFERENCE_GIT --output target/p4-dispatch.json
+```
+
+它在临时仓库和配置中以空 PATH 执行 `git p4 branches` 与相邻 `git-p4 branches`，不设置 `GIT_P4_GIT`，验证两者都找到包内 Git。参考 Git 只创建夹具，个人 Perforce 配置不参与检查。
+
 独立 P4/P4D 测试在临时 HOME、client 与数据库中使用本地 `rsh` 模式，覆盖真实 clone、增量、二进制、分支祖先、标签、client remap、LFS、submit、shelve/update-shelve、unshelve、rename/delete、编辑器、RCS 清理、hooks 和失败回滚。独立审查回归还覆盖多分支最近 depot、其他 depot 已打开文件、整批作者预检、非管理员拒绝和旧 footer 兼容。原入口一次性对照中，普通历史导入的原始 commit 对象 SHA 相同。
 
 Linux 同环境对照已分别调用原 Python 与 Go 的上游 `t9800`–`t9836` 共 37 套测试，36 套执行，Python 2 专用的 `t9835` 跳过。原入口 379 个成功、16 个标记的已知缺陷；Go 382 个成功、13 个相同已知缺陷，没有新增差异失败。子集分支、同一 changelist 多标签和非法 UTF-16 恢复三项已知缺陷消失，原测试框架将它们记为 XPASS 并返回非零；迁移证据保留原日志和逐项分类。Go 的 metadata suite 只替换 Python launcher 前置检查，保留 12 个行为断言。

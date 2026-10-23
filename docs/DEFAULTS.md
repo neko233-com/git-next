@@ -18,6 +18,14 @@ Git 2.54.0.windows.1) with a 5,000-file working tree, median of five runs, taken
 other build or benchmark running. They are reported as what they are: one machine, one
 tree size, one day. The file-count and process-count facts are reproducible anywhere.
 
+The current Windows read defaults prioritize complete results over those historical
+timings. On 2026-10-23, the same frozen 1.0.3 native binary and a generated 4,000-file
+repository returned only 3,999 files in round 21 with fscache/preloading enabled and
+automatic index/grep threads. The five-setting serial control below completed all
+30 grep/status rounds. This isolates the configuration effect; it does not establish
+the internal cause or a throughput comparison. See the
+[bounded read-safety evidence](benchmarks/windows-read-safety-20261023.json).
+
 ## Adding or changing a default
 
 1. Add the key to `packaging/runtime-defaults/gitconfig`, nowhere else. The payload
@@ -39,8 +47,8 @@ A default is not eligible if it starts a process per repository. See
 | --- | --- | --- | --- |
 | `core.longpaths` | `true` | Paths beyond `MAX_PATH` are ordinary in game and `node_modules` trees. | A 280-character path round-trips through `add`, `status` and `commit`. |
 | `core.autocrlf` / `core.eol` | `input` / `lf` | The LF policy; unchanged from before. | - |
-| `core.fscache` | `true` | Git for Windows caches `lstat` results, which is most of a cold `status`. | - |
-| `core.preloadIndex` | `true` | Reads index entries in parallel. | Needs `index.threads` to be worth it. |
+| `core.fscache` | `false` | Part of the Windows read-safety profile; preserving complete results takes priority over cached `lstat` throughput. | The combined profile completed 30 rounds; disabling fscache alone was not sufficient in the earlier diagnostic. |
+| `core.preloadIndex` | `false` | Keeps worktree stat reads serial in the Windows stability profile. Explicit configuration can still request preloading. | The combined profile completed all 4,000-file grep/status rounds. |
 | `core.commitGraph` | `true` | Commit-graph makes `log` and merge-base independent of history length. | - |
 | `core.quotePath` | `false` | A non-ASCII name should be readable. `status --porcelain` shows `文档.txt` instead of `"\346\226\207\346\241\243.txt"`. | Verified both ways. |
 | `core.fsmonitor` | `false` | See below. | 12.1 MB and one process per repository. |
@@ -58,13 +66,14 @@ A default is not eligible if it starts a process per repository. See
 | `init.defaultBranch` | `main` | Already the product behaviour; stated so it survives a user config that says otherwise. | Verified: a new repository is on `main`. |
 | `branch.sort` | `-committerdate` | Recently touched branches first. | Verified: `zeta` before `alpha`. |
 | `tag.sort` | `version:refname` | `v1.10` after `v1.2`, not before it. | Verified: `v1.0`, `v1.2`, `v1.10`. |
-| `index.threads` | `0` | Parallel index preload. **Not `-1`**: that is silently worse. | 256 ms at `0`, 311 ms unset, 312 ms at `-1`, 298 ms at `1`. |
-| `grep.threads` | `0` | Parallel grep. **`-1` is fatal** (`invalid number of threads specified`). | 475 ms at `0`, 751 ms unset; `-1` exits 128. |
+| `index.threads` | `1` | Serial index reads in the shipped Windows profile. Automatic CPU-based budgets remain available with an explicit `0`. | Historical 5,000-file timing was 298 ms at `1`; the current correctness control completed 30 rounds. |
+| `grep.threads` | `1` | Serial grep avoids the observed intermittent incomplete Windows results. **`-1` is fatal** (`invalid number of threads specified`). | The former automatic profile omitted one of 4,000 files; the serial control completed 30 rounds. |
 
-The thread values are the clearest case for behaviour over appearance. Both `-1` and `0`
-look like "use the machine", one of them is a configuration that makes `grep` refuse to
-run, and the other is the fastest value measured. `go -C tools/devtool run . check-runtime-defaults`
-asserts the exit codes, which is the only way to tell them apart.
+These five settings apply to the shipped Windows profile and takeover defaults.
+POSIX packages retain their native automatic budgets. User, repository and command-line
+settings keep their normal precedence. The read-thread gate verifies the shipped values
+against the authoritative fragment and requires complete results in every one of 30
+rounds; timing a command that omitted files is not an accepted performance sample.
 
 ## The file-system monitor is not a default
 

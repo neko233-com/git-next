@@ -61,8 +61,9 @@ rejects absent, incomplete or changed Mac runtime evidence.
 ## Migration evidence and rollback
 
 The initial remaining inventory was 114 files. Upstream added the freestanding
-bridge verifier during this work, bringing that batch to 115. Six primary tools
-had already been migrated. Thirty retired CLI suites are preserved at Git commit
+bridge verifier during this work, bringing that batch to 115. Earlier migrations
+are recorded separately and are not added to this batch's verified count.
+Thirty retired CLI suites are preserved at Git commit
 `3609553`; removing them does not claim every old assertion moved into Rust.
 
 Equivalent checks use the same pinned inputs: native source integration, Windows
