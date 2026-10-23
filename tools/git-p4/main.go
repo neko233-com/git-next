@@ -2,9 +2,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -14,6 +16,7 @@ type cliOptions struct {
 	flags   map[string]bool
 	args    []string
 }
+type usageError struct{ error }
 
 func (o cliOptions) value(key string) string {
 	v := o.values[key]
@@ -146,6 +149,9 @@ func parseCLI(args []string) (cliOptions, error) {
 		}
 		o.values[key] = append(o.values[key], value)
 	}
+	if value := o.value("conflict"); value != "" && value != "ask" && value != "skip" && value != "quit" {
+		return o, fmt.Errorf("invalid conflict behavior %s", value)
+	}
 	return o, nil
 }
 func usage(w io.Writer, command string) {
@@ -170,7 +176,7 @@ func usage(w io.Writer, command string) {
 func executeP4(args []string, out, errout io.Writer) error {
 	o, e := parseCLI(args)
 	if e != nil {
-		return e
+		return usageError{e}
 	}
 	if o.flags["help"] {
 		usage(out, o.command)
@@ -181,7 +187,18 @@ func executeP4(args []string, out, errout io.Writer) error {
 		return e
 	}
 	d.verbose = o.flags["verbose"]
-	if dir := o.value("git-dir"); dir != "" {
+	dir := o.value("git-dir")
+	if dir == "" {
+		dir = os.Getenv("GIT_DIR")
+	}
+	if dir != "" && o.command != "clone" {
+		if info, e := os.Stat(filepath.Join(dir, ".git")); e == nil && (info.IsDir() || info.Mode().IsRegular()) {
+			dir = filepath.Join(dir, ".git")
+		}
+		dir, e = filepath.Abs(dir)
+		if e != nil {
+			return e
+		}
 		if e = os.Setenv("GIT_DIR", dir); e != nil {
 			return e
 		}
@@ -206,6 +223,10 @@ func executeP4(args []string, out, errout io.Writer) error {
 func main() {
 	if e := executeP4(os.Args[1:], os.Stdout, os.Stderr); e != nil {
 		fmt.Fprintln(os.Stderr, "git-p4:", e)
+		var usage usageError
+		if errors.As(e, &usage) {
+			os.Exit(2)
+		}
 		os.Exit(1)
 	}
 }

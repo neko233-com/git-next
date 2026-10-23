@@ -3,7 +3,6 @@ package main
 
 import (
 	"bytes"
-	"context"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -133,7 +132,7 @@ func (d *driver) branches() error {
 }
 func normalizeDepot(value string) (string, string, error) {
 	if !strings.HasPrefix(value, "//") {
-		return "", "", fmt.Errorf("depot paths must start with //: %s", value)
+		return "", "", fmt.Errorf("Depot paths must start with //: %s", value)
 	}
 	base, revision := value, ""
 	if i := strings.IndexAny(base, "@#"); i >= 0 {
@@ -165,6 +164,7 @@ func branchRef(o cliOptions) string {
 	return "refs/remotes/" + branch
 }
 func (d *driver) sync(o cliOptions) error {
+	d.clientPaths, d.clientKnown = nil, nil
 	if o.command == "clone" {
 		if len(o.args) == 0 {
 			return fmt.Errorf("clone requires depot path")
@@ -239,7 +239,7 @@ func (d *driver) sync(o cliOptions) error {
 	} else {
 		_, settings, e := d.upstream(ref)
 		if e != nil {
-			return e
+			return fmt.Errorf("Error: no branch %s. Perhaps you never did git p4 clone? %w", ref, e)
 		}
 		roots, last = settings.paths, settings.change
 		if strings.Contains(settings.options, "keepRepoPath") {
@@ -248,7 +248,10 @@ func (d *driver) sync(o cliOptions) error {
 		revision = fmt.Sprintf("@%d,#head", last+1)
 	}
 	if o.flags["detect-branches"] {
-		return d.syncBranches(roots, revision, o)
+		if e := d.syncBranches(roots, revision, o); e != nil {
+			return e
+		}
+		return d.persistCloneSettings(o)
 	}
 	if d.cfgBool("git-p4.useclientspec") {
 		o.flags["use-client-spec"] = true
@@ -257,6 +260,9 @@ func (d *driver) sync(o cliOptions) error {
 		return e
 	}
 	if _, e := d.gitCall(nil, nil, "check-ref-format", ref); e != nil {
+		return e
+	}
+	if e := d.checkAccess(); e != nil {
 		return e
 	}
 	var changes []int64
@@ -317,7 +323,7 @@ func (d *driver) sync(o cliOptions) error {
 				return e
 			}
 			for _, item := range records {
-				if text(item["action"]) == "delete" || text(item["action"]) == "purge" {
+				if text(item["action"]) == "delete" || text(item["action"]) == "move/delete" || text(item["action"]) == "purge" {
 					continue
 				}
 				change := integer(item["change"])
@@ -350,6 +356,9 @@ func (d *driver) sync(o cliOptions) error {
 			files := describeFiles(details)
 			parent := ""
 			reset := newBranch && first
+			if first && newBranch && o.value("_initial-parent") != "" {
+				parent, reset = o.value("_initial-parent"), false
+			}
 			if first && !newBranch {
 				parent, e = d.gitText("rev-parse", ref)
 				if e != nil {
@@ -408,19 +417,147 @@ func (d *driver) sync(o cliOptions) error {
 				return e
 			}
 		}
-		if o.flags["use-client-spec"] {
-			if _, e = d.gitCall(nil, nil, "config", "--bool", "git-p4.useclientspec", "true"); e != nil {
-				return e
-			}
+		if e := d.persistCloneSettings(o); e != nil {
+			return e
 		}
 	}
 	if !o.flags["silent"] {
+		if imported == 0 {
+			fmt.Fprintln(d.out, "No changes to import!")
+		}
 		fmt.Fprintf(d.out, "Imported %d Perforce changelist(s) into %s\n", imported, ref)
 	}
 	return nil
 }
 
+func (d *driver) persistCloneSettings(o cliOptions) error {
+	if o.command != "clone" {
+		return nil
+	}
+	if o.flags["use-client-spec"] {
+		if _, e := d.gitCall(nil, nil, "config", "--bool", "git-p4.useclientspec", "true"); e != nil {
+			return e
+		}
+		d.config["git-p4.useclientspec"] = []string{"true"}
+	}
+	for _, key := range []string{"metadataDecodingStrategy", "metadataFallbackEncoding", "pathEncoding"} {
+		if value := d.cfg("git-p4." + key); value != "" {
+			if _, e := d.gitCall(nil, nil, "config", "git-p4."+key, value); e != nil {
+				return e
+			}
+		}
+	}
+	return nil
+}
+
 type p4File struct{ depot, revision, kind, action string }
+
+func (d *driver) shadowedFiles(files []p4File, roots []string, change string) ([]p4File, error) {
+	queries := map[string]bool{}
+	underRoot := func(name string) bool {
+		for _, root := range roots {
+			if strings.HasPrefix(name, root) {
+				return true
+			}
+		}
+		return false
+	}
+	for _, file := range files {
+		if file.action != "delete" && file.action != "move/delete" && file.action != "purge" {
+			continue
+		}
+		queries[file.depot+"/..."] = true
+		for parent := file.depot; strings.LastIndex(parent, "/") > 1; {
+			parent = parent[:strings.LastIndex(parent, "/")]
+			if underRoot(parent) {
+				queries[parent] = true
+			}
+			if parent == "//" || parent == "/" {
+				break
+			}
+		}
+	}
+	var added []p4File
+	seen := map[string]bool{}
+	for query := range queries {
+		if !underRoot(query) {
+			continue
+		}
+		records, e := d.p4List("files", query+"@"+change)
+		if e != nil {
+			message := strings.ToLower(e.Error())
+			if strings.Contains(message, "no such file") || strings.Contains(message, "no file(s)") {
+				continue
+			}
+			return nil, e
+		}
+		for _, item := range records {
+			name, action := text(item["depotFile"]), text(item["action"])
+			if name == "" || action == "delete" || action == "move/delete" || action == "purge" || seen[name] {
+				continue
+			}
+			seen[name] = true
+			added = append(added, p4File{name, text(item["rev"]), text(item["type"]), "add"})
+		}
+	}
+	return append(files, added...), nil
+}
+
+func (d *driver) clientKey(depot string) string {
+	if d.cfgBool("core.ignorecase") {
+		return strings.ToLower(depot)
+	}
+	return depot
+}
+func (d *driver) prepareClientMap(files []p4File, o cliOptions) error {
+	if !o.flags["use-client-spec"] {
+		return nil
+	}
+	if d.clientPaths == nil {
+		d.clientPaths = map[string]string{}
+		d.clientKnown = map[string]bool{}
+	}
+	var pending []string
+	for _, file := range files {
+		key := d.clientKey(file.depot)
+		if !d.clientKnown[key] {
+			pending = append(pending, file.depot)
+		}
+	}
+	for _, depot := range pending {
+		d.clientKnown[d.clientKey(depot)] = true
+	}
+	for len(pending) > 0 {
+		count, total := 0, 0
+		for count < len(pending) && total+len(pending[count]) < 12000 {
+			total += len(pending[count]) + 1
+			count++
+		}
+		if count == 0 {
+			count = 1
+		}
+		var records []dictionary
+		e := d.p4EachBytes([]string{"-x", "-", "where"}, []byte(strings.Join(pending[:count], "\n")+"\n"), func(item dictionary) error {
+			records = append(records, item)
+			return nil
+		})
+		if e != nil && !strings.Contains(strings.ToLower(e.Error()), "not in client view") {
+			return e
+		}
+		for _, item := range records {
+			depot, client := text(item["depotFile"]), text(item["clientFile"])
+			if depot == "" || item["unmap"] != nil || strings.HasPrefix(depot, "-") || !strings.HasPrefix(client, "//") {
+				continue
+			}
+			_, suffix, ok := strings.Cut(strings.TrimPrefix(client, "//"), "/")
+			if ok {
+				d.clientPaths[d.clientKey(depot)] = suffix
+			}
+		}
+		pending = pending[count:]
+	}
+	return nil
+}
 
 func describeFiles(item dictionary) []p4File {
 	var files []p4File
@@ -438,9 +575,9 @@ func (d *driver) relativeFile(depot string, roots []string, o cliOptions) (strin
 	wanted := false
 	relative := ""
 	for _, root := range roots {
-		if strings.HasPrefix(depot, root) {
+		if strings.HasPrefix(depot, root) || d.cfgBool("core.ignorecase") && len(depot) >= len(root) && strings.EqualFold(depot[:len(root)], root) {
 			wanted = true
-			relative = strings.TrimPrefix(depot, root)
+			relative = depot[len(root):]
 			break
 		}
 	}
@@ -449,36 +586,30 @@ func (d *driver) relativeFile(depot string, roots []string, o cliOptions) (strin
 	}
 	for _, excluded := range o.values["/"] {
 		excluded = strings.TrimPrefix(excluded, "//")
-		excluded = strings.TrimSuffix(excluded, "...")
-		if strings.HasPrefix(strings.TrimPrefix(depot, "//"), excluded) {
+		target := strings.TrimPrefix(depot, "//")
+		if target == excluded || strings.HasSuffix(excluded, "...") && strings.HasPrefix(target, strings.TrimSuffix(excluded, "...")) {
 			return "", false, nil
 		}
 	}
 	if o.flags["keep-path"] {
 		relative = strings.TrimPrefix(depot, "//")
+		_, relative, _ = strings.Cut(relative, "/")
 	}
 	if o.flags["use-client-spec"] {
-		records, e := d.p4List("where", depot)
-		if e != nil {
+		if e := d.prepareClientMap([]p4File{{depot: depot}}, o); e != nil {
 			return "", false, e
 		}
-		mapped := false
-		for _, item := range records {
-			if item["unmap"] != nil || strings.HasPrefix(text(item["depotFile"]), "-") {
-				continue
-			}
-			client := text(item["clientFile"])
-			if !strings.HasPrefix(client, "//") {
-				continue
-			}
-			_, suffix, ok := strings.Cut(strings.TrimPrefix(client, "//"), "/")
-			if ok {
-				relative = suffix
-				mapped = true
-			}
-		}
-		if !mapped {
+		mapped, found := d.clientPaths[d.clientKey(depot)]
+		if !found {
 			return "", false, nil
+		}
+		relative = mapped
+		for _, branch := range o.values["_client-branch-prefixes"] {
+			prefix := branch + "/"
+			if strings.HasPrefix(relative, prefix) || d.cfgBool("core.ignorecase") && len(relative) >= len(prefix) && strings.EqualFold(relative[:len(prefix)], prefix) {
+				relative = relative[len(prefix):]
+				break
+			}
 		}
 	}
 	for _, pair := range [][2]string{{"%40", "@"}, {"%23", "#"}, {"%2A", "*"}, {"%25", "%"}} {
@@ -504,6 +635,9 @@ func (d *driver) relativeFile(depot string, roots []string, o cliOptions) (strin
 	return relative, true, nil
 }
 func (d *driver) wantedCount(files []p4File, roots []string, o cliOptions) (int, error) {
+	if e := d.prepareClientMap(files, o); e != nil {
+		return 0, e
+	}
 	n := 0
 	for _, file := range files {
 		_, wanted, e := d.relativeFile(file.depot, roots, o)
@@ -558,10 +692,12 @@ func (d *driver) printFile(file p4File, change string, shelved bool) ([]byte, er
 	if base == "utf16" {
 		args, env := d.p4Args([]string{"print", "-q", "-o", "-", file.depot + revision})
 		b, _, e := d.process(nil, env, d.p4, args...)
-		if e != nil {
+		if e == nil {
+			return bytes.ReplaceAll(b, []byte{13, 0, 10, 0}, []byte{10, 0}), nil
+		}
+		if !strings.Contains(e.Error(), "Translation of file content failed") {
 			return nil, e
 		}
-		return bytes.ReplaceAll(b, []byte{13, 0, 10, 0}, []byte{10, 0}), nil
 	}
 	var contents bytes.Buffer
 	var failure error
@@ -585,6 +721,16 @@ func (d *driver) printFile(file p4File, change string, shelved bool) ([]byte, er
 	return contents.Bytes(), nil
 }
 func (d *driver) importCommit(w io.Writer, ref string, roots []string, details dictionary, files []p4File, o cliOptions, parent string, reset, shelved bool) error {
+	var e error
+	if !shelved {
+		files, e = d.shadowedFiles(files, roots, text(details["change"]))
+		if e != nil {
+			return e
+		}
+	}
+	if e := d.prepareClientMap(files, o); e != nil {
+		return e
+	}
 	change := text(details["change"])
 	author, e := d.author(text(details["user"]))
 	if e != nil {
@@ -639,7 +785,7 @@ func (d *driver) importCommit(w io.Writer, ref string, roots []string, details d
 		if deleted(files[i].action) != deleted(files[j].action) {
 			return deleted(files[i].action)
 		}
-		return files[i].depot < files[j].depot
+		return false
 	})
 	for _, file := range files {
 		relative, wanted, e := d.relativeFile(file.depot, roots, o)
@@ -668,7 +814,7 @@ func (d *driver) importCommit(w io.Writer, ref string, roots []string, details d
 		}
 		data, e := d.printFile(file, change, shelved)
 		if e != nil {
-			return e
+			return fmt.Errorf("Error from p4 print: %w", e)
 		}
 		mode := "100644"
 		if strings.Contains(mods, "x") {
@@ -709,7 +855,7 @@ func (d *driver) importCommit(w io.Writer, ref string, roots []string, details d
 	return e
 }
 func (d *driver) fastImport(spool *os.File) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, cancel := d.commandContext()
 	defer cancel()
 	cmd := exec.CommandContext(ctx, d.git, "fast-import", "--quiet", "--done")
 	cmd.Dir = d.cwd
@@ -759,7 +905,7 @@ func (d *driver) importLabels(roots []string, ref string, detect bool) error {
 	}
 	for _, item := range labels {
 		name := text(item["label"])
-		if name == "" || ignored[name] || !valid.MatchString(name) {
+		if name == "" || !detect && (ignored[name] || !valid.MatchString(name)) {
 			continue
 		}
 		files := dictionary{}

@@ -137,7 +137,11 @@ func buildNativePOSIX(a *app, o options) error {
 	}
 	generator := o.value("generator", "Ninja")
 	shell := o.value("shell", "/bin/sh")
-	args := []string{"-S", filepath.Join(source, "contrib/buildsystems"), "-B", build, "-G", generator, "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=" + stage, "-DCMAKE_PREFIX_PATH=" + dependencies + ";" + prerequisite, "-DSH_EXE=" + shell, "-DBUILD_TESTING=ON", "-DUSE_VCPKG=OFF", "-DCMAKE_C_FLAGS=-DPCRE2_STATIC", "-DMSGFMT_EXE=MSGFMT_EXE-NOTFOUND"}
+	cFlags := "-DPCRE2_STATIC"
+	if mac {
+		cFlags += " -DHAVE_NS_GET_EXECUTABLE_PATH"
+	}
+	args := []string{"-S", filepath.Join(source, "contrib/buildsystems"), "-B", build, "-G", generator, "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=" + stage, "-DCMAKE_PREFIX_PATH=" + dependencies + ";" + prerequisite, "-DSH_EXE=" + shell, "-DBUILD_TESTING=ON", "-DUSE_VCPKG=OFF", "-DCMAKE_C_FLAGS=" + cFlags, "-DMSGFMT_EXE=MSGFMT_EXE-NOTFOUND"}
 	if o.get("toolchain") != "" {
 		args = append(args, "-DCMAKE_TOOLCHAIN_FILE="+o.get("toolchain"))
 	}

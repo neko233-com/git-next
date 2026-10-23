@@ -75,7 +75,7 @@ func dockerOwnedPhase(a *app, owner, target, image, inputs, outputs, script stri
 		if target == "linux-arm64" {
 			arch = "arm64"
 		}
-		args := []string{"run", "--rm", "--pull", "never", "--platform", "linux/" + arch, "--name", container, "--pids-limit", "256", "--memory", "8g", "--cpus", "8"}
+		args := []string{"run", "--rm", "--init", "--pull", "never", "--platform", "linux/" + arch, "--name", container, "--pids-limit", "256", "--memory", "8g", "--cpus", "8"}
 		args = append(args, labels...)
 		args = append(args, "--mount", "type=bind,source="+inputs+",target=/inputs,readonly", "--mount", "type=bind,source="+outputs+",target=/output", "--mount", "type=volume,source="+volume+",target=/build", "--env", "GIT_NEXT_ROOT=/inputs")
 		for _, v := range env {

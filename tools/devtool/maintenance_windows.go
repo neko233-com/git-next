@@ -191,6 +191,10 @@ func verifyBridgeScenarios(a *app, o options) (returnErr error) {
 	if e != nil {
 		return e
 	}
+	bridgeHash, e := digest(bridge)
+	if e != nil {
+		return e
+	}
 	sandbox, e := os.MkdirTemp("", "gn-bridge-")
 	if e != nil {
 		return e
@@ -360,7 +364,10 @@ func verifyBridgeScenarios(a *app, o options) (returnErr error) {
 	for _, r := range rows {
 		ok = ok && truth(r, "ok")
 	}
-	report := record{"ok": ok, "bridge": bridge, "process_limit": 64, "scenarios": rows, "isolated_registry_platform": platform}
+	if e = requireHash(bridge, bridgeHash); e != nil {
+		return e
+	}
+	report := record{"ok": ok, "bridge": bridge, "bridge_sha256": bridgeHash, "process_limit": 64, "scenarios": rows, "isolated_registry_platform": platform}
 	if o.get("json") != "" {
 		if e = writeJSON(o.get("json"), report); e != nil {
 			return e

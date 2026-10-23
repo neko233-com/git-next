@@ -22,6 +22,7 @@ import (
 type dictionary = map[string]any
 type driver struct {
 	git, p4, cwd   string
+	p4cwd          string
 	out, err       io.Writer
 	in             io.Reader
 	config         map[string][]string
@@ -33,6 +34,10 @@ type driver struct {
 	usersLoaded    bool
 	promptReader   *bufio.Reader
 	commitUsers    map[string]string
+	clientPaths    map[string]string
+	clientKnown    map[string]bool
+	moveAvailable  *bool
+	timeout        time.Duration
 }
 
 func newDriver(out, errout io.Writer) (*driver, error) {
@@ -46,28 +51,92 @@ func newDriver(out, errout io.Writer) (*driver, error) {
 		if e != nil {
 			return nil, e
 		}
-		for _, name := range []string{"git.exe", "git"} {
-			candidate := filepath.Join(filepath.Dir(exe), name)
-			if st, e := os.Stat(candidate); e == nil && !st.IsDir() {
-				git = candidate
-				break
-			}
+		git, e = ownedGit(exe)
+		if e != nil {
+			return nil, e
 		}
 	}
 	if git == "" {
-		return nil, fmt.Errorf("owned Git executable is missing beside git-p4; set GIT_P4_GIT only for an explicit development fixture")
+		return nil, fmt.Errorf("owned Git executable is missing; set GIT_P4_GIT only for an explicit development fixture")
 	}
 	p4 := os.Getenv("GIT_P4_P4")
 	if p4 == "" {
 		p4 = "p4"
 	}
-	return &driver{git: git, p4: p4, cwd: cwd, out: out, err: errout, in: os.Stdin, config: map[string][]string{}, users: map[string]string{}}, nil
+	timeout := 30 * time.Minute
+	if raw := os.Getenv("GIT_P4_TIMEOUT"); raw != "" {
+		timeout, e = time.ParseDuration(raw)
+		if e != nil || timeout <= 0 {
+			return nil, fmt.Errorf("GIT_P4_TIMEOUT must be a positive duration, such as 30m or 6h")
+		}
+	}
+	return &driver{git: git, p4: p4, cwd: cwd, out: out, err: errout, in: os.Stdin, config: map[string][]string{}, users: map[string]string{}, timeout: timeout}, nil
+}
+
+func ownedGit(exe string) (string, error) {
+	resolved, e := filepath.EvalSymlinks(exe)
+	if e != nil {
+		return "", e
+	}
+	find := func(directory, root string) (string, error) {
+		for _, name := range []string{"git.exe", "git"} {
+			candidate := filepath.Join(directory, name)
+			if _, e := os.Lstat(candidate); os.IsNotExist(e) {
+				continue
+			}
+			resolved, e := filepath.EvalSymlinks(candidate)
+			if e != nil {
+				return "", e
+			}
+			relative, e := filepath.Rel(root, resolved)
+			if e != nil || filepath.IsAbs(relative) || relative == ".." || strings.HasPrefix(relative, ".."+string(filepath.Separator)) {
+				return "", fmt.Errorf("Git executable resolves outside its owned package")
+			}
+			if st, e := os.Stat(resolved); e == nil && st.Mode().IsRegular() {
+				return resolved, nil
+			}
+		}
+		return "", nil
+	}
+	directory := filepath.Dir(resolved)
+	helperDirectory := directory
+	// POSIX installs the helper under runtime/usr/libexec/git-core.
+	for depth := 0; depth < 6; depth++ {
+		manifest, me := os.Stat(filepath.Join(directory, "git-next-distribution.json"))
+		config, ce := os.Stat(filepath.Join(directory, "runtime", "etc", "gitconfig"))
+		if me == nil && ce == nil && manifest.Mode().IsRegular() && config.Mode().IsRegular() {
+			if git, e := find(helperDirectory, directory); e != nil || git != "" {
+				return git, e
+			}
+			if git, e := find(filepath.Join(directory, "bin"), directory); e != nil || git != "" {
+				return git, e
+			}
+			return "", fmt.Errorf("Git is missing from owned package bin directory")
+		}
+		parent := filepath.Dir(directory)
+		if parent == directory {
+			break
+		}
+		directory = parent
+	}
+	return "", fmt.Errorf("owned Git executable is missing beside git-p4 or within its package")
+}
+
+func (d *driver) commandContext() (context.Context, context.CancelFunc) {
+	timeout := d.timeout
+	if timeout <= 0 {
+		timeout = 30 * time.Minute
+	}
+	return context.WithTimeout(context.Background(), timeout)
 }
 func (d *driver) process(input []byte, environment []string, program string, args ...string) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, cancel := d.commandContext()
 	defer cancel()
 	cmd := exec.CommandContext(ctx, program, args...)
 	cmd.Dir = d.cwd
+	if program == d.p4 && d.p4cwd != "" {
+		cmd.Dir = d.p4cwd
+	}
 	if environment != nil {
 		cmd.Env = environment
 	}
@@ -122,6 +191,11 @@ func (d *driver) cfgBool(key string) bool {
 }
 func (d *driver) p4Args(args []string) ([]string, []string) {
 	global := []string{}
+	if d.p4cwd != "" {
+		global = append(global, "-d", filepath.ToSlash(d.p4cwd))
+	} else if d.cwd != "" {
+		global = append(global, "-d", filepath.ToSlash(d.cwd))
+	}
 	for _, v := range [][2]string{{"user", "-u"}, {"port", "-p"}, {"host", "-H"}, {"client", "-c"}} {
 		if value := d.cfg("git-p4." + v[0]); value != "" {
 			global = append(global, v[1], value)
@@ -141,18 +215,27 @@ func (d *driver) p4Args(args []string) ([]string, []string) {
 	return append(global, args...), environment
 }
 func (d *driver) p4Each(args []string, input dictionary, visit func(dictionary) error) error {
-	args, environment := d.p4Args(append([]string{"-G"}, args...))
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
-	defer cancel()
-	cmd := exec.CommandContext(ctx, d.p4, args...)
-	cmd.Dir = d.cwd
-	cmd.Env = environment
 	var encoded bytes.Buffer
 	if input != nil {
 		if e := marshal.Encode(&encoded, input); e != nil {
 			return e
 		}
-		cmd.Stdin = &encoded
+	}
+	return d.p4EachBytes(args, encoded.Bytes(), visit)
+}
+
+func (d *driver) p4EachBytes(args []string, input []byte, visit func(dictionary) error) error {
+	args, environment := d.p4Args(append([]string{"-G"}, args...))
+	ctx, cancel := d.commandContext()
+	defer cancel()
+	cmd := exec.CommandContext(ctx, d.p4, args...)
+	cmd.Dir = d.cwd
+	if d.p4cwd != "" {
+		cmd.Dir = d.p4cwd
+	}
+	cmd.Env = environment
+	if len(input) > 0 {
+		cmd.Stdin = bytes.NewReader(input)
 	}
 	stdout, e := cmd.StdoutPipe()
 	if e != nil {
@@ -260,6 +343,18 @@ func (d *driver) p4Single(args ...string) (dictionary, error) {
 	}
 	return nil, fmt.Errorf("p4 returned no data record")
 }
+func (d *driver) checkAccess() error {
+	records, e := d.p4List("login", "-s")
+	if e != nil {
+		return fmt.Errorf("failure accessing depot: %w", e)
+	}
+	for _, item := range records {
+		if value, found := item["TicketExpiration"]; found && integer(value) < 1 {
+			return fmt.Errorf("failure accessing depot: perforce ticket expired")
+		}
+	}
+	return nil
+}
 func text(v any) string {
 	switch v := v.(type) {
 	case string:
@@ -281,7 +376,7 @@ func (d *driver) metadata(v any) string {
 	}
 	strategy := d.cfg("git-p4.metadataDecodingStrategy")
 	if strategy != "" && strategy != "fallback" {
-		d.metadataError = fmt.Errorf("decoding Perforce metadata failed; configure git-p4.metadataDecodingStrategy=fallback and metadataFallbackEncoding")
+		d.metadataError = fmt.Errorf("Decoding perforce metadata failed! Configure git-p4.metadataDecodingStrategy=fallback and metadataFallbackEncoding")
 		return ""
 	}
 	encoding := strings.ToLower(d.cfg("git-p4.metadataFallbackEncoding"))

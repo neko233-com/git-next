@@ -74,8 +74,13 @@ func nativeReadThreads(a *app, o options) error {
 		blob := strings.TrimSpace(string(run([]string{"rev-parse", "HEAD:d00/f000000.txt"}, nil, "")))
 		runtime.LockOSThread()
 		defer runtime.UnlockOSThread()
-		cpus, restore, restrict, e := acceptanceAffinity()
-		acceptMust(e)
+		cpus := runtime.NumCPU()
+		var restore, restrict func() error
+		if runtime.GOOS != "darwin" {
+			var e error
+			cpus, restore, restrict, e = acceptanceAffinity()
+			acceptMust(e)
+		}
 		budget := cpus * 2
 		defaultOut, events := values("default", "ls-files", "--stage", "-z")
 		acceptCheck(events["read-thread-budget"] == budget, "default budget %v != %d", events, budget)
@@ -108,13 +113,15 @@ func nativeReadThreads(a *app, o options) error {
 		acceptCheck(override["preload-thread-budget"] == 3, "command precedence")
 		run([]string{"config", "--unset", "index.threads"}, nil, "")
 		results = append(results, record{"case": "preload-default-and-repository-command-line-precedence", "status": "pass", "actual_workers": preload["preload-workers"]})
-		func() {
-			defer func() { acceptMust(restore()) }()
-			acceptMust(restrict())
-			_, limited := values("affinity", "ls-files", "--stage", "-z")
-			acceptCheck(limited["read-thread-budget"] == 2, "inherited affinity budget %v", limited)
-		}()
-		results = append(results, record{"case": "current-process-affinity-is-inherited-and-honored", "status": "pass"})
+		if runtime.GOOS != "darwin" {
+			func() {
+				defer func() { acceptMust(restore()) }()
+				acceptMust(restrict())
+				_, limited := values("affinity", "ls-files", "--stage", "-z")
+				acceptCheck(limited["read-thread-budget"] == 2, "inherited affinity budget %v", limited)
+			}()
+			results = append(results, record{"case": "current-process-affinity-is-inherited-and-honored", "status": "pass"})
+		}
 		acceptWrite(filepath.Join(repo, "d00/f000000.txt"), data)
 		acceptWrite(filepath.Join(repo, "new-read-file.txt"), data)
 		indexHash := acceptHash(filepath.Join(repo, ".git/index"))
@@ -151,7 +158,7 @@ func nativeReadThreads(a *app, o options) error {
 	if r["status"] != "pass" {
 		results = append(results, r)
 	}
-	return acceptReport(a, o, record{"status": acceptStatus(results), "scope": "native index decode/preload/name-hash and read-only grep; no compression or checkout worker changes", "seconds": time.Since(started).Seconds(), "personal_profile_accessed": false, "results": results})
+	return acceptReport(a, o, record{"status": acceptStatus(results), "scope": "native index decode/preload/name-hash and read-only grep; no compression or checkout worker changes", "cpu_affinity_constraint_supported": runtime.GOOS != "darwin", "seconds": time.Since(started).Seconds(), "personal_profile_accessed": false, "results": results})
 }
 func init() {
 	register("native-read-threads-acceptance", "CPU budget, bounded workers, inherited affinity and read consistency", "output system-config", nativeReadThreads)

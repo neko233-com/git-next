@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"os/exec"
 	"syscall"
 	"unsafe"
@@ -21,15 +22,22 @@ func childProcess(cmd *exec.Cmd) (func() error, func(), error) {
 		windows.CloseHandle(job)
 		return nil, nil, e
 	}
-	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	cmd.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: windows.CREATE_SUSPENDED}
 	cmd.Cancel = func() error { return windows.TerminateJobObject(job, 1) }
 	attach := func() error {
-		process, e := windows.OpenProcess(windows.PROCESS_SET_QUOTA|windows.PROCESS_TERMINATE, false, uint32(cmd.Process.Pid))
+		process, e := windows.OpenProcess(windows.PROCESS_SET_QUOTA|windows.PROCESS_TERMINATE|windows.PROCESS_SUSPEND_RESUME, false, uint32(cmd.Process.Pid))
 		if e != nil {
 			return e
 		}
 		defer windows.CloseHandle(process)
-		return windows.AssignProcessToJobObject(job, process)
+		if e = windows.AssignProcessToJobObject(job, process); e != nil {
+			return e
+		}
+		status, _, _ := windows.NewLazySystemDLL("ntdll.dll").NewProc("NtResumeProcess").Call(uintptr(process))
+		if status != 0 {
+			return fmt.Errorf("NtResumeProcess: NTSTATUS %08x", status)
+		}
+		return nil
 	}
 	return attach, func() { windows.CloseHandle(job) }, nil
 }

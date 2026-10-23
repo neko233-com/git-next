@@ -6,8 +6,144 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
+
+func TestProductAuditPairedPOSIXManifests(t *testing.T) {
+	type fixtureMember struct {
+		name, text, link string
+	}
+	for _, test := range []struct {
+		name                                                                            string
+		key, value                                                                      string
+		differentRoot, conflictingFile, missingFile, duplicate, reverse, python, escape bool
+	}{
+		{name: "same-root"},
+		{name: "package-first", reverse: true},
+		{name: "platform-conflict", key: "platform", value: "macos-arm64"},
+		{name: "version-conflict", key: "version", value: "other"},
+		{name: "source-conflict", key: "source_tree_sha256", value: "other"},
+		{name: "missing-source", key: "source_tree_sha256"},
+		{name: "missing-product", key: "product"},
+		{name: "missing-platform", key: "platform"},
+		{name: "missing-version", key: "version"},
+		{name: "other-product", key: "product", value: "other"},
+		{name: "different-roots", differentRoot: true},
+		{name: "conflicting-files", conflictingFile: true},
+		{name: "missing-files", missingFile: true},
+		{name: "duplicate", duplicate: true},
+		{name: "unlisted-python", python: true},
+		{name: "escaping-link", escape: true},
+	} {
+		for _, archive := range []bool{false, true} {
+			form := "directory"
+			if archive {
+				form = "tar"
+			}
+			if test.duplicate && !archive {
+				continue
+			}
+			t.Run(test.name+"/"+form, func(t *testing.T) {
+				file := record{"kind": "file", "sha256": digestBytes([]byte("native")), "bytes": 6}
+				pack := record{"schema_version": 1, "product": "git-next", "platform": "linux-x64", "version": "fixture", "source_tree_sha256": "fixture-source", "files": record{"bin/git": file}}
+				distribution := record{"schema_version": 1, "product": "git-next", "platform": "linux-x64", "version": "fixture", "source_tree_sha256": "fixture-source", "files": record{"bin/git": file, "runtime/data": record{"kind": "file", "sha256": "fixture"}}}
+				if test.key != "" {
+					distribution[test.key] = test.value
+				}
+				if test.conflictingFile {
+					object(distribution, "files")["bin/git"] = record{"kind": "file", "sha256": "different"}
+				}
+				if test.missingFile {
+					delete(object(distribution, "files"), "bin/git")
+				}
+				encode := func(value record) string {
+					data, err := jsonBytes(value)
+					if err != nil {
+						t.Fatal(err)
+					}
+					return string(data)
+				}
+				distributionName := "git-next-distribution.json"
+				if test.differentRoot {
+					distributionName = "nested/" + distributionName
+				}
+				members := []fixtureMember{{distributionName, encode(distribution), ""}, {"package.json", encode(pack), ""}, {"bin/git", "native", ""}}
+				if test.reverse {
+					members[0], members[1] = members[1], members[0]
+				}
+				if test.duplicate {
+					members = append(members, fixtureMember{"package.json", encode(pack), ""})
+				}
+				if test.python {
+					members = append(members, fixtureMember{"bin/extensionless", "#!/usr/bin/env python3\n", ""})
+				}
+				if test.escape {
+					members = append(members, fixtureMember{"bin/link", "", "../../outside"})
+				}
+				root := t.TempDir()
+				var report record
+				var err error
+				if archive {
+					var buffer bytes.Buffer
+					tarball := tar.NewWriter(&buffer)
+					for _, member := range members {
+						header := &tar.Header{Name: member.name, Mode: 0644, Size: int64(len(member.text))}
+						if member.link != "" {
+							header.Typeflag, header.Linkname = tar.TypeSymlink, member.link
+						}
+						if err := tarball.WriteHeader(header); err != nil {
+							t.Fatal(err)
+						}
+						if _, err := tarball.Write([]byte(member.text)); err != nil {
+							t.Fatal(err)
+						}
+					}
+					if err := tarball.Close(); err != nil {
+						t.Fatal(err)
+					}
+					name := filepath.Join(root, "fixture.tar")
+					if err := os.WriteFile(name, buffer.Bytes(), 0644); err != nil {
+						t.Fatal(err)
+					}
+					report, err = inspectNoPythonProduct("", name)
+				} else {
+					for _, member := range members {
+						name := filepath.Join(root, filepath.FromSlash(member.name))
+						if member.link != "" {
+							if err := os.Symlink(member.link, name); err != nil {
+								t.Skipf("symlinks unavailable: %v", err)
+							}
+						} else if err := write(name, []byte(member.text), 0644); err != nil {
+							t.Fatal(err)
+						}
+					}
+					report, err = inspectNoPythonProduct(root, "")
+				}
+				bad := test.key != "" || test.differentRoot || test.conflictingFile || test.missingFile || test.duplicate || test.escape
+				if bad {
+					if err == nil {
+						t.Fatalf("conflicting or unsafe product accepted: %+v", report)
+					}
+					return
+				}
+				if err != nil {
+					t.Fatal(err)
+				}
+				if !strings.HasSuffix(stringValue(object(report, "identity"), "manifest"), "git-next-distribution.json") {
+					t.Fatalf("complete distribution manifest was not selected: %+v", report)
+				}
+				wantPython := 0
+				if test.python {
+					wantPython = 1
+				}
+				if report["python_entry_count"] != wantPython || report["complete"] != !test.python {
+					t.Fatalf("Python checks changed: %+v", report)
+				}
+			})
+		}
+	}
+}
 
 func TestProductArchiveAuditChecksLinkTargets(t *testing.T) {
 	for _, target := range []string{"../runtime/bin/python3", "../../outside"} {

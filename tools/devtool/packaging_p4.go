@@ -278,6 +278,10 @@ func pythonRuntimeMember(name string) bool {
 		}
 	}
 	base := path.Base(strings.ToLower(name))
+	// SDK-only generator; libpsl already contains the generated DAFSA data.
+	if base == "psl-make-dafsa" {
+		return true
+	}
 	return strings.HasSuffix(base, ".py") || strings.HasSuffix(base, ".pyc") || base == "git-p4" || base == "git-p4.exe"
 }
 func (b *distributionBuilder) addGitP4(a *app, root, platform, prefix string) (record, error) {

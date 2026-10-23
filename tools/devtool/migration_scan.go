@@ -225,8 +225,12 @@ func inspectNoPythonProduct(directory, archive string) (record, error) {
 	refs := []pythonReference{}
 	count := 0
 	var total int64
-	manifestFound := false
-	identity := record{}
+	type productManifest struct {
+		name  string
+		value record
+	}
+	manifests := map[string]productManifest{}
+	manifestRoot := ""
 	scan := func(name string, size int64, reader io.Reader, isManifest bool) error {
 		count++
 		total += size
@@ -255,12 +259,20 @@ func inspectNoPythonProduct(directory, archive string) (record, error) {
 			if e := decodeJSON(append(prefix, rest...), &candidate); e != nil {
 				return e
 			}
-			if candidate["product"] == "git-next" && number(candidate, "schema_version") == 1 && len(object(candidate, "files")) > 0 {
-				if manifestFound {
-					return fmt.Errorf("ambiguous product manifest")
+			product := stringValue(candidate, "product")
+			if product == "git-next" || number(candidate, "schema_version") == 1 && len(object(candidate, "files")) > 0 {
+				if product != "git-next" || number(candidate, "schema_version") != 1 || len(object(candidate, "files")) == 0 {
+					return fmt.Errorf("invalid or conflicting product manifest: %s", name)
 				}
-				manifestFound = true
-				identity = record{"product": candidate["product"], "version": candidate["version"], "platform": candidate["platform"], "manifest": name}
+				base, root := path.Base(name), path.Dir(name)
+				if len(manifests) > 0 && root != manifestRoot {
+					return fmt.Errorf("product manifests belong to different roots")
+				}
+				if _, found := manifests[base]; found {
+					return fmt.Errorf("duplicate product manifest: %s", name)
+				}
+				manifestRoot = root
+				manifests[base] = productManifest{name, candidate}
 			}
 		}
 		return nil
@@ -350,9 +362,29 @@ func inspectNoPythonProduct(directory, archive string) (record, error) {
 			return nil, e
 		}
 	}
-	if !manifestFound {
+	if len(manifests) == 0 {
 		return nil, fmt.Errorf("git-next product file manifest is required")
 	}
+	selected := manifests["git-next-distribution.json"]
+	if selected.name == "" {
+		selected = manifests["package.json"]
+	}
+	if len(manifests) == 2 {
+		pack := manifests["package.json"].value
+		distribution := manifests["git-next-distribution.json"].value
+		for _, key := range []string{"product", "platform", "version", "source_tree_sha256"} {
+			if stringValue(pack, key) == "" || stringValue(pack, key) != stringValue(distribution, key) {
+				return nil, fmt.Errorf("product manifests disagree on %s", key)
+			}
+		}
+		for name, entry := range object(pack, "files") {
+			other, found := object(distribution, "files")[name]
+			if !found || !equalJSON(entry, other) {
+				return nil, fmt.Errorf("product manifest file records disagree: %s", name)
+			}
+		}
+	}
+	identity := record{"product": selected.value["product"], "version": selected.value["version"], "platform": selected.value["platform"], "source_tree_sha256": selected.value["source_tree_sha256"], "manifest": selected.name}
 	sort.Slice(refs, func(i, j int) bool { return refs[i].Path < refs[j].Path })
 	return record{"schema_version": 1, "scope": "actual final product paths, script headers and direct platform wrappers; opaque source archives and historical receipts are excluded", "input": input, "identity": identity, "files_inspected": count, "declared_bytes_inspected": total, "python_entries": refs, "python_entry_count": len(refs), "complete": len(refs) == 0}, nil
 }

@@ -533,7 +533,7 @@ func prepareGitTerminal(a *app, o options) error {
 		sort.Strings(names)
 		dependencies = append(dependencies, record{"name": item["name"], "version": item["version"], "license": item["license"], "notices": names})
 	}
-	for _, name := range []string{"README.md", "AGENTS.md", "LICENSE", "docs/site/index.html", "vendor/gpui-terminal/MODIFICATIONS.md", "vendor/portable-pty/MODIFICATIONS.md"} {
+	for _, name := range []string{"README.md", "AGENTS.md", "LICENSE", "docs/site/index.html", "vendor/gpui-terminal/MODIFICATIONS.md", "vendor/gpui-fast-windows/MODIFICATIONS.md", "vendor/portable-pty/MODIFICATIONS.md"} {
 		if e = copyFile(filepath.Join(source, filepath.FromSlash(name)), filepath.Join(out, "manuals", filepath.FromSlash(name))); e != nil {
 			return e
 		}

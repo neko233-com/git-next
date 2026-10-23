@@ -30,6 +30,7 @@ var manuals = []manual{
 	{"docs/TEST_COVERAGE.md", "test-coverage.html", "Test coverage"},
 	{"docs/TAKEOVER.md", "takeover.html", "Complete takeover"},
 	{"docs/LFS.md", "lfs.html", "Native LFS"},
+	{"docs/GIT_P4.md", "git-p4.html", "Perforce integration"},
 	{"docs/TERMINAL.md", "terminal.html", "Git-Terminal"},
 	{"docs/GAME_PROJECTS.md", "game-projects.html", "Game projects"},
 	{"docs/READ_COMMANDS.md", "read-commands.html", "Read commands"},

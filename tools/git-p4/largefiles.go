@@ -2,8 +2,8 @@
 package main
 
 import (
+	"archive/zip"
 	"bytes"
-	"compress/flate"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -16,6 +16,38 @@ import (
 )
 
 var lfsAttributeHeader = []byte("\n#\n# Git LFS (see https://git-lfs.github.com/)\n#\n")
+
+func (d *driver) compressedSize(data []byte) (int64, error) {
+	file, e := os.CreateTemp("", "git-p4-compress-")
+	if e != nil {
+		return 0, e
+	}
+	defer os.Remove(file.Name())
+	if _, e = file.Write(data); e != nil {
+		file.Close()
+		return 0, e
+	}
+	if e = file.Close(); e != nil {
+		return 0, e
+	}
+	// Use the owned Git's zlib stream so thresholds match the original ZIP_DEFLATED classification.
+	tree, e := d.gitText("mktree")
+	if e != nil {
+		return 0, e
+	}
+	archive, e := d.gitCall(nil, nil, "archive", "--format=zip", "-6", "--add-file="+file.Name(), tree)
+	if e != nil {
+		return 0, e
+	}
+	z, e := zip.NewReader(bytes.NewReader(archive), int64(len(archive)))
+	if e != nil {
+		return 0, e
+	}
+	if len(z.File) != 1 {
+		return 0, fmt.Errorf("owned Git compression archive has unexpected entries")
+	}
+	return int64(z.File[0].CompressedSize64), nil
+}
 
 func (d *driver) prepareLargeFiles(ref string) error {
 	d.largeFiles = map[string]bool{}
@@ -103,18 +135,11 @@ func (d *driver) largeContent(w io.Writer, mode, name string, data []byte) (stri
 	}
 	compressed, e := strconv.ParseInt(d.cfg("git-p4.largeFileCompressedThreshold"), 10, 64)
 	if !large && e == nil && compressed > 0 && int64(len(data)) > compressed {
-		var b bytes.Buffer
-		zw, e := flate.NewWriter(&b, flate.DefaultCompression)
+		size, e := d.compressedSize(data)
 		if e != nil {
 			return "", nil, e
 		}
-		if _, e = zw.Write(data); e != nil {
-			return "", nil, e
-		}
-		if e = zw.Close(); e != nil {
-			return "", nil, e
-		}
-		large = int64(b.Len()) > compressed
+		large = size > compressed
 	}
 	if !large || len(data) == 0 {
 		return mode, data, nil

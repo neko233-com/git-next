@@ -15,6 +15,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 )
@@ -191,6 +192,7 @@ func extractArchive(archive, destination string, p extractPolicy) (map[string]st
 	written := map[string]string{}
 	var skipped []string
 	var links []archiveMember
+	directories := map[string]os.FileMode{}
 	var total int64
 	e = eachArchive(archive, func(member archiveMember, reader io.Reader) error {
 		relative := member.name
@@ -202,6 +204,7 @@ func extractArchive(archive, destination string, p extractPolicy) (map[string]st
 		}
 		relative = strings.TrimPrefix(relative, "./")
 		if (relative == "" || relative == ".") && member.directory {
+			directories[root] = member.mode.Perm()
 			return nil
 		}
 		target, e := confined(root, relative)
@@ -246,7 +249,11 @@ func extractArchive(archive, destination string, p extractPolicy) (map[string]st
 			return nil
 		}
 		if member.directory {
-			return os.MkdirAll(target, 0755)
+			if e = os.MkdirAll(target, 0755); e != nil {
+				return e
+			}
+			directories[target] = member.mode.Perm()
+			return nil
 		}
 		if e = os.MkdirAll(filepath.Dir(target), 0755); e != nil {
 			return e
@@ -266,6 +273,9 @@ func extractArchive(archive, destination string, p extractPolicy) (map[string]st
 		}
 		if n != member.size {
 			return fmt.Errorf("archive size mismatch: %s", relative)
+		}
+		if e = os.Chmod(target, mode); e != nil {
+			return e
 		}
 		if !member.modified.IsZero() {
 			if e = os.Chtimes(target, member.modified, member.modified); e != nil {
@@ -355,6 +365,16 @@ func extractArchive(archive, destination string, p extractPolicy) (map[string]st
 			return nil, skipped, fmt.Errorf("unresolved archive links")
 		}
 		links = remaining
+	}
+	directoryNames := make([]string, 0, len(directories))
+	for directory := range directories {
+		directoryNames = append(directoryNames, directory)
+	}
+	sort.Slice(directoryNames, func(i, j int) bool { return len(directoryNames[i]) > len(directoryNames[j]) })
+	for _, directory := range directoryNames {
+		if e = os.Chmod(directory, directories[directory]); e != nil {
+			return nil, skipped, e
+		}
 	}
 	return written, skipped, nil
 }

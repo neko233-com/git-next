@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -201,7 +202,11 @@ func macPackageStatic(a *app, o options) error {
 	if len(failures) > 0 {
 		status = "failed"
 	}
-	return acceptReport(a, o, record{"schema_version": 1, "status": status, "platform": "macos-arm64", "acceptance_scope": "linux-docker-package-hashes-arm64-mach-o-and-shell-syntax", "package_manifest_sha256": acceptHash(filepath.Join(root, "package.json")), "files_inspected": len(object(manifest, "files")), "native_images": images, "shell_entrypoints": scripts, "failures": failures, "macos_product_executed": false, "macos_kernel_keychain_runtime_verified": false, "host_profiles_mounted": false})
+	scope := "linux-docker-package-hashes-arm64-mach-o-and-shell-syntax"
+	if runtime.GOOS == "darwin" {
+		scope = "native-macos-package-hashes-arm64-mach-o-and-shell-syntax"
+	}
+	return acceptReport(a, o, record{"schema_version": 1, "status": status, "platform": "macos-arm64", "acceptance_scope": scope, "package_manifest_sha256": acceptHash(filepath.Join(root, "package.json")), "files_inspected": len(object(manifest, "files")), "native_images": images, "shell_entrypoints": scripts, "failures": failures, "macos_product_executed": false, "macos_kernel_keychain_runtime_verified": false, "host_profiles_mounted": false})
 }
 func nativeDockerRun(a *app, o options) error {
 	archive := o.value("archive", "/inputs/package.tar.gz")
@@ -248,6 +253,21 @@ func nativeDockerRun(a *app, o options) error {
 			checks[i] = record{"case": c.name, "status": status, "exit_code": value.code}
 		}()
 	}
+	temp, e := os.MkdirTemp("", "git-next-p4-dispatch-")
+	if e != nil {
+		return e
+	}
+	defer os.RemoveAll(temp)
+	p4Dispatch, p4Err := ownedP4Dispatch(filepath.Join(root, "bin/git"), "/usr/bin/git", temp)
+	p4Status := "pass"
+	if p4Err != nil {
+		p4Status = "fail"
+		p4Dispatch = record{"status": "fail", "reason": p4Err.Error()}
+	}
+	if e = writeNewJSON(filepath.Join(resultDir, "git-p4-dispatch.json"), p4Dispatch); e != nil {
+		return e
+	}
+	checks = append(checks, record{"case": "git-p4-owned-dispatch", "status": p4Status, "report_sha256": digestBytes(encoded(p4Dispatch))})
 	report := record{"schema_version": 1, "status": acceptStatus(checks), "platform": manifest["platform"], "package_manifest_sha256": acceptHash(filepath.Join(root, "package.json")), "files_verified": len(object(manifest, "files")), "cases": checks, "personal_profile_mounted": false}
 	if e = writeNewJSON(filepath.Join(resultDir, "linux-native.json"), report); e != nil {
 		return e

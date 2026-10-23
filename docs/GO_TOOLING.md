@@ -51,6 +51,13 @@ identities. A source or runtime change reopens the affected gate. Compilation,
 cross-compilation and static package inspection are distinct from actual platform
 execution. Existing receipts keep their original hashes and scope.
 
+The native release also requires `native-mac-runtime-acceptance` on Apple Silicon.
+Pass its exact-archive receipt to `freeze-native-batch --mac-runtime-receipt`.
+The 51 actual cases cover common CLI, core contracts, LFS/signing and read-thread
+budgets; Darwin CPU affinity constraints remain explicitly unsupported. The Linux
+static inspection still checks the same Mac archive independently. Release staging
+rejects absent, incomplete or changed Mac runtime evidence.
+
 ## Migration evidence and rollback
 
 The initial remaining inventory was 114 files. Upstream added the freestanding

@@ -31,6 +31,12 @@ func init() {
 	})
 	register("native-docker-batch", "Run one complete-package Docker acceptance and clean exact owned resources", "platform archive sha256 base-image output go", nativeDockerBatch)
 }
+func matrixHarnessPath(a *app, m record, name string) (string, error) {
+	if peer := stringValue(m, "terminal_source"); peer != "" && strings.HasPrefix(name, "../git-terminal/") {
+		return confined(peer, strings.TrimPrefix(name, "../git-terminal/"))
+	}
+	return a.path(filepath.FromSlash(name)), nil
+}
 func nativeMatrixReadback(a *app, m record) error {
 	for path, want := range object(m, "files") {
 		if e := requireHash(path, want); e != nil {
@@ -38,16 +44,31 @@ func nativeMatrixReadback(a *app, m record) error {
 		}
 	}
 	for name, want := range object(m, "harnesses") {
-		path := a.path(name)
-		if peer := stringValue(m, "terminal_source"); peer != "" && strings.HasPrefix(name, "../git-terminal/") {
-			var e error
-			path, e = confined(peer, strings.TrimPrefix(name, "../git-terminal/"))
-			if e != nil {
-				return e
-			}
+		path, e := matrixHarnessPath(a, m, name)
+		if e != nil {
+			return e
 		}
 		if e := requireHash(path, want); e != nil {
 			return e
+		}
+	}
+	mac := object(object(m, "platforms"), "macos-arm64")
+	if mac["native_executed"] == true && stringValue(mac, "runtime_receipt") == "" {
+		return fmt.Errorf("Mac native execution flag lacks its exact runtime receipt")
+	}
+	if path := stringValue(mac, "runtime_receipt"); path != "" {
+		if mac["native_executed"] != true {
+			return fmt.Errorf("Mac actual runtime evidence flag is inconsistent")
+		}
+		if e := requireHash(path, object(m, "files")[path]); e != nil {
+			return e
+		}
+		r, e := checkedMacRuntimeReceipt(a, path, stringValue(mac, "archive"), stringValue(m, "source_tree_sha256"), stringValue(m, "version"))
+		if e != nil {
+			return e
+		}
+		if r["archive_sha256"] != mac["runtime_archive_sha256"] {
+			return fmt.Errorf("Mac runtime archive hash is inconsistent")
 		}
 	}
 	return nil
@@ -326,7 +347,7 @@ func nativeProductBatch(a *app, o options) error {
 		reusedScopes = append(reusedScopes, s)
 	}
 	sort.Strings(reusedScopes)
-	report := record{"schema_version": 1, "status": status, "phase": phase, "matrix_sha256": identity, "reference_sha256": referenceSHA, "source_tree_sha256": matrix["source_tree_sha256"], "results": results, "release_eligible": false, "native_mac_product_executed": false, "personal_account_accessed": false, "elapsed_seconds": elapsed, "wall_clock_target_seconds": target, "wall_clock_target_met": elapsed < target, "workers": effectiveWorkers, "msi_transactions_serialized": true, "local_pairs_per_command": localPairs, "network_pairs_per_operation": networkPairs, "checks_skipped_to_meet_time_target": false, "msi_scopes_reusing_unchanged_passed_evidence": reusedScopes, "desktop_reusing_unchanged_passed_evidence": len(reusedDesktop) > 0, "msi_transactions_after_parallel_functional_lanes": !o.yes("performance")}
+	report := record{"schema_version": 1, "status": status, "phase": phase, "matrix_sha256": identity, "reference_sha256": referenceSHA, "source_tree_sha256": matrix["source_tree_sha256"], "results": results, "release_eligible": false, "native_mac_product_executed": object(platforms, "macos-arm64")["native_executed"] == true, "personal_account_accessed": false, "elapsed_seconds": elapsed, "wall_clock_target_seconds": target, "wall_clock_target_met": elapsed < target, "workers": effectiveWorkers, "msi_transactions_serialized": true, "local_pairs_per_command": localPairs, "network_pairs_per_operation": networkPairs, "checks_skipped_to_meet_time_target": false, "msi_scopes_reusing_unchanged_passed_evidence": reusedScopes, "desktop_reusing_unchanged_passed_evidence": len(reusedDesktop) > 0, "msi_transactions_after_parallel_functional_lanes": !o.yes("performance")}
 	if !o.yes("performance") {
 		first, last := math.MaxFloat64, 0.0
 		msiSeconds := 0.0
@@ -452,7 +473,7 @@ func nativeDockerBatch(a *app, o options) (returned error) {
 		return fmt.Errorf("Docker acceptance image build failed")
 	}
 	args := append([]string{"run", "--rm", "--init", "--name", container}, labels...)
-	args = append(args, "--platform", "linux/"+arch, "--network", "none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--pids-limit", "128", "--memory", "2g", "--cpus", "4", "--tmpfs", "/tmp:rw,exec,size=1536m", "--env", "GIT_NEXT_ROOT=/repo", "--mount", "type=bind,source="+out+",target=/results", "--mount", "type=bind,source="+a.root+",target=/repo,readonly", "--mount", "type=bind,source="+a.path("tests")+",target=/tests,readonly", "--mount", "type=bind,source="+a.path("tests/containers")+",target=/harness,readonly", "--mount", "type=bind,source="+tool+",target=/harness/git-next-tool,readonly", "--mount", "type=bind,source="+archive+",target=/inputs/package.tar.gz,readonly", image)
+	args = append(args, "--platform", "linux/"+arch, "--network", "none", "--read-only", "--cap-drop=ALL", "--security-opt=no-new-privileges", "--pids-limit", "128", "--memory", "2g", "--cpus", "4", "--tmpfs", "/tmp:rw,exec,size=1536m", "--env", "GIT_NEXT_ROOT=/repo", "--mount", "type=bind,source="+out+",target=/results", "--mount", "type=bind,source="+a.root+",target=/repo,readonly", "--mount", "type=bind,source="+a.path("tests")+",target=/tests,readonly", "--mount", "type=bind,source="+a.path("tests/containers")+",target=/harness,readonly", "--mount", "type=bind,source="+tool+",target=/usr/local/bin/git-next-tool,readonly", "--mount", "type=bind,source="+archive+",target=/inputs/package.tar.gz,readonly", image)
 	if mac {
 		args = append(args, "--archive", "/inputs/package.tar.gz", "--output", "/results/macos-package-static.json")
 	}

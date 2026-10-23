@@ -154,6 +154,9 @@ func TestNativeMatrixReadsExplicitTerminalWorktree(t *testing.T) {
 		t.Fatal(e)
 	}
 	m := record{"terminal_source": clean, "harnesses": record{"../git-terminal/src/main.rs": hash}}
+	if _, e = matrixHarnessPath(&app{root: root}, m, "../git-terminal/../../outside"); e == nil {
+		t.Fatal("terminal harness escaped explicit worktree")
+	}
 	if e = nativeMatrixReadback(&app{root: root}, m); e != nil {
 		t.Fatal(e)
 	}

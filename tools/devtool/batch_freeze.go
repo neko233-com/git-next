@@ -12,7 +12,7 @@ var nativePlatforms = []string{"windows-x64", "windows-arm64", "linux-x64", "lin
 var nativeBases = map[string]string{"linux-x64": "debian@sha256:7c7b2c966bc9ee8cedfeef67e0e279108992c77681fa595db4a9d65c06ccc587", "linux-arm64": "debian@sha256:a1b86db52ce3daef089e45aabe36dfec4091f82464c25c1fdcf03de197cbe82a"}
 
 func init() {
-	register("freeze-native-batch", "Freeze complete package and actual Go/platform harness bytes", "windows-x64 windows-arm64 linux-x64 linux-arm64 macos-arm64 msi-directory base-msi-directory source-bundles race-binary terminal-source output", freezeNativeBatch)
+	register("freeze-native-batch", "Freeze complete package and actual Go/platform harness bytes", "windows-x64 windows-arm64 linux-x64 linux-arm64 macos-arm64 mac-runtime-receipt msi-directory base-msi-directory source-bundles race-binary terminal-source output", freezeNativeBatch)
 }
 func gitMetadata(a *app, args ...string) (string, error) {
 	ctx, cancel := deadline()
@@ -75,7 +75,7 @@ func freezeNativeBatch(a *app, o options) error {
 		if e != nil {
 			return e
 		}
-		if !strings.Contains(testModule, "#[cfg(all(test, windows))]\nmod shell_acceptance;") {
+		if !strings.Contains(strings.ReplaceAll(testModule, "\r\n", "\n"), "#[cfg(all(test, windows))]\nmod shell_acceptance;") {
 			return fmt.Errorf("excluded terminal fixture must remain test-only")
 		}
 		if built == "" {
@@ -215,6 +215,19 @@ func freezeNativeBatch(a *app, o options) error {
 		return e
 	}
 	identities[stringValue(core, "source_tree_sha256")] = true
+	if path := o.get("mac-runtime-receipt"); path != "" {
+		r, e := checkedMacRuntimeReceipt(a, path, archive, stringValue(core, "source_tree_sha256"), version)
+		if e != nil {
+			return e
+		}
+		p, e := pin(path)
+		if e != nil {
+			return e
+		}
+		entry := object(platforms, "macos-arm64")
+		entry["runtime_receipt"], entry["native_executed"] = p, r["native_executed"]
+		entry["runtime_archive_sha256"] = r["archive_sha256"]
+	}
 	if len(identities) != 1 || identities[""] {
 		return fmt.Errorf("five cores must share a frozen source identity")
 	}

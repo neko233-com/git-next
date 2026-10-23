@@ -150,7 +150,11 @@ func prepareNativeRelease(a *app, o options) error {
 		if o.get("windows-runtime-acl-fix") != "" && (name == "packaging/windows/Runtime.Configuration.ps1" || name == "tests/updater_acceptance.ps1") {
 			continue
 		}
-		actual, e := digest(a.path(filepath.FromSlash(name)))
+		path, e := matrixHarnessPath(a, matrix, name)
+		if e != nil {
+			return e
+		}
+		actual, e := digest(path)
 		if e != nil || actual != h {
 			return fmt.Errorf("accepted source/harness input changed: %s", name)
 		}
@@ -164,6 +168,18 @@ func prepareNativeRelease(a *app, o options) error {
 	if len(platformsInput) != 5 {
 		return fmt.Errorf("release requires exact supported five platforms")
 	}
+	mac := object(platformsInput, "macos-arm64")
+	if mac["native_executed"] != true || stringValue(mac, "runtime_receipt") == "" {
+		return fmt.Errorf("release requires actual macOS ARM64 runtime evidence")
+	}
+	macRuntimeHash := object(matrix, "files")[stringValue(mac, "runtime_receipt")]
+	if e = requireHash(stringValue(mac, "runtime_receipt"), macRuntimeHash); e != nil {
+		return e
+	}
+	macRuntime, e := checkedMacRuntimeReceipt(a, stringValue(mac, "runtime_receipt"), stringValue(mac, "archive"), stringValue(matrix, "source_tree_sha256"), stringValue(matrix, "version"))
+	if e != nil {
+		return e
+	}
 	out, e := newDestination(o.get("destination"))
 	if e != nil {
 		return e
@@ -176,7 +192,7 @@ func prepareNativeRelease(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	proof := record{"schema_version": 1, "product": "git-next", "source_commit": o.get("source-commit"), "source_tree_sha256": matrix["source_tree_sha256"], "matrix_sha256": identity, "correctness_sha256": ch, "performance_sha256": ph, "native_mac_product_executed": false, "personal_account_accessed": false, "scope": "accepted core/runtime bytes; release metadata, documentation and archive root finalized after local gates"}
+	proof := record{"schema_version": 1, "product": "git-next", "source_commit": o.get("source-commit"), "source_tree_sha256": matrix["source_tree_sha256"], "matrix_sha256": identity, "correctness_sha256": ch, "performance_sha256": ph, "native_mac_product_executed": true, "native_mac_runtime_cases": macRuntime["passed_cases"], "native_mac_runtime_receipt_sha256": macRuntimeHash, "personal_account_accessed": false, "scope": "accepted core/runtime bytes; release metadata, documentation and archive root finalized after local gates"}
 	for k, v := range repairs {
 		proof[k] = v
 	}

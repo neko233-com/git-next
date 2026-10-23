@@ -19,13 +19,17 @@ impl Process {
             command.process_group(0);
         }
         let child = command.spawn().context("spawn acceptance process")?;
-        let mut process = Self {
+        let process = Self {
             child,
             #[cfg(windows)]
             job: std::ptr::null_mut(),
         };
         #[cfg(windows)]
-        process.limit_job()?;
+        let process = {
+            let mut process = process;
+            process.limit_job()?;
+            process
+        };
         Ok(process)
     }
 

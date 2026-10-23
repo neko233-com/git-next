@@ -4,7 +4,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"context"
 	"fmt"
 	"io"
 	"os"
@@ -14,7 +13,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type gitDelta struct{ oldMode, newMode, oldID, newID, status, source, destination string }
@@ -56,6 +54,7 @@ func parseRawDiff(raw []byte) ([]gitDelta, error) {
 	return result, nil
 }
 func wildcardEncode(s string) string {
+	s = filepath.ToSlash(s)
 	return strings.NewReplacer("%", "%25", "@", "%40", "#", "%23", "*", "%2A").Replace(s)
 }
 func (d *driver) hook(name string, args ...string) error {
@@ -78,10 +77,52 @@ func (d *driver) clientPath(depot string) (string, error) {
 		}
 		p := text(item["path"])
 		if p != "" {
+			if runtime.GOOS == "windows" {
+				if strings.HasPrefix(p, "/cygdrive/") {
+					p = strings.TrimPrefix(p, "/cygdrive")
+				}
+				if len(p) >= 3 && p[0] == '/' && p[2] == '/' && (p[1] >= 'a' && p[1] <= 'z' || p[1] >= 'A' && p[1] <= 'Z') {
+					p = strings.ToUpper(p[1:2]) + ":" + p[2:]
+				}
+			}
 			return strings.TrimSuffix(strings.TrimSuffix(p, "..."), string(filepath.Separator)), nil
 		}
 	}
 	return "", fmt.Errorf("cannot locate Perforce checkout for %s", depot)
+}
+func (d *driver) submitWorkspace(depot string) (string, error) {
+	if d.cfgBool("git-p4.useclientspec") {
+		refs, e := d.gitText("for-each-ref", "--format=%(refname)", "refs/remotes/p4", "refs/heads/p4")
+		if e != nil {
+			return "", e
+		}
+		count := 0
+		for _, ref := range strings.Fields(refs) {
+			if !strings.HasSuffix(ref, "/HEAD") {
+				count++
+			}
+		}
+		if count < 2 {
+			client, e := d.p4Single("client", "-o")
+			if e != nil {
+				return "", e
+			}
+			root := text(client["Root"])
+			if runtime.GOOS == "windows" {
+				if strings.HasPrefix(root, "/cygdrive/") {
+					root = strings.TrimPrefix(root, "/cygdrive")
+				}
+				if len(root) >= 3 && root[0] == '/' && root[2] == '/' {
+					root = strings.ToUpper(root[1:2]) + ":" + root[2:]
+				}
+			}
+			if root == "" {
+				return "", fmt.Errorf("Perforce client root missing")
+			}
+			return root, nil
+		}
+	}
+	return d.clientPath(depot)
 }
 func (d *driver) preflightUsers(commits, paths []string) error {
 	d.commitUsers = map[string]string{}
@@ -127,6 +168,7 @@ func (d *driver) preflightUsers(commits, paths []string) error {
 }
 func (d *driver) submit(o cliOptions) error {
 	d.promptReader = nil
+	d.moveAvailable = nil
 	if len(o.args) > 1 {
 		return fmt.Errorf("submit accepts at most one Git branch")
 	}
@@ -152,6 +194,9 @@ func (d *driver) submit(o cliOptions) error {
 	}
 	if d.cfg("git-p4.largeFileSystem") != "" {
 		return fmt.Errorf("large file system not supported for git-p4 submit; remove it from config")
+	}
+	if e := d.checkAccess(); e != nil {
+		return e
 	}
 	upstream, settings, e := d.upstream("")
 	if e != nil {
@@ -207,10 +252,15 @@ func (d *driver) submit(o cliOptions) error {
 	if conflict != "ask" && conflict != "skip" && conflict != "quit" {
 		return fmt.Errorf("invalid conflict behavior")
 	}
-	workspace, e := d.clientPath(settings.paths[0])
+	workspace, e := d.submitWorkspace(settings.paths[0])
 	if e != nil {
 		return e
 	}
+	previousP4CWD := d.p4cwd
+	if info, e := os.Stat(workspace); e == nil && info.IsDir() {
+		d.p4cwd = workspace
+	}
+	defer func() { d.p4cwd = previousP4CWD }()
 	opened, e := d.p4List("opened", settings.paths[0]+"...")
 	if e != nil {
 		return e
@@ -234,12 +284,22 @@ func (d *driver) submit(o cliOptions) error {
 			}
 			fmt.Fprintln(d.out, " ", subject)
 		}
+		if o.flags["export-labels"] || d.cfgBool("git-p4.exportLabels") {
+			return d.exportLabels(settings.paths, true)
+		}
 		return nil
 	}
+	newWorkspace := !existsPath(workspace)
 	if e = os.MkdirAll(workspace, 0755); e != nil {
 		return e
 	}
-	if _, e = d.p4List("sync", settings.paths[0]+"..."); e != nil {
+	d.p4cwd = workspace
+	syncArgs := []string{"sync"}
+	if newWorkspace {
+		syncArgs = append(syncArgs, "-f")
+	}
+	syncArgs = append(syncArgs, settings.paths[0]+"...")
+	if _, e = d.p4List(syncArgs...); e != nil {
 		return e
 	}
 	gitdir, e := d.gitText("rev-parse", "--absolute-git-dir")
@@ -247,6 +307,7 @@ func (d *driver) submit(o cliOptions) error {
 		return e
 	}
 	var submitted []string
+	var applied []string
 	var firstFailure error
 	for i, commit := range pending {
 		updateShelf := ""
@@ -268,8 +329,10 @@ func (d *driver) submit(o cliOptions) error {
 				fmt.Fprintf(d.err, "Skipping commit %s: %v\n", commit, e)
 				continue
 			}
+			d.reportApplied(pending, applied, o.flags["shelve"] || len(shelves) > 0)
 			return e
 		}
+		applied = append(applied, commit)
 		if change != "" {
 			submitted = append(submitted, change)
 		}
@@ -278,6 +341,7 @@ func (d *driver) submit(o cliOptions) error {
 		}
 	}
 	if firstFailure != nil {
+		d.reportApplied(pending, applied, o.flags["shelve"] || len(shelves) > 0)
 		return firstFailure
 	}
 	shelved := o.flags["shelve"] || len(shelves) > 0
@@ -303,6 +367,44 @@ func (d *driver) submit(o cliOptions) error {
 		}
 	}
 	return nil
+}
+func (d *driver) reportApplied(pending, applied []string, shelved bool) {
+	action := "applied"
+	if shelved {
+		action = "shelved"
+	}
+	if len(applied) == 0 {
+		fmt.Fprintf(d.out, "No commits %s.\n", action)
+		return
+	}
+	fmt.Fprintf(d.out, "%s only the commits marked with '*':\n", strings.ToUpper(action[:1])+action[1:])
+	for _, commit := range pending {
+		mark := " "
+		for _, done := range applied {
+			if done == commit {
+				mark = "*"
+				break
+			}
+		}
+		subject, e := d.gitText("show", "-s", "--format=%h %s", commit)
+		if e == nil {
+			fmt.Fprintln(d.out, mark, subject)
+		}
+	}
+	fmt.Fprintln(d.out, "You will have to do 'git p4 sync' and rebase.")
+}
+func (d *driver) canMove() bool {
+	if d.moveAvailable != nil {
+		return *d.moveAvailable
+	}
+	_, e := d.p4Raw(nil, "move", "-k", "@from", "@to")
+	message := ""
+	if e != nil {
+		message = strings.ToLower(e.Error())
+	}
+	allowed := !strings.Contains(message, "disabled") && !strings.Contains(message, "invalid option") && !strings.Contains(message, "unknown command")
+	d.moveAvailable = &allowed
+	return allowed
 }
 func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, updateShelf string) (change string, failure error) {
 	diffOpts := []string{}
@@ -345,6 +447,8 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	}
 	var owned []string
 	var added []string
+	var pureCopies []string
+	fallbackDeletes := map[string]bool{}
 	type backup struct {
 		data []byte
 		mode os.FileMode
@@ -387,26 +491,55 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	for _, delta := range deltas {
 		src, dst := filepath.Join(workspace, filepath.FromSlash(delta.source)), filepath.Join(workspace, filepath.FromSlash(delta.destination))
 		switch delta.status[0] {
-		case 'M', 'T':
+		case 'M':
 			if e = p4("edit", wildcardEncode(src)); e != nil {
 				return "", e
 			}
+			owned = append(owned, src)
+		case 'T':
 			owned = append(owned, src)
 		case 'D':
 			owned = append(owned, src)
 		case 'R':
-			if e = p4("edit", wildcardEncode(src)); e != nil {
-				return "", e
-			}
 			owned = append(owned, src, dst)
-			if e = p4("move", "-k", wildcardEncode(src), wildcardEncode(dst)); e != nil {
-				return "", e
+			if d.canMove() {
+				if e = p4("edit", wildcardEncode(src)); e != nil {
+					return "", e
+				}
+				if e = p4("move", "-k", wildcardEncode(src), wildcardEncode(dst)); e != nil {
+					return "", e
+				}
+			} else {
+				if e = p4("integrate", "-Dt", wildcardEncode(src), wildcardEncode(dst)); e != nil {
+					return "", e
+				}
+				if delta.oldID != delta.newID || delta.oldMode != delta.newMode {
+					if e = p4("edit", wildcardEncode(dst)); e != nil {
+						return "", e
+					}
+				} else {
+					pureCopies = append(pureCopies, dst)
+				}
+				if e = os.Chmod(dst, 0644); e != nil {
+					return "", e
+				}
+				if e = os.Remove(dst); e != nil {
+					return "", e
+				}
+				fallbackDeletes[src] = true
 			}
 		case 'C':
 			if e = p4("integrate", "-Dt", wildcardEncode(src), wildcardEncode(dst)); e != nil {
 				return "", e
 			}
 			owned = append(owned, dst)
+			if delta.oldID != delta.newID || delta.oldMode != delta.newMode {
+				if e = p4("edit", wildcardEncode(dst)); e != nil {
+					return "", e
+				}
+			} else {
+				pureCopies = append(pureCopies, dst)
+			}
 			if existsPath(dst) {
 				if e = os.Chmod(dst, 0644); e != nil {
 					return "", e
@@ -470,8 +603,21 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	}
 	for _, delta := range deltas {
 		dst := filepath.Join(workspace, filepath.FromSlash(delta.destination))
+		if delta.status[0] == 'T' {
+			if e = p4("edit", "-t", "auto", wildcardEncode(dst)); e != nil {
+				return "", e
+			}
+		}
+		if delta.status[0] == 'R' {
+			src := filepath.Join(workspace, filepath.FromSlash(delta.source))
+			if fallbackDeletes[src] {
+				if e = p4("delete", wildcardEncode(src)); e != nil {
+					return "", e
+				}
+			}
+		}
 		if delta.status[0] == 'A' {
-			if e = p4("add", "-f", dst); e != nil {
+			if e = p4("add", "-f", filepath.ToSlash(dst)); e != nil {
 				return "", e
 			}
 			owned = append(owned, dst)
@@ -518,7 +664,7 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	}
 	jobs := ""
 	if i := strings.Index("\n"+description, "\nJobs:"); i >= 0 {
-		body := strings.TrimSpace(("\n" + description)[i+len("\nJobs:"):])
+		body := strings.TrimSpace(("\n" + description)[i+1:])
 		jobs = body
 		description = strings.TrimSpace(("\n" + description)[:i])
 	}
@@ -533,11 +679,6 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	form := dictionary{"Change": "new", "Client": client["Client"], "User": currentUser["User"], "Description": description}
 	if updateShelf != "" {
 		form["Change"] = updateShelf
-	}
-	if jobs != "" {
-		for i, job := range strings.Fields(jobs) {
-			form["Jobs"+strconv.Itoa(i)] = job
-		}
 	}
 	var opened []dictionary
 	seenOwned := map[string]bool{}
@@ -569,6 +710,9 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 		}
 	}
 	template := formatP4Form(form)
+	if jobs != "" {
+		template = bytes.Replace(template, []byte("\nFiles:\n"), []byte("\n"+jobs+"\n\nFiles:\n"), 1)
+	}
 	if o.flags["preserve-user"] || d.cfgBool("git-p4.preserveUser") {
 		template = append(template, []byte("\n######## Actual user "+d.commitUsers[commit]+", modified after commit\n")...)
 	}
@@ -608,7 +752,13 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	}
 	if o.flags["prepare-p4-only"] {
 		keep = true
-		fmt.Fprintf(d.out, "Prepared Perforce workspace %s; submit template %s\n", workspace, templatePath)
+		fmt.Fprintf(d.out, "Perforce workspace prepared for submission in %s; submit template %s\n", workspace, templatePath)
+		if len(added) > 0 {
+			fmt.Fprintln(d.out, "Added files must be deleted when reverting this preparation:")
+			for _, p := range added {
+				fmt.Fprintln(d.out, p)
+			}
+		}
 		return "", nil
 	}
 	if !d.cfgBool("git-p4.skipSubmitEdit") {
@@ -676,6 +826,11 @@ func (d *driver) submitCommit(commit, workspace, gitdir string, o cliOptions, up
 	}
 	if !shelve {
 		keep = true
+		for _, p := range pureCopies {
+			if _, e = d.p4List("sync", "-f", wildcardEncode(p)); e != nil {
+				return "", e
+			}
+		}
 	}
 	if o.flags["preserve-user"] || d.cfgBool("git-p4.preserveUser") {
 		if change == "" {
@@ -754,7 +909,7 @@ func (d *driver) runEditor(editor, file string) error {
 		_, _, e := d.process(nil, nil, "notepad.exe", file)
 		return e
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Minute)
+	ctx, cancel := d.commandContext()
 	defer cancel()
 	cmd := exec.CommandContext(ctx, shell, "-c", editor+` "$1"`, "git-p4-editor", file)
 	cmd.Dir = d.cwd
@@ -873,7 +1028,7 @@ func (d *driver) unshelve(o cliOptions) error {
 	fmt.Fprintf(d.out, "unshelved changelist %d into %s\n", change, ref)
 	return nil
 }
-func (d *driver) exportLabels(roots []string) error {
+func (d *driver) exportLabels(roots []string, dryRun ...bool) error {
 	labels, e := d.p4List("labels")
 	if e != nil {
 		return e
@@ -904,6 +1059,10 @@ func (d *driver) exportLabels(roots []string) error {
 		}
 		settings, e := settingsFromLog(log)
 		if e != nil {
+			continue
+		}
+		if len(dryRun) > 0 && dryRun[0] {
+			fmt.Fprintf(d.out, "Would create p4 label %s\n", name)
 			continue
 		}
 		description := "lightweight tag imported by git p4\n"

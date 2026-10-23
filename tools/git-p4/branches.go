@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"path"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -67,6 +68,11 @@ func (d *driver) syncBranches(roots []string, revision string, o cliOptions) err
 		}
 		return fmt.Errorf("no standard Perforce branch mappings or git-p4.branchList defined")
 	}
+	var clientBranches []string
+	for branch := range mapping {
+		clientBranches = append(clientBranches, branch)
+	}
+	sort.Slice(clientBranches, func(i, j int) bool { return len(clientBranches[i]) > len(clientBranches[j]) })
 	project := path.Base(strings.TrimSuffix(root, "/")) + "/"
 	refFor := func(branch string) string {
 		name := project + branch
@@ -106,13 +112,38 @@ func (d *driver) syncBranches(roots []string, revision string, o cliOptions) err
 			}
 		}
 		sub.values["branch"] = []string{ref}
+		sub.values["_client-branch-prefixes"] = clientBranches
 		if existed != nil {
 			sub.args = []string{root + branch + "/" + revision}
+			if flags["use-client-spec"] && source != branch && source != "" {
+				changes, e := d.changesForPaths([]string{root + branch + "/"}, revision, 0, o.value("changes-block-size"))
+				if e != nil {
+					return e
+				}
+				if len(changes) > 0 {
+					first := changes[0]
+					for _, change := range changes {
+						if change < first {
+							first = change
+						}
+					}
+					parent, e := d.branchParentBefore(refFor(source), first)
+					if e != nil {
+						return e
+					}
+					if parent != "" {
+						sub.values["_initial-parent"] = []string{parent}
+					}
+				}
+			}
 		}
 		if e := d.sync(sub); e != nil {
 			return e
 		}
-		if existed != nil && source != branch && source != "" {
+		if _, e := d.gitText("rev-parse", "--verify", ref); e != nil {
+			return nil
+		}
+		if existed != nil && source != branch && source != "" && sub.value("_initial-parent") == "" {
 			if e := d.attachBranchParent(ref, refFor(source)); e != nil {
 				return e
 			}
@@ -146,6 +177,24 @@ func (d *driver) syncBranches(roots []string, revision string, o cliOptions) err
 		}
 	}
 	return nil
+}
+
+func (d *driver) branchParentBefore(source string, change int64) (string, error) {
+	commits, e := d.gitText("rev-list", source)
+	if e != nil {
+		return "", e
+	}
+	for _, commit := range strings.Fields(commits) {
+		message, e := d.gitText("show", "-s", "--format=%B", commit)
+		if e != nil {
+			return "", e
+		}
+		settings, e := settingsFromLog(message)
+		if e == nil && settings.change <= change {
+			return commit, nil
+		}
+	}
+	return "", nil
 }
 func (d *driver) attachBranchParent(branch, source string) error {
 	commits, e := d.gitText("rev-list", "--reverse", branch)

@@ -1,7 +1,8 @@
 use anyhow::{Context, Result, ensure};
+#[cfg(windows)]
+use std::io::Write;
 use std::{
     fs,
-    io::Write,
     path::{Path, PathBuf},
     process::{Command, Stdio},
 };

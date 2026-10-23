@@ -40,6 +40,9 @@ func (b *distributionBuilder) store(name string, data []byte, component string, 
 	if e = write(p, data, os.FileMode(mode)); e != nil {
 		return e
 	}
+	if e = os.Chmod(p, os.FileMode(mode)); e != nil {
+		return e
+	}
 	if attributes&4 != 0 {
 		if e = setSystemFileAttribute(p); e != nil {
 			return e
@@ -225,6 +228,20 @@ func posixRelative(from, to string) string {
 		return ""
 	}
 	return filepath.ToSlash(p)
+}
+func publicPOSIXDistribution(root string) error {
+	if e := os.Chmod(filepath.Join(root, "git-next-distribution.json"), 0644); e != nil {
+		return e
+	}
+	return filepath.WalkDir(root, func(p string, entry os.DirEntry, e error) error {
+		if e != nil {
+			return e
+		}
+		if entry.IsDir() {
+			return os.Chmod(p, 0755)
+		}
+		return nil
+	})
 }
 func assembleNativePOSIX(a *app, o options) error {
 	if runtime.GOOS == "windows" {
@@ -570,6 +587,9 @@ func assembleNativePOSIX(a *app, o options) error {
 	report := record{"schema_version": 1, "status": "posix-distribution-assembled-not-runtime-accepted", "product": "git-next", "platform": target, "version": build["product_version"], "source_tree_sha256": build["source_tree_sha256"], "files": b.records, "native_images_inspected": len(b.images), "core_receipt_sha256": ch, "runtime_receipt_sha256": rh, "shared_receipt_sha256": sh, "upstream_git_core_deployed": false, "product_executed": false, "tests_executed": false, "installed": false, "complete_git_parity": compat["complete_git_parity"], "release_eligible": false}
 	report["git_p4"], report["python_required"] = p4Receipt, false
 	if e = writeNewJSON(filepath.Join(out, "git-next-distribution.json"), report); e != nil {
+		return e
+	}
+	if e = publicPOSIXDistribution(out); e != nil {
 		return e
 	}
 	return a.json(record{"status": report["status"], "platform": target, "files": len(b.records), "product_executed": false})
@@ -1013,10 +1033,9 @@ func assembleNativeWindows(a *app, o options) error {
 	if e = b.copy(filepath.Join(worker, "receipt.json"), "LICENSES/git-next-msi-worker/source.json", "msi-worker-source-identity", 0644, 0); e != nil {
 		return e
 	}
-	system := map[string]bool{}
-	systemPaths, _ := filepath.Glob(filepath.Join(os.Getenv("SystemRoot"), "System32/*.dll"))
-	for _, p := range systemPaths {
-		system[strings.ToLower(filepath.Base(p))] = true
+	system, e := windowsSystemDLLNames(filepath.Join(os.Getenv("SystemRoot"), "System32"))
+	if e != nil {
+		return fmt.Errorf("enumerate Windows system DLLs: %w", e)
 	}
 	seen := map[string]bool{}
 	var inspect func(string) error

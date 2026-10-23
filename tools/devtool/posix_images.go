@@ -65,6 +65,10 @@ func relocateELF(a *app, p, libraries string) error {
 	return e
 }
 func relocateMacho(a *app, p, root string, mapping map[string]string) error {
+	info, e := os.Stat(p)
+	if e != nil {
+		return e
+	}
 	names, e := machoNeeded(p)
 	if e != nil {
 		return e
@@ -104,7 +108,10 @@ func relocateMacho(a *app, p, root string, mapping map[string]string) error {
 	if changed {
 		_, e = a.mustRun("codesign", "--force", "--sign", "-", "--timestamp=none", "--preserve-metadata=entitlements,flags,runtime", p)
 	}
-	return e
+	if e != nil {
+		return e
+	}
+	return os.Chmod(p, info.Mode().Perm())
 }
 func machoRpaths(p string) ([]string, error) {
 	f, e := macho.Open(p)
