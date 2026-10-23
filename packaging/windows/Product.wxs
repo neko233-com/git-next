@@ -4,7 +4,8 @@
   <Package Name="git-next" Manufacturer="neko233-com" Language="1033"
            Version="$(MsiVersion)" ProductCode="$(ProductCode)" UpgradeCode="$(UpgradeCode)"
            Scope="$(PackageScope)" InstallerVersion="500" Compressed="yes">
-    <MajorUpgrade Schedule="afterInstallInitialize" AllowSameVersionUpgrades="yes"
+    <!-- Keep the old registration intact until the new payload transaction succeeds. -->
+    <MajorUpgrade Schedule="afterInstallExecute" AllowSameVersionUpgrades="yes"
                   DowngradeErrorMessage="A newer git-next version is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
     <Property Id="ARPNOMODIFY" Value="1" />
@@ -168,7 +169,7 @@
       <ComponentRef Id="MachineMigrationSecurity" /><ComponentRef Id="MachineUpdateState" />
       <ComponentRef Id="MachineConfigState" /><ComponentRef Id="MachineComponentState" />
       <?endif?>
-      <ComponentGroupRef Id="Payload" />
+      <FeatureGroupRef Id="PayloadFeatures" />
     </Feature>
   </Package>
 </Wix>

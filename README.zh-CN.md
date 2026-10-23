@@ -1,16 +1,14 @@
 # git-next
 
-开发工具采用 [Rust 验收 + Go 工具链](docs/GO_TOOLING.md)。Go 接替自有 Python 构建、打包和文档工具；native 构建、MSI 和迁移能力保留到替代实现通过等价验证，迁移审计如实报告剩余 Python 文件。
-
-Rust CLI 的合并/tag 门禁统一为 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)：L0/full/network 分层、JSON 报告，Windows/macOS 无需 Python；发布分支必须通过 full。Python CLI 套件已立即归档到 `tests/legacy_cli/` 并禁止执行，聚合 wrapper 已移除。native 产品包、安装器和 GUI 仍按各自范围验收。
-
-当前发布版本是 1.0.2。Linux x64 是 Debian 12 构建，安装后默认 `git` 就是 git-next。Windows x64 与 ARM64 的机器版和用户版 MSI 会装进官方 Git 目录。其中的 git 程序是已验收的 0.3.0 引擎，产品身份改为 1.0.2，旧命令桥接则是重新链接的 CRT-free 程序。1.0.1 已修正 HTTPS、FTP、FTPS；1.0.2 保留这个修正并补上 Windows 包。Windows 终端组件仍可参考 [Git-Terminal 0.2.0](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0) 和[组件安装说明](docs/TERMINAL.md)。
+1.0.3 当前处于最终交付验收阶段。原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。最终本地门禁和发布尚待完成；2026-10-23 核验的最新已发布版本为 [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1)。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
-git-next 的客户端用 Rust 实现命令、仓库读写和传输。行为对照 [Git 官方文档](https://git-scm.com/docs)，对象、refs 和 index 仍是 Git 仓库格式。程序不链接、不调用本机的原生 Git。已实现的命令见 [兼容性说明](docs/COMPATIBILITY.md)；`complete_git_parity` 在文档里的命令都对齐之前保持为 false。现有仓库、Git 配置和凭据助手保留原有契约。
+构建、打包、文档、夹具、性能测量和发布工具统一采用 Go，产品中的 `git-p4` helper 也已迁到 Go。本批逐文件核验退役 115 个 Python 文件，自有工具链和产品 helper 无需 Python 解释器；必要的 PowerShell 与 POSIX shell 脚本保留。30 个历史 CLI 套件保留在 Git 历史 `3609553`，当前树不含可运行的 Python CLI wrapper。[工具链说明](docs/GO_TOOLING.md)。
 
-0.3.0 已通过最终 18 项本地正确性证据和成对批量性能门禁；本机已卸载原版并接管默认 Git，正式发布及 10/10 完成记录见[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
+独立 Rust 客户端继续作为 preview，使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md) 验收。Windows x64 与真实 macOS ARM64 的 full 各通过 100 个范围化场景，L0 覆盖 39 个命令。Rust 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Rust 场景不宣称逐条等量覆盖全部历史断言。[兼容性说明](docs/COMPATIBILITY.md)。
+
+当前 native 产品证据包括真实 Apple Silicon macOS 15.5 的 51 场景、Linux 两个 Docker 目标各 52 场景，以及每个 POSIX 目标的两路包内 Git/P4 入口检查。Windows ARM64 已有交叉编译、PE 和包静态检查，尚无真实 ARM64 运行验收。Windows 默认关闭 fscache/fsmonitor/preload，index/grep 使用单线程读取。最终正确性、成对性能、安装与工作站验收、发布仍单独追踪；用户已豁免后续 Git-Terminal 专项验证，已有失败记录保留。[交付进度](docs/DELIVERY_STATUS.md) · [默认配置](docs/DEFAULTS.md) · [性能边界](docs/PERFORMANCE.md)。
 
 ## 原生安装包
 
@@ -20,7 +18,7 @@ git-next 的客户端用 Rust 实现命令、仓库读写和传输。行为对�
 | --- | --- | --- |
 | Windows x64 / ARM64 | 机器级或用户级 MSI | 机器级安装需要管理员权限 |
 | Linux x64 / ARM64 | 含 install.sh 的完整 tar.gz | Debian 12 / glibc 2.36 或兼容系统 |
-| macOS Apple Silicon | 含 install.sh 的完整 tar.gz | macOS 15.5+；按用户要求通过 Dockerfile_mac 检查打包、Mach-O 和 shell |
+| macOS Apple Silicon | 含 install.sh 的完整 tar.gz | macOS 15.5+；真实 ARM64 运行验收及独立包/Mach-O/shell 检查；CPU affinity 约束不支持 |
 
 参见[安装与卸载](docs/INSTALLATION.md)。根目录 `install.ps1` 安装正式原生 MSI 后自动接管已注册的 Git for Windows，机器级安装会请求系统 UAC；保留仓库、配置和登录资料，并提供验证过的恢复备份。[接管说明](docs/TAKEOVER.md)。
 
@@ -45,11 +43,15 @@ git update check
 
 ## 验证与源码
 
+Rust CLI 统一使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)，提供 L0/full/network 分层和 JSON 报告；Windows/macOS 同一套 Rust 命令，无需 Python，发布分支要求 full。native C 产品行为及平台生命周期由 Go 工具和必要平台脚本另行验收。参考 Git 仅用于隔离夹具，产品检查拒绝回退到本机已安装的 Git。历史 Python CLI 断言保留在 Git 历史中。
+
 独立正确性验证并行执行，Windows Installer 事务串行执行，报告保留真实耗时和失败结果。性能采用独立成对批量测量，根据实际 median、p95 和主进程内存给出结论，不承诺所有场景都更快。[构建](docs/BUILDING.md) · [性能](docs/PERFORMANCE.md) · [兼容性](docs/COMPATIBILITY.md)。
 
 原生核心遵循 GPL-2.0-only，并提供依赖许可证及对应源码包。[源码与许可](docs/CORRESPONDING_SOURCES.md)。本仓库不使用 GitHub Actions。
 
-## Rust 包
+## 独立 Rust preview 包
+
+此包交付独立 Rust 客户端；native C 安装包由 Go 工具另行构建、打包和验收。本批 115 文件退役保留了适用的构建、打包、迁移和维护能力，必要平台脚本继续保留。[工具链与迁移证据](docs/GO_TOOLING.md)。
 
 `go -C tools/devtool run . package-rust --platform windows-x64` 打出一个 zip，里面只有 Rust 写的 `git`、LFS 入口和 Git-Terminal。包里没有 MinGW、Bash、Perl、Python，也没有 Git for Windows 的任何文件。解压后运行其中的 `install.ps1`，程序会装到 `%LOCALAPPDATA%\Programs\git-next`，不会改已注册的官方 Git 目录。说明见[安装](docs/INSTALLATION.md)。
 
@@ -59,6 +61,6 @@ git update check
 
 Windows MSI 同时安装独立 Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md)，支持标签页、Unicode/IME、复制粘贴、历史滚动及自有 Bash、PowerShell/CMD 配置。它替代 Git Bash 桌面入口，不添加 Git GUI 菜单。[内置 LFS 与游戏项目模板](docs/GAME_PROJECTS.md)覆盖 Unity/Tuanjie、Unreal，无需另外安装 LFS。
 
-## 源码与历史预览
+## 源码与许可
 
-原生 C 核心遵循 GPL-2.0-only，自有打包/扩展及终端遵循各自声明的许可证。发布附带固定依赖、许可证和对应源码包。本项目不使用 GitHub Actions。Gitoxide/Russh Rust 预览保留为历史源码；[固定旧修订中的说明](https://github.com/neko233-com/git-next/blob/ecee4ad91367327957d77ff4bdcb9349d8ee0511/README.zh-CN.md)不代表当前安装入口，安装请使用上面的原生指南。
+原生 C 核心遵循 GPL-2.0-only；自有扩展、打包工具和 Rust 终端各自遵循声明的许可证。原生发布包提供固定依赖、许可证材料及对应源码。独立 Rust preview 保留自己的实现与范围化验收报告；正式产品安装请使用上方原生安装说明。本仓库不使用 GitHub Actions。

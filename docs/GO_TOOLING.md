@@ -62,6 +62,25 @@ the package, source, reference and installer harness identities. This partial
 report cannot satisfy `prepare-native-release`; all 18 consolidated correctness
 cases and the separate performance gate remain required.
 
+An explicit user instruction to stop terminal testing can be recorded with
+`--terminal-waiver PATH` on `native-product-batch` and `prepare-native-release`.
+The schema-1 `terminal-test-waiver` JSON must name `authorized_by: user`, quote
+the instruction in `authorization` and `reason`, bind the exact matrix SHA-256,
+and list only `terminal-rust-contracts` and `terminal-native-desktop` in `cases`.
+Its `terminal_binaries` map must identify both `windows-x64` and `windows-arm64`:
+each has the exact `source_commit` and a `files` map containing the SHA-256 of
+`bin/git-terminal.exe` and `bin/git-terminal-shell.exe`. Matrix, manifest and
+actual binary bytes must agree.
+
+With that exact authorization, correctness keeps all 18 rows: 16 passed cases and
+two `waived` cases, with overall `pass-with-user-waiver`. The terminal Rust,
+desktop and startup tests are not executed. Earlier failed reports remain intact.
+Performance requires this same exact correctness report and waiver; all five
+performance rows must pass. MSI, native CLI, actual Mac/Linux, package and hash
+gates are unchanged. Release proofs and package acceptance metadata retain the
+waiver and its hash, and `native-terminal-waiver.json` is included among the
+checksummed release assets. A waiver for any other case is rejected.
+
 The native release also requires `native-mac-runtime-acceptance` on Apple Silicon.
 Pass its exact-archive receipt to `freeze-native-batch --mac-runtime-receipt`.
 The 51 actual cases cover common CLI, core contracts, LFS/signing and read-thread

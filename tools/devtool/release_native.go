@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix?", prepareNativeRelease)
+	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix? terminal-waiver", prepareNativeRelease)
 }
 func resultCases(gate record, expected []string) error {
 	want := map[string]bool{}
@@ -109,18 +109,15 @@ func prepareNativeRelease(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	for _, gate := range []record{correctness, performance} {
-		if gate["status"] != "pass" || gate["matrix_sha256"] != identity {
-			return fmt.Errorf("passed correctness and timing gates must identify exact matrix")
-		}
-	}
-	if correctness["phase"] != "correctness" || performance["phase"] != "performance" || correctness["reference_sha256"] != performance["reference_sha256"] {
-		return fmt.Errorf("paired correctness/performance phases and reference required")
-	}
-	if e = resultCases(correctness, []string{"windows-core-contracts", "windows-owned-integrations", "windows-dpapi-migration", "windows-update-contracts", "linux-x64", "linux-arm64", "macos-arm64", "docker-login-migration", "posix-updater-race-contracts", "msi-user", "msi-machine", "frozen-input-readback", "windows-read-thread-contracts", "windows-bootstrap-contracts", "windows-game-lfs-contracts", "terminal-rust-contracts", "terminal-native-desktop", "windows-common-cli-contracts"}); e != nil {
+	waiver, e := readNativeWaiver(a, o.get("terminal-waiver"), matrix, identity)
+	if e != nil {
 		return e
 	}
-	if e = resultCases(performance, []string{"performance-1000", "performance-10000", "performance-100000", "performance-network", "frozen-input-readback"}); e != nil {
+	ch, e := digest(o.get("correctness"))
+	if e != nil {
+		return e
+	}
+	if e = validateNativeReleaseGates(correctness, performance, matrix, identity, ch, waiver); e != nil {
 		return e
 	}
 	if !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(o.get("source-commit")) {
@@ -184,15 +181,24 @@ func prepareNativeRelease(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	ch, e := digest(o.get("correctness"))
-	if e != nil {
-		return e
-	}
 	ph, e := digest(o.get("performance"))
 	if e != nil {
 		return e
 	}
 	proof := record{"schema_version": 1, "product": "git-next", "source_commit": o.get("source-commit"), "source_tree_sha256": matrix["source_tree_sha256"], "matrix_sha256": identity, "correctness_sha256": ch, "performance_sha256": ph, "native_mac_product_executed": true, "native_mac_runtime_cases": macRuntime["passed_cases"], "native_mac_runtime_receipt_sha256": macRuntimeHash, "personal_account_accessed": false, "scope": "accepted core/runtime bytes; release metadata, documentation and archive root finalized after local gates"}
+	if waiver != nil {
+		proof["correctness_status"], proof["terminal_waiver"] = correctness["status"], waiver.proof()
+		if e = waiver.unchanged(); e != nil {
+			return e
+		}
+		waiverAsset := filepath.Join(out, "native-terminal-waiver.json")
+		if e = copyFile(waiver.path, waiverAsset); e != nil {
+			return e
+		}
+		if e = requireHash(waiverAsset, waiver.sha); e != nil {
+			return e
+		}
+	}
 	for k, v := range repairs {
 		proof[k] = v
 	}
@@ -363,6 +369,9 @@ func prepareNativeRelease(a *app, o options) error {
 		platforms[platform] = record{"asset": filepath.Base(destination), "sha256": h, "size": st.Size(), "install_kind": "tar"}
 	}
 	update := record{"schema_version": 1, "product": "git-next", "version": version, "source_commit": o.get("source-commit"), "complete_git_parity": true, "platforms": platforms}
+	if waiver != nil {
+		update["acceptance"] = proof
+	}
 	if e = writeNewJSON(filepath.Join(out, "git-next-update.json"), update); e != nil {
 		return e
 	}

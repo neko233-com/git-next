@@ -57,6 +57,19 @@ when it did not.
 
 A directly installed MSI preserves an existing default Git until the [protected takeover](TAKEOVER.md) is explicitly applied. The PowerShell bootstrap performs that step automatically. Windows Apps or `msiexec.exe /x <product-code>` removes the MSI. An active original-Git handoff must first be rolled back using its recorded transaction; the removal guard prevents breaking callers. Recovery backups, repositories and user credentials are retained. No blind deletion of unrelated Git installations occurs.
 
+MSI major upgrades execute the new payload before removing the previous product, within
+the same Windows Installer transaction (`afterInstallExecute`). A failed new-product
+action leaves the old installed registration available for rollback. Component GUIDs,
+key paths, installation paths and UpgradeCodes remain stable across versions; old-only
+components are removed normally. Payload components belong to 64 fixed, hidden feature
+buckets under the existing `ProductFeature`, each limited to 1,600 components. The buckets
+follow their parent's installation state and add no optional installation choices.
+This changes MSI feature membership without moving files or user data. The lifecycle
+gate must verify an upgrade from the previous single-feature layout and an injected
+failure that restores the old installed state, payload bytes, updater task and PATH.
+User-scope lifecycle verification runs without elevation; machine-scope verification
+runs elevated. Package compilation alone does not establish those rollback results.
+
 Windows machine TLS preparation releases verified child-file handles before its atomic directory rename. The protected ACL and exclusive platform lock remain active. `tests/tls_provider_install_acceptance.ps1` verifies fresh preparation, repeat preparation, pinned component bytes and machine ACLs against an installed MSI; this targeted gate complements the previously exercised MSI lifecycle.
 
 Machine configuration migration converts inherited ACL entries into explicit rules before removing non-administrator write permissions. Existing read and deny restrictions remain; the final protected configuration must pass the same machine-state checks. Updater regression covers inherited full-control input, and actual migration exercises the installed helper against existing system configuration.

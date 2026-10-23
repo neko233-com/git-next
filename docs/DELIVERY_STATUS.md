@@ -1,5 +1,28 @@
 # git-next 固定交付清单与进度
 
+## 当前交付范围 · 1.0.3 candidate（2026-10-23）
+
+本轮完成 Python 工具链退役，准备一次整合发布。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。2026-10-23 核验的最新已发布版本为 [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1)，本轮尚未发布。
+
+115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前不存在 `tests/legacy_cli/`，Rust 的 100 场景也不代表全部历史断言逐条等量迁移。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
+
+| 当前证据 | 已完成范围及边界 |
+| --- | --- |
+| Go `git-p4` A/B | 相同 Linux 隔离环境调用上游 t9800–t9836 共 37 套，36 套执行、395 项断言；原 Python 379 成功/16 已知缺陷，Go 382 成功/13 已知缺陷，新增差异失败 0。三项改善产生的 XPASS 及原始退出码保留；t9835 因缺少 Python 2 跳过，Go t9836 只适配解释器 launcher 前置检查，12 项行为断言保留。Windows 26 个顶层真实 P4/协议测试通过。 |
+| Rust 客户端 | Windows x64 与真实 macOS ARM64 的 full 各 100/100，失败/跳过均为 0；L0 为 39 个命令。Mac 构建及 Clippy 通过。`complete_git_parity=false`，与 native C 产品分别验收。 |
+| Linux native | x64、ARM64 Docker 各 52 场景和两路 owned Git/P4 入口通过；产品 Python 扫描为 0。ARM64 为 Windows x64 上 Docker Desktop 执行 ARM64 进程，不宣称真实 ARM64 硬件验收。 |
+| macOS native | 真实 Apple Silicon macOS 15.5 上 51 场景及两路 owned Git/P4 入口通过；同一归档通过独立 Mach-O/shell 静态检查及目录/归档 Python 0 扫描。Darwin CPU affinity 约束明确不支持。 |
+| Windows ARM64 | native core/bridge/helper 交叉编译、PE/导入和包静态检查；尚无真实 ARM64 运行或安装验收。 |
+| Windows r4 默认值 | 权威片段采用 `core.fscache=false`、`core.fsmonitor=false`、`core.preloadIndex=false`、`index.threads=1`、`grep.threads=1`；同一 core 的隔离 4,000 文件对照完成 30 轮 grep/status 和 6 项契约。R4 组合批次的 read-thread lane 已通过，最终安装与工作站状态另行绑定。 |
+
+Windows 默认值对照保留原 `true/0` 配置在第 21 轮只返回 3,999/4,000 文件的失败证据，保持完整输出断言。该对照没有证明内部根因或性能优势；用户、仓库和命令行显式配置仍有正常优先级。POSIX 包不消费此 Windows defaults fragment，现有已验收 POSIX 归档字节保持不变。[公开对照回执](benchmarks/windows-read-safety-20261023.json)。
+
+**最终整合状态：pending。** 已完成的 R4 correctness 原报告为 18 lane 中 16 成功、2 失败：`terminal-native-desktop` 在 GUI startup 失败，`msi-user` 在用户级 rollback 失败；原报告和失败保持不变。用户随后明确豁免后续 Git-Terminal 专项验证，仅覆盖 `terminal-rust-contracts` 与 `terminal-native-desktop`，不将豁免计作通过。豁免授权与最终矩阵/校验和的绑定尚待完成；MSI rollback 修复仍需重新验收。最终正确性、5 个 paired-performance lane、Windows installer lifecycle、工作站安装/更新、校验及配置的签名验证、push 和一次整合发布均以准确产物及 harness SHA 的最终回执收尾。当前不声明本轮 10/10、工作站接管完成或 1.0.3 已发布。[机器可读状态](DELIVERY_STATUS.json) 中 `current_release_evidence` 单列本轮结果与待完成项。
+
+## 历史已发布版本 · v0.3.0（2026-10-21）
+
+以下保留 v0.3.0 原始交付、进度及验收记录。其中 10/10、18 项正确性、性能数字、工作站状态和 Mac 仅静态的范围只属于当时产物；它们不表示当前 1.0.3 已完成，也不限制本轮新增的真实 Mac 验收。JSON 原有 `scope_id`、`policy`、`deliverables` 和 `progress` 同属该历史范围，保持原证据。
+
 截至 2026-10-21，本轮客户端固定范围 **10/10（100%），剩余 0 项**。[v0.3.0](https://github.com/neko233-com/git-next/releases/tag/v0.3.0) 已一次性发布，21 个附件的远端字节数和 SHA-256 与本地产物一致。[最终本机与发布回执](benchmarks/native-workstation-release-20261021.json)记录实际完成层级。
 
 Windows 本机已安装正式机器级 MSI，卸载原版 Git for Windows；新 CMD、PowerShell 和旧绝对路径均返回 git-next。旧路径仅保留兼容入口，受保护的原安装恢复备份保留。13 个 Git/SSH 配置文件逐字节不变，默认采用 LF。Git-Terminal 正式窗口已打开，包含原创多尺寸图标、一体化标题栏、原生窗口按钮、多 tab、命令高亮和目录/分支提示。

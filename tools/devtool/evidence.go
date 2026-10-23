@@ -123,7 +123,7 @@ func validateReuseAt(a *app, report, previous, current record, reference string,
 		all[name] = true
 	}
 	for name := range all {
-		permitted := allowed[name]
+		permitted := allowed[name] || !desktop && terminalWaiverMSIReuseSource(name)
 		if desktop {
 			permitted = !(strings.HasPrefix(name, "../git-terminal/") && name != "../git-terminal/src/shell_acceptance.rs") && name != "tools/terminal_runtime_fixture.py" && name != "tools/devtool/evidence.go"
 			if strings.HasPrefix(name, "tools/devtool/") {

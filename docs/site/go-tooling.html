@@ -47,6 +47,23 @@ with <code>--reuse-msi-batch NEWDIR/batch.json --reuse-msi-matrix MATRIX</code> 
 the package, source, reference and installer harness identities. This partial
 report cannot satisfy <code>prepare-native-release</code>; all 18 consolidated correctness
 cases and the separate performance gate remain required.</p>
+<p>An explicit user instruction to stop terminal testing can be recorded with
+<code>--terminal-waiver PATH</code> on <code>native-product-batch</code> and <code>prepare-native-release</code>.
+The schema-1 <code>terminal-test-waiver</code> JSON must name <code>authorized_by: user</code>, quote
+the instruction in <code>authorization</code> and <code>reason</code>, bind the exact matrix SHA-256,
+and list only <code>terminal-rust-contracts</code> and <code>terminal-native-desktop</code> in <code>cases</code>.
+Its <code>terminal_binaries</code> map must identify both <code>windows-x64</code> and <code>windows-arm64</code>:
+each has the exact <code>source_commit</code> and a <code>files</code> map containing the SHA-256 of
+<code>bin/git-terminal.exe</code> and <code>bin/git-terminal-shell.exe</code>. Matrix, manifest and
+actual binary bytes must agree.</p>
+<p>With that exact authorization, correctness keeps all 18 rows: 16 passed cases and
+two <code>waived</code> cases, with overall <code>pass-with-user-waiver</code>. The terminal Rust,
+desktop and startup tests are not executed. Earlier failed reports remain intact.
+Performance requires this same exact correctness report and waiver; all five
+performance rows must pass. MSI, native CLI, actual Mac/Linux, package and hash
+gates are unchanged. Release proofs and package acceptance metadata retain the
+waiver and its hash, and <code>native-terminal-waiver.json</code> is included among the
+checksummed release assets. A waiver for any other case is rejected.</p>
 <p>The native release also requires <code>native-mac-runtime-acceptance</code> on Apple Silicon.
 Pass its exact-archive receipt to <code>freeze-native-batch --mac-runtime-receipt</code>.
 The 51 actual cases cover common CLI, core contracts, LFS/signing and read-thread

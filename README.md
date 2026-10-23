@@ -1,12 +1,14 @@
 # git-next
 
-Version 1.0.2 is the current release. Linux x64 installs a Debian 12 build as the `git` command. Windows x64 and ARM64 machine and user MSIs install into the official Git directory. Their git program is the accepted 0.3.0 engine with the 1.0.2 identity, and the legacy command bridge is the rebuilt CRT-free binary. The 1.0.1 Linux package already corrected HTTPS, FTP and FTPS; 1.0.2 keeps that correction and adds the Windows packages.
+The 1.0.3 delivery candidate uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. Final local gates and publication remain pending. The latest published release checked on 2026-10-23 is [v1.0.1](https://github.com/neko233-com/git-next/releases/tag/v1.0.1).
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
-The git-next client implements commands, repository access and transport in Rust. Behavior follows [Git's documentation](https://git-scm.com/docs), while objects, refs and the index remain Git's on-disk format. The program does not link or execute a native Git binary. Implemented commands are listed in [compatibility](docs/COMPATIBILITY.md). `complete_git_parity` stays false until those documented commands match. Existing repositories, Git configuration and credential helpers keep their normal contracts.
+Go now owns build, packaging, documentation, fixtures, benchmarks and release tooling, including the product's `git-p4` helper. This migration retires 115 inventoried Python files; owned tooling and product helpers require no Python interpreter. Necessary PowerShell and POSIX shell scripts remain. Thirty historical CLI suites are retained in Git history at `3609553`; the current tree contains no runnable Python CLI wrapper. [Tooling](docs/GO_TOOLING.md).
 
-Version 1.0.1 is the release that replaces the `git` command. The 1.0.0 Linux package copied a new `git` but left `git-remote-https`, `git-remote-ftp` and `git-remote-ftps` as the 0.3.0 binaries, so those transports did not run the 1.0.0 core. 1.0.1 installs one core for HTTP and those three schemes. On Linux x64 the command was checked against Git 2.43.0: the same init, branch and merge produced the same commit hash. Version 0.3.0 passed the earlier 18-case local correctness evidence and paired performance batch; that record stays in [delivery status](docs/DELIVERY_STATUS.md). Windows ships tested serial index/grep reads with fscache/fsmonitor/preload disabled; full large-tree scans remain a measured latency limitation, documented in [performance](docs/PERFORMANCE.md).
+The independent Rust client is a preview with its own [Rust acceptance runner](docs/GIT_NEXT_ACCEPTANCE.md). Windows x64 and real macOS ARM64 each pass full's 100 scoped scenarios; L0 covers 39 commands. These reports describe the Rust client, while the native C distribution has separate package, runtime and installer gates. `complete_git_parity` remains false, and the Rust suite does not claim a one-for-one port of every historical assertion. [Compatibility](docs/COMPATIBILITY.md).
+
+Current native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. Final correctness, paired performance, installer/workstation acceptance and publication remain tracked separately. Further Git-Terminal-specific validation is waived by the user; existing failures remain recorded. [Delivery status](docs/DELIVERY_STATUS.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
 
 ## Native packages
 
@@ -16,7 +18,7 @@ Download accepted packages from [GitHub Releases](https://github.com/neko233-com
 | --- | --- | --- |
 | Windows x64 / ARM64 | Machine MSI or user MSI | Machine installation requires administrator rights |
 | Linux x64 / ARM64 | Complete tar.gz with install.sh | Debian 12 / glibc 2.36 or compatible system |
-| macOS Apple Silicon | Complete tar.gz with install.sh | macOS 15.5+; package/Mach-O/shell validation uses Dockerfile_mac |
+| macOS Apple Silicon | Complete tar.gz with install.sh | macOS 15.5+; real ARM64 runtime acceptance and independent package/Mach-O/shell checks; CPU-affinity constraints unsupported |
 
 Use the [native installation and removal guide](docs/INSTALLATION.md). The root `install.ps1` installs the accepted native MSI and automatically takes over registered Git for Windows (with UAC for machine installations); it preserves repository/profile data and provides a verified recovery backup. [Takeover procedure](docs/TAKEOVER.md).
 
@@ -41,15 +43,15 @@ Language follows system preferences and supports persistent and per-command over
 
 ## Evidence and source
 
-Rust CLI conformance has one local merge/tag gate: [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md), with L0/full/network tiers and JSON reports. It runs on Windows/macOS without Python; release branches require full. Python CLI suites are retired immediately under `tests/legacy_cli/`, with no runnable wrapper. Native package/installer/GUI acceptance remains a separate scope.
+Rust CLI conformance uses [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md), with L0/full/network tiers and JSON reports. Windows/macOS use the same Rust runner without Python; release branches require full. Native C product conformance and platform lifecycle acceptance run through Go tooling and necessary platform scripts. Reference Git creates isolated fixtures; owned runtime checks reject fallback to installed Git. Historical Python CLI assertions remain available in Git history.
 
 Validation runs locally, with independent correctness lanes in parallel and Windows Installer transactions serialized. Reports retain actual elapsed time and failures. Performance uses a separate paired batch; measured medians, p95 and primary-process memory determine claims. No universal speedup is promised. [Builds](docs/BUILDING.md) · [Performance](docs/PERFORMANCE.md) · [Compatibility](docs/COMPATIBILITY.md).
 
 The native core is GPL-2.0-only with the declared dependency licenses and corresponding source bundles. [Source/license delivery](docs/CORRESPONDING_SOURCES.md). No GitHub Actions are used.
 
-## Rust package
+## Independent Rust preview package
 
-Development tooling follows [Rust acceptance + Go tooling](docs/GO_TOOLING.md). Go replaces the owned Python build/package/docs controllers; native build/MSI/migration capabilities are retained until their replacements have equivalent evidence. The migration audit reports remaining Python files explicitly.
+The preview packages the independent Rust client. Go tooling also builds the native C distribution and its installers; these are separate artifacts with separate acceptance scope. The 115-file Python retirement preserves the applicable build, packaging, migration and maintenance capabilities in Go, while necessary platform scripts remain. [Tooling and migration evidence](docs/GO_TOOLING.md).
 
 `go -C tools/devtool run . package-rust --platform windows-x64` writes a zip of the Rust `git`, LFS entrypoints, and Git-Terminal. The zip contains no MinGW, Bash, Perl, Python, or Git for Windows files. Its `install.ps1` copies them to `%LOCALAPPDATA%\Programs\git-next` and does not replace a registered official Git directory. See [installation](docs/INSTALLATION.md).
 
@@ -59,6 +61,6 @@ After obtaining the official release's `install.ps1`, run `powershell.exe -NoPro
 
 Windows MSI installs the independent Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md) beside Git-next, with tabs, Unicode/IME, copy/paste, scrollback and owned Bash plus PowerShell/CMD profiles. It replaces the Git Bash desktop entry and adds no Git GUI menu. [Built-in LFS and game profiles](docs/GAME_PROJECTS.md) cover Unity/Tuanjie and Unreal; no separate LFS installer is needed.
 
-## Source and historical preview
+## Source and licenses
 
-The native C core is GPL-2.0-only; owned packaging/extensions and the terminal carry their declared licenses. Pinned dependencies, notices and corresponding-source bundles accompany the release. No GitHub Actions are used. The independent Gitoxide/Russh Rust preview remains historical source; [the old entrypoint at its fixed revision](https://github.com/neko233-com/git-next/blob/ecee4ad91367327957d77ff4bdcb9349d8ee0511/README.md) does not describe the current installer. Follow the native installation guide above.
+The native C core is GPL-2.0-only; owned packaging/extensions and the Rust terminal carry their declared licenses. Pinned dependencies, notices and corresponding-source bundles accompany the native release. The independent Rust preview retains its own implementation and scoped acceptance reports. Follow the native installation guide for the released product. No GitHub Actions are used.

@@ -129,6 +129,34 @@ func checkedMSIFiles(root string, manifest record) (map[string]string, error) {
 	}
 	return files, nil
 }
+
+func payloadMSIFeatures(fragment, group *wixNode) error {
+	const bucketCount, componentLimit = 64, 1600
+	buckets := make([][]string, bucketCount)
+	for _, component := range group.children {
+		id := component.attrs["Id"]
+		hash := sha256.Sum256([]byte(id))
+		bucket := int(hash[0]) & (bucketCount - 1)
+		buckets[bucket] = append(buckets[bucket], id)
+	}
+	featureGroup := fragment.add("FeatureGroup", map[string]string{"Id": "PayloadFeatures"})
+	for bucket, ids := range buckets {
+		if len(ids) > componentLimit {
+			return fmt.Errorf("MSI payload feature bucket %02x exceeds %d components: %d", bucket, componentLimit, len(ids))
+		}
+		if len(ids) == 0 {
+			continue
+		}
+		sort.Strings(ids)
+		// Fixed buckets preserve feature membership when later releases add files.
+		feature := featureGroup.add("Feature", map[string]string{"Id": fmt.Sprintf("PayloadFeature_%02x", bucket), "Level": "1", "Display": "hidden", "InstallDefault": "followParent"})
+		for _, id := range ids {
+			feature.add("ComponentRef", map[string]string{"Id": id})
+		}
+	}
+	return nil
+}
+
 func payloadWix(files map[string]string, manifest record, platform, version, scope, suffix string, legacy bool) (*wixNode, error) {
 	root := wn("Wix", map[string]string{"xmlns": "http://wixtoolset.org/schemas/v4/wxs"})
 	fragment := root.add("Fragment", nil)
@@ -226,8 +254,82 @@ func payloadWix(files map[string]string, manifest record, platform, version, sco
 			component.add("RemoveFolder", map[string]string{"Id": id + "_Folder", "Directory": dirs[name].id, "On": "uninstall"})
 		}
 	}
+	if e := payloadMSIFeatures(fragment, group); e != nil {
+		return nil, e
+	}
 	return root, nil
 }
+
+func checkMSIPayloadTables(files, components, features, membership, sequence [][]string, expectedFiles int) error {
+	if len(files) != expectedFiles {
+		return fmt.Errorf("compiled MSI File table has %d rows; expected %d payload files", len(files), expectedFiles)
+	}
+	featureIDs := map[string]bool{}
+	for _, row := range features {
+		if len(row) < 2 || row[0] == "" || featureIDs[row[0]] || row[0] != "ProductFeature" && (!strings.HasPrefix(row[0], "PayloadFeature_") || row[1] != "ProductFeature") {
+			return fmt.Errorf("compiled MSI payload feature hierarchy differs")
+		}
+		featureIDs[row[0]] = true
+	}
+	if !featureIDs["ProductFeature"] || len(featureIDs) < 2 || len(featureIDs) > 65 {
+		return fmt.Errorf("compiled MSI payload features missing or excessive")
+	}
+	componentIDs := map[string]bool{}
+	for _, row := range components {
+		if len(row) == 0 || row[0] == "" || componentIDs[row[0]] {
+			return fmt.Errorf("compiled MSI component identity invalid")
+		}
+		componentIDs[row[0]] = true
+	}
+	assigned := map[string]bool{}
+	counts := map[string]int{}
+	for _, row := range membership {
+		if len(row) < 2 || !featureIDs[row[0]] || !componentIDs[row[1]] || assigned[row[1]] {
+			return fmt.Errorf("compiled MSI component must belong to exactly one feature")
+		}
+		assigned[row[1]] = true
+		counts[row[0]]++
+		if counts[row[0]] > 1600 {
+			return fmt.Errorf("compiled MSI feature %s exceeds 1600 components", row[0])
+		}
+	}
+	if len(assigned) != len(componentIDs) {
+		return fmt.Errorf("compiled MSI has unassigned components")
+	}
+	actions := map[string]int{}
+	for _, row := range sequence {
+		if len(row) < 2 {
+			return fmt.Errorf("compiled MSI sequence invalid")
+		}
+		value, e := strconv.Atoi(row[1])
+		if e != nil {
+			return fmt.Errorf("compiled MSI sequence invalid: %w", e)
+		}
+		actions[row[0]] = value
+	}
+	if actions["InstallInitialize"] <= 0 || actions["InstallExecute"] <= actions["InstallInitialize"] || actions["RemoveExistingProducts"] <= actions["InstallExecute"] || actions["InstallFinalize"] <= actions["RemoveExistingProducts"] {
+		return fmt.Errorf("compiled MSI must remove the old product after InstallExecute and before InstallFinalize")
+	}
+	return nil
+}
+
+func checkCompiledMSIPayload(path string, expectedFiles int) error {
+	database, e := openMSI(path)
+	if e != nil {
+		return e
+	}
+	defer closeMSI(database)
+	queries := []string{"SELECT `File` FROM `File`", "SELECT `Component` FROM `Component`", "SELECT `Feature`, `Feature_Parent` FROM `Feature`", "SELECT `Feature_`, `Component_` FROM `FeatureComponents`", "SELECT `Action`, `Sequence` FROM `InstallExecuteSequence`"}
+	tables := make([][][]string, len(queries))
+	for i, query := range queries {
+		tables[i], e = queryMSI(database, query)
+		if e != nil {
+			return e
+		}
+	}
+	return checkMSIPayloadTables(tables[0], tables[1], tables[2], tables[3], tables[4], expectedFiles)
+}
+
 func compileMSI(a *app, o options, manifest record, files map[string]string, pkg record, packaging map[string]string, legacy bool) (record, error) {
 	platform, version := stringValue(pkg, "platform"), stringValue(pkg, "version")
 	scope := stringValue(pkg, "install_scope")
@@ -343,6 +445,9 @@ func compileMSI(a *app, o options, manifest record, files map[string]string, pkg
 		args = append(args, "-d", key+"="+defines[key])
 	}
 	if _, e = commandAt(a.root, environment, wix, args...); e != nil {
+		return nil, e
+	}
+	if e = checkCompiledMSIPayload(filepath.Join(stage, asset), len(files)); e != nil {
 		return nil, e
 	}
 	for name, h := range inputHashes {

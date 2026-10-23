@@ -22,8 +22,8 @@ type nativeCase struct {
 }
 
 func init() {
-	register("native-product-batch", "Run consolidated native correctness or paired timing batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix", nativeProductBatch)
-	register("product-batch", "Compatibility entrypoint for the native product batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix", func(a *app, o options) error {
+	register("native-product-batch", "Run consolidated native correctness or paired timing batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver", nativeProductBatch)
+	register("product-batch", "Compatibility entrypoint for the native product batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver", func(a *app, o options) error {
 		if o.get("native-packages") == "" {
 			return fmt.Errorf("Rust CLI conformance uses accept-runner/git-next-accept --tier full; native packages require --native-packages")
 		}
@@ -129,6 +129,13 @@ func nativeProductBatch(a *app, o options) error {
 	if e != nil {
 		return e
 	}
+	waiver, e := readNativeWaiver(a, o.get("terminal-waiver"), matrix, identity)
+	if e != nil {
+		return e
+	}
+	if waiver != nil && (o.get("reuse-desktop-batch") != "" || o.get("reuse-desktop-matrix") != "") {
+		return fmt.Errorf("terminal waiver cannot be combined with desktop acceptance reuse")
+	}
 	reusedMSI, reusedDesktop := record{}, record{}
 	for _, kind := range []string{"msi", "desktop"} {
 		report, matrixPath := o.get("reuse-"+kind+"-batch"), o.get("reuse-"+kind+"-matrix")
@@ -197,7 +204,7 @@ func nativeProductBatch(a *app, o options) error {
 		command := append([]string{shell, "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", script}, args...)
 		return nativeCase{name, command, time.Duration(timeout) * time.Second}
 	}
-	var raceContainer, raceScope string
+	var raceContainer, raceScope, correctnessSHA string
 	if o.yes("performance") {
 		if e = o.require("correctness-receipt"); e != nil {
 			return e
@@ -206,8 +213,12 @@ func nativeProductBatch(a *app, o options) error {
 		if e != nil {
 			return e
 		}
-		if prior["status"] != "pass" || prior["matrix_sha256"] != identity || prior["reference_sha256"] != referenceSHA {
-			return fmt.Errorf("passed correctness receipt must identify these exact final bytes")
+		if e = validateNativeCorrectness(prior, matrix, identity, referenceSHA, waiver); e != nil {
+			return e
+		}
+		correctnessSHA, e = digest(o.get("correctness-receipt"))
+		if e != nil {
+			return e
 		}
 		binarySHA, e := digest(binary)
 		if e != nil {
@@ -227,9 +238,12 @@ func nativeProductBatch(a *app, o options) error {
 		if terminalSource == "" {
 			terminalSource = filepath.Join(filepath.Dir(a.root), "git-terminal")
 		}
-		runtimeRoot, e := prepareTerminalRuntime(a, stringValue(win, "directory"), filepath.Join(out, "terminal-runtime"))
-		if e != nil {
-			return e
+		runtimeRoot := ""
+		if waiver == nil {
+			runtimeRoot, e = prepareTerminalRuntime(a, stringValue(win, "directory"), filepath.Join(out, "terminal-runtime"))
+			if e != nil {
+				return e
+			}
 		}
 		cases := []nativeCase{
 			makeTool("windows-core-contracts", 1200, "native-contract-acceptance", binary, "--reference", reference, "--output", filepath.Join(out, "windows-core.json")),
@@ -240,7 +254,9 @@ func nativeProductBatch(a *app, o options) error {
 			makeTool("windows-read-thread-contracts", 240, "native-read-threads-acceptance", binary, "--output", filepath.Join(out, "windows-read-threads.json")),
 			ps("windows-bootstrap-contracts", "tests/bootstrap_acceptance.ps1", 120, "-PackagePath", stringValue(win, "msi_machine"), "-Output", filepath.Join(out, "windows-bootstrap.json")),
 			makeTool("windows-game-lfs-contracts", 900, "native-game-project-acceptance", binary, "--output", filepath.Join(out, "windows-game-lfs.json")),
-			makeTool("terminal-rust-contracts", 3600, "terminal-product-acceptance", "--source", terminalSource, "--distribution", runtimeRoot, "--output", filepath.Join(out, "terminal-rust.json")),
+		}
+		if waiver == nil {
+			cases = append(cases, makeTool("terminal-rust-contracts", 3600, "terminal-product-acceptance", "--source", terminalSource, "--distribution", runtimeRoot, "--output", filepath.Join(out, "terminal-rust.json")))
 		}
 		desktop := makeTool("terminal-native-desktop", 900, "terminal-desktop-acceptance", "--binary", filepath.Join(runtimeRoot, "bin/git-terminal.exe"), "--git", filepath.Join(runtimeRoot, "bin/git.exe"), "--output", filepath.Join(out, "terminal-desktop.json"))
 		for _, target := range []string{"linux-x64", "linux-arm64", "macos-arm64"} {
@@ -257,7 +273,14 @@ func nativeProductBatch(a *app, o options) error {
 				results = append(results, item)
 			}
 		}
-		if len(reusedDesktop) > 0 {
+		if waiver != nil {
+			for _, name := range keys(terminalWaiverCases) {
+				item := waiver.result(name)
+				stamp := roundedSeconds(time.Since(startedBatch))
+				item["started_seconds_from_batch"], item["finished_seconds_from_batch"] = stamp, stamp
+				results = append(results, item)
+			}
+		} else if len(reusedDesktop) > 0 {
 			stampReuse(reusedDesktop)
 		} else {
 			results = append(results, run(desktop))
@@ -321,17 +344,16 @@ func nativeProductBatch(a *app, o options) error {
 	unchanged = unchanged && e == nil && hash == identity
 	hash, e = digest(reference)
 	unchanged = unchanged && e == nil && hash == referenceSHA
+	unchanged = unchanged && waiver.unchanged() == nil
+	if correctnessSHA != "" {
+		unchanged = unchanged && requireHash(o.get("correctness-receipt"), correctnessSHA) == nil
+	}
 	readbackStatus := "fail"
 	if unchanged {
 		readbackStatus = "pass"
 	}
 	results = append(results, record{"case": "frozen-input-readback", "status": readbackStatus})
-	status := "pass"
-	for _, item := range results {
-		if item["status"] != "pass" {
-			status = "fail"
-		}
-	}
+	status := nativeBatchStatus(results, waiver, o.yes("performance"))
 	elapsed := roundedSeconds(time.Since(startedBatch))
 	phase := "correctness"
 	effectiveWorkers := workers
@@ -348,6 +370,12 @@ func nativeProductBatch(a *app, o options) error {
 	}
 	sort.Strings(reusedScopes)
 	report := record{"schema_version": 1, "status": status, "phase": phase, "matrix_sha256": identity, "reference_sha256": referenceSHA, "source_tree_sha256": matrix["source_tree_sha256"], "results": results, "release_eligible": false, "native_mac_product_executed": object(platforms, "macos-arm64")["native_executed"] == true, "personal_account_accessed": false, "elapsed_seconds": elapsed, "wall_clock_target_seconds": target, "wall_clock_target_met": elapsed < target, "workers": effectiveWorkers, "msi_transactions_serialized": true, "local_pairs_per_command": localPairs, "network_pairs_per_operation": networkPairs, "checks_skipped_to_meet_time_target": false, "msi_scopes_reusing_unchanged_passed_evidence": reusedScopes, "desktop_reusing_unchanged_passed_evidence": len(reusedDesktop) > 0, "msi_transactions_after_parallel_functional_lanes": !o.yes("performance")}
+	if waiver != nil {
+		report["terminal_waiver"] = waiver.proof()
+	}
+	if correctnessSHA != "" {
+		report["correctness_sha256"] = correctnessSHA
+	}
 	if !o.yes("performance") {
 		first, last := math.MaxFloat64, 0.0
 		msiSeconds := 0.0
@@ -371,7 +399,7 @@ func nativeProductBatch(a *app, o options) error {
 	if e = a.json(report); e != nil {
 		return e
 	}
-	if status != "pass" {
+	if status != "pass" && status != "pass-with-user-waiver" {
 		return fmt.Errorf("native product batch failed; see batch.json")
 	}
 	return nil
