@@ -1,12 +1,12 @@
 # git-next
 
-当前发布版本是 1.0.0。Linux x64 安装后默认 `git` 就是 git-next。Windows 请下载 [Git-Terminal 0.2.0 完整 MSI 包](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0)：包含已验收的 git-next 0.3.0 核心，以及新版 SSH / SFTP / 监控终端和提示符延迟修复。已有安装请使用随包的 `install_bundle.ps1`，参见[组件安装说明](docs/TERMINAL.md)。1.0.0 的 Windows MSI 不在这次发布里，需要用带 freestanding 桥接的源码重新打包后才能替换 Git for Windows。
+当前发布版本是 1.0.1。Linux x64 安装后默认 `git` 就是 git-next。1.0.0 换了 `git`，但 `git-remote-https`、`git-remote-ftp` 和 `git-remote-ftps` 仍是 0.3.0；1.0.1 让这三种传输和 HTTP 使用同一套核心。Windows 请下载 [Git-Terminal 0.2.0 完整 MSI 包](https://github.com/neko233-com/git-terminal/releases/tag/v0.2.0)：包含已验收的 git-next 0.3.0 核心，以及新版 SSH / SFTP / 监控终端和提示符延迟修复。已有安装请使用随包的 `install_bundle.ps1`，参见[组件安装说明](docs/TERMINAL.md)。1.0.0 的 Windows MSI 不在这次发布里，需要用带 freestanding 桥接的源码重新打包后才能替换 Git for Windows。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
 git-next 是从固定源码构建的完整 Git 客户端，提供自身产品身份、跨平台 LF 默认和原生中英文。主要引擎采用完整的 Git 2.54.0 原生命令、仓库和协议实现，不依赖本机原 Git 或 OpenSSH 兜底。现有仓库、Git 配置和凭据助手保留原有契约。
 
-1.0.0 是替换 `git` 命令的发布版本。Linux x64 已对照 Git 2.43.0：同样的 init、合并、cherry-pick、revert、标签、hook 和 rebase 得到相同提交哈希，1000 个文件的 status 预热后两边都是 6 ms。0.3.0 此前通过 18 项本地正确性证据和成对性能门禁，记录仍见[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
+1.0.1 是替换 `git` 命令的发布版本。1.0.0 的 Linux 包只换了 `git` 主程序，HTTPS、FTP、FTPS 仍走 0.3.0 助手。1.0.1 修正这一点。Linux x64 已对照 Git 2.43.0：同样的 init、分支和合并得到相同提交哈希。0.3.0 此前通过 18 项本地正确性证据和成对性能门禁，记录仍见[交付进度](docs/DELIVERY_STATUS.md)。Windows 默认采用已验证的串行 index/grep 读取，关闭 fscache/fsmonitor/preload；大型仓库全量扫描仍有明确的延迟边界，详见[性能记录](docs/PERFORMANCE.md)。
 
 ## 原生安装包
 

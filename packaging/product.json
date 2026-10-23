@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
   "product": "git-next",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engine": "source-built-git-next-native-core"
 }

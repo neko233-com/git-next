@@ -3,12 +3,14 @@
 default <code>git</code> on a machine that matters. It is a gap list, not a roadmap of wishes.
 Every item names what is missing, what it costs the user today, what &quot;done&quot; means,
 and what evidence would close it.</p>
-<p>The current release is <strong>1.0.0</strong>. Linux x64 installs that package as the <code>git</code>
-command. <code>packaging/native-compatibility.json</code> records parity and release
-eligibility as true. The Rust preview's root <code>compatibility.json</code> still reports
-<code>complete_git_parity: false</code>; the five blockers below belong to that preview
-contract, not to the native 1.0.0 Linux package. A Windows MSI built from this
-1.0.0 source is not attached to the release.</p>
+<p>The current release is <strong>1.0.1</strong>. Linux x64 installs that package as the <code>git</code>
+command, including <code>git-remote-https</code>, <code>git-remote-ftp</code> and <code>git-remote-ftps</code>.
+1.0.0 replaced <code>git</code> and <code>git-remote-http</code> only; the other three scheme helpers
+were still the 0.3.0 binaries. <code>packaging/native-compatibility.json</code> records
+parity and release eligibility as true. The Rust preview's root
+<code>compatibility.json</code> still reports <code>complete_git_parity: false</code>; the five
+blockers below belong to that preview contract, not to the native Linux
+package. A Windows MSI built from this source is not attached to the release.</p>
 <p>The MSVC 14.44 CRT-free bridge link is no longer an open choice between <code>/O2 /Ob1</code>
 and a freestanding <code>memcpy</code>. Full <code>/O2</code> stays, and <code>freestanding-memory.c</code> supplies
 <code>memcpy</code>, <code>memset</code>, <code>memmove</code> and <code>memcmp</code>. <code>/Ob1</code> would also turn off inlining in
