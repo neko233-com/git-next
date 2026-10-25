@@ -32,6 +32,17 @@ example `prepare-windows-runtime`, `native-product-batch`, `msi-lifecycle` and
 remain compatibility contracts. `help` lists every supported command.
 `build-git-p4` builds the independent Go Perforce module for the five targets.
 
+Game-project tools include `native-game-multirepo-acceptance` (independent
+repositories and a nested Unity/Unreal monorepository),
+`native-game-lfs-stream-acceptance` (disk-streamed assets and failed-transfer
+recovery), `benchmark-game-resources` (raw Git status/packing process trees) and
+`benchmark-game-lfs-resources` (the complete two-project fixture/Git/LFS process
+tree). Use each command's `--help` for bounded fixture sizes and new output paths.
+Reports distinguish Windows job committed-memory peaks, Linux samples and
+unavailable metrics; process-budget failures and timeouts are failed samples.
+`runProcess` returns an identifiable context error on deadline rather than
+misclassifying a killed process as an ordinary command exit.
+
 ## Acceptance layers
 
 For the already published v1.0.3 delivery, the user's 2026-10-25 instruction accepts
@@ -94,6 +105,48 @@ The 51 actual cases cover common CLI, core contracts, LFS/signing and read-threa
 budgets; Darwin CPU affinity constraints remain explicitly unsupported. The Linux
 static inspection still checks the same Mac archive independently. Release staging
 rejects absent, incomplete or changed Mac runtime evidence.
+
+## Explicit package-validation release scope
+
+The user's instruction for the current game-project work accepts Docker,
+cross-compilation and package verification without complete local host lifecycle
+validation: “不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境”.
+The additive `--package-validation-policy PATH` option records this scope on
+`native-product-batch` and `prepare-native-release`. It never infers authorization
+from a missing machine or a failed test.
+
+The schema-1 `package-validation-policy` document names `authorized_by: user`,
+the explicit instruction and reason, the exact matrix/source identities, and only
+`msi-user` and `msi-machine` in `cases`. It binds all five platform packages,
+the four MSI packages and their receipts/manifests by name, size and SHA-256.
+`native-package-validation-probes` must actually verify compiled MSI payloads,
+run isolated migration-contract fixtures and all six common resource-behavior
+probes. The policy pins that successful report and its relevant source identities.
+Changed inputs, incomplete probes and any additional waived case are rejected.
+
+All original correctness rows remain present. The two MSI transaction rows are
+`waived`, with `installation_runtime_accepted: false`; package checks do not become
+installation, upgrade, rollback or uninstall runtime passes. With the separate
+existing two-case terminal waiver, the result is 14 passed and four explicitly
+waived rows. Other native CLI/transport/read-safety, Windows bootstrap/update,
+Docker, updater race and input-readback lanes still run. The five performance
+rows still require real passes. Available Mac CLI acceptance stays independent
+and requires no GUI or host installation. Without this policy the original
+18-case requirements remain unchanged.
+
+Release staging validates the same policy and probes again, records the scope in
+proof/update/platform metadata, and includes
+`native-package-validation-policy.json` and
+`native-package-validation-probes.json` as checksummed assets. These documents
+record the frozen candidate inputs. Staging can finalize manuals and
+acceptance metadata and rebuild archive/MSI containers; final checksums and static
+payload checks identify the published artifacts and their unchanged accepted
+core/runtime bytes. Candidate package hashes are not substituted for final asset
+hashes. The policy still makes no installer-runtime claim. This adds release
+metadata and CLI options only; it changes no Git/LFS protocol, storage path,
+installer operation or existing receipt. There is no persistent-state migration.
+Rollback uses the previous controller and its original full validation path;
+older controllers reject the new option rather than silently accepting the scope.
 
 ## Migration evidence and rollback
 

@@ -243,6 +243,14 @@ func publicPOSIXDistribution(root string) error {
 		return nil
 	})
 }
+func posixRuntimeDefaults(d defaults) (string, error) {
+	resources, e := d.resources()
+	if e != nil {
+		return "", e
+	}
+	return "[core]\n\tautocrlf = input\n\teol = lf\n[init]\n\tdefaultBranch = main\n[filter \"lfs\"]\n\tclean = git-lfs clean -- %f\n\tsmudge = git-lfs smudge -- %f\n\tprocess = git-lfs filter-process\n\trequired = true\n" + resources, nil
+}
+
 func assembleNativePOSIX(a *app, o options) error {
 	if runtime.GOOS == "windows" {
 		return fmt.Errorf("POSIX assembly requires native filesystem/image tools")
@@ -498,7 +506,15 @@ func assembleNativePOSIX(a *app, o options) error {
 	if e = b.store("runtime/interpreter-environment", []byte(strings.Join(environment, "\n")+"\n"), "owned-interpreter-paths", 0644, 0); e != nil {
 		return e
 	}
-	if e = b.store("runtime/etc/gitconfig", []byte("[core]\n\tautocrlf = input\n\teol = lf\n[init]\n\tdefaultBranch = main\n[filter \"lfs\"]\n\tclean = git-lfs clean -- %f\n\tsmudge = git-lfs smudge -- %f\n\tprocess = git-lfs filter-process\n\trequired = true\n"), "managed-product-defaults", 0644, 0); e != nil {
+	d, e := readDefaults(a.root)
+	if e != nil {
+		return e
+	}
+	config, e := posixRuntimeDefaults(d)
+	if e != nil {
+		return e
+	}
+	if e = b.store("runtime/etc/gitconfig", []byte(config), "managed-product-defaults", 0644, 0); e != nil {
 		return e
 	}
 	if e = b.addLFSHooks(a, "runtime/usr"); e != nil {

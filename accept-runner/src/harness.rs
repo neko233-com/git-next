@@ -64,6 +64,8 @@ impl Harness {
             "[init]\n\tdefaultBranch = main\n[core]\n\tautocrlf = false\n\tfilemode = false\n\tsymlinks = false\n[commit]\n\tgpgSign = false\n[tag]\n\tgpgSign = false\n",
         )?;
         env.insert("GIT_CONFIG_NOSYSTEM".into(), "1".into());
+        // Installed reference Git can ship active LFS hooks in its templates.
+        env.insert("GIT_TEMPLATE_DIR".into(), empty.display().to_string());
         env.insert(
             "GIT_CONFIG_GLOBAL".into(),
             home.join("config").display().to_string(),

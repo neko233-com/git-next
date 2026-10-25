@@ -1,6 +1,6 @@
 # Why git-next
 
-The native product and the 1.0.3 candidate use a source-built native C Git engine,
+The native product uses a source-built native C Git engine,
 with git-next's identity, LF policy, language support and installation/update behavior.
 They include an owned runtime and preserve existing Git repository, configuration
 and helper contracts. The independent Rust client is a separate preview; its
@@ -34,6 +34,24 @@ profile completed all 30 grep/status rounds and six contract checks. This suppor
 the scoped read-safety choice, not an internal root-cause or speed claim. Explicit
 user/repository/command-line settings retain their normal priority.
 [Defaults](DEFAULTS.md).
+
+## Unity/Unreal resources · 2026-10-25
+
+Shared pack/cache/LFS worker budgets and disabled automatic maintenance target
+concurrent projects without a resident process per repository. On the same native
+1.0.3 Windows x64 binary, first packing four generated projects with eight 16 MiB
+assets/two revisions each moves from 1519 to 440 MiB whole-job peak commit and
+29.0 to 6.9 seconds, with identical compressed pack byte counts. The six settings
+are selected for native 1.0.4; its release-byte acceptance remains separate.
+[Full profile evidence](benchmarks/native-game-resources-20261025.json).
+
+The separate multi-project matrix verifies 60,037 tracked paths, ignore-policy
+placement and independent refs/index/configuration. Streamed LFS fixtures test
+large-object integrity and failed-transfer recovery. These results are generated
+layout fixtures, not Unity/Unreal Editor acceptance. A single 64 MiB asset has no
+first-pack memory improvement, and some warm repacks are slower. Peak committed
+memory is not RSS. [Performance and limits](PERFORMANCE.md) ·
+[Project setup](GAME_PROJECTS.md).
 
 ## Current measurements · 2026-10-24
 

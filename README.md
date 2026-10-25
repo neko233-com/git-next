@@ -49,11 +49,15 @@ Unconfigured text uses LF consistently across platforms. Explicit repository att
 
 Language follows system preferences and supports persistent and per-command overrides. Machine formats remain stable. Automatic updates select official GitHub metadata, probe official/mirror download routes concurrently and verify downloaded bytes; mirrors cannot choose the release or provide its trusted identity. [Languages](docs/LANGUAGE.md) · [Updates](docs/UPDATES.md).
 
+Unity/Unreal projects can use independent repositories or project-root profiles in a shared monorepository. The selected 1.0.4 resource defaults bound packing caches/workers and LFS concurrency, with automatic maintenance disabled. On the profiled 1.0.3 Windows binary, first concurrent packing of four generated multi-asset projects reduces whole-job peak commit from about 1519 to 440 MiB with identical pack byte counts. Single-large-asset and warm-pack results retain their limitations. [Game projects](docs/GAME_PROJECTS.md) · [Measured scope](docs/PERFORMANCE.md).
+
 ## Evidence and source
 
 Rust CLI conformance uses [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md), with L0/full/network tiers and JSON reports. Windows/macOS use the same Rust runner without Python; release branches require full. Native C product conformance and platform lifecycle acceptance run through Go tooling and necessary platform scripts. Reference Git creates isolated fixtures; owned runtime checks reject fallback to installed Git. Historical Python CLI assertions remain available in Git history.
 
 Validation runs locally, with independent correctness lanes in parallel and Windows Installer transactions serialized. Reports retain actual elapsed time and failures. Performance uses a separate paired batch; measured medians, p95 and primary-process memory determine claims. No universal speedup is promised. [Builds](docs/BUILDING.md) · [Performance](docs/PERFORMANCE.md) · [Compatibility](docs/COMPATIBILITY.md).
+
+An explicitly authorized [package-validation release policy](docs/GO_TOOLING.md#explicit-package-validation-release-scope) can replace the two local MSI transaction prerequisites with actual package, isolated migration and resource probes. Those two lifecycle rows remain `waived`, never runtime passes; the policy and its exact package bindings accompany the release. Native CLI, transport, Docker, race and performance requirements remain in force.
 
 The native core is GPL-2.0-only with the declared dependency licenses and corresponding source bundles. [Source/license delivery](docs/CORRESPONDING_SOURCES.md). No GitHub Actions are used.
 

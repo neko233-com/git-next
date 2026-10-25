@@ -2,11 +2,104 @@
 package main
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
 )
+
+func TestReleaseCandidateAndFinalCoreIdentityExcludesOnlyMetadata(t *testing.T) {
+	candidate := record{
+		"bin/git":          record{"kind": "file", "sha256": digestBytes([]byte("core")), "bytes": 4, "mode": 0755},
+		"runtime/lib/link": record{"kind": "symlink", "target": "../../bin/git"},
+		"docs/manual.md":   record{"sha256": digestBytes([]byte("old manual")), "bytes": 10},
+	}
+	for _, mode := range []string{"metadata-only", "changed core", "missing runtime", "extra runtime", "changed link", "changed mode"} {
+		t.Run(mode, func(t *testing.T) {
+			var staged record
+			if e := decodeJSON(encoded(candidate), &staged); e != nil {
+				t.Fatal(e)
+			}
+			staged["docs/manual.md"] = record{"sha256": digestBytes([]byte("new release manual")), "bytes": 18}
+			switch mode {
+			case "changed core":
+				object(staged, "bin/git")["sha256"] = digestBytes([]byte("wrong core"))
+			case "missing runtime":
+				delete(staged, "runtime/lib/link")
+			case "extra runtime":
+				staged["runtime/unaccepted"] = record{"sha256": digestBytes(nil), "bytes": 0}
+			case "changed link":
+				object(staged, "runtime/lib/link")["target"] = "../../bin/other"
+			case "changed mode":
+				object(staged, "bin/git")["mode"] = 0644
+			}
+			proof, e := releaseCoreRuntimeIdentity(candidate, staged)
+			if (e == nil) != (mode == "metadata-only") {
+				t.Fatal(mode, e)
+			}
+			if e == nil && (proof["candidate_identity_sha256"] != proof["final_identity_sha256"] || number(proof, "members") != 2) {
+				t.Fatal("candidate and final runtime proof diverged", proof)
+			}
+		})
+	}
+}
+
+func TestReleaseFinalArchiveRechecksActualCoreBytesAndLinks(t *testing.T) {
+	for _, mode := range []string{"valid", "changed bytes", "missing member", "wrong link", "extra core"} {
+		t.Run(mode, func(t *testing.T) {
+			archive := filepath.Join(t.TempDir(), "final.tar.gz")
+			file, e := os.Create(archive)
+			if e != nil {
+				t.Fatal(e)
+			}
+			gz := gzip.NewWriter(file)
+			tw := tar.NewWriter(gz)
+			body := []byte("core")
+			if mode == "changed bytes" {
+				body = []byte("bad!")
+			}
+			if mode != "missing member" {
+				if e = tw.WriteHeader(&tar.Header{Name: "git-next-final/bin/git", Mode: 0755, Size: int64(len(body))}); e != nil {
+					t.Fatal(e)
+				}
+				if _, e = tw.Write(body); e != nil {
+					t.Fatal(e)
+				}
+			}
+			link := "../../bin/git"
+			if mode == "wrong link" {
+				link = "../../bin/other"
+			}
+			if e = tw.WriteHeader(&tar.Header{Name: "git-next-final/runtime/lib/link", Mode: 0777, Typeflag: tar.TypeSymlink, Linkname: link}); e != nil {
+				t.Fatal(e)
+			}
+			if mode == "extra core" {
+				if e = tw.WriteHeader(&tar.Header{Name: "git-next-final/runtime/extra", Mode: 0644}); e != nil {
+					t.Fatal(e)
+				}
+			}
+			if e = tw.Close(); e != nil {
+				t.Fatal(e)
+			}
+			if e = gz.Close(); e != nil {
+				t.Fatal(e)
+			}
+			if e = file.Close(); e != nil {
+				t.Fatal(e)
+			}
+			expected := record{"bin/git": record{"kind": "file", "sha256": digestBytes([]byte("core")), "bytes": 4, "mode": 0755}, "runtime/lib/link": record{"kind": "symlink", "target": "../../bin/git"}}
+			proof, e := releaseArchiveCoreRuntime(archive, "git-next-final", expected)
+			if (e == nil) != (mode == "valid") {
+				t.Fatal(mode, e)
+			}
+			if e == nil && proof["final_archive_members_streamed_and_hashed"] != true {
+				t.Fatal("final byte readback was not recorded")
+			}
+		})
+	}
+}
 
 func TestReleaseStagingReplacementsPreserveHardlinkedSource(t *testing.T) {
 	root := t.TempDir()

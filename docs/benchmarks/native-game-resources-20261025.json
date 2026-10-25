@@ -1,0 +1,2189 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "measured_on": "2026-10-25",
+  "product": "git-next",
+  "scope": "Configuration profiling and generated Unity/Unreal fixtures; not final-byte acceptance for a later native release or real Editor/device acceptance",
+  "host": {
+    "os": "Microsoft Windows NT 10.0.26300.0",
+    "architecture": "amd64",
+    "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+    "logical_processors": 32
+  },
+  "profiled_native_core": {
+    "version": "1.0.3",
+    "compatibility_version": "2.54.0.windows.1.git-next.1.0.3",
+    "source_tree_sha256": "ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad",
+    "upstream_commit": "2b8a3ab140826ac423c2845ef81d4c6ac4f7bf3c",
+    "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1"
+  },
+  "selected_for_native_version": "1.0.4",
+  "resource_settings": {
+    "maintenance.auto": "false",
+    "pack.threads": "2",
+    "pack.windowMemory": "32m",
+    "pack.deltaCacheSize": "32m",
+    "core.deltaBaseCacheLimit": "32m",
+    "lfs.concurrenttransfers": "2"
+  },
+  "configuration_provenance": {
+    "current_fragment": {
+      "name": "gitconfig",
+      "sha256": "9c119d6d590874dca84bf636387378d4cb479bc6d350fc2dcaedef520f382f26",
+      "bytes": 1428
+    },
+    "measured_candidate_sha256": "6d5366c0c6212f8bcd52024b5ecac782e8190eb52c7b322125532b77b9554fe4",
+    "rendered_runtime_block_sha256": "4fd6c9784e3e380d40c65ad884a42039414dc06a3f5a669509bb18956f9b081d",
+    "measured_and_current_bodies_identical": true,
+    "change_since_measurement": "Only the header comment marking the resource budget as a candidate was updated."
+  },
+  "multi_project_functional": {
+    "evidence": {
+      "name": "files10000-r2.json",
+      "sha256": "2473a5cf79b84f1a5c59330d8257e43ab6496098ea6da0b03d888928cab8339b",
+      "bytes": 272363
+    },
+    "status": "pass",
+    "cases": [
+      {
+        "case": "isolated-game-project-fixtures",
+        "status": "pass"
+      },
+      {
+        "case": "candidate-defaults-and-explicit-resource-overrides",
+        "status": "pass"
+      },
+      {
+        "case": "status/project-00",
+        "status": "pass"
+      },
+      {
+        "case": "status/project-01",
+        "status": "pass"
+      },
+      {
+        "case": "status/project-02",
+        "status": "pass"
+      },
+      {
+        "case": "status/project-03",
+        "status": "pass"
+      },
+      {
+        "case": "status/dual-engine-monorepo",
+        "status": "pass"
+      },
+      {
+        "case": "diff/project-00",
+        "status": "pass"
+      },
+      {
+        "case": "diff/project-01",
+        "status": "pass"
+      },
+      {
+        "case": "diff/project-02",
+        "status": "pass"
+      },
+      {
+        "case": "diff/project-03",
+        "status": "pass"
+      },
+      {
+        "case": "diff/dual-engine-monorepo",
+        "status": "pass"
+      },
+      {
+        "case": "add/project-00",
+        "status": "pass"
+      },
+      {
+        "case": "add/project-01",
+        "status": "pass"
+      },
+      {
+        "case": "add/project-02",
+        "status": "pass"
+      },
+      {
+        "case": "add/project-03",
+        "status": "pass"
+      },
+      {
+        "case": "add/dual-engine-monorepo",
+        "status": "pass"
+      },
+      {
+        "case": "commit/project-00",
+        "status": "pass"
+      },
+      {
+        "case": "commit/project-01",
+        "status": "pass"
+      },
+      {
+        "case": "commit/project-02",
+        "status": "pass"
+      },
+      {
+        "case": "commit/project-03",
+        "status": "pass"
+      },
+      {
+        "case": "commit/dual-engine-monorepo",
+        "status": "pass"
+      },
+      {
+        "case": "fetch/project-00",
+        "status": "pass"
+      },
+      {
+        "case": "fetch/project-01",
+        "status": "pass"
+      },
+      {
+        "case": "fetch/project-02",
+        "status": "pass"
+      },
+      {
+        "case": "fetch/project-03",
+        "status": "pass"
+      },
+      {
+        "case": "fetch/dual-engine-monorepo",
+        "status": "pass"
+      },
+      {
+        "case": "actual-multirepository-process-overlap",
+        "status": "pass"
+      },
+      {
+        "case": "repository-refs-index-and-config-stay-independent",
+        "status": "pass"
+      },
+      {
+        "case": "one-index-lock-does-not-block-another-repository",
+        "status": "pass"
+      },
+      {
+        "case": "manual-maintenance-remains-available",
+        "status": "pass"
+      },
+      {
+        "case": "final-exact-game-trees-and-no-index-locks",
+        "status": "pass"
+      },
+      {
+        "case": "input-binary-system-config-and-profiles-unchanged",
+        "status": "pass"
+      }
+    ],
+    "independent_repositories": 4,
+    "dual_engine_monorepositories": 1,
+    "engine_projects": 6,
+    "generated_files_per_engine_project": 10000,
+    "tracked_paths_verified": 60037,
+    "ignored_cache_paths_verified": 36,
+    "git_commands": 489,
+    "elapsed_seconds_excluding_cleanup": 442.6909272,
+    "subprocess_timeout_seconds": 300,
+    "phases": [
+      {
+        "maintenance_child_count": 0,
+        "phase": "status",
+        "status": "pass",
+        "trace2_events": 265,
+        "trace2_root_process_overlap_peak": 4,
+        "trace2_sha256": {
+          "dual-engine-monorepo": "1487101f08e1b31f5e4f8b74839ef7854a662ac538d116d402824b2c78c091c2",
+          "project-00": "93c6a33e0d3a28a19438dd2ad12559a937a7bbc2ccc3e8c9cb5620e9022b8b06",
+          "project-01": "c3236898215f62d3e4def07aabd8528d42c46e7eb98d6b3e4bcca1f24efb920e",
+          "project-02": "ecddec1a205ad98ce5acff46860d562d4973934fe253ff99f8d64414ed24db63",
+          "project-03": "d428852d13c777119a26bcd29e3f4ec6d24eba2c81d792b63fd159cd7f27b0a5"
+        }
+      },
+      {
+        "maintenance_child_count": 0,
+        "phase": "diff",
+        "status": "pass",
+        "trace2_events": 105,
+        "trace2_root_process_overlap_peak": 4,
+        "trace2_sha256": {
+          "dual-engine-monorepo": "47491d1609063aab496776df0feac8fab5e343f1d0753d6ade879464e843c30d",
+          "project-00": "873f4393906fc4259003fb7d1eb0cb8ec13ce56fd93aae9c01da927af102e5e1",
+          "project-01": "f2461f9749e6f6f077c9d8594f6714be667219240c36aee41d10ed5ba46e2d43",
+          "project-02": "530b6a6926b2c12ec7d7b1fce1241e345e0c31a38a1daa936272eff224ca7d5e",
+          "project-03": "eb976acca243334f1767f9fd2afb11d7c4bebdefda1e1699ada0abcb768eb5fb"
+        }
+      },
+      {
+        "maintenance_child_count": 0,
+        "phase": "add",
+        "status": "pass",
+        "trace2_events": 160,
+        "trace2_root_process_overlap_peak": 4,
+        "trace2_sha256": {
+          "dual-engine-monorepo": "2491beab3ad0539d1a278afac11dd3620cc95781d17f42d073615cd13ba7f623",
+          "project-00": "a252c8bb3c35ea56ecb731457e963c51427fa11c90f57aa491b3b3a94a49b20d",
+          "project-01": "3a3f3abf631cca39a1dbec51a0fcb0c7f01099eaa2d8e11b2d421c8d9ee12dfd",
+          "project-02": "f0e88c0fb1f22d46c3abae8b968f3f593eaec521c8cbc19880cb2238d22febf4",
+          "project-03": "28a0e975fa8458e673cc09991f97de4a75c8673c7e8d81e0111fa185ab7f1287"
+        }
+      },
+      {
+        "maintenance_child_count": 0,
+        "phase": "commit",
+        "status": "pass",
+        "trace2_events": 1001,
+        "trace2_root_process_overlap_peak": 4,
+        "trace2_sha256": {
+          "dual-engine-monorepo": "7016a25feccf0e8959486e3d723266c148d5730027395f7da633e4b0dbac8398",
+          "project-00": "630f8ce8e674e0304e81904641772e95b97550a01251a38f3caef4e2e245925d",
+          "project-01": "7f668d17d454b923fa41b1a148efe072141e5d7c5f7b121fcf5be5e748d4b28d",
+          "project-02": "daadcc18c82347263f57dee7d3d9819bb3a92573d7a541b2e9ee5a8ac3d97795",
+          "project-03": "e9477c6c3020112047b314f1bd2793aa9e80c28b55d51de999ca4513a23c0fbc"
+        }
+      },
+      {
+        "maintenance_child_count": 0,
+        "phase": "fetch",
+        "status": "pass",
+        "trace2_events": 425,
+        "trace2_root_process_overlap_peak": 4,
+        "trace2_sha256": {
+          "dual-engine-monorepo": "a1f6ae6e20915d4d8bbb7ba4e85db3702ff8da44bfa5cb769943a6fca841ae6d",
+          "project-00": "369b03f05bc895063b2dcb23fe520e1c09369a6a1289c8431daeb96f2bc4bbe3",
+          "project-01": "864c943e15c8071f5262b6dc372d170a6b660f0d7a79b9fdfd69e34a035d2f72",
+          "project-02": "b0f816d31ad939b529549babec67fab7818080d0707d98422436c390371764de",
+          "project-03": "c4f5b238e816ef154cedf46fa844aaa814b362e04d1816703bd6d4b43d687014"
+        }
+      }
+    ],
+    "largest_first_add_seconds": 163.036,
+    "default_command_timeout_seconds": 90,
+    "chosen_large_fixture_deadline_is_not_a_latency_SLO": true
+  },
+  "raw_git_many_assets": {
+    "evidence": {
+      "name": "raw16x8-s2-r1.json",
+      "sha256": "87ef8d660e6a7ab70af7bb68830d3149b0f5b3497a7729c751edd1631fc0c290",
+      "bytes": 1197288
+    },
+    "controller": {
+      "name": "git-next-tool-r4.exe",
+      "sha256": "a3403dd827b9545621659f649bf0b6faf9ca370905ff0ad17e7bf9b4421cfb02",
+      "bytes": 19165184
+    },
+    "input_identities": {
+      "baseline_sha256": "e66c31fe9b704dc2abb77ddce1ca0754755a989f483759067effca01a6191644",
+      "baseline_snapshot_sha256": "e66c31fe9b704dc2abb77ddce1ca0754755a989f483759067effca01a6191644",
+      "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+      "candidate_sha256": "6d5366c0c6212f8bcd52024b5ecac782e8190eb52c7b322125532b77b9554fe4",
+      "candidate_snapshot_sha256": "6d5366c0c6212f8bcd52024b5ecac782e8190eb52c7b322125532b77b9554fe4"
+    },
+    "status": "pass",
+    "seconds": 428.2130962,
+    "projects_per_profile": 4,
+    "text_files_per_repository": 128,
+    "assets_per_repository": 8,
+    "asset_mib_per_revision": 16,
+    "revisions_per_asset": 2,
+    "samples_per_profile": 2,
+    "order": "AB then BA; sample 1 starts with loose objects, sample 2 follows earlier repacks; OS caches are not flushed",
+    "memory_metric": "windows_job_peak_commit_bytes",
+    "parent_controller_and_fixture_generation_in_timed_peak": false,
+    "phases": [
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0548349,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2543616,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.05654,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2531328,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0210456,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9330688,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 7,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0193163,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 8548352,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 6,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 60.169169,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 405241856,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 3014,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 17.998625,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 162414592,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 905,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 29.0105997,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 1593008128,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 1456,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 6.9198071,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 461889536,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 351,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 62.8710398,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 407076864,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 3149,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 19.3196652,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 146464768,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 971,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 1.4804324,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 17584128,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 80,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.8037739,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 17559552,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 46,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0630377,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2756608,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 9,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0577022,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2752512,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0221927,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 8749056,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 7,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0198219,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 8798208,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 6,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 2.4717263,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2670592,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 129,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 2.9602809,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2637824,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 154,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 1.3084111,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 10256384,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 71,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 1.6071385,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 10248192,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 86,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 537104973,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 3.0237105,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 4509696,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 157,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 1.7031231999999998,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 4550656,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 91,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.5543383,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 17489920,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 33,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.5515828,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 17559552,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 33,
+          "memory_limit_bytes": 4294967296,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 537104051,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      }
+    ]
+  },
+  "raw_git_single_large_asset_control": {
+    "evidence": {
+      "name": "raw64-s2-r1.json",
+      "sha256": "636aa56101e26c0be37e708f2f82179c67af1840c147019b31a8683091f0614c",
+      "bytes": 521985
+    },
+    "controller": {
+      "name": "git-next-tool-r3.exe",
+      "sha256": "9cb29d32869294f5f89c933712eb42a50221c8c82a4075ea57d9e47770ebf050",
+      "bytes": 19021312
+    },
+    "input_identities": {
+      "baseline_sha256": "e66c31fe9b704dc2abb77ddce1ca0754755a989f483759067effca01a6191644",
+      "baseline_snapshot_sha256": "e66c31fe9b704dc2abb77ddce1ca0754755a989f483759067effca01a6191644",
+      "binary_sha256": "2e2e323ca44bb0d4dffcfdb879b02cd8928b7c78aef6dd61fc0456613afadef1",
+      "candidate_sha256": "6d5366c0c6212f8bcd52024b5ecac782e8190eb52c7b322125532b77b9554fe4",
+      "candidate_snapshot_sha256": "6d5366c0c6212f8bcd52024b5ecac782e8190eb52c7b322125532b77b9554fe4"
+    },
+    "status": "pass",
+    "seconds": 154.9599012,
+    "projects_per_profile": 4,
+    "text_files_per_repository": 128,
+    "assets_per_repository": 1,
+    "asset_mib_per_revision": 64,
+    "revisions_per_asset": 2,
+    "samples_per_profile": 2,
+    "order": "AB then BA; sample 1 starts with loose objects, sample 2 follows earlier repacks; OS caches are not flushed",
+    "memory_metric": "windows_job_peak_commit_bytes",
+    "parent_controller_and_fixture_generation_in_timed_peak": false,
+    "phases": [
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0548745,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2555904,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0564659,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2531328,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0195539,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9297920,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 6,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.0190564,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9035776,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 6,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 6.5422174,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 321798144,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 333,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 6.3790129,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 321765376,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 324,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 1.8723033,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 1286631424,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 99,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 1.8213151,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 1286660096,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 97,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 0,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 6.8762651,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 323661824,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 349,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 7.0289462,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 323653632,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 357,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.3347665,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 16990208,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 22,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 0.9006658,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 16961536,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 51,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0545475,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2637824,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 8,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0651921,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2629632,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 9,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0220452,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9355264,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 7,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "status",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.0235263,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 8470528,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 7,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 1.8447196,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2535424,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 98,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 3.4505287,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 2527232,
+          "peak_processes_observed": 1,
+          "sample_interval_ms": 20,
+          "samples": 178,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.8937572,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9785344,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 50,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "pack-objects",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 1.1758808,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 9711616,
+          "peak_processes_observed": 4,
+          "sample_interval_ms": 20,
+          "samples": 64,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 268570466,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 2.2999737,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 4407296,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 120,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "sequential",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 2.2431601,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 4415488,
+          "peak_processes_observed": 2,
+          "sample_interval_ms": 20,
+          "samples": 118,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "candidate",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 2.5100745,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 16998400,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 131,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      },
+      {
+        "profile": "baseline",
+        "workload": "repack",
+        "mode": "concurrent-four",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 0.906437,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 16904192,
+          "peak_processes_observed": 8,
+          "sample_interval_ms": 20,
+          "samples": 51,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "repository_pack_bytes": 268570258,
+        "external_pack_bytes": 0,
+        "integrity": {
+          "status": "pass",
+          "full_fsck": true,
+          "full_worktree_file_sha256": true,
+          "complete_current_and_historical_asset_sha256": true,
+          "refs_and_index_entries_unchanged": true
+        }
+      }
+    ]
+  },
+  "streamed_lfs": {
+    "evidence": {
+      "name": "lfs16x8-s2-r1.json",
+      "sha256": "7a273965483819b0ca230dddbd5ee57294aa8de648d56f5a2150fe4493150ad0",
+      "bytes": 26182
+    },
+    "controller": {
+      "name": "git-next-tool-r3.exe",
+      "sha256": "9cb29d32869294f5f89c933712eb42a50221c8c82a4075ea57d9e47770ebf050",
+      "bytes": 19021312
+    },
+    "status": "pass",
+    "projects": 2,
+    "assets_per_project": 8,
+    "asset_mib": 16,
+    "samples_per_profile": 2,
+    "order": "AB then BA",
+    "scope": "Complete fixture/controller/Git/LFS tree, including generation, fsck, failures, recovery and cleanup; not success-only network throughput",
+    "phases": [
+      {
+        "profile": "baseline",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 10.8906595,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 205418496,
+          "peak_processes_observed": 21,
+          "sample_interval_ms": 20,
+          "samples": 547,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "server": {
+          "active_transfers": 0,
+          "maximum_active_transfers": 16,
+          "objects": 17,
+          "objects_buffered_in_memory": false,
+          "stream_buffer_bytes": 32768,
+          "transferred_bytes": 822083584
+        },
+        "results": [
+          {
+            "case": "two-project-streamed-large-lfs-fixture-setup",
+            "status": "pass"
+          },
+          {
+            "case": "parallel-unity-unreal-large-lfs-upload-clone-and-sha",
+            "status": "pass"
+          },
+          {
+            "case": "corrupt-large-download-never-publishes-valid-cache-and-retries",
+            "status": "pass"
+          },
+          {
+            "case": "rejected-large-upload-preserves-remote-ref-and-recovers",
+            "status": "pass"
+          },
+          {
+            "case": "no-active-fixture-transfers-after-commands",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "profile": "candidate",
+        "sample": 1,
+        "status": "pass",
+        "seconds": 12.6766436,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 192479232,
+          "peak_processes_observed": 19,
+          "sample_interval_ms": 20,
+          "samples": 636,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "server": {
+          "active_transfers": 0,
+          "maximum_active_transfers": 4,
+          "objects": 17,
+          "objects_buffered_in_memory": false,
+          "stream_buffer_bytes": 32768,
+          "transferred_bytes": 822083584
+        },
+        "results": [
+          {
+            "case": "two-project-streamed-large-lfs-fixture-setup",
+            "status": "pass"
+          },
+          {
+            "case": "parallel-unity-unreal-large-lfs-upload-clone-and-sha",
+            "status": "pass"
+          },
+          {
+            "case": "corrupt-large-download-never-publishes-valid-cache-and-retries",
+            "status": "pass"
+          },
+          {
+            "case": "rejected-large-upload-preserves-remote-ref-and-recovers",
+            "status": "pass"
+          },
+          {
+            "case": "no-active-fixture-transfers-after-commands",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "profile": "candidate",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 11.0737264,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 175505408,
+          "peak_processes_observed": 18,
+          "sample_interval_ms": 20,
+          "samples": 556,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "server": {
+          "active_transfers": 0,
+          "maximum_active_transfers": 3,
+          "objects": 17,
+          "objects_buffered_in_memory": false,
+          "stream_buffer_bytes": 32768,
+          "transferred_bytes": 822083584
+        },
+        "results": [
+          {
+            "case": "two-project-streamed-large-lfs-fixture-setup",
+            "status": "pass"
+          },
+          {
+            "case": "parallel-unity-unreal-large-lfs-upload-clone-and-sha",
+            "status": "pass"
+          },
+          {
+            "case": "corrupt-large-download-never-publishes-valid-cache-and-retries",
+            "status": "pass"
+          },
+          {
+            "case": "rejected-large-upload-preserves-remote-ref-and-recovers",
+            "status": "pass"
+          },
+          {
+            "case": "no-active-fixture-transfers-after-commands",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "profile": "baseline",
+        "sample": 2,
+        "status": "pass",
+        "seconds": 13.9503228,
+        "process_tree_memory": {
+          "available": true,
+          "metric": "windows_job_peak_commit_bytes",
+          "scope": "Kernel PeakJobMemoryUsed for all commands and descendants in this shared phase job; parent benchmark orchestrator excluded; committed private memory, not RSS",
+          "peak_bytes": 205336576,
+          "peak_processes_observed": 21,
+          "sample_interval_ms": 20,
+          "samples": 700,
+          "memory_limit_bytes": 2147483648,
+          "memory_limit_enforced": true,
+          "process_limit": 128,
+          "process_limit_kernel_enforced": true,
+          "processes_before_cleanup": 0,
+          "cleanup_verified": true,
+          "cleanup_scope": "All processes in this owned phase job"
+        },
+        "server": {
+          "active_transfers": 0,
+          "maximum_active_transfers": 16,
+          "objects": 17,
+          "objects_buffered_in_memory": false,
+          "stream_buffer_bytes": 32768,
+          "transferred_bytes": 822083584
+        },
+        "results": [
+          {
+            "case": "two-project-streamed-large-lfs-fixture-setup",
+            "status": "pass"
+          },
+          {
+            "case": "parallel-unity-unreal-large-lfs-upload-clone-and-sha",
+            "status": "pass"
+          },
+          {
+            "case": "corrupt-large-download-never-publishes-valid-cache-and-retries",
+            "status": "pass"
+          },
+          {
+            "case": "rejected-large-upload-preserves-remote-ref-and-recovers",
+            "status": "pass"
+          },
+          {
+            "case": "no-active-fixture-transfers-after-commands",
+            "status": "pass"
+          }
+        ]
+      }
+    ]
+  },
+  "rust_preview_gate": {
+    "evidence": {
+      "name": "rust-full-template-isolation.json",
+      "sha256": "b1937d35fffedf491bc2fb4546ad44695302d1c1d4a022c997e812c9a2daff29",
+      "bytes": 15856
+    },
+    "tier": "full",
+    "passed": 100,
+    "failed": 0,
+    "skipped": 0,
+    "template_isolation_added": true,
+    "preview_lfs_hook_compatibility_not_established": true
+  },
+  "retained_diagnostics": [
+    {
+      "evidence": {
+        "name": "files10000-r1.json",
+        "sha256": "7516a1e45aadbaf7638b12784b47b2eda63bbad37bbe701b51c8d0f176160bc7",
+        "bytes": 1807
+      },
+      "status": "fail",
+      "verified_paths_before_failure": 40022,
+      "error": "Initial 20k-path monorepo add exited 1 without stderr; its root cause remains unproved."
+    },
+    {
+      "evidence": {
+        "name": "mono-add-diagnostic-r1.json",
+        "sha256": "7cd99a0448baaedd7bc420301ca5b48a015dbb00565b6c6a63f6f039b9191268",
+        "bytes": 21177
+      },
+      "status": "pass",
+      "first_20k_add_seconds": 54.731,
+      "note": "Separate diagnostic; not substituted for the complete five-repository matrix."
+    }
+  ],
+  "limits": [
+    "Windows kernel whole-job peak committed private memory is not RSS or total physical memory; fixture job caps are not production-wide limits.",
+    "Two samples per profile and changing object-pack reuse state do not establish a universal latency distribution or per-key causal effect.",
+    "The 64 MiB single-asset control did not reduce first-pack peak memory; warm repacks are not consistently faster.",
+    "Raw Git measurements override automatic maintenance off in both profiles and disable fixture hooks/templates/LFS; maintenance child suppression is separately covered by actual functional probes.",
+    "No automatic history rewrite, renormalization, object/ref/LFS path change, daemon-per-project or real user repository operation was introduced.",
+    "macOS/Linux resource-performance measurements and real Unity/Unreal Editor acceptance are not claimed by this Windows report."
+  ],
+  "terminal_executed": false,
+  "personal_repository_accessed": false,
+  "final_release_eligible": false
+}

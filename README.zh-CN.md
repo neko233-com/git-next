@@ -49,11 +49,15 @@ git update check
 
 语言默认跟随系统，可持久设置或单次覆盖，机器格式不随语言变化。自动更新从官方 GitHub 获取可信版本信息，并发探测官方与镜像下载路径、校验实际包内容；镜像不能决定版本或可信身份。[语言](docs/LANGUAGE.md) · [更新](docs/UPDATES.md)。
 
+Unity／UE 支持独立多仓库，也支持在同一仓库内分别放置项目根目录规则。1.0.4 选定的资源默认值限制 pack 缓存、打包线程及 LFS 并发，并关闭自动维护。在同一 1.0.3 原生 Windows 二进制的配置对照中，四个生成的多资产项目首次并行打包时，整进程树峰值提交内存从约 1519 降至 440 MiB，pack 字节数一致。单个超大资产和重复打包的反例保留，不承诺全面加速。[游戏项目](docs/GAME_PROJECTS.md) · [实测范围](docs/PERFORMANCE.md)。
+
 ## 验证与源码
 
 Rust CLI 统一使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)，提供 L0/full/network 分层和 JSON 报告；Windows/macOS 同一套 Rust 命令，无需 Python，发布分支要求 full。native C 产品行为及平台生命周期由 Go 工具和必要平台脚本另行验收。参考 Git 仅用于隔离夹具，产品检查拒绝回退到本机已安装的 Git。历史 Python CLI 断言保留在 Git 历史中。
 
 独立正确性验证并行执行，Windows Installer 事务串行执行，报告保留真实耗时和失败结果。性能采用独立成对批量测量，根据实际 median、p95 和主进程内存给出结论，不承诺所有场景都更快。[构建](docs/BUILDING.md) · [性能](docs/PERFORMANCE.md) · [兼容性](docs/COMPATIBILITY.md)。
+
+按用户明确选择的[安装包验证发布范围](docs/GO_TOOLING.md#explicit-package-validation-release-scope)，可用真实静态包、隔离迁移与资源行为探针代替两项本机 MSI 事务前置要求。两项生命周期仍标 `waived`，不冒充实际安装通过；发布资产保留授权、探针和精确包哈希。其它 native CLI、传输、Docker、race 与性能门禁继续执行。
 
 原生核心遵循 GPL-2.0-only，并提供依赖许可证及对应源码包。[源码与许可](docs/CORRESPONDING_SOURCES.md)。本仓库不使用 GitHub Actions。
 

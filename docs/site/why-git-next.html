@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Why git-next</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Why git-next</h1>
-<p>The native product and the 1.0.3 candidate use a source-built native C Git engine,
+<p>The native product uses a source-built native C Git engine,
 with git-next's identity, LF policy, language support and installation/update behavior.
 They include an owned runtime and preserve existing Git repository, configuration
 and helper contracts. The independent Rust client is a separate preview; its
@@ -28,6 +28,21 @@ profile completed all 30 grep/status rounds and six contract checks. This suppor
 the scoped read-safety choice, not an internal root-cause or speed claim. Explicit
 user/repository/command-line settings retain their normal priority.
 <a href="defaults.html">Defaults</a>.</p>
+<h2>Unity/Unreal resources · 2026-10-25</h2>
+<p>Shared pack/cache/LFS worker budgets and disabled automatic maintenance target
+concurrent projects without a resident process per repository. On the same native
+1.0.3 Windows x64 binary, first packing four generated projects with eight 16 MiB
+assets/two revisions each moves from 1519 to 440 MiB whole-job peak commit and
+29.0 to 6.9 seconds, with identical compressed pack byte counts. The six settings
+are selected for native 1.0.4; its release-byte acceptance remains separate.
+<a href="../benchmarks/native-game-resources-20261025.json">Full profile evidence</a>.</p>
+<p>The separate multi-project matrix verifies 60,037 tracked paths, ignore-policy
+placement and independent refs/index/configuration. Streamed LFS fixtures test
+large-object integrity and failed-transfer recovery. These results are generated
+layout fixtures, not Unity/Unreal Editor acceptance. A single 64 MiB asset has no
+first-pack memory improvement, and some warm repacks are slower. Peak committed
+memory is not RSS. <a href="performance.html">Performance and limits</a> ·
+<a href="game-projects.html">Project setup</a>.</p>
 <h2>Current measurements · 2026-10-24</h2>
 <p>Native 1.0.3 completed its exact R7 correctness batch with 16 passed lanes and
 two terminal lanes waived by explicit user instruction, in 249.801

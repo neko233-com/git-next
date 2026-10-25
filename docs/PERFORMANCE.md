@@ -1,4 +1,64 @@
-# Native 1.0.3 measurements · 2026-10-24
+# Game-project resource defaults · 2026-10-25
+
+The [resource-profile report](benchmarks/native-game-resources-20261025.json)
+compares the same source-built native **1.0.3** binary with its original defaults
+and the six resource settings selected for **1.0.4**. It is configuration profiling,
+separate from the later release's final-byte gates. Host: Windows
+10.0.26300, AMD64 Family 26 Model 68 Stepping 0, 32 logical CPUs. These figures
+are not macOS/Linux performance measurements or real Editor acceptance.
+
+Four generated repositories, two Unity and two Unreal, each contain 128 small
+files and eight distinct 16 MiB binary assets with two revisions. Every phase
+verifies all current and historical asset bytes, worktree files, refs/index and
+full `fsck`. The two profile orders are AB then BA. The first sample starts from
+loose objects; the second follows earlier repacks. OS caches are not flushed.
+Treat these as two distinct reuse states, not a latency distribution.
+
+| First packing of loose-object fixtures | Original / resource profile seconds | Original / resource profile whole-job peak MiB |
+| --- | --- | --- |
+| Four repositories sequentially, `pack-objects` | 60.169 / 17.999 | 386.47 / 154.89 |
+| Four repositories concurrently, `pack-objects` | 29.011 / 6.920 | 1519.21 / 440.49 |
+| Four repositories sequentially, `repack` | 62.871 / 19.320 | 388.22 / 139.68 |
+
+The first concurrent pack reduces peak committed memory by about **71%** in this
+fixture. All eight pack-objects phases produce exactly **537,104,973 compressed
+pack bytes** across the four repositories; the complete object histories remain
+valid. This does not attribute the joint change to any individual setting.
+
+The limits matter as much as the wins. A separate one-64-MiB-asset/two-revision
+control has virtually identical first-pack peaks, about 307 MiB sequentially and
+1227 MiB concurrently. Large individual objects still need memory. Reused packs
+have mixed timings: the many-asset sequential repack's second sample is
+1.703 seconds originally versus 3.024 seconds with the profile. Small clean-status
+memory is essentially unchanged. No universal speed or memory reduction is claimed.
+
+The separate LFS comparison uses two repositories, each with eight 16 MiB assets.
+All four AB/BA runs pass upload/clone/SHA, corrupted-download rejection, failed-push
+ref preservation and recovery. Maximum observed concurrent transfers decrease
+from 16 to 4. Whole-tree peak commit is 195.90/195.82 MiB originally and
+183.56/167.38 MiB with the profile, a median of about 196 versus 175 MiB.
+End-to-end times are 10.891/13.950 versus 12.677/11.074 seconds; these include
+fixture generation, checks, failures, recovery and cleanup, not just successful
+network throughput.
+
+Windows metrics are kernel job peak committed memory across all owned processes,
+**not RSS**. Raw Git phase metrics exclude the parent controller and fixture
+generation; LFS metrics include the fixture/controller/Git/LFS tree. Job caps
+protect the experiments, not arbitrary production callers. The report retains
+all phases, pack sizes, exact hashes, the single-large-asset counterexample and
+the earlier failed large-file fixture attempt. See [defaults](DEFAULTS.md) and
+[multi-project usage](GAME_PROJECTS.md).
+
+The functional matrix separately verifies **60,037 tracked paths**, 36 ignored
+cache paths and 489 Git calls across four independent repositories plus a nested
+dual-engine monorepository: 33/33 cases pass. Actual root-process overlap reaches
+four for status/diff/add/commit/fetch, with zero maintenance children. Its large
+fixture explicitly selects a 300-second command deadline; the monorepository's
+first 20k-file add takes 163.036 seconds in that run. This is an integrity and
+isolation result, not a promise of fast first imports or an absolute stability
+guarantee.
+
+## Native 1.0.3 measurements · 2026-10-24
 
 The exact R7 correctness batch completed **16 passed / 2 user-waived lanes** in
 **249.801 seconds**. All **five performance lanes passed** in

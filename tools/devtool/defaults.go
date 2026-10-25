@@ -19,6 +19,79 @@ type defaults struct {
 	bodies   map[string][]string
 }
 
+func parseDefaultByteSize(value string) (uint64, error) {
+	if value == "" {
+		return 0, fmt.Errorf("empty byte size")
+	}
+	multiplier := uint64(1)
+	last := value[len(value)-1]
+	switch last {
+	case 'k', 'K':
+		multiplier = 1 << 10
+	case 'm', 'M':
+		multiplier = 1 << 20
+	case 'g', 'G':
+		multiplier = 1 << 30
+	}
+	if multiplier != 1 {
+		value = value[:len(value)-1]
+	}
+	if len(value) > 1 && value[0] == '0' {
+		return 0, fmt.Errorf("byte size must use canonical decimal notation")
+	}
+	for _, digit := range value {
+		if digit < '0' || digit > '9' {
+			return 0, fmt.Errorf("byte size requires a decimal integer with optional k/m/g suffix")
+		}
+	}
+	amount, e := strconv.ParseUint(value, 10, 64)
+	if e != nil || amount > ^uint64(0)/multiplier {
+		return 0, fmt.Errorf("byte size overflows uint64")
+	}
+	return amount * multiplier, nil
+}
+
+func commonResourceKey(key string) bool {
+	switch strings.ToLower(key) {
+	case "maintenance.auto", "core.deltabasecachelimit", "pack.threads", "pack.windowmemory", "pack.deltacachesize", "lfs.concurrenttransfers":
+		return true
+	}
+	return false
+}
+
+func validateDefaultValue(entry setting) error {
+	key := strings.ToLower(entry.section + "." + entry.key)
+	switch key {
+	case "maintenance.auto":
+		if entry.value != "false" {
+			return fmt.Errorf("%s must disable automatic per-repository maintenance", key)
+		}
+		return nil
+	case "pack.threads", "lfs.concurrenttransfers":
+		count, e := strconv.ParseUint(entry.value, 10, 32)
+		if e != nil || count < 1 || count > 64 || strconv.FormatUint(count, 10) != entry.value {
+			return fmt.Errorf("%s must bound the shipped worker count to 1..64", key)
+		}
+		return nil
+	case "core.deltabasecachelimit", "pack.windowmemory", "pack.deltacachesize":
+		amount, e := parseDefaultByteSize(entry.value)
+		// pack.deltaCacheSize uses Git's signed-int parser; use one portable bound.
+		if e != nil || amount < 1 || amount > 1<<31-1 {
+			return fmt.Errorf("%s must specify 1..2147483647 bytes using Git k/m/g units", key)
+		}
+		return nil
+	}
+	for _, value := range []string{"histogram", "zdiff3", "-committerdate", "version:refname", "main", "input", "lf", "true", "false"} {
+		if entry.value == value {
+			return nil
+		}
+	}
+	if _, e := strconv.ParseUint(entry.value, 10, 64); e != nil {
+		return fmt.Errorf("invalid default value for %s", key)
+	}
+	return nil
+}
+
 func readDefaults(root string) (defaults, error) {
 	text, e := read(filepath.Join(root, "packaging/runtime-defaults/gitconfig"))
 	if e != nil {
@@ -46,11 +119,16 @@ func readDefaults(root string) (defaults, error) {
 		if !ok {
 			return d, fmt.Errorf("invalid default %q", line)
 		}
-		if seen[section+"."+key] {
+		canonical := strings.ToLower(section + "." + key)
+		if seen[canonical] {
 			return d, fmt.Errorf("duplicate default: %s.%s", section, key)
 		}
-		seen[section+"."+key] = true
-		d.entries = append(d.entries, setting{section, key, value})
+		seen[canonical] = true
+		entry := setting{section, key, value}
+		if e := validateDefaultValue(entry); e != nil {
+			return d, e
+		}
+		d.entries = append(d.entries, entry)
 		d.bodies[section] = append(d.bodies[section], line)
 	}
 	if len(d.bodies["core"]) == 0 {
@@ -69,6 +147,33 @@ func (d defaults) tail() string {
 	return b.String()
 }
 func (d defaults) block() string { return "[core]\n" + d.core() + d.tail() }
+func (d defaults) resources() (string, error) {
+	remaining := map[string]bool{"maintenance.auto": true, "core.deltabasecachelimit": true, "pack.threads": true, "pack.windowmemory": true, "pack.deltacachesize": true, "lfs.concurrenttransfers": true}
+	var b strings.Builder
+	section := ""
+	for _, entry := range d.entries {
+		key := strings.ToLower(entry.section + "." + entry.key)
+		if !commonResourceKey(key) {
+			continue
+		}
+		if !remaining[key] {
+			return "", fmt.Errorf("duplicate resource default %s", key)
+		}
+		if e := validateDefaultValue(entry); e != nil {
+			return "", e
+		}
+		delete(remaining, key)
+		if section != entry.section {
+			section = entry.section
+			fmt.Fprintf(&b, "[%s]\n", section)
+		}
+		fmt.Fprintf(&b, "\t%s = %s\n", entry.key, entry.value)
+	}
+	if len(remaining) != 0 {
+		return "", fmt.Errorf("common resource defaults are incomplete")
+	}
+	return b.String(), nil
+}
 func (d defaults) powershell() string {
 	var b strings.Builder
 	for _, section := range d.sections {
@@ -96,19 +201,15 @@ func agreement(a *app) (defaults, []check, error) {
 		return d, nil, e
 	}
 	checks := []check{{"fragment-duplicate-keys", true, fmt.Sprintf("%d defaults", len(d.entries))}, {"migration-literal-matches-fragment", strings.Contains(text, `"`+d.powershell()+`"`), "PowerShell literal equals authoritative fragment"}, {"fragment-renders", strings.HasPrefix(d.core(), "\tautocrlf = input\n") && strings.HasPrefix(d.tail(), "[gc]"), "core and remaining sections render from one fragment"}}
-	enums := map[string]bool{}
-	for _, value := range []string{"histogram", "zdiff3", "-committerdate", "version:refname", "main", "input", "lf", "true", "false"} {
-		enums[value] = true
-	}
 	var bad []string
 	for _, entry := range d.entries {
-		if !enums[entry.value] {
-			if _, e := strconv.ParseUint(entry.value, 10, 64); e != nil {
-				bad = append(bad, entry.key)
-			}
+		if e := validateDefaultValue(entry); e != nil {
+			bad = append(bad, entry.section+"."+entry.key)
 		}
 	}
 	checks = append(checks, check{"fragment-value-shapes", len(bad) == 0, strings.Join(bad, ", ")})
+	_, e = d.resources()
+	checks = append(checks, check{"common-resource-defaults", e == nil, "six bounded resource settings render from the authoritative fragment"})
 	return d, checks, nil
 }
 func init() {
@@ -126,8 +227,14 @@ func init() {
 			_, e = fmt.Fprint(a.out, d.tail())
 		case "powershell":
 			_, e = fmt.Fprint(a.out, d.powershell())
+		case "resources":
+			var text string
+			text, e = d.resources()
+			if e == nil {
+				_, e = fmt.Fprint(a.out, text)
+			}
 		default:
-			return fmt.Errorf("format must be block/core/tail/powershell")
+			return fmt.Errorf("format must be block/core/tail/powershell/resources")
 		}
 		return e
 	})
@@ -631,6 +738,11 @@ func defaultBehavior(a *app, git string, d defaults) ([]check, error) {
 		return nil, e
 	}
 	add("core.quotePath", bytesContains(status.stdout, "文档.txt") && !bytesContains(quoted.stdout, "文档.txt"), "default preserves Unicode while explicit true escapes it")
+	resources, e := defaultResourceBehavior(git, d)
+	if e != nil {
+		return nil, e
+	}
+	checks = append(checks, resources...)
 	if runtime.GOOS == "windows" {
 		before, e := gitFamily()
 		if e != nil {

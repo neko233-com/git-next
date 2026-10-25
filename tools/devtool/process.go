@@ -42,6 +42,13 @@ func runProcess(ctx context.Context, cwd string, environment []string, input []b
 	}
 	e = cmd.Wait()
 	r := result{out.Bytes(), errout.Bytes(), 0}
+	if contextErr := ctx.Err(); contextErr != nil {
+		r.code = -1
+		if cmd.ProcessState != nil {
+			r.code = cmd.ProcessState.ExitCode()
+		}
+		return r, fmt.Errorf("command %s exceeded its execution context: %w", filepathBase(program), contextErr)
+	}
 	if e != nil {
 		r.code = 1
 		if exit, ok := e.(*exec.ExitError); ok {

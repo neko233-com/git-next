@@ -12,6 +12,16 @@ the delivery scope, not runtime bytes or the staging controller's immutable-inpu
 checks. New runtime/installer changes still invalidate affected evidence.
 [Scope receipt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
 
+For the subsequent game-project delivery, the user's same package/container
+validation instruction can be expressed through the narrowly bounded
+[package-validation policy](GO_TOOLING.md#explicit-package-validation-release-scope).
+Do not request another machine or repeat full workstation takeover solely to
+recreate MSI lifecycle evidence excluded by that scope. Run the required actual
+package, migration and resource probes, preserve the two unexecuted MSI rows as
+`waived`, and keep all other native/transport/Docker/race/performance gates.
+This optional policy does not change the default release path or broaden the
+separate terminal waiver.
+
 ## Rust CLI gate and Python retirement
 
 Owned build/package/docs/release controllers and fixture services use the
@@ -33,6 +43,14 @@ Artifact diagnostics and source-contract helpers use Go `fast-verify` and
 `verify-repo-contract`. Use packaging, locale/default maintenance and documentation tools only for
 their corresponding changes; installing Python is not a prerequisite for CLI
 merge/tag acceptance.
+
+For Unity/Unreal changes, retain exact project-root ignore/attribute placement and
+verify repository configuration/index/ref isolation. The Go game-project acceptance
+and resource tools described in [tooling](GO_TOOLING.md) record actual sizes and
+whole-process-tree measurement scope. Never treat a timed-out or memory-budget-killed
+command as an ordinary refusal or a successful performance sample. The common
+resource defaults are soft budgets, not a total-RSS promise; keep the Windows five-key
+read-safety profile and the absence of default per-repository daemons.
 
 `--reuse-desktop-batch` and `--reuse-desktop-matrix` reuse a previously passed desktop case only with passed original frozen-input readback, matching reference and exact behavioral desktop test bytes. Desktop reuse across installer/document changes checks every GUI/core/Bash/runtime byte; the only runtime configuration exception is the byte-exact transition to the five tested Windows read-safety settings. Unrelated config changes are rejected. Only explicitly unrelated orchestration/test-only source changes are permitted. Original receipt hashes and elapsed time remain in the report. This avoids repeating foreground input after an accepted unchanged build while the user is using the desktop; it cannot accept a changed terminal or changed desktop test. `go -C tools/devtool run . complete-native-batch` can finalize an externally interrupted foreground case with dependency-matched prior desktop evidence only when every other case and original readback passed, all product inputs are identical, and only the listed reporting tools/tests changed. It verifies the exact focus-error stack, rechecks every frozen input, preserves original timing/failure hashes and does not rerun product cases.
 

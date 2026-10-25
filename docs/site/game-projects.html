@@ -21,6 +21,60 @@ git lfs unlock Content/Maps/Main.umap
 <p>The server must support the standard LFS locking API. Native pre-push uploads required objects before Git ref publication and verifies supported locks. Upload/verification failures reject the push. Locking is distinct from offline local Git commits.</p>
 <h2>Existing histories and large trees</h2>
 <p>Changing attributes does not rewrite history. Review explicit git add --renormalize changes separately from business work; git lfs migrate rewrites only when the operator deliberately invokes it. Shared branches need ordinary coordination.</p>
-<p>The native index/stat fast path, Windows filesystem cache, ignored-directory traversal and streaming LFS transfers cover large asset trees without treating editor opens as content edits. Large-file cache layout and Git object/ref/index storage keep their standard paths. No speculative repack, history migration or credential reset occurs during installation.</p>
+<p>The native index/stat fast path, ignored-directory traversal and streaming LFS transfers cover asset trees without treating editor opens as content edits. Windows keeps filesystem caching, index preloading and parallel index/grep reads disabled after an incomplete-result regression; throughput must never depend on omitting files. Large-file cache layout and Git object/ref/index storage keep their standard paths. No speculative repack, history migration or credential reset occurs during installation.</p>
+<h2>Multiple projects</h2>
+<p>Independent projects use independent repositories, with their own configuration, refs, index, locks and LFS cache. No project registry or resident process is required:</p>
+<pre><code class="language-sh">git -C UnityA status --short
+git -C UnrealB status --short
+</code></pre>
+<p>A monorepository can contain both engines. Put the Unity profiles in <code>UnityProject/.gitignore</code> and <code>UnityProject/.gitattributes</code>, and the Unreal profiles in <code>UnrealProject/</code>. These ignore patterns are anchored to each profile's directory. A single copy at the monorepository root cannot identify every nested engine project. Both project directories share the enclosing repository's Git configuration, refs and index; an index lock therefore applies to that whole repository.</p>
+<p>Keep Unity <code>Assets</code>, <code>.meta</code>, <code>Packages</code> and <code>ProjectSettings</code>, and Unreal <code>Source</code>, <code>Config</code>, <code>Build</code> and the <code>.uproject</code> under review. Ignore generated caches at their actual project roots. Existing policy files are merged deliberately, never replaced by installation.</p>
+<h2>Resource budgets</h2>
+<p>The common resource settings are rendered from <code>packaging/runtime-defaults/gitconfig</code> for Windows and POSIX packages:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Scope and tradeoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>maintenance.auto</code></td>
+<td><code>false</code></td>
+<td>Ordinary commit/fetch operations do not start automatic maintenance. Manual maintenance and <code>gc</code> remain available; long-lived repositories need deliberate maintenance.</td>
+</tr>
+<tr>
+<td><code>pack.threads</code></td>
+<td><code>2</code></td>
+<td>Bounds compression workers per packing process. A single large pack may take longer than using every CPU.</td>
+</tr>
+<tr>
+<td><code>pack.windowMemory</code></td>
+<td><code>32m</code></td>
+<td>Delta-search window budget per packing thread.</td>
+</tr>
+<tr>
+<td><code>pack.deltaCacheSize</code></td>
+<td><code>32m</code></td>
+<td>Delta-result cache per packing process; smaller caches can require recomputation.</td>
+</tr>
+<tr>
+<td><code>core.deltaBaseCacheLimit</code></td>
+<td><code>32m</code></td>
+<td>Decoded delta-base cache per process.</td>
+</tr>
+<tr>
+<td><code>lfs.concurrenttransfers</code></td>
+<td><code>2</code></td>
+<td>Transfer workers per LFS process; several active repositories still multiply the total.</td>
+</tr>
+</tbody>
+</table>
+<p>These are resource knobs, not a hard RSS limit. Indexes, objects, oversized individual assets, helper runtimes and other allocations still consume memory. Repository settings and <code>git -c</code> retain ordinary precedence. See <a href="defaults.html">runtime defaults</a> for the measured comparison and its limits. Git's memory suffixes are binary (<code>32m</code> means 32 MiB), and <code>pack.windowMemory</code> is per thread. <a href="https://git-scm.com/docs/git-config">Git configuration reference</a>.</p>
+<p>In the <a href="../benchmarks/native-game-resources-20261025.json">Windows resource fixtures</a>, first packing across four projects with eight 16 MiB assets each reduces whole-job peak commit from about 1519 to 440 MiB with identical compressed pack byte counts. The separate 60,037-path multi-project integrity matrix passes all 33 cases. A single 64 MiB asset does not show the same memory benefit, and warm repacks can be slower. These are generated-layout results on the profiled native 1.0.3 bytes, not real Editor or later release-byte acceptance.</p>
+<p>For example, a project that values transfer throughput over the default budget can explicitly use <code>git -C UnityA config --local lfs.concurrenttransfers 4</code>. This changes that repository only. Plan concurrent editor/build/VCS activity across projects; the product does not impose a machine-wide memory limit on arbitrary callers.</p>
 <p>Acceptance uses generated repositories/accounts: Unity YAML/.meta and binary bytes, CRLF-only saves and genuine edits, large asset push/clone/checkout, cache corruption, transfer failure before refs, lock/unlock/conflicts, existing hooks and deep/Unicode paths. The <a href="delivery-status.html">delivery ledger</a> distinguishes implemented behavior from completed final-byte checks.</p>
+<p>The Go tools <code>native-game-multirepo-acceptance</code>, <code>native-game-lfs-stream-acceptance</code>, <code>benchmark-game-resources</code> and <code>benchmark-game-lfs-resources</code> retain their actual fixture sizes, input hashes, failure cases and measurement scope. The LFS service streams object bodies to disk through fixed buffers. Windows resource benchmarks measure kernel job peak committed memory across the owned process tree, not just the entry process and not RSS. These fixtures do not claim real Unity/Unreal Editor acceptance or absolute stability.</p>
 </main></html>

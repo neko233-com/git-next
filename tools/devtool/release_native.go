@@ -3,10 +3,14 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -14,7 +18,7 @@ import (
 )
 
 func init() {
-	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix? terminal-waiver", prepareNativeRelease)
+	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix? terminal-waiver package-validation-policy", prepareNativeRelease)
 }
 func resultCases(gate record, expected []string) error {
 	want := map[string]bool{}
@@ -42,6 +46,124 @@ func releaseInputReadback(matrix record) error {
 		}
 	}
 	return nil
+}
+
+func releaseCoreRuntimeEntries(files record) (record, error) {
+	entries := record{}
+	for name, raw := range files {
+		if !strings.HasPrefix(name, "bin/") && !strings.HasPrefix(name, "cmd/") && !strings.HasPrefix(name, "runtime/") {
+			continue
+		}
+		if path.Clean(name) != name || path.IsAbs(name) || strings.ContainsAny(name, "\\:") {
+			return nil, fmt.Errorf("unsafe core/runtime identity member")
+		}
+		item := rec(raw)
+		if item["kind"] == "symlink" {
+			target := stringValue(item, "target")
+			resolved := path.Clean(path.Join(path.Dir(name), target))
+			if target == "" || path.IsAbs(target) || strings.ContainsAny(target, "\\:") || resolved == ".." || strings.HasPrefix(resolved, "../") {
+				return nil, fmt.Errorf("unsafe core/runtime identity link")
+			}
+			entries[name] = record{"kind": "symlink", "target": target}
+			continue
+		}
+		if !regexp.MustCompile(`^[0-9a-f]{64}$`).MatchString(stringValue(item, "sha256")) || item["bytes"] == nil || number(item, "bytes") < 0 {
+			return nil, fmt.Errorf("core/runtime identity lacks exact file bytes")
+		}
+		entry := record{"kind": "file", "sha256": item["sha256"], "bytes": number(item, "bytes")}
+		for _, key := range []string{"mode", "windows_attributes"} {
+			if item[key] != nil {
+				entry[key] = item[key]
+			}
+		}
+		entries[name] = entry
+	}
+	if len(entries) == 0 {
+		return nil, fmt.Errorf("core/runtime identity cannot be empty")
+	}
+	return entries, nil
+}
+
+func releaseCoreRuntimeIdentity(candidate, staged record) (record, error) {
+	before, e := releaseCoreRuntimeEntries(candidate)
+	if e != nil {
+		return nil, e
+	}
+	after, e := releaseCoreRuntimeEntries(staged)
+	if e != nil {
+		return nil, e
+	}
+	if !equalJSON(before, after) {
+		return nil, fmt.Errorf("final core/runtime payload differs from accepted candidate bytes, links or modes")
+	}
+	var total int64
+	for _, raw := range before {
+		total += number(rec(raw), "bytes")
+	}
+	h := digestBytes(encoded(before))
+	return record{"status": "pass", "scope": "bin/, cmd/ and runtime/; release metadata and manuals excluded", "candidate_identity_sha256": h, "final_identity_sha256": h, "members": len(before), "logical_bytes": total}, nil
+}
+
+func releaseArchiveCoreRuntime(archive, prefix string, expected record) (record, error) {
+	entries, e := releaseCoreRuntimeEntries(expected)
+	if e != nil {
+		return nil, e
+	}
+	seen := map[string]bool{}
+	var total int64
+	count := 0
+	e = eachArchive(archive, func(m archiveMember, r io.Reader) error {
+		name := path.Clean(m.name)
+		count++
+		if m.size < 0 || m.size > 4<<30 || total > (4<<30)-m.size || count > 100000 {
+			return fmt.Errorf("final archive inspection exceeds package bounds")
+		}
+		total += m.size
+		if name == prefix && m.directory {
+			return nil
+		}
+		if !strings.HasPrefix(name, prefix+"/") {
+			return fmt.Errorf("final archive root differs from release identity")
+		}
+		name = strings.TrimPrefix(name, prefix+"/")
+		if !strings.HasPrefix(name, "bin/") && !strings.HasPrefix(name, "cmd/") && !strings.HasPrefix(name, "runtime/") {
+			return nil
+		}
+		if m.directory {
+			return nil
+		}
+		entry := rec(entries[name])
+		if entry == nil || seen[name] {
+			return fmt.Errorf("unexpected or duplicate final core/runtime archive member")
+		}
+		seen[name] = true
+		if entry["kind"] == "symlink" {
+			if !m.symlink || m.link != entry["target"] {
+				return fmt.Errorf("final core/runtime archive link differs")
+			}
+			return nil
+		}
+		if m.symlink || m.hardlink || m.size != number(entry, "bytes") || entry["mode"] != nil && int64(m.mode.Perm()) != number(entry, "mode") {
+			return fmt.Errorf("final core/runtime archive file identity differs")
+		}
+		h := sha256.New()
+		n, e := io.Copy(h, r)
+		if e != nil || n != m.size || hex.EncodeToString(h.Sum(nil)) != entry["sha256"] {
+			return fmt.Errorf("final core/runtime archive file SHA differs")
+		}
+		return nil
+	})
+	if e != nil {
+		return nil, e
+	}
+	if len(seen) != len(entries) {
+		return nil, fmt.Errorf("final archive omitted accepted core/runtime members")
+	}
+	identity, e := releaseCoreRuntimeIdentity(entries, entries)
+	if e == nil {
+		identity["final_archive_members_streamed_and_hashed"] = true
+	}
+	return identity, e
 }
 func releaseOwnedReplace(root, name string, data []byte, mode os.FileMode) error {
 	target, e := confined(root, name)
@@ -170,11 +292,15 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 	if e != nil {
 		return e
 	}
+	packagePolicy, e := readNativePackagePolicy(a, o.get("package-validation-policy"), matrix, identity)
+	if e != nil {
+		return e
+	}
 	ch, e := digest(o.get("correctness"))
 	if e != nil {
 		return e
 	}
-	if e = validateNativeReleaseGates(correctness, performance, matrix, identity, ch, waiver); e != nil {
+	if e = validateNativeReleaseWithPackagePolicy(correctness, performance, matrix, identity, ch, waiver, packagePolicy); e != nil {
 		return e
 	}
 	if !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(o.get("source-commit")) {
@@ -192,7 +318,7 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 	}
 	defer func() {
 		if releaseErr != nil {
-			releaseErr = errors.Join(releaseErr, releaseInputReadback(matrix))
+			releaseErr = errors.Join(releaseErr, releaseInputReadback(matrix), packagePolicy.unchanged())
 		}
 	}()
 	repairs, e := boundedReleaseRepairs(a, o, matrix)
@@ -258,11 +384,30 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 			return e
 		}
 	}
+	if packagePolicy != nil {
+		if e = packagePolicy.unchanged(); e != nil {
+			return e
+		}
+		proof["correctness_status"], proof["package_validation_policy"] = correctness["status"], packagePolicy.proof()
+		proof["input_candidate_package_validation"] = packagePolicy.proof()
+		proof["embedded_acceptance_scope"] = "input_candidate_package_validation; final download hashes and static checks are in standalone native-release-acceptance.json"
+		proof["host_msi_lifecycle_executed"], proof["installation_runtime_accepted"] = false, false
+		for _, item := range [][3]string{{packagePolicy.path, packagePolicyAsset, packagePolicy.sha}, {packagePolicy.probePath, packageProbeAsset, packagePolicy.probeSHA}} {
+			if e = copyFile(item[0], filepath.Join(out, item[1])); e != nil {
+				return e
+			}
+			if e = requireHash(filepath.Join(out, item[1]), item[2]); e != nil {
+				return e
+			}
+		}
+	}
 	for k, v := range repairs {
 		proof[k] = v
 	}
-	if e = writeNewJSON(filepath.Join(out, "native-release-acceptance.json"), proof); e != nil {
-		return e
+	if packagePolicy == nil {
+		if e = writeNewJSON(filepath.Join(out, "native-release-acceptance.json"), proof); e != nil {
+			return e
+		}
 	}
 	manuals, e := releaseDocuments(a)
 	if e != nil {
@@ -273,6 +418,7 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 		return e
 	}
 	platforms := record{}
+	finalPackages := record{}
 	for _, platform := range sortedKeys(platformsInput) {
 		item := rec(platformsInput[platform])
 		if strings.HasPrefix(platform, "windows-") {
@@ -287,6 +433,13 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 			}
 			if !truth(manifest, "complete_git_parity") || manifest["source_tree_sha256"] != matrix["source_tree_sha256"] {
 				return fmt.Errorf("native package lacks accepted complete identity")
+			}
+			var candidateCore record
+			if packagePolicy != nil {
+				candidateCore, e = releaseCoreRuntimeEntries(object(manifest, "files"))
+				if e != nil {
+					return e
+				}
 			}
 			manifest["status"] = "accepted-release-distribution"
 			manifest["source_commit"] = o.get("source-commit")
@@ -374,6 +527,22 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 					return e
 				}
 				entry := record{"size": st.Size(), "install_kind": "msi"}
+				if packagePolicy != nil {
+					entry["installation_runtime_accepted"], entry["host_msi_lifecycle_executed"] = false, false
+					entry["package_validation_policy_sha256"] = packagePolicy.sha
+					entry["package_validation_policy_binding_scope"] = "input_candidate_package_validation"
+					if e = checkCompiledMSIPayload(asset, int(number(receipt, "payload_files"))); e != nil {
+						return fmt.Errorf("final MSI static payload readback failed: %w", e)
+					}
+					if e = checkPackageMSIIdentity(asset, receipt); e != nil {
+						return e
+					}
+					coreIdentity, e := releaseCoreRuntimeIdentity(candidateCore, object(manifest, "files"))
+					if e != nil {
+						return e
+					}
+					finalPackages[filepath.Base(asset)] = record{"platform": platform, "install_scope": scope, "sha256": receipt["sha256"], "bytes": st.Size(), "source_tree_sha256": matrix["source_tree_sha256"], "compiled_msi_payload_tables_rechecked": true, "msi_identity_and_replacement_guard_rechecked": true, "payload_validation_method": "manifest-bound payload source bytes checked before and after WiX; final MSI tables and identity read back", "core_runtime_identity": coreIdentity, "installation_runtime_accepted": false}
+				}
 				for _, key := range []string{"asset", "sha256", "install_scope", "msi_version", "product_code", "upgrade_code"} {
 					entry[key] = receipt[key]
 				}
@@ -393,6 +562,13 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 		manifest, report := manifests["package.json"], manifests["git-next-distribution.json"]
 		if !truth(manifest, "complete_git_parity") || manifest["source_tree_sha256"] != matrix["source_tree_sha256"] {
 			return fmt.Errorf("POSIX package lacks accepted complete identity")
+		}
+		var candidateCore record
+		if packagePolicy != nil {
+			candidateCore, e = releaseCoreRuntimeEntries(object(manifest, "files"))
+			if e != nil {
+				return e
+			}
 		}
 		manifest["source_commit"] = o.get("source-commit")
 		manifest["release_eligible"] = true
@@ -434,9 +610,25 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 			return e
 		}
 		platforms[platform] = record{"asset": filepath.Base(destination), "sha256": h, "size": st.Size(), "install_kind": "tar"}
+		if packagePolicy != nil {
+			coreIdentity, e := releaseArchiveCoreRuntime(destination, prefix, candidateCore)
+			if e != nil {
+				return e
+			}
+			finalPackages[filepath.Base(destination)] = record{"platform": platform, "sha256": h, "bytes": st.Size(), "source_tree_sha256": matrix["source_tree_sha256"], "core_runtime_identity": coreIdentity, "validation_method": "streamed final archive core/runtime SHA, size, link and mode readback"}
+		}
+	}
+	if packagePolicy != nil {
+		if len(finalPackages) != 7 {
+			return fmt.Errorf("all four final MSI and three final POSIX package readbacks required")
+		}
+		proof["final_download_package_validation"] = record{"status": "pass", "binding_scope": "final_download_packages", "assets": finalPackages, "msi_host_lifecycle_executed": false, "installation_runtime_accepted": false}
+		if e = writeNewJSON(filepath.Join(out, "native-release-acceptance.json"), proof); e != nil {
+			return e
+		}
 	}
 	update := record{"schema_version": 1, "product": "git-next", "version": version, "source_commit": o.get("source-commit"), "complete_git_parity": true, "platforms": platforms}
-	if waiver != nil {
+	if waiver != nil || packagePolicy != nil {
 		update["acceptance"] = proof
 	}
 	if e = writeNewJSON(filepath.Join(out, "git-next-update.json"), update); e != nil {
@@ -496,6 +688,9 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 		return e
 	}
 	if e = releaseInputReadback(matrix); e != nil {
+		return e
+	}
+	if e = packagePolicy.unchanged(); e != nil {
 		return e
 	}
 	return a.json(record{"status": "release-staged-not-published", "source_commit": o.get("source-commit"), "platforms": len(platforms), "assets": len(assets)})

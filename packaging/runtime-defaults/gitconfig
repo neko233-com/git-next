@@ -8,9 +8,9 @@
 #   packaging/windows/Takeover.Core.psm1 - writes it as the migration override
 #   tools/devtool/evidence.go - refuses evidence reuse without it
 #
-# Every key here was exercised against the installed binary; the measured cost
-# and the reason are recorded in docs/DEFAULTS.md. A default that starts a
-# process per repository does not belong in this file.
+# Shared budgets apply per process/thread; they are not total RSS limits.
+# Their reasons and measured costs belong in docs/DEFAULTS.md. A default that
+# starts a process per repository does not belong in this file.
 [core]
 	autocrlf = input
 	eol = lf
@@ -20,6 +20,7 @@
 	commitGraph = true
 	quotePath = false
 	fsmonitor = false
+	deltaBaseCacheLimit = 32m
 [gc]
 	auto = 256
 	autoDetach = true
@@ -49,3 +50,11 @@
 	threads = 1
 [grep]
 	threads = 1
+[maintenance]
+	auto = false
+[pack]
+	threads = 2
+	windowMemory = 32m
+	deltaCacheSize = 32m
+[lfs]
+	concurrenttransfers = 2

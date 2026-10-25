@@ -97,5 +97,7 @@ Go 的 `verify-repo-contract` 检查的是本文件写下的规则，而不是�
 - 不得把 GitHub CI 状态当作发布闸门。
 - 使用 Conventional Commits 和 `Assisted-by:` 尾注。禁止 force push、amend、squash 和自动 sign-off——sign-off 必须由人完成。
 - 禁止发布逐特性的增量版本。完成完整需求范围并逐条验证后，再创建一个整合的标签与包版本。
+- 用户明确选择 Docker、交叉编译和安装包验证、免除完整宿主安装生命周期时，可用独立 `--package-validation-policy` 记录该授权。此策略只允许 `msi-user`、`msi-machine` 标记为 `waived`，不得标记为运行通过；必须绑定精确 matrix、五平台归档、四个 MSI、清单及实际静态包/隔离迁移/六项资源行为探针。其它正确性、Mac CLI、Docker、race、校验和与性能门禁不变。终端豁免仍是另一份仅限两项终端检查的授权。
+- 无安装包验证策略时保留全部原门禁；未知豁免项、缺少明确用户授权、探针失败、输入或授权文件变更一律拒绝发布。发布证明和校验和资产必须保留策略、探针与未执行安装生命周期的事实，不得把打包检查冒充真实安装。范围、兼容性与回滚见 `docs/GO_TOOLING.md`。
 
 如果产品行为需要改变这些约束，先更新本文件、`tools/devtool/contract.go` 和 README，再改实现。

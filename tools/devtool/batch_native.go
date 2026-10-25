@@ -22,8 +22,8 @@ type nativeCase struct {
 }
 
 func init() {
-	register("native-product-batch", "Run consolidated native correctness or paired timing batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver", nativeProductBatch)
-	register("product-batch", "Compatibility entrypoint for the native product batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver", func(a *app, o options) error {
+	register("native-product-batch", "Run consolidated native correctness or paired timing batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver package-validation-policy", nativeProductBatch)
+	register("product-batch", "Compatibility entrypoint for the native product batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver package-validation-policy", func(a *app, o options) error {
 		if o.get("native-packages") == "" {
 			return fmt.Errorf("Rust CLI conformance uses accept-runner/git-next-accept --tier full; native packages require --native-packages")
 		}
@@ -133,6 +133,13 @@ func nativeProductBatch(a *app, o options) error {
 	if e != nil {
 		return e
 	}
+	packagePolicy, e := readNativePackagePolicy(a, o.get("package-validation-policy"), matrix, identity)
+	if e != nil {
+		return e
+	}
+	if packagePolicy != nil && (o.get("reuse-msi-batch") != "" || o.get("reuse-msi-matrix") != "") {
+		return fmt.Errorf("package validation policy cannot be combined with host MSI lifecycle evidence reuse")
+	}
 	if waiver != nil && (o.get("reuse-desktop-batch") != "" || o.get("reuse-desktop-matrix") != "") {
 		return fmt.Errorf("terminal waiver cannot be combined with desktop acceptance reuse")
 	}
@@ -213,7 +220,7 @@ func nativeProductBatch(a *app, o options) error {
 		if e != nil {
 			return e
 		}
-		if e = validateNativeCorrectness(prior, matrix, identity, referenceSHA, waiver); e != nil {
+		if e = validateNativeCorrectnessWithPackagePolicy(prior, matrix, identity, referenceSHA, waiver, packagePolicy); e != nil {
 			return e
 		}
 		correctnessSHA, e = digest(o.get("correctness-receipt"))
@@ -328,6 +335,10 @@ func nativeProductBatch(a *app, o options) error {
 		}
 		for _, scope := range []string{"user", "machine"} {
 			name := "msi-" + scope
+			if packagePolicy != nil {
+				stampReuse(record{name: packagePolicy.result(name)})
+				continue
+			}
 			if raw := reusedMSI[name]; raw != nil {
 				stampReuse(record{name: raw})
 				continue
@@ -349,6 +360,7 @@ func nativeProductBatch(a *app, o options) error {
 	hash, e = digest(reference)
 	unchanged = unchanged && e == nil && hash == referenceSHA
 	unchanged = unchanged && waiver.unchanged() == nil
+	unchanged = unchanged && packagePolicy.unchanged() == nil
 	if correctnessSHA != "" {
 		unchanged = unchanged && requireHash(o.get("correctness-receipt"), correctnessSHA) == nil
 	}
@@ -357,7 +369,7 @@ func nativeProductBatch(a *app, o options) error {
 		readbackStatus = "pass"
 	}
 	results = append(results, record{"case": "frozen-input-readback", "status": readbackStatus})
-	status := nativeBatchStatus(results, waiver, o.yes("performance"))
+	status := nativeBatchStatusWithPackagePolicy(results, waiver, packagePolicy, o.yes("performance"))
 	elapsed := roundedSeconds(time.Since(startedBatch))
 	phase := "correctness"
 	effectiveWorkers := workers
@@ -376,6 +388,11 @@ func nativeProductBatch(a *app, o options) error {
 	report := record{"schema_version": 1, "status": status, "phase": phase, "matrix_sha256": identity, "reference_sha256": referenceSHA, "source_tree_sha256": matrix["source_tree_sha256"], "results": results, "release_eligible": false, "native_mac_product_executed": object(platforms, "macos-arm64")["native_executed"] == true, "personal_account_accessed": false, "elapsed_seconds": elapsed, "wall_clock_target_seconds": target, "wall_clock_target_met": elapsed < target, "workers": effectiveWorkers, "msi_transactions_serialized": true, "local_pairs_per_command": localPairs, "network_pairs_per_operation": networkPairs, "checks_skipped_to_meet_time_target": false, "msi_scopes_reusing_unchanged_passed_evidence": reusedScopes, "desktop_reusing_unchanged_passed_evidence": len(reusedDesktop) > 0, "msi_transactions_after_parallel_functional_lanes": !o.yes("performance")}
 	if waiver != nil {
 		report["terminal_waiver"] = waiver.proof()
+	}
+	if packagePolicy != nil {
+		report["package_validation_policy"] = packagePolicy.proof()
+		report["host_msi_lifecycle_executed"], report["installation_runtime_accepted"] = false, false
+		report["msi_transactions_after_parallel_functional_lanes"] = false
 	}
 	if correctnessSHA != "" {
 		report["correctness_sha256"] = correctnessSHA

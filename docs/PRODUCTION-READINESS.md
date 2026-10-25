@@ -1,5 +1,22 @@
 # Production readiness
 
+## 1.0.4 candidate: Unity/Unreal multi-project resource defaults · 2026-10-25
+
+The candidate preserves the native Git object/index/ref layout, Windows read-safety
+settings and independent Rust preview boundary. Six shared resource defaults are
+selected from the [configuration experiment](benchmarks/native-game-resources-20261025.json).
+Four concurrent first packs use about 71% less whole-job committed memory in the
+many-asset fixture; single large assets and repeated packs do not universally
+benefit. The 60,037-path isolation matrix passes 33/33 cases. These measurements
+use the pinned 1.0.3 core with candidate configuration; they are not final 1.0.4
+package acceptance or real Unity/Unreal Editor acceptance.
+
+Final five-platform compilation, package-bound correctness, performance and release
+staging remain required before publication. The explicit package-validation policy
+may waive only live user/machine MSI transactions, with actual compiled-payload,
+isolated migration and resource-behavior probes required. Those rows remain waived.
+The separately authorized terminal waiver remains unchanged. See [Go tooling](GO_TOOLING.md).
+
 ## Published 1.0.3: approved release scope complete · 2026-10-25
 
 [v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) is published

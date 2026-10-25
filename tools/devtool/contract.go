@@ -115,6 +115,12 @@ func verifyRepoContract(a *app, o options) error {
 		add("tracked-files-use-lf", true, "skipped: Git unavailable")
 	}
 	add("no-github-workflows", !exists(a.path(".github/workflows")), "GitHub Actions remain absent")
+	_, userMSI := packageValidationCases["msi-user"]
+	_, machineMSI := packageValidationCases["msi-machine"]
+	add("package-policy-bounded", len(packageValidationCases) == 2 && userMSI && machineMSI, "explicit package policy can waive only the two MSI lifecycle rows")
+	_, packageProbes := commands["native-package-validation-probes"]
+	add("package-policy-probes-present", packageProbes, "compiled package, isolated migration and actual resource probes remain required")
+	add("package-policy-documented", strings.Contains(text("AGENTS.md"), "--package-validation-policy") && strings.Contains(text("docs/GO_TOOLING.md"), "installation_runtime_accepted: false"), "authorization, exact inputs, waived scope and rollback are documented")
 	commit, e := a.run("git", "log", "-1", "--format=%B")
 	if e == nil && commit.code == 0 {
 		message := strings.TrimSpace(string(commit.stdout))

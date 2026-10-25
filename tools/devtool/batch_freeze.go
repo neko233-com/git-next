@@ -26,6 +26,21 @@ func gitMetadata(a *app, args ...string) (string, error) {
 	}
 	return strings.TrimSpace(string(r.stdout)), nil
 }
+
+func freezeNativeRuntimeDefaults(a *app, harnesses record) error {
+	const name = "packaging/runtime-defaults/gitconfig"
+	file := a.path(filepath.FromSlash(name))
+	info, e := os.Lstat(file)
+	if e != nil || !info.Mode().IsRegular() {
+		return fmt.Errorf("the authoritative runtime defaults must be a regular file")
+	}
+	h, e := digest(file)
+	if e != nil {
+		return e
+	}
+	harnesses[name] = h
+	return nil
+}
 func freezeNativeBatch(a *app, o options) error {
 	if e := o.require("windows-x64", "windows-arm64", "linux-x64", "linux-arm64", "macos-arm64", "msi-directory", "base-msi-directory", "source-bundles", "race-binary", "output"); e != nil {
 		return e
@@ -316,6 +331,9 @@ func freezeNativeBatch(a *app, o options) error {
 		return e
 	}
 	harnesses["install.ps1"] = h
+	if e = freezeNativeRuntimeDefaults(a, harnesses); e != nil {
+		return e
+	}
 	race, e := pin(o.get("race-binary"))
 	if e != nil {
 		return e

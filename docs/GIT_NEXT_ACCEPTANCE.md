@@ -38,6 +38,9 @@ Windows process trees are limited to 64 processes in a job object; POSIX uses a
 separate process group. Process trees, git daemons and owned temporary directories
 are reclaimed on exit. Reference Git creates disposable fixtures and supplies
 read-only comparisons/fsck; it is never a client fallback or bundled runtime.
+The fixture template directory is empty, so active hooks bundled with an installed
+reference Git cannot silently enter unrelated CLI scenarios. Explicit hook cases
+still create and execute their own hooks.
 
 ## Migrated local coverage
 
@@ -69,6 +72,13 @@ is explicitly skipped. `GIT_NEXT_ACCEPT_SKIP_NETWORK=1` explicitly skips the
 network layer and records that fact. A report with these skips is not evidence
 that the skipped transport was accepted. Loopback daemon fixtures need reference
 Git with `git daemon` available, while the client keeps its empty PATH.
+
+The 2026-10-25 template-isolation correction was prompted by active LFS hooks in
+an installed reference Git. They made ordinary preview cases enter unsupported
+LFS hook dispatch, including a recursive post-commit path stopped by the harness's
+64-process job limit. Empty fixture templates restore the intended plain CLI
+scenario; that correction does not establish preview LFS-hook compatibility.
+The released native product uses its separately accepted bundled LFS runtime.
 
 ## Python retirement and rollback
 

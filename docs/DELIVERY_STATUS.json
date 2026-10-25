@@ -1,4 +1,21 @@
 {
+  "current_candidate": {
+    "version": "1.0.4",
+    "scope": "Unity and Unreal multi-project resource defaults; bounded native package validation policy",
+    "status": "implementation-complete-final-package-gates-pending",
+    "published": false,
+    "configuration_experiment": "docs/benchmarks/native-game-resources-20261025.json",
+    "profiled_native_version": "1.0.3",
+    "profiled_binary_is_final_candidate": false,
+    "multi_project_passed_cases": 33,
+    "multi_project_tracked_paths": 60037,
+    "rust_preview_passed_full_cases": 100,
+    "rust_complete_git_parity": false,
+    "installation_runtime_accepted": false,
+    "waivable_installer_cases": ["msi-user", "msi-machine"],
+    "waivable_terminal_cases": ["terminal-rust-contracts", "terminal-native-desktop"],
+    "remaining": ["five-platform rebuild", "compiled MSI and isolated migration/resource probes", "frozen correctness batch", "independent paired performance batch", "final staging and checksum verification", "one consolidated push and release"]
+  },
   "current_release_evidence": {
     "architecture": {
       "complete_git_parity": false,

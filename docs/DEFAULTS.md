@@ -1,9 +1,9 @@
 # Runtime defaults
 
 git-next is a replacement for Git, not a copy of it. The configuration it ships is
-therefore a product decision rather than whatever the upstream defaults happen to be:
-where a modern option is faster or easier without changing what a command means, it is
-turned on.
+therefore a product decision rather than whatever the upstream defaults happen to be.
+Complete results and predictable resource use across concurrent game projects take
+priority over maximizing one command's worker count.
 
 Every default lives in one file, `packaging/runtime-defaults/gitconfig`, and every one
 of them is exercised against the real binary by `go -C tools/devtool run . check-runtime-defaults`. A
@@ -52,8 +52,14 @@ A default is not eligible if it starts a process per repository. See
 | `core.commitGraph` | `true` | Commit-graph makes `log` and merge-base independent of history length. | - |
 | `core.quotePath` | `false` | A non-ASCII name should be readable. `status --porcelain` shows `文档.txt` instead of `"\346\226\207\346\241\243.txt"`. | Verified both ways. |
 | `core.fsmonitor` | `false` | See below. | 12.1 MB and one process per repository. |
-| `gc.auto` | `256` | The upstream 6,700 lets loose objects pile up until a `gc` big enough to notice. | - |
-| `gc.autoDetach` | `true` | A triggered `gc` must not hold the caller. | - |
+| `maintenance.auto` | `false` | Ordinary operations must not add overlapping maintenance work for every active repository. | Trace2 commit/fetch have no maintenance child; explicit `-c maintenance.auto=true` positive controls each start one. Manual maintenance/gc remain usable. |
+| `pack.threads` | `2` | Bounds compression workers per packing process instead of multiplying every online CPU by active repositories. | Real two-thread and explicit four-thread packs preserve the complete object set. A single large pack can take longer. |
+| `pack.windowMemory` | `32m` | Bounds the delta-search window per packing thread. | Git parses 33,554,432 bytes; a real pack completes and verifies every expected object. This is a soft budget, not an RSS cap. |
+| `pack.deltaCacheSize` | `32m` | Restricts cached delta results per packing process. | The same complete-pack check and an explicit 8 MiB control run; reduced caches may recompute more deltas. |
+| `core.deltaBaseCacheLimit` | `32m` | Limits the decoded delta-base cache per process. | The same complete-pack check and explicit 8 MiB control; other object/index allocations remain outside this budget. |
+| `lfs.concurrenttransfers` | `2` | Bounds workers per LFS process during multi-project asset transfers. | The exact bundled LFS helper reports 2; an explicit command override reports 4. This can trade throughput for a lower worker budget. |
+| `gc.auto` | `256` | Retains the threshold for explicitly requested `gc --auto`. Ordinary commands bypass automatic maintenance under the policy above. | Manual `gc` and full `fsck` pass. |
+| `gc.autoDetach` | `true` | Retains asynchronous behavior when automatic `gc` is deliberately requested. | - |
 | `gc.writeCommitGraph` / `fetch.writeCommitGraph` | `true` | Keeps the graph current without a separate `gc`. | - |
 | `fetch.prune` | `true` | A branch deleted upstream should stop being listed locally. | Verified: the remote-tracking ref disappears. |
 | `fetch.pruneTags` | `true` | The same for tags. **This one deletes things**: a tag removed upstream is removed locally. | Verified. |
@@ -70,7 +76,9 @@ A default is not eligible if it starts a process per repository. See
 | `grep.threads` | `1` | Serial grep avoids the observed intermittent incomplete Windows results. **`-1` is fatal** (`invalid number of threads specified`). | The former automatic profile omitted one of 4,000 files; the serial control completed 30 rounds. |
 
 These five settings apply to the shipped Windows profile and takeover defaults.
-POSIX packages retain their native automatic budgets. User, repository and command-line
+POSIX packages retain native automatic index/grep budgets. The six common resource
+settings above also ship in POSIX packages, rendered from the same fragment without
+copying the Windows read-safety switches. User, repository and command-line
 settings keep their normal precedence. The read-thread gate verifies the shipped values
 against the authoritative fragment and requires complete results in every one of 30
 rounds; timing a command that omitted files is not an accepted performance sample.
@@ -104,8 +112,42 @@ longer than two minutes, which is what a daemon looks like; a `clone` or a `gc` 
 the process that asked for it and is left alone. It is the reason turning the monitor on
 is safe now rather than a slow leak.
 
-`maintenance.auto` is off for the same reason: it runs `git maintenance` after ordinary
-commands, which is a process per command per repository.
+`maintenance.auto` is also off: it can start transient `git maintenance` children after
+ordinary commands, multiplying work across active repositories. It does not create the
+same resident daemon as fsmonitor. Run explicit maintenance when appropriate for a
+long-lived repository; disabling automatic maintenance does not maintain it for you.
+
+## Common game-project resource policy
+
+The previous fragment omitted `maintenance.auto=false` even though this document
+said it was disabled. The shared fragment now expresses that policy, and the actual
+command probes compare both disabled and explicitly enabled maintenance. They also
+verify manual maintenance, generated pack contents, cache-size parsing and the
+manifest-bound bundled LFS helper's effective worker count.
+
+The three memory knobs are not independently measured process limits. A pack thread
+has its own search window, a packing process has its own delta cache, and several
+repositories can run several processes. Large individual objects and the index can
+exceed those budgets. Git's `k`/`m`/`g` units are binary; the exact setting semantics
+are documented in the [Git configuration reference](https://git-scm.com/docs/git-config).
+LFS concurrency applies to each helper process; the pinned helper's upstream default
+is eight workers. [Git LFS 3.7.1 configuration](https://github.com/git-lfs/git-lfs/blob/v3.7.1/docs/man/git-lfs-config.adoc).
+
+Explicit per-repository values and `git -c` keep their normal priority. Installation
+does not rewrite repository configs, histories or Git/LFS storage. See
+[game projects](GAME_PROJECTS.md) for independent repositories, nested Unity/Unreal
+project roots and deliberate maintenance.
+
+The [2026-10-25 profile measurements](benchmarks/native-game-resources-20261025.json)
+use the same native 1.0.3 bytes on Windows x64 with the original and selected
+configurations. With four repositories each holding eight 16 MiB assets/two
+revisions, first concurrent packing moves from 1519.21 to 440.49 MiB peak job
+commit and 29.011 to 6.920 seconds; compressed pack byte counts remain identical.
+The one-64-MiB-asset control does not reduce peak memory, and some reused-pack
+timings regress. LFS whole-tree peak commit has a median of about 196 versus
+175 MiB across two AB/BA samples per profile. These are joint-profile effects,
+not per-key causal measurements or RSS limits. Full scope, raw phases and costs
+are retained in [performance](PERFORMANCE.md).
 
 ## Long paths
 
@@ -125,8 +167,9 @@ two of them:
 
 ## The ceiling
 
-Nothing above slows a caller down, and nothing in a single Git process can stop a caller
-starting a thousand copies. Three layers cover that:
+These defaults deliberately trade some single-command parallelism and cache capacity
+for predictable concurrent use. They cannot stop an arbitrary caller starting a thousand
+copies. Separate process controls cover entry-point recursion and runaway processes:
 
 - The forwarder refuses to start a copy of itself and stops a two-file cycle after four
   hops, so an entry point can never multiply itself.

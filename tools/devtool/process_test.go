@@ -4,6 +4,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -17,6 +18,8 @@ func TestProcessFixture(t *testing.T) {
 		t.Skip("subprocess fixture")
 	}
 	switch mode {
+	case "exit-one":
+		os.Exit(1)
 	case "pipes":
 		os.Stdout.Write(bytes.Repeat([]byte("x"), 100000))
 		os.Stderr.Write(bytes.Repeat([]byte("y"), 100000))
@@ -50,12 +53,18 @@ func TestProcessCapturesBothPipes(t *testing.T) {
 }
 func TestProcessTimeoutStopsTree(t *testing.T) {
 	start := time.Now()
-	r, e := fixtureRun(t, "hang", 150*time.Millisecond)
-	if e == nil && r.code == 0 {
-		t.Fatal("timed out child passed")
+	_, e := fixtureRun(t, "hang", 150*time.Millisecond)
+	if !errors.Is(e, context.DeadlineExceeded) {
+		t.Fatalf("deadline was reported as an ordinary command result: %v", e)
 	}
 	if time.Since(start) > 4*time.Second {
 		t.Fatal("timeout cleanup hung")
+	}
+}
+func TestProcessOrdinaryFailureIsNotDeadline(t *testing.T) {
+	r, e := fixtureRun(t, "exit-one", 5*time.Second)
+	if e != nil || r.code != 1 {
+		t.Fatalf("ordinary exit 1 was misclassified: code=%d error=%v", r.code, e)
 	}
 }
 func TestProcessReapsOrphanedPipeOwner(t *testing.T) {
