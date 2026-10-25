@@ -1,21 +1,30 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Engineering workflow</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Local engineering and release workflow</h1>
+<h2>v1.0.3 release closure · 2026-10-25</h2>
+<p>The user approved Docker validation, cross-compilation and package/layout/checksum
+evidence for this existing release, without physical ARM machines or complete
+host installation/update-service validation. Do not keep requesting those host
+environments or repeat terminal tests. Retain the five existing platform packages,
+exact accepted receipts and historical failures; excluded or unexecuted checks
+remain distinct from passes. The published v1.0.3 scope is complete. This changes
+the delivery scope, not runtime bytes or the staging controller's immutable-input
+checks. New runtime/installer changes still invalidate affected evidence.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json">Scope receipt</a>.</p>
 <h2>Rust CLI gate and Python retirement</h2>
-<p>Owned build/package/docs/release controllers and fixture services migrate to the
+<p>Owned build/package/docs/release controllers and fixture services use the
 <a href="go-tooling.html">Go tool module</a>. Rust remains the CLI conformance gate. Native
-C/MSI/migration functionality must survive the migration; keep old controllers
-until the replacement and callers pass equivalent checks. No new Python source
+C/MSI/migration functionality is retained with its replacement evidence. No new Python source
 or Python wrapper is allowed. <code>migration-audit --require-complete</code> reports remaining
 owned Python rather than accepting renamed or non-gating files as completion.</p>
 <p>Use <a href="git-next-acceptance.html">git-next-accept</a> as the only Rust CLI conformance gate:
 L0 before merge/tag, full on release branches, network only when selected. Both
 macOS and Windows use the same Cargo command and JSON tier contract. Python CLI
-suites are immediately archived under <code>tests/legacy_cli/</code>, refuse direct execution,
-and must not be restored as merge/release gates. The Python aggregate wrapper is
+suites are retained only in Git history at <code>3609553</code>; <code>tests/legacy_cli/</code> tracks
+the retirement README only. They must not be restored as merge/release gates. The Python aggregate wrapper is
 removed. Add new CLI scenarios in Rust. Native package/GUI/MSI/credential migration
 and performance workflows below remain separate, with their own coverage and
 frozen receipts. Old native acceptance cannot establish parity for the Rust client.</p>
-<p>Python artifact diagnostics and source-contract helpers are optional for the CLI
-gate. Use packaging, locale/default maintenance and documentation tools only for
+<p>Artifact diagnostics and source-contract helpers use Go <code>fast-verify</code> and
+<code>verify-repo-contract</code>. Use packaging, locale/default maintenance and documentation tools only for
 their corresponding changes; installing Python is not a prerequisite for CLI
 merge/tag acceptance.</p>
 <p><code>--reuse-desktop-batch</code> and <code>--reuse-desktop-matrix</code> reuse a previously passed desktop case only with passed original frozen-input readback, matching reference and exact behavioral desktop test bytes. Desktop reuse across installer/document changes checks every GUI/core/Bash/runtime byte; the only runtime configuration exception is the byte-exact transition to the five tested Windows read-safety settings. Unrelated config changes are rejected. Only explicitly unrelated orchestration/test-only source changes are permitted. Original receipt hashes and elapsed time remain in the report. This avoids repeating foreground input after an accepted unchanged build while the user is using the desktop; it cannot accept a changed terminal or changed desktop test. <code>go -C tools/devtool run . complete-native-batch</code> can finalize an externally interrupted foreground case with dependency-matched prior desktop evidence only when every other case and original readback passed, all product inputs are identical, and only the listed reporting tools/tests changed. It verifies the exact focus-error stack, rechecks every frozen input, preserves original timing/failure hashes and does not rerun product cases.</p>
