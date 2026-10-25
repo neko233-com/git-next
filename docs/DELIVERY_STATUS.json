@@ -49,78 +49,144 @@
         "msi-user",
         "msi-machine"
       ],
-      "elapsed_seconds": 239.89,
-      "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
-      "sha256": "6fe985d0fe999ad3a3e913b0943b69f932e864daf72bdc746a16de74a97327a6",
+      "elapsed_seconds": 243.565,
+      "matrix_sha256": "8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f",
+      "sha256": "71a9c01fe6020662e5be7bd5d4bbdbd37bb7e834fc7e29f1938719d025b40286",
       "release_asset": "native-correctness.json",
-      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json"
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json",
+      "generation": "r2",
+      "previous_local_checkpoint": {
+        "generation": "r1",
+        "documentation_commit": "4d61669ddf4276c52fd977f048ccb72218cd7805",
+        "history_url": "https://github.com/neko233-com/git-next/blob/4d61669ddf4276c52fd977f048ccb72218cd7805/docs/DELIVERY_STATUS.json",
+        "correctness": {
+          "status": "pass-with-user-waiver",
+          "passed": 14,
+          "waived": 4,
+          "waived_cases": [
+            "terminal-native-desktop",
+            "terminal-rust-contracts",
+            "msi-user",
+            "msi-machine"
+          ],
+          "elapsed_seconds": 239.89,
+          "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
+          "sha256": "6fe985d0fe999ad3a3e913b0943b69f932e864daf72bdc746a16de74a97327a6",
+          "release_asset": "native-correctness.json",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json"
+        },
+        "performance": {
+          "status": "pass",
+          "passed": 5,
+          "elapsed_seconds": 618.615,
+          "local_pairs_per_command": 10,
+          "network_pairs_per_operation": 10,
+          "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
+          "correctness_sha256": "6fe985d0fe999ad3a3e913b0943b69f932e864daf72bdc746a16de74a97327a6",
+          "sha256": "ad803d5c3ff69aadd75e356a4cd7b0e014843a5df3bfc5c88143287b119606e6",
+          "release_asset": "native-performance.json",
+          "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json",
+          "reports": {
+            "performance-1000.json": {
+              "asset": "performance-1000.json",
+              "sha256": "39f12c4386951a91d2dab1f69792675871170695d3873f16327ddf24759920da",
+              "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-1000.json"
+            },
+            "performance-10000.json": {
+              "asset": "performance-10000.json",
+              "sha256": "ca49b1352044f97d911328e0365e3cbd5a15f840fd3d14cf0b36b63391bdb5c0",
+              "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-10000.json"
+            },
+            "performance-100000.json": {
+              "asset": "performance-100000.json",
+              "sha256": "08859892708cdcbb9c3ccad6f8073245d25a74a2b9abfb3d117f650afe284a07",
+              "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-100000.json"
+            },
+            "performance-network.json": {
+              "asset": "performance-network.json",
+              "sha256": "589c560570e9d31bcbb59881b9d2c2557e2828711387b52649579005c3c464a1",
+              "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-network.json"
+            }
+          }
+        },
+        "original_local_reports": [
+          "target/go-native-release-1.0.4/final-correctness/batch.json",
+          "target/go-native-release-1.0.4/final-performance/batch.json"
+        ],
+        "stage_status": "rejected-rooted-macos-candidate-archive",
+        "published": false,
+        "failure_scope": "candidate container layout; previous actual pass results retained unchanged",
+        "replacement_candidate_archive_sha256": "307e57a2de91c3b010cd0a541e83237af6819ce7a8ca9da5244ba44420e83cc9",
+        "native_core_source_tree_sha256_unchanged": "845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155"
+      }
     },
     "performance": {
       "status": "pass",
       "passed": 5,
-      "elapsed_seconds": 618.615,
+      "elapsed_seconds": 640.668,
       "local_pairs_per_command": 10,
       "network_pairs_per_operation": 10,
-      "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
-      "correctness_sha256": "6fe985d0fe999ad3a3e913b0943b69f932e864daf72bdc746a16de74a97327a6",
-      "sha256": "ad803d5c3ff69aadd75e356a4cd7b0e014843a5df3bfc5c88143287b119606e6",
+      "matrix_sha256": "8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f",
+      "correctness_sha256": "71a9c01fe6020662e5be7bd5d4bbdbd37bb7e834fc7e29f1938719d025b40286",
+      "sha256": "15155435fd3d85d0e03d1ee521596c47190081fbb034098184b3789b3dc880e9",
       "release_asset": "native-performance.json",
       "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json",
       "reports": {
         "performance-1000.json": {
           "asset": "performance-1000.json",
-          "sha256": "39f12c4386951a91d2dab1f69792675871170695d3873f16327ddf24759920da",
+          "sha256": "d60301746dfe95961f09f706d4aadd5dc9a890a460c20dc8702116485e6e705d",
           "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-1000.json"
         },
         "performance-10000.json": {
           "asset": "performance-10000.json",
-          "sha256": "ca49b1352044f97d911328e0365e3cbd5a15f840fd3d14cf0b36b63391bdb5c0",
+          "sha256": "f73fab35fdf9729134bca4aaf6e27f6e8a153864b11974f22327a3682ef96d54",
           "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-10000.json"
         },
         "performance-100000.json": {
           "asset": "performance-100000.json",
-          "sha256": "08859892708cdcbb9c3ccad6f8073245d25a74a2b9abfb3d117f650afe284a07",
+          "sha256": "dcd4def0217833c48dce90762fc315b914e036fb9500be916795fd23465c8756",
           "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-100000.json"
         },
         "performance-network.json": {
           "asset": "performance-network.json",
-          "sha256": "589c560570e9d31bcbb59881b9d2c2557e2828711387b52649579005c3c464a1",
+          "sha256": "9bdf99105d0e89175a62805f5ffaf37c17f1de7a8673cff85824f392656d4ae9",
           "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-network.json"
         }
-      }
+      },
+      "generation": "r2"
     },
     "waivers": {
       "terminal": {
+        "schema_version": 1,
+        "kind": "terminal-test-waiver",
         "asset": "native-terminal-waiver.json",
-        "authorization": "用户指令：不用再测试 git-terminal 了，其他没问题就可以帮我进行全部 push 和发布了。空白归一化引用：不用再测试git-terminal了",
+        "sha256": "c9fed559e5d6253e37410d85c9c5d4cc7f94aba248f3b69bce6568c9974f8993",
+        "matrix_sha256": "8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f",
         "authorized_by": "user",
         "cases": [
           "terminal-rust-contracts",
           "terminal-native-desktop"
         ],
-        "kind": "terminal-test-waiver",
-        "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
         "reason": "按用户“不用再测试 git-terminal 了”的明确要求，停止后续终端专项验证，保留既有失败记录；仅豁免两个指定 lane。空白归一化引用：不用再测试git-terminal了",
-        "schema_version": 1,
-        "sha256": "1cf62bf174dd7f5e6835b77f722e263cf417bd3e32b9c706ad6b143e25ed928d"
+        "authorization": "用户指令：不用再测试 git-terminal 了，其他没问题就可以帮我进行全部 push 和发布了。空白归一化引用：不用再测试git-terminal了"
       },
       "live_msi": {
+        "schema_version": 1,
+        "kind": "package-validation-policy",
         "asset": "native-package-validation-policy.json",
-        "authorization": "不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境",
+        "sha256": "c2a412518d61668a341651cc372bac52f95ee8224bf0ed890088816874a7c40e",
+        "matrix_sha256": "8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f",
         "authorized_by": "user",
-        "binding_scope": "input_candidate_package_validation",
         "cases": [
           "msi-user",
           "msi-machine"
         ],
-        "host_msi_lifecycle_executed": false,
-        "installation_runtime_accepted": false,
-        "kind": "package-validation-policy",
-        "matrix_sha256": "159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00",
         "reason": "用户接受容器、交叉编译和打包验证；两项宿主 MSI 生命周期保留为 waived，四个实际 MSI 静态载荷、隔离迁移和六项资源行为探针必须通过。",
-        "schema_version": 1,
-        "sha256": "a86823ec91e5a549d42d161a4e61e24a9b4f8132806f66b641951496511c616d",
-        "source_tree_sha256": "845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155"
+        "authorization": "不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境",
+        "source_tree_sha256": "845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155",
+        "binding_scope": "input_candidate_package_validation",
+        "host_msi_lifecycle_executed": false,
+        "installation_runtime_accepted": false
       }
     },
     "platform_boundaries": {

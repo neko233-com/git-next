@@ -148,6 +148,17 @@ installer operation or existing receipt. There is no persistent-state migration.
 Rollback uses the previous controller and its original full validation path;
 older controllers reject the new option rather than silently accepting the scope.
 
+### POSIX candidate and release archive layouts
+
+A POSIX candidate archive must place `package.json` and
+`git-next-distribution.json` at its archive root (an optional `./` is equivalent).
+Release staging reads those root-level manifests before emitting the published
+archive with one product top-level directory. A rooted release archive is not a
+candidate input. The r1 Mac stage rejection retained its prior reports; the r3
+candidate corrected that container layout without changing payload/core bytes,
+then passed fresh Mac runtime checks and a newly frozen full local gate generation.
+This is the existing archive contract, not a weaker parser or a Git/storage migration.
+
 ## Migration evidence and rollback
 
 The initial remaining inventory was 114 files. Upstream added the freestanding

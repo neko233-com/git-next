@@ -2,7 +2,7 @@
 
 **v1.0.4 已完成最终本地门禁，仍为候选版本；最终 stage 和正式发布待完成。** 产品使用从固定源码构建的 native C Git 引擎与自有运行时，为 Unity/UE 多项目限制 pack 缓存、线程与 LFS 并发，并关闭自动维护。仓库配置和显式命令参数保留优先级，Windows 串行安全读取与存储格式保持不变。
 
-最终产物正确性为 **14 通过、4 项用户豁免，239.890 秒**；独立配对性能 **5/5 通过，618.615 秒**，每操作 10 对样本。豁免仅限终端两项及用户级/机器级 live MSI 生命周期，不表示 1.0.4 已发布或已在本机安装。[交付进度](docs/DELIVERY_STATUS.md)。
+最终产物正确性为 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对样本。豁免仅限终端两项及用户级/机器级 live MSI 生命周期，不表示 1.0.4 已发布或已在本机安装。[交付进度](docs/DELIVERY_STATUS.md)。
 
 当前已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过，Rust preview full 100/100；Windows 多项目 33/33（805 个受跟踪路径、489 次 Git 调用）、大资源 LFS 5/5；真实 Mac native 51 场景和两路 P4，Linux 两个 Docker 目标各 52 场景和两路 P4。Windows ARM64 为交叉编译 PE/包静态检查，不声明 ARM 真机或完整宿主生命周期。四个 MSI 均未签名。计划随发布提供[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)和[MSI 包验证策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)资产；正式发布前不可作为已上线下载。
 
@@ -11,6 +11,8 @@
 构建、打包、文档、夹具、性能测量和发布工具统一采用 Go，产品中的 `git-p4` helper 也已迁到 Go。本批逐文件核验退役 115 个 Python 文件，自有工具链和产品 helper 无需 Python 解释器；必要的 PowerShell 与 POSIX shell 脚本保留。30 个历史 CLI 套件保留在 Git 历史 `3609553`，当前树不含可运行的 Python CLI wrapper。[工具链说明](docs/GO_TOOLING.md)。
 
 独立 Rust 客户端继续作为 preview，使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md) 验收。Windows x64 与真实 macOS ARM64 的 full 各通过 100 个范围化场景，L0 覆盖 39 个命令。Rust 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Rust 场景不宣称逐条等量覆盖全部历史断言。[兼容性说明](docs/COMPATIBILITY.md)。
+
+**保留 r1 检查点与归档布局纠正。** 先前正确性 14 通过/4 豁免（239.890 秒）、性能 5/5（618.615 秒）仍保留在 [Git 历史](https://github.com/neko233-com/git-next/blob/4d61669ddf4276c52fd977f048ccb72218cd7805/docs/DELIVERY_STATUS.json)及原始本地报告中。r1 stage 随后因 Mac 候选包将 package.json 放在产品目录前缀下而拒绝，未发布。r3 在归档根放置相同载荷，保留相同 native core 源身份，并重新实际执行 Mac 51/P4/Python 0；新 r2 矩阵绑定该归档，14 项非豁免正确性及全部 5 项性能均完整重跑。此处纠正包布局，不改变 Git 存储，也不削弱 parser。最终 stage/发布仍待完成，1.0.4 安装运行验收仍为 false。
 
 ## 历史 v1.0.3 验收与工作站范围
 
