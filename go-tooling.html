@@ -23,6 +23,16 @@ example <code>prepare-windows-runtime</code>, <code>native-product-batch</code>,
 <code>benchmark-clone</code>. Existing options, layouts, MSI identities and manifest fields
 remain compatibility contracts. <code>help</code> lists every supported command.
 <code>build-git-p4</code> builds the independent Go Perforce module for the five targets.</p>
+<p>Game-project tools include <code>native-game-multirepo-acceptance</code> (independent
+repositories and a nested Unity/Unreal monorepository),
+<code>native-game-lfs-stream-acceptance</code> (disk-streamed assets and failed-transfer
+recovery), <code>benchmark-game-resources</code> (raw Git status/packing process trees) and
+<code>benchmark-game-lfs-resources</code> (the complete two-project fixture/Git/LFS process
+tree). Use each command's <code>--help</code> for bounded fixture sizes and new output paths.
+Reports distinguish Windows job committed-memory peaks, Linux samples and
+unavailable metrics; process-budget failures and timeouts are failed samples.
+<code>runProcess</code> returns an identifiable context error on deadline rather than
+misclassifying a killed process as an ordinary command exit.</p>
 <h2>Acceptance layers</h2>
 <p>For the already published v1.0.3 delivery, the user's 2026-10-25 instruction accepts
 Docker validation, cross-compilation and package/layout/checksum evidence without
@@ -76,6 +86,52 @@ The 51 actual cases cover common CLI, core contracts, LFS/signing and read-threa
 budgets; Darwin CPU affinity constraints remain explicitly unsupported. The Linux
 static inspection still checks the same Mac archive independently. Release staging
 rejects absent, incomplete or changed Mac runtime evidence.</p>
+<h2>Explicit package-validation release scope</h2>
+<p>The user's instruction for the current game-project work accepts Docker,
+cross-compilation and package verification without complete local host lifecycle
+validation: “不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境”.
+The additive <code>--package-validation-policy PATH</code> option records this scope on
+<code>native-product-batch</code> and <code>prepare-native-release</code>. It never infers authorization
+from a missing machine or a failed test.</p>
+<p>The schema-1 <code>package-validation-policy</code> document names <code>authorized_by: user</code>,
+the explicit instruction and reason, the exact matrix/source identities, and only
+<code>msi-user</code> and <code>msi-machine</code> in <code>cases</code>. It binds all five platform packages,
+the four MSI packages and their receipts/manifests by name, size and SHA-256.
+<code>native-package-validation-probes</code> must actually verify compiled MSI payloads,
+run isolated migration-contract fixtures and all six common resource-behavior
+probes. The policy pins that successful report and its relevant source identities.
+Changed inputs, incomplete probes and any additional waived case are rejected.</p>
+<p>All original correctness rows remain present. The two MSI transaction rows are
+<code>waived</code>, with <code>installation_runtime_accepted: false</code>; package checks do not become
+installation, upgrade, rollback or uninstall runtime passes. With the separate
+existing two-case terminal waiver, the result is 14 passed and four explicitly
+waived rows. Other native CLI/transport/read-safety, Windows bootstrap/update,
+Docker, updater race and input-readback lanes still run. The five performance
+rows still require real passes. Available Mac CLI acceptance stays independent
+and requires no GUI or host installation. Without this policy the original
+18-case requirements remain unchanged.</p>
+<p>Release staging validates the same policy and probes again, records the scope in
+proof/update/platform metadata, and includes
+<code>native-package-validation-policy.json</code> and
+<code>native-package-validation-probes.json</code> as checksummed assets. These documents
+record the frozen candidate inputs. Staging can finalize manuals and
+acceptance metadata and rebuild archive/MSI containers; final checksums and static
+payload checks identify the published artifacts and their unchanged accepted
+core/runtime bytes. Candidate package hashes are not substituted for final asset
+hashes. The policy still makes no installer-runtime claim. This adds release
+metadata and CLI options only; it changes no Git/LFS protocol, storage path,
+installer operation or existing receipt. There is no persistent-state migration.
+Rollback uses the previous controller and its original full validation path;
+older controllers reject the new option rather than silently accepting the scope.</p>
+<h3>POSIX candidate and release archive layouts</h3>
+<p>A POSIX candidate archive must place <code>package.json</code> and
+<code>git-next-distribution.json</code> at its archive root (an optional <code>./</code> is equivalent).
+Release staging reads those root-level manifests before emitting the published
+archive with one product top-level directory. A rooted release archive is not a
+candidate input. The r1 Mac stage rejection retained its prior reports; the r3
+candidate corrected that container layout without changing payload/core bytes,
+then passed fresh Mac runtime checks and a newly frozen full local gate generation.
+This is the existing archive contract, not a weaker parser or a Git/storage migration.</p>
 <h2>Migration evidence and rollback</h2>
 <p>The initial remaining inventory was 114 files. Upstream added the freestanding
 bridge verifier during this work, bringing that batch to 115. Earlier migrations
