@@ -1,14 +1,18 @@
 # git-next
 
-The published **v1.0.3** release uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. R8 local correctness, paired performance, both Windows x64 MSI lifecycles, final staging and scoped Windows x64 machine workstation acceptance are complete. [Delivery status](docs/DELIVERY_STATUS.md).
+**v1.0.4 is a local-verified candidate; staging and publication remain pending.** The distribution uses a source-built native C Git engine and owned runtime. Its Unity/Unreal multi-project defaults bound packing caches/workers and LFS concurrency while disabling automatic maintenance. Repository configuration and explicit command overrides retain priority; Windows serial-safe reads and existing storage formats remain unchanged.
 
-The user-approved release scope was closed on **2026-10-25** using the accepted Docker, cross-compilation, package/layout and checksum evidence. Physical ARM machines and complete host installation/update-service lifecycles are outside this release gate. All five existing platform packages remain available; this does not claim additional hardware testing. [Release scope](docs/PRODUCTION-READINESS.md).
+The final-byte correctness batch records **14 passed / 4 user-waived lanes in 239.890 seconds**; the independent paired-performance batch records **5/5 passed in 618.615 seconds**, with ten pairs per operation. The only waivers are two terminal lanes and live user/machine MSI lifecycles. This does not claim 1.0.4 is published or installed. [Delivery status](docs/DELIVERY_STATUS.md).
+
+Current validation includes **31 defaults / 24 actual behavior checks**, passed Go tests/vet/race, Rust preview full 100/100, Windows multi-project 33/33 (805 tracked paths, 489 Git calls), and large-LFS 5/5. Real Mac has 51 native scenarios and two owned P4 dispatches; each Linux Docker target has 52 scenarios and two P4 dispatches. Windows ARM64 has cross-compiled PE/static-package evidence; complete host lifecycles and physical ARM acceptance are not claimed. All four MSI candidates are unsigned. Planned release assets retain the [correctness](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json), [performance](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json), [terminal waiver](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json) and [MSI package policy](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json); they become downloadable only after publication.
 
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
 Go now owns build, packaging, documentation, fixtures, benchmarks and release tooling, including the product's `git-p4` helper. This migration retires 115 inventoried Python files; owned tooling and product helpers require no Python interpreter. Necessary PowerShell and POSIX shell scripts remain. Thirty historical CLI suites are retained in Git history at `3609553`; the current tree contains no runnable Python CLI wrapper. [Tooling](docs/GO_TOOLING.md).
 
 The independent Rust client is a preview with its own [Rust acceptance runner](docs/GIT_NEXT_ACCEPTANCE.md). Windows x64 and real macOS ARM64 each pass full's 100 scoped scenarios; L0 covers 39 commands. These reports describe the Rust client, while the native C distribution has separate package, runtime and installer gates. `complete_git_parity` remains false, and the Rust suite does not claim a one-for-one port of every historical assertion. [Compatibility](docs/COMPATIBILITY.md).
+
+## Historical v1.0.3 acceptance and workstation scope
 
 Recorded native evidence includes 51 scenarios on real Apple Silicon macOS 15.5 and 52 per Linux Docker target, plus two owned-Git `git-p4` dispatch checks per POSIX target. Windows ARM64 has cross-compilation, PE and static package evidence; hardware runtime acceptance is not claimed. Windows defaults disable fscache/fsmonitor/preload and use serial index/grep reads. R8 records 16 passed correctness lanes and two user-waived terminal lanes in 1,229.320 seconds, with all five paired-performance lanes passing in 649.347 seconds. Both Windows x64 MSI lifecycles ran afresh: 27 user checks and 26 machine checks, without receipt reuse. [R8 local evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.md) · [Defaults](docs/DEFAULTS.md) · [Performance](docs/PERFORMANCE.md).
 
@@ -20,15 +24,17 @@ R8 subsequently used verified recovery control and ordinary guarded MSI removal 
 
 ## Native packages
 
-Download packages and checksums from the official latest [v1.0.3 release](https://github.com/neko233-com/git-next/releases/tag/v1.0.3), published at `2026-10-23T20:44:12Z` from source `05dac2a938784ce03a2de219349c4d381a637ab5`. All 28 remote asset digests match the local release; 27 assets are listed in SHA256SUMS, and both SHA256SUMS and the acceptance proof were independently downloaded and verified. The four MSIs are unsigned (`NotSigned`); no cryptographic signature verification is claimed. Windows packages include the owned runtime and require no Rust compiler.
+The five **1.0.4 local candidate** packages have passed their declared build/package and final local gates. Final staging, checksums and [v1.0.4 publication](https://github.com/neko233-com/git-next/releases/tag/v1.0.4) remain pending; no 1.0.4 download is claimed available yet.
 
-| Platform | Package | Boundary |
+| Platform | 1.0.4 candidate | Verified boundary |
 | --- | --- | --- |
-| Windows x64 / ARM64 | Machine MSI or user MSI | Machine installation requires administrator rights; x64 has actual lifecycle evidence, ARM64 has build/table/static checks |
-| Linux x64 / ARM64 | Complete tar.gz with install.sh | Debian 12 / glibc 2.36 or compatible system |
-| macOS Apple Silicon | Complete tar.gz with install.sh | macOS 15.5+; real ARM64 runtime acceptance and independent package/Mach-O/shell checks; CPU-affinity constraints unsupported |
+| Windows x64 / ARM64 | Machine MSI or user MSI | PE/imports, four MSI payload/table checks, isolated migration and resource probes; live MSI lifecycles waived; all MSIs unsigned |
+| Linux x64 / ARM64 | Complete tar.gz with install.sh | Debian 12 / glibc 2.36; each Docker target 52 native scenarios and two P4 dispatches; no physical ARM claim |
+| macOS Apple Silicon | Complete tar.gz with install.sh | Real Mac 51 native scenarios and two P4 dispatches plus Mach-O/shell checks; full host installation/launchd lifecycle not claimed |
 
-Use the [native installation and removal guide](docs/INSTALLATION.md). The R8 bootstrap saves a protected complete original-Git snapshot before MSI writes, pins its manifest digest and binds post-MSI takeover to that snapshot. Applicable isolated installation/rollback gates and the final scoped Windows x64 machine workstation acceptance pass. [Takeover procedure](docs/TAKEOVER.md).
+Use the [installation and removal guide](docs/INSTALLATION.md), matching accepted release assets, and [takeover procedure](docs/TAKEOVER.md). The bootstrap snapshots the original Git before MSI writes; a local-gate checkpoint does not certify a completed 1.0.4 workstation installation.
+
+**Historical v1.0.3 publication and actual MSI/workstation evidence:** Download packages and checksums from the official latest [v1.0.3 release](https://github.com/neko233-com/git-next/releases/tag/v1.0.3), published at `2026-10-23T20:44:12Z` from source `05dac2a938784ce03a2de219349c4d381a637ab5`. All 28 remote asset digests match the local release; 27 assets are listed in SHA256SUMS, and both SHA256SUMS and the acceptance proof were independently downloaded and verified. The four MSIs are unsigned (`NotSigned`); no cryptographic signature verification is claimed. Windows packages include the owned runtime and require no Rust compiler.
 
 ## Commands and defaults
 
@@ -69,7 +75,7 @@ The preview packages the independent Rust client. Go tooling also builds the nat
 
 ## Windows one-click installation
 
-After obtaining v1.0.3's matching `install.ps1`, run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1`. **The bootstrap selects registered Git for Windows for replacement.** R8 first relays a 32-bit PowerShell process to native 64-bit PowerShell without elevation, then requests UAC if machine scope requires it. It snapshots the original installation before MSI writes and retains the protected snapshot path/SHA on failure. `-Plan` only inspects selection. Installation needs no Go, Python or WiX. Isolated lifecycle gates and final scoped Windows x64 machine workstation acceptance pass. See [installation](docs/INSTALLATION.md) for compatibility and recovery boundaries.
+After v1.0.4 is published, obtain its matching accepted `install.ps1` and inspect selection with `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Plan`. Remove `-Plan` only to request installation of that accepted release. The bootstrap selects registered Git for Windows for replacement, relays 32-bit PowerShell to native 64-bit before UAC, and preserves a protected pre-MSI snapshot path/SHA on failure. Installation needs no Go, Python or WiX. **The current 1.0.4 checkpoint has not run live MSI lifecycles or installed 1.0.4 on this workstation.** The actual MSI/workstation successes above belong to 1.0.3. See [installation](docs/INSTALLATION.md).
 
 Windows MSI installs the independent Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md) beside Git-next, with tabs, Unicode/IME, copy/paste, scrollback and owned Bash plus PowerShell/CMD profiles. It replaces the Git Bash desktop entry and adds no Git GUI menu. [Built-in LFS and game profiles](docs/GAME_PROJECTS.md) cover Unity/Tuanjie and Unreal; no separate LFS installer is needed.
 

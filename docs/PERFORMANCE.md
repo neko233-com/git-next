@@ -58,6 +58,14 @@ first 20k-file add takes 163.036 seconds in that run. This is an integrity and
 isolation result, not a promise of fast first imports or an absolute stability
 guarantee.
 
+## Native 1.0.4 final-byte local gates · 2026-10-25
+
+The independent final performance batch completed **5/5 actual passed lanes in 618.615 seconds** after the exact **14 passed / 4 authorized waived correctness lanes in 239.890 seconds**. The five lanes are 1,000, 10,000 and 100,000 files, loopback HTTPS, and frozen-input readback. Every local operation and network operation has **10 paired samples**; performance ran separately from compilation and functional tests. No check was skipped for a timing target, and no universal speed or memory advantage is claimed.
+
+This is the final-byte **1.0.4 local-gate checkpoint**, source 3be06fa5bac1912ec7e77459830de4ebff055355, matrix 159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00. It is separate from the earlier resource-configuration profiling on the pinned 1.0.3 binary and from historical 1.0.3 release measurements below. Final staging, checksums and publication remain pending; four correctness waivers are not measured passes or installation acceptance.
+
+Planned release assets, available only after publication: [batch performance](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json), [1,000 files](https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-1000.json), [10,000 files](https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-10000.json), [100,000 files](https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-100000.json), [loopback HTTPS](https://github.com/neko233-com/git-next/releases/download/v1.0.4/performance-network.json), and [correctness](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json). Full reports retain binary/source/harness identity, output/object verification, paired medians/p95 and their memory scope. The following 1.0.3 measurements keep their original dates, sample counts and bytes.
+
 ## Native 1.0.3 measurements · 2026-10-24
 
 The exact R7 correctness batch completed **16 passed / 2 user-waived lanes** in

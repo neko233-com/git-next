@@ -1,21 +1,14 @@
 # Production readiness
 
-## 1.0.4 candidate: Unity/Unreal multi-project resource defaults · 2026-10-25
+## 1.0.4 candidate: final local gates complete · 2026-10-25
 
-The candidate preserves the native Git object/index/ref layout, Windows read-safety
-settings and independent Rust preview boundary. Six shared resource defaults are
-selected from the [configuration experiment](benchmarks/native-game-resources-20261025.json).
-Four concurrent first packs use about 71% less whole-job committed memory in the
-many-asset fixture; single large assets and repeated packs do not universally
-benefit. The 60,037-path isolation matrix passes 33/33 cases. These measurements
-use the pinned 1.0.3 core with candidate configuration; they are not final 1.0.4
-package acceptance or real Unity/Unreal Editor acceptance.
+The five-platform candidate has completed fresh builds and package checks, **14 passed / 4 user-waived correctness lanes in 239.890 seconds**, and a separate **five-lane paired-performance pass in 618.615 seconds**, ten pairs per operation. Frozen matrix: 159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00. Final staging/checksums and one consolidated publication remain pending; this is a pre-tag local checkpoint, not a published or installed 1.0.4 release.
 
-Final five-platform compilation, package-bound correctness, performance and release
-staging remain required before publication. The explicit package-validation policy
-may waive only live user/machine MSI transactions, with actual compiled-payload,
-isolated migration and resource-behavior probes required. Those rows remain waived.
-The separately authorized terminal waiver remains unchanged. See [Go tooling](GO_TOOLING.md).
+There are 31 defaults with 24 actual behavior checks; Go tests/vet/race and Rust preview full 100 pass. The final Windows multi-project matrix is 33/33 with 805 tracked paths and 489 Git calls; large-LFS is 5/5. The earlier 60,037-path matrix and memory experiment used the pinned 1.0.3 core with candidate configuration and retain that historical profiling scope. They are not extra final-byte paths or real Editor acceptance.
+
+Real Mac runs 51 native scenarios and two owned P4 dispatches; each Linux Docker target runs 52 and two P4 dispatches. Windows ARM64 has cross-compilation, PE/import and package evidence. Full host lifecycle/physical ARM acceptance is not claimed. Only terminal-native-desktop, terminal-rust-contracts, msi-user and msi-machine are waived. The live MSI waiver requires actual four-MSI static payload/table checks, isolated migration and resource probes; it is not installation runtime acceptance. All four MSI candidates are unsigned.
+
+Planned release evidence: [correctness](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json), [performance](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json), [terminal waiver](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json), [package policy](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json). Assets become publicly available only after publication. The following 1.0.3 MSI/workstation/publication results remain historical evidence for their original bytes.
 
 ## Published 1.0.3: approved release scope complete · 2026-10-25
 

@@ -3,4 +3,4 @@
 # Unified-diff context prefixes are syntax; integration pins resulting source bytes.
 native-core/patches/*.patch whitespace=-blank-at-eol,-space-before-tab
 # This report is published with its original byte-level SHA-256 identity.
-docs/benchmarks/native-game-resources-20261025.json -text
+docs/benchmarks/native-game-resources-20261025.json -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

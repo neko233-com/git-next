@@ -1,12 +1,14 @@
 # git-next 固定交付清单与进度
 
-## 1.0.4 候选：Unity/Unreal 多项目资源优化（2026-10-25）
+## 1.0.4 候选：最终本地门禁已完成（2026-10-25）
 
-已完成六项共享资源默认值、磁盘流式 LFS 失败夹具、多项目/混合引擎 monorepo 隔离与有界整进程树测量。60,037 个受跟踪路径的矩阵 **33/33 通过**；多资产首次四仓库并行打包的峰值提交内存约 **1,519 → 440 MiB**，耗时 **29.0 → 6.9 秒**，pack 大小与全部对象一致。单个大资产和重复打包未普遍受益，原失败诊断保留。[公开测量与边界](benchmarks/native-game-resources-20261025.json)。测量使用固定 1.0.3 核心与候选配置，不代表最终 1.0.4 字节验收。
+五平台新包已完成构建及包检查。冻结正确性 **14 通过、4 项用户豁免，239.890 秒**；独立配对性能 **5/5 通过，618.615 秒**，每操作 10 对，矩阵 SHA-256 为 159f3094f0fc4859ff63f50e42c50474e6f5ff28a3ec35d5287bad02b1327e00。目前仅剩最终 stage/校验和及一次整合发布，不表示 1.0.4 已发布或已在本机安装。
 
-正在完成新版五平台构建、冻结产物正确性/性能与一次汇总发布。按用户已授权范围，live MSI 两项仅可通过显式包验证策略标为豁免，必须实际通过四个 MSI 静态载荷、隔离迁移和六项资源行为探针；终端两项另行保留豁免。未经运行的宿主生命周期不记为通过。以下 1.0.3 及更早记录保留其原始产物身份。
+已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过、Rust preview full 100/100。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
 
-## 当前交付范围 · v1.0.3 已发布，用户确认的发布范围已完成（2026-10-25）
+仅 terminal-native-desktop、terminal-rust-contracts、msi-user、msi-machine 四 lane 豁免；两项 live MSI 生命周期由实际四 MSI 载荷/表、隔离迁移和资源探针约束，不记为安装运行通过。四个 MSI 未签名。计划发布资产：[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)、[MSI 包策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)，正式发布前不声明已上线。以下 1.0.3 的完整 MSI、工作站与发布记录保留原产物身份，不能外推到 1.0.4。
+
+## 历史交付范围 · v1.0.3 已发布，用户确认的发布范围已完成（2026-10-25）
 
 **发布门禁范围已确认。** 用户明确接受 Docker 验证、交叉编译和打包校验，不要求 ARM 真机或本机/各平台完整真实宿主验收。既有五平台产物保留；原 Windows ARM64 真机与 Mac 完整 GUI/launchd/升级生命周期缺口不再阻塞本次交付，历史未测和 blocked 记录保持原样。已复核 7 份固定回执及 28 个线上资产的名称、大小和 SHA-256；发布后只有文档变更，复用既有通过的 Docker、正确性、性能和包校验结果，没有重跑终端、运行时或安装测试。**本次用户授权的发布范围已关闭，无待补的宿主环境门禁。**[范围确认记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json)。
 
