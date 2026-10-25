@@ -46,6 +46,24 @@
       "status": "r8-pre-msi-snapshot-bootstrap-and-independent-workstation-readback-pass"
     },
     "current_gate_generation": "r8",
+    "release_validation_scope": {
+      "status": "complete-under-user-approved-release-scope",
+      "authorized_on": "2026-10-25",
+      "authorized_by": "user",
+      "authorization": "不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境",
+      "release_ready_within_declared_scope": true,
+      "required_release_scope_complete": true,
+      "physical_arm_and_complete_host_validation_required": false,
+      "existing_five_platform_assets_retained": true,
+      "historical_unverified_host_checks_claimed_as_passed": false,
+      "runtime_or_installer_tests_repeated": false,
+      "evidence": {
+        "path": "docs/benchmarks/native-release-scope-20261025.json",
+        "sha256": "2983f4748758130ff2b84934f2e36db909da0e6f1c63c02e7d8bb4eee94a44df",
+        "bytes": 12657,
+        "url": "https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json"
+      }
+    },
     "production_channel_readback": {
       "status": "pass",
       "checked_at_utc": "2026-10-23T20:57:30Z",
@@ -78,6 +96,9 @@
     },
     "production_platform_blockers": {
       "all_platforms_production_acceptance_complete": false,
+      "current_release_blocking": false,
+      "required_release_scope_complete": true,
+      "release_disposition": "physical-arm-and-complete-host-checks-excluded-by-user-on-2026-10-25; historical observations preserved",
       "windows_arm64": "real-machine-runtime-and-installer-entrypoint-unavailable",
       "macos_arm64": {
         "status": "blocked",
@@ -816,7 +837,7 @@
       "release_source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
       "verification_commit": "00d2b405c04a03acb186b92850c1f90a78e915ae"
     },
-    "status": "r8-published-workstation-accepted-in-declared-scope",
+    "status": "published-ready-under-user-approved-container-and-package-scope",
     "terminal_validation_waiver": {
       "authorization_file": "target/go-native-release-1.0.3/terminal-waiver-r8.json",
       "authorization_sha256": "9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f",
@@ -836,7 +857,7 @@
       "status": "user-authorized-and-r8-matrix-bound",
       "waived_is_passed": false
     },
-    "updated_on": "2026-10-23",
+    "updated_on": "2026-10-25",
     "version": "1.0.3",
     "windows_r4_stable_defaults": {
       "authoritative_fragment": "packaging/runtime-defaults/gitconfig",

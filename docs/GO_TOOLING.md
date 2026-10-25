@@ -34,6 +34,13 @@ remain compatibility contracts. `help` lists every supported command.
 
 ## Acceptance layers
 
+For the already published v1.0.3 delivery, the user's 2026-10-25 instruction accepts
+Docker validation, cross-compilation and package/layout/checksum evidence without
+physical ARM or complete host lifecycle prerequisites. The existing accepted
+receipts satisfy that scope; no runtime bytes, staging checks or old reports are
+changed, and no new host/terminal run is required to close this delivery.
+[Scope record](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
+
 ```sh
 cargo build --release --locked
 cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json

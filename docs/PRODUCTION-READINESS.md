@@ -1,19 +1,32 @@
 # Production readiness
 
-## Current 1.0.3 local evidence · 2026-10-24
+## Published 1.0.3: approved release scope complete · 2026-10-25
 
-The native C distribution has completed R7 correctness with 16 passed lanes and
-two explicitly user-waived Git-Terminal lanes in 249.801 seconds. Windows x64
-has actual MSI install/repair/upgrade/failure-rollback/uninstall evidence for
-27 user-scope and 25 machine-scope checks. Real Apple Silicon macOS 15.5 has
-51 native scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated
-ARM64 each have 52 scenarios and two dispatch checks. Windows ARM64 has build,
-PE/table and static-package evidence, not hardware runtime/lifecycle acceptance.
-R7 paired performance passed all five lanes in 668.849 seconds. Staging,
-workstation activation and publication remain separate;
-[delivery status](DELIVERY_STATUS.md) records their current state. The Rust
-preview's `complete_git_parity: false` and five blockers below do not describe
-the native product's command surface or establish its release eligibility.
+[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) is published
+and latest. The user explicitly accepted Docker validation, cross-compilation and
+packaging, without physical ARM machines or complete host validation. Those host
+checks no longer block this delivery. This closes the requested release scope;
+it does not turn unexecuted hardware tests or a blocked Mac GUI preflight into passes.
+
+The accepted native R8 batch has **16 passed correctness lanes and two user-waived
+terminal lanes**, with **five passed paired-performance lanes**. Linux x64 and
+emulated ARM64 each have 52 native scenarios and two owned P4 dispatch checks;
+Docker login migration and frozen-input readback pass. Five platform packages,
+four MSI layouts and five product Python-absence scans pass. All **28 published
+asset names, sizes and SHA-256 digests** were rechecked against the immutable local
+manifest. No runtime or installer source changed after the accepted release, so
+these existing receipts were reused without repeating tests or rebuilding packages.
+[Scope receipt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
+
+Windows x64 additionally has fresh 27 user-scope and 26 machine-scope MSI lifecycle
+checks, actual workstation installation/readback and a successful SYSTEM update
+Check. Real Apple Silicon macOS 15.5 has 51 native scenarios and two owned P4
+dispatch checks. Windows ARM64 retains cross-compilation, PE/import and package
+evidence. Its physical runtime and full Mac GUI/launchd/upgrade lifecycles remain
+unverified and outside the approved gate. Existing ARM packages are retained.
+Four MSIs remain `NotSigned`, with no signer configured. Rust remains an independent
+preview with `complete_git_parity=false`; native acceptance does not promote it.
+[Delivery status](DELIVERY_STATUS.md).
 
 ## Historical packaging and Rust preview readiness notes
 

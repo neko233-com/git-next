@@ -1,6 +1,13 @@
 # MSI and automatic updates
 
-## Published v1.0.3 validation scope · 2026-10-24
+## Published v1.0.3 validation scope · 2026-10-25
+
+The user-approved scope for this existing release accepts Docker validation,
+cross-compilation and package/layout/checksum checks. Physical ARM machines and
+complete host installation/update-service lifecycles are not prerequisites for
+this delivery. The release scope is complete, with all five existing platform
+packages retained. Existing immutable passing receipts are reused; historical
+unverified host checks are not relabeled as passed. [Scope receipt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
 
 Local native correctness R8 completed with 16 passed lanes and two explicitly
 user-waived Git-Terminal lanes in 1,229.320 seconds. Actual Windows x64 MSI
@@ -52,8 +59,9 @@ GUI launchd domain was unavailable. The isolated host-service acceptance stopped
 before uploading, installing or executing the product, leaving existing services
 and personal configuration unchanged. This is an explicit environmental blocker,
 not a passed Mac installer or upgrade lifecycle. Windows ARM64 still lacks a
-real-machine execution entrypoint. These gaps prevent an all-platform production
-acceptance claim. [Mac preflight](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-macos-host-preflight-20261024.json).
+real-machine execution entrypoint. These are limits on hardware coverage, excluded
+from this release gate by the user's 2026-10-25 instruction. They no longer block
+delivery; complete physical-host acceptance is not claimed. [Mac preflight](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-macos-host-preflight-20261024.json).
 
 ## Delivery contract
 

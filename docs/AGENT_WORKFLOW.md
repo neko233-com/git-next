@@ -1,25 +1,36 @@
 # Local engineering and release workflow
 
+## v1.0.3 release closure · 2026-10-25
+
+The user approved Docker validation, cross-compilation and package/layout/checksum
+evidence for this existing release, without physical ARM machines or complete
+host installation/update-service validation. Do not keep requesting those host
+environments or repeat terminal tests. Retain the five existing platform packages,
+exact accepted receipts and historical failures; excluded or unexecuted checks
+remain distinct from passes. The published v1.0.3 scope is complete. This changes
+the delivery scope, not runtime bytes or the staging controller's immutable-input
+checks. New runtime/installer changes still invalidate affected evidence.
+[Scope receipt](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
+
 ## Rust CLI gate and Python retirement
 
-Owned build/package/docs/release controllers and fixture services migrate to the
+Owned build/package/docs/release controllers and fixture services use the
 [Go tool module](GO_TOOLING.md). Rust remains the CLI conformance gate. Native
-C/MSI/migration functionality must survive the migration; keep old controllers
-until the replacement and callers pass equivalent checks. No new Python source
+C/MSI/migration functionality is retained with its replacement evidence. No new Python source
 or Python wrapper is allowed. `migration-audit --require-complete` reports remaining
 owned Python rather than accepting renamed or non-gating files as completion.
 
 Use [git-next-accept](GIT_NEXT_ACCEPTANCE.md) as the only Rust CLI conformance gate:
 L0 before merge/tag, full on release branches, network only when selected. Both
 macOS and Windows use the same Cargo command and JSON tier contract. Python CLI
-suites are immediately archived under `tests/legacy_cli/`, refuse direct execution,
-and must not be restored as merge/release gates. The Python aggregate wrapper is
+suites are retained only in Git history at `3609553`; `tests/legacy_cli/` tracks
+the retirement README only. They must not be restored as merge/release gates. The Python aggregate wrapper is
 removed. Add new CLI scenarios in Rust. Native package/GUI/MSI/credential migration
 and performance workflows below remain separate, with their own coverage and
 frozen receipts. Old native acceptance cannot establish parity for the Rust client.
 
-Python artifact diagnostics and source-contract helpers are optional for the CLI
-gate. Use packaging, locale/default maintenance and documentation tools only for
+Artifact diagnostics and source-contract helpers use Go `fast-verify` and
+`verify-repo-contract`. Use packaging, locale/default maintenance and documentation tools only for
 their corresponding changes; installing Python is not a prerequisite for CLI
 merge/tag acceptance.
 

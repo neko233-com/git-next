@@ -2,6 +2,8 @@
 
 **v1.0.3 已正式发布。** 原生安装包采用从固定源码构建的 native C Git 引擎，整合 git-next 身份、LF 策略、语言和安装更新能力，并提供自有运行时；现有仓库、Git 配置、hooks 和凭据助手保留正常契约。R8 最终本地正确性、配对性能、两种 Windows x64 MSI 生命周期、最终打包和 Windows x64 机器级工作站范围化验收均已完成。[交付进度](docs/DELIVERY_STATUS.md)。
 
+**2026-10-25 已按用户确认的范围完成发布交付：**采用已通过的 Docker、交叉编译、安装包/布局及校验和证据，不要求 ARM 真机或各平台完整宿主安装/更新生命周期。既有五平台安装包继续提供；未执行的硬件验收不标为通过。[发布范围](docs/PRODUCTION-READINESS.md)。
+
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
 构建、打包、文档、夹具、性能测量和发布工具统一采用 Go，产品中的 `git-p4` helper 也已迁到 Go。本批逐文件核验退役 115 个 Python 文件，自有工具链和产品 helper 无需 Python 解释器；必要的 PowerShell 与 POSIX shell 脚本保留。30 个历史 CLI 套件保留在 Git 历史 `3609553`，当前树不含可运行的 Python CLI wrapper。[工具链说明](docs/GO_TOOLING.md)。

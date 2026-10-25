@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "status": "complete-under-user-approved-release-scope",
+  "product": "git-next",
+  "version": "1.0.3",
+  "authorized_on": "2026-10-25",
+  "checked_at_utc": "2026-10-25T09:59:52Z",
+  "authorized_by": "user",
+  "authorization": "不需要 arm，docker 验证打包就可，能发布就行。不需要本机完全验证真实环境",
+  "release_ready_within_declared_scope": true,
+  "no_open_release_blockers_in_authorized_scope": true,
+  "published": true,
+  "latest": true,
+  "release_id": 422290807,
+  "release_url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.3",
+  "source_commit": "05dac2a938784ce03a2de219349c4d381a637ab5",
+  "checked_documentation_base_commit": "2b212b2f344549a94d4be664284a409cee5111b3",
+  "native_runtime_source_unchanged_since_release": true,
+  "scope": "Existing v1.0.3 release closure using accepted immutable Docker execution, cross-compilation, static package/layout, Python absence and digest evidence; no physical ARM or complete host lifecycle prerequisite.",
+  "existing_five_platform_assets_retained": true,
+  "publication_manifest_sha256": "0bef0482f4ab0cc9d0abd549cf60ec5ca38ecbb4af7c35fcdde038c6b67751f4",
+  "remote_assets_verified": 28,
+  "checksum_assets": 27,
+  "all_remote_asset_digests_match": true,
+  "correctness_passed_lanes": 16,
+  "terminal_waived_lanes": 2,
+  "performance_passed_lanes": 5,
+  "docker_cases": [
+    "linux-x64",
+    "linux-arm64",
+    "docker-login-migration"
+  ],
+  "frozen_input_readback": "pass",
+  "packaged_platforms": 5,
+  "msi_layouts": 4,
+  "accepted_reports": [
+    {
+      "asset": "native-release-acceptance.json",
+      "sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1",
+      "bytes": 2414,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-release-acceptance.json"
+    },
+    {
+      "asset": "native-correctness.json",
+      "sha256": "4e8cc6827407ed3a8592a7eacdc3961880af50e1e0db424e4c08c3329afc0b2f",
+      "bytes": 6843,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-correctness.json"
+    },
+    {
+      "asset": "native-performance.json",
+      "sha256": "2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f",
+      "bytes": 3456,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-performance.json"
+    },
+    {
+      "asset": "native-terminal-waiver.json",
+      "sha256": "9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f",
+      "bytes": 1375,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-terminal-waiver.json"
+    },
+    {
+      "asset": "native-staged-integrity-r8.json",
+      "sha256": "c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8",
+      "bytes": 14444,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-staged-integrity-r8.json"
+    },
+    {
+      "asset": "native-product-python-final-r8.json",
+      "sha256": "1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812",
+      "bytes": 7642,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-product-python-final-r8.json"
+    },
+    {
+      "asset": "native-msi-layout-final-r8.json",
+      "sha256": "845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49",
+      "bytes": 6864,
+      "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.3/native-msi-layout-final-r8.json"
+    }
+  ],
+  "assets": [
+    {
+      "name": "git-next-1.0.3-linux-arm64.tar.gz",
+      "bytes": 142067374,
+      "sha256": "e389df9a22a9991a893aa2ffe5c4c8e0c84336af965955f6ca7bd9cb5ce6e1bf",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:e389df9a22a9991a893aa2ffe5c4c8e0c84336af965955f6ca7bd9cb5ce6e1bf"
+    },
+    {
+      "name": "git-next-1.0.3-linux-x64.tar.gz",
+      "bytes": 147035072,
+      "sha256": "5873aee2726d201499931becc62e33b57e32f6c2a462ff439d937b175a3879e6",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:5873aee2726d201499931becc62e33b57e32f6c2a462ff439d937b175a3879e6"
+    },
+    {
+      "name": "git-next-1.0.3-macos-arm64.tar.gz",
+      "bytes": 132602790,
+      "sha256": "da5ba9c120a6660eaa61d548e603379feae2e3a0adc4b6f1a920aafe17815c8c",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:da5ba9c120a6660eaa61d548e603379feae2e3a0adc4b6f1a920aafe17815c8c"
+    },
+    {
+      "name": "git-next-1.0.3-windows-arm64-user.msi",
+      "bytes": 189907284,
+      "sha256": "2490d18b298d4f6cc200ac8fc8530a8aa9286136435f1562be832d5e35cd1fa0",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:2490d18b298d4f6cc200ac8fc8530a8aa9286136435f1562be832d5e35cd1fa0"
+    },
+    {
+      "name": "git-next-1.0.3-windows-arm64.msi",
+      "bytes": 190545723,
+      "sha256": "fb95c7d09a4bd9099852b80483003209642ac625c6d60cca87bce0f5b89449fa",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:fb95c7d09a4bd9099852b80483003209642ac625c6d60cca87bce0f5b89449fa"
+    },
+    {
+      "name": "git-next-1.0.3-windows-x64-user.msi",
+      "bytes": 146285064,
+      "sha256": "f38c7c7231f1576745bb17a7acbaf3777293d9fc5296ba88dd54a408a517f433",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:f38c7c7231f1576745bb17a7acbaf3777293d9fc5296ba88dd54a408a517f433"
+    },
+    {
+      "name": "git-next-1.0.3-windows-x64.msi",
+      "bytes": 146820593,
+      "sha256": "76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:76a2ec5cd6c416fd26d2eb46dbf7dac10a6d28266d44173cdb2743811620abd7"
+    },
+    {
+      "name": "git-next-corresponding-sources-core-and-producer-recipes.zip",
+      "bytes": 161029026,
+      "sha256": "712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab"
+    },
+    {
+      "name": "git-next-corresponding-sources-debian.zip",
+      "bytes": 366235738,
+      "sha256": "7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68"
+    },
+    {
+      "name": "git-next-corresponding-sources-homebrew.zip",
+      "bytes": 205445362,
+      "sha256": "791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a"
+    },
+    {
+      "name": "git-next-corresponding-sources-msys2.zip",
+      "bytes": 774880829,
+      "sha256": "a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6"
+    },
+    {
+      "name": "git-next-update.json",
+      "bytes": 5110,
+      "sha256": "340a70a3ca62da471150da70ba67902df64701600e12b240e99c4b960a8a8c81",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:340a70a3ca62da471150da70ba67902df64701600e12b240e99c4b960a8a8c81"
+    },
+    {
+      "name": "install.ps1",
+      "bytes": 46748,
+      "sha256": "807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3"
+    },
+    {
+      "name": "native-arm64-byte-recovery-summary.json",
+      "bytes": 1282,
+      "sha256": "fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:fde2c333f85a3fbfcbbcd4db21daaac75d2bf237e6670e2e68e25051b09f8461"
+    },
+    {
+      "name": "native-correctness.json",
+      "bytes": 6843,
+      "sha256": "4e8cc6827407ed3a8592a7eacdc3961880af50e1e0db424e4c08c3329afc0b2f",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:4e8cc6827407ed3a8592a7eacdc3961880af50e1e0db424e4c08c3329afc0b2f"
+    },
+    {
+      "name": "native-msi-layout-final-r8.json",
+      "bytes": 6864,
+      "sha256": "845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:845eb08d6cc42b911a7938460c3c42c2cc450c938d1a179960b47bf1b7ac6f49"
+    },
+    {
+      "name": "native-performance.json",
+      "bytes": 3456,
+      "sha256": "2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:2becc21e8c8a803e23020f388d0bb277f34a585d6359f579fecc536ed58c993f"
+    },
+    {
+      "name": "native-product-python-final-r8.json",
+      "bytes": 7642,
+      "sha256": "1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:1cb6f83d7235824f7326cb41676cdd61112f07dfba874626a0d86a9928c75812"
+    },
+    {
+      "name": "native-python-retirement-20261023.json",
+      "bytes": 192584,
+      "sha256": "cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:cffa3766d84cc7ad46cb824c01ee3f010af64bfeaf66c657a74db1fe4c99abf7"
+    },
+    {
+      "name": "native-release-acceptance.json",
+      "bytes": 2414,
+      "sha256": "869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:869debb02ce937172d2eac5e2e6dda7bcea9b477a3824b0129491782b0aa77f1"
+    },
+    {
+      "name": "native-staged-integrity-r8.json",
+      "bytes": 14444,
+      "sha256": "c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:c13e7a6e21c9429fb66a9ce5320297e6d863b5406791775e46cf518710372dd8"
+    },
+    {
+      "name": "native-terminal-waiver.json",
+      "bytes": 1375,
+      "sha256": "9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:9f5ef49777ee899f2103367386cbbf0ae73e7c1dd1a3773a440bd581e432221f"
+    },
+    {
+      "name": "native-workstation-acceptance.json",
+      "bytes": 4677,
+      "sha256": "16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:16e135aa7da930384f28e538a5b3bf018db3adbf9edcb7c6500972f9b200b13e"
+    },
+    {
+      "name": "performance-1000.json",
+      "bytes": 5731,
+      "sha256": "dc1d9b630434addab5915d14d701094f8c04fc76c72242c9ccb39934e800ac67",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:dc1d9b630434addab5915d14d701094f8c04fc76c72242c9ccb39934e800ac67"
+    },
+    {
+      "name": "performance-10000.json",
+      "bytes": 5753,
+      "sha256": "fc3dfaa354e5000bf44aac2bc50b8d259164a59dd2a73c66a35c2e7ce8d599fe",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:fc3dfaa354e5000bf44aac2bc50b8d259164a59dd2a73c66a35c2e7ce8d599fe"
+    },
+    {
+      "name": "performance-100000.json",
+      "bytes": 5770,
+      "sha256": "5345e856c6e718bf6984461a9eff91187e5eb1ed0442f982428ce5ff8ba07887",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:5345e856c6e718bf6984461a9eff91187e5eb1ed0442f982428ce5ff8ba07887"
+    },
+    {
+      "name": "performance-network.json",
+      "bytes": 4555,
+      "sha256": "be35b31890cb66ba7526fd0e5d86059b3bf5f114b8de7a9e7030cbc8042a6dd0",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:be35b31890cb66ba7526fd0e5d86059b3bf5f114b8de7a9e7030cbc8042a6dd0"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 2656,
+      "sha256": "1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c",
+      "remote_state": "uploaded",
+      "remote_digest": "sha256:1779173479011556aa760f2ac62ed6e0403aea190eed8d3461779d218aac512c"
+    }
+  ],
+  "excluded_from_this_release_gate": [
+    "Windows ARM64 physical runtime and installer lifecycle",
+    "macOS complete host installation/GUI launchd/automatic upgrade lifecycle",
+    "Complete physical-host validation on each platform"
+  ],
+  "full_physical_host_validation_claimed": false,
+  "historical_host_blockers_rewritten_as_pass": false,
+  "historical_receipts_unchanged": true,
+  "terminal_tests_executed": false,
+  "runtime_or_installer_tests_executed_in_this_check": false,
+  "docker_test_execution_repeated": false,
+  "existing_immutable_acceptance_reused": true,
+  "signature_policy": "No signer configured; four MSI signatures remain NotSigned. SHA-256 integrity is verified; no cryptographic signature pass is claimed."
+}

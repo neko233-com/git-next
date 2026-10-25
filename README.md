@@ -2,6 +2,8 @@
 
 The published **v1.0.3** release uses a source-built native C Git engine with git-next's identity, LF policy, language support and installation/update behavior. Native packages include their owned runtime; existing repositories, Git configuration, hooks and credential-helper contracts retain their normal behavior. R8 local correctness, paired performance, both Windows x64 MSI lifecycles, final staging and scoped Windows x64 machine workstation acceptance are complete. [Delivery status](docs/DELIVERY_STATUS.md).
 
+The user-approved release scope was closed on **2026-10-25** using the accepted Docker, cross-compilation, package/layout and checksum evidence. Physical ARM machines and complete host installation/update-service lifecycles are outside this release gate. All five existing platform packages remain available; this does not claim additional hardware testing. [Release scope](docs/PRODUCTION-READINESS.md).
+
 [简体中文](README.zh-CN.md) · [Git guide](docs/GIT-GUIDE.md) · [Manual](docs/site/index.html) · [Why git-next](docs/WHY-GIT-NEXT.md) · [Delivery status](docs/DELIVERY_STATUS.md) · [Documentation site](https://neko233-com.github.io/git-next/)
 
 Go now owns build, packaging, documentation, fixtures, benchmarks and release tooling, including the product's `git-p4` helper. This migration retires 115 inventoried Python files; owned tooling and product helpers require no Python interpreter. Necessary PowerShell and POSIX shell scripts remain. Thirty historical CLI suites are retained in Git history at `3609553`; the current tree contains no runnable Python CLI wrapper. [Tooling](docs/GO_TOOLING.md).

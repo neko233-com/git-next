@@ -1,17 +1,28 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Production readiness</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Production readiness</h1>
-<h2>Current 1.0.3 local evidence · 2026-10-24</h2>
-<p>The native C distribution has completed R7 correctness with 16 passed lanes and
-two explicitly user-waived Git-Terminal lanes in 249.801 seconds. Windows x64
-has actual MSI install/repair/upgrade/failure-rollback/uninstall evidence for
-27 user-scope and 25 machine-scope checks. Real Apple Silicon macOS 15.5 has
-51 native scenarios and two owned-Git/P4 dispatch checks; Linux x64 and emulated
-ARM64 each have 52 scenarios and two dispatch checks. Windows ARM64 has build,
-PE/table and static-package evidence, not hardware runtime/lifecycle acceptance.
-R7 paired performance passed all five lanes in 668.849 seconds. Staging,
-workstation activation and publication remain separate;
-<a href="delivery-status.html">delivery status</a> records their current state. The Rust
-preview's <code>complete_git_parity: false</code> and five blockers below do not describe
-the native product's command surface or establish its release eligibility.</p>
+<h2>Published 1.0.3: approved release scope complete · 2026-10-25</h2>
+<p><a href="https://github.com/neko233-com/git-next/releases/tag/v1.0.3">v1.0.3</a> is published
+and latest. The user explicitly accepted Docker validation, cross-compilation and
+packaging, without physical ARM machines or complete host validation. Those host
+checks no longer block this delivery. This closes the requested release scope;
+it does not turn unexecuted hardware tests or a blocked Mac GUI preflight into passes.</p>
+<p>The accepted native R8 batch has <strong>16 passed correctness lanes and two user-waived
+terminal lanes</strong>, with <strong>five passed paired-performance lanes</strong>. Linux x64 and
+emulated ARM64 each have 52 native scenarios and two owned P4 dispatch checks;
+Docker login migration and frozen-input readback pass. Five platform packages,
+four MSI layouts and five product Python-absence scans pass. All <strong>28 published
+asset names, sizes and SHA-256 digests</strong> were rechecked against the immutable local
+manifest. No runtime or installer source changed after the accepted release, so
+these existing receipts were reused without repeating tests or rebuilding packages.
+<a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json">Scope receipt</a>.</p>
+<p>Windows x64 additionally has fresh 27 user-scope and 26 machine-scope MSI lifecycle
+checks, actual workstation installation/readback and a successful SYSTEM update
+Check. Real Apple Silicon macOS 15.5 has 51 native scenarios and two owned P4
+dispatch checks. Windows ARM64 retains cross-compilation, PE/import and package
+evidence. Its physical runtime and full Mac GUI/launchd/upgrade lifecycles remain
+unverified and outside the approved gate. Existing ARM packages are retained.
+Four MSIs remain <code>NotSigned</code>, with no signer configured. Rust remains an independent
+preview with <code>complete_git_parity=false</code>; native acceptance does not promote it.
+<a href="delivery-status.html">Delivery status</a>.</p>
 <h2>Historical packaging and Rust preview readiness notes</h2>
 <p>The remainder preserves earlier packaging observations and preview gap lists.
 Their host, version, runtime and installation limitations belong to those
