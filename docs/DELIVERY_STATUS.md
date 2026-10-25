@@ -1,12 +1,16 @@
 # git-next 固定交付清单与进度
 
-## 1.0.4 候选：最终本地门禁已完成（2026-10-25）
+## v1.0.4 已发布：本地验证的包交付范围（2026-10-25）
 
-五平台新包已完成构建及包检查。冻结正确性 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对，矩阵 SHA-256 为 8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f。目前仅剩最终 stage/校验和及一次整合发布，不表示 1.0.4 已发布或已在本机安装。
+五平台新包已完成构建及包检查。冻结正确性 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对，矩阵 SHA-256 为 8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f。最终 stage、校验和与一次整合 stable/latest 发布均已完成；不表示已执行 1.0.4 宿主安装验收。
 
 已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过、Rust preview full 100/100。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
 
-仅 terminal-native-desktop、terminal-rust-contracts、msi-user、msi-machine 四 lane 豁免；两项 live MSI 生命周期由实际四 MSI 载荷/表、隔离迁移和资源探针约束，不记为安装运行通过。四个 MSI 未签名。计划发布资产：[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)、[MSI 包策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)，正式发布前不声明已上线。以下 1.0.3 的完整 MSI、工作站与发布记录保留原产物身份，不能外推到 1.0.4。
+仅 terminal-native-desktop、terminal-rust-contracts、msi-user、msi-machine 四 lane 豁免；两项 live MSI 生命周期由实际四 MSI 载荷/表、隔离迁移和资源探针约束，不记为安装运行通过。四个 MSI 未签名。已发布资产：[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)、[MSI 包策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)，全部 API 资产摘要与五个匿名实际下载均已核验。以下 1.0.3 的完整 MSI、工作站与发布记录保留原产物身份，不能外推到 1.0.4。
+
+发布源码：`06b073593a5765ff4db204f7e454584990868881`；构建代码检查点：`3be06fa5bac1912ec7e77459830de4ebff055355`；native 源树：`845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155`。全部 **29** 个远端资产的名称、字节数和 SHA-256 一致，**28** 个资产列入 SHA256SUMS。已匿名 HTTPS 实际下载并核对五个资产，包括 Windows x64 用户级 MSI。四个 MSI 实际状态均为 **`NotSigned`**，摘要一致不代表发布者签名验证。[发布完成记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-1.0.4.json)。宿主 MSI 生命周期和 1.0.4 工作站安装仍未执行，两项终端门禁保持豁免。
+
+**以下段落保留发布前检查点的原文；其中 pending 仅表示当时状态。**
 
 **保留 r1 检查点与归档布局纠正。** 先前正确性 14 通过/4 豁免（239.890 秒）、性能 5/5（618.615 秒）仍保留在 [Git 历史](https://github.com/neko233-com/git-next/blob/4d61669ddf4276c52fd977f048ccb72218cd7805/docs/DELIVERY_STATUS.json)及原始本地报告中。r1 stage 随后因 Mac 候选包将 package.json 放在产品目录前缀下而拒绝，未发布。r3 在归档根放置相同载荷，保留相同 native core 源身份，并重新实际执行 Mac 51/P4/Python 0；新 r2 矩阵绑定该归档，14 项非豁免正确性及全部 5 项性能均完整重跑。此处纠正包布局，不改变 Git 存储，也不削弱 parser。最终 stage/发布仍待完成，1.0.4 安装运行验收仍为 false。
 
@@ -20,7 +24,7 @@ R8 已完成最终本地门禁：正确性 **16 通过、2 项指定终端豁免
 
 随后标准 R8 bootstrap 已在 **1,075.391 秒**完成，Windows x64 机器级工作站独立回读通过：**10,698/10,698 个不可变文件、1,362,711,981 字节**一致；检查 **10,714** 文件、Python 项 **0**；空 PATH 两路 owned P4 入口通过；SYSTEM updater task 已确认；首次安装前 fresh baseline 的 **12** 个个人配置文件 **0 变化**。四项必需结果为 immutable、Python 0、owned P4 dispatch、task/profile readback，工作站聚合 `release_gate=true`；没有运行后续终端/GUI 专项，不冒充真实 Mac 全宿主或 Windows ARM64 硬件生命周期验收。
 
-**[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 已正式发布并为官方 latest**，release ID 为 `422290807`，发布时间 `2026-10-23T20:44:12Z`（上海时间 2026-10-24 04:44:12）。发布源码为 `05dac2a938784ce03a2de219349c4d381a637ab5`；git-next、git-terminal 和父仓库的发布检查点均已推送并回读，不把后续文档提交当作发布二进制的新源码。最终五平台 stage、四个 MSI 表检查及五产品 Python 0 扫描通过；**28 个**远端资产哈希与本地发布全部一致，**27 个**资产列入 SHA256SUMS，SHA256SUMS 和验收证明均完成匿名公开下载核验。四个 MSI 的实际签名状态为 **`NotSigned`**，没有配置发布签名者，不声明密码学签名验证。[发布与工作站完成记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json) SHA-256 为 `305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b`。
+**[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 已正式发布、在该历史检查点为官方 latest**，release ID 为 `422290807`，发布时间 `2026-10-23T20:44:12Z`（上海时间 2026-10-24 04:44:12）。发布源码为 `05dac2a938784ce03a2de219349c4d381a637ab5`；git-next、git-terminal 和父仓库的发布检查点均已推送并回读，不把后续文档提交当作发布二进制的新源码。最终五平台 stage、四个 MSI 表检查及五产品 Python 0 扫描通过；**28 个**远端资产哈希与本地发布全部一致，**27 个**资产列入 SHA256SUMS，SHA256SUMS 和验收证明均完成匿名公开下载核验。四个 MSI 的实际签名状态为 **`NotSigned`**，没有配置发布签名者，不声明密码学签名验证。[发布与工作站完成记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json) SHA-256 为 `305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b`。
 
 本轮完成 Python 工具链退役。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。1.0.2 继续作为历史打包检查点记录。
 

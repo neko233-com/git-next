@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "status": "pass",
+  "product": "git-next",
+  "version": "1.0.4",
+  "tag": "v1.0.4",
+  "scope": "Verified consolidated stable publication and package-scoped local acceptance; no new installation or terminal testing",
+  "source_commit": "06b073593a5765ff4db204f7e454584990868881",
+  "built_source_commit": "3be06fa5bac1912ec7e77459830de4ebff055355",
+  "source_tree_sha256": "845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155",
+  "matrix_sha256": "8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f",
+  "published": true,
+  "draft": false,
+  "prerelease": false,
+  "latest_at_readback": true,
+  "release_id": 423412772,
+  "release_url": "https://github.com/neko233-com/git-next/releases/tag/v1.0.4",
+  "published_at_utc": "2026-10-25T14:13:25Z",
+  "asset_count": 29,
+  "checksum_asset_count": 28,
+  "all_remote_asset_names_sizes_digests_match": true,
+  "publication_manifest_sha256": "00fa42d9f9db96f536b8e1e8c22e63787dd7fb06ceca9a27f62c5888f2fcae52",
+  "publication_api_readback_sha256": "05af73cdfe4481b2e60c6296aae191a9b3b486ded19cdb69775479e5b8ab7fc1",
+  "public_download_readback_sha256": "6894bc800b4e824d0d46bb99a9215241be318c3650eebb1188a9227020973097",
+  "final_local_audit_sha256": "bfd93dbb366c09f5534963e3e2d619d75a3d477aa252985e838d2cc79a5befe2",
+  "release_acceptance_sha256": "9a0c1a4098f31271cabeec194e62fc51c2d3bc0c0bc20d7c89530810118bb8b0",
+  "assets": [
+    {
+      "name": "git-next-1.0.4-linux-arm64.tar.gz",
+      "bytes": 142175061,
+      "sha256": "bdb03a7729b4520504a8c704762eefead732cee573eb24422d4f163a9a143e00"
+    },
+    {
+      "name": "git-next-1.0.4-linux-x64.tar.gz",
+      "bytes": 147126677,
+      "sha256": "f4a72ec7fb2c8e28986cfd7ff56586e736fafbcf4bfae99f1548aa58ad0e576b"
+    },
+    {
+      "name": "git-next-1.0.4-macos-arm64.tar.gz",
+      "bytes": 132637863,
+      "sha256": "a0696ad4c3015c1e9748322c8a7002dc5927d2100a877ff29afe619291c1153d"
+    },
+    {
+      "name": "git-next-1.0.4-windows-arm64-user.msi",
+      "bytes": 189944292,
+      "sha256": "d2899b3fae96008608fafdeafee319717a6581d36f5d1ac90270def493e642db"
+    },
+    {
+      "name": "git-next-1.0.4-windows-arm64.msi",
+      "bytes": 190584201,
+      "sha256": "5f20983d2856b0e3cc22b30f4afabb34e78a155db028a8953c26257403e8c852"
+    },
+    {
+      "name": "git-next-1.0.4-windows-x64-user.msi",
+      "bytes": 146285208,
+      "sha256": "efa2fa35f3429e9540a75e4a2cf4a49c63206af225dc9e1d00d1a1f8ae77f025"
+    },
+    {
+      "name": "git-next-1.0.4-windows-x64.msi",
+      "bytes": 146822207,
+      "sha256": "9b49a8343c230503976a38e35c357ac6ccb33553c5e91bf13c87ff7dfd80c3a3"
+    },
+    {
+      "name": "git-next-corresponding-sources-core-and-producer-recipes.zip",
+      "bytes": 161029026,
+      "sha256": "712f2d405b91497354fa690d4c6351ea32bae7754ffde57a09ef015eb73710ab"
+    },
+    {
+      "name": "git-next-corresponding-sources-debian.zip",
+      "bytes": 366235738,
+      "sha256": "7383629686dd98211dbcb872f7c6acab41377ddd765e77c88c69422c93ea3c68"
+    },
+    {
+      "name": "git-next-corresponding-sources-homebrew.zip",
+      "bytes": 205445362,
+      "sha256": "791c782594417487d5775f3a9b5464267467abf6a34d48de31c6642b1e4bd67a"
+    },
+    {
+      "name": "git-next-corresponding-sources-msys2.zip",
+      "bytes": 774880829,
+      "sha256": "a50cb11613b0f854fe11054a2d4d83de327d9e0d1d0ffb735750f797fb8231d6"
+    },
+    {
+      "name": "git-next-update.json",
+      "bytes": 22831,
+      "sha256": "9f8efb4104728334e37dd19415e6f9e5a39dd6eb4f6930bbe2946c34fc719e3d"
+    },
+    {
+      "name": "install.ps1",
+      "bytes": 46748,
+      "sha256": "807856dc2ac23fe13408050e2328d18e4319489bbb0b1cc6452444f1afc122c3"
+    },
+    {
+      "name": "native-correctness.json",
+      "bytes": 11825,
+      "sha256": "71a9c01fe6020662e5be7bd5d4bbdbd37bb7e834fc7e29f1938719d025b40286"
+    },
+    {
+      "name": "native-game-final-1.0.4.json",
+      "bytes": 5538,
+      "sha256": "50ee691b0c27b5ede670a0f6392fced2bfb710328efaa0afadb6c218988b89ba"
+    },
+    {
+      "name": "native-game-resources-20261025.json",
+      "bytes": 84717,
+      "sha256": "d7b27c597a3d3d27c3a286fecbdfeecd0c248b96ac1e3e733e0302496b0b1a1d"
+    },
+    {
+      "name": "native-local-tooling-1.0.4.json",
+      "bytes": 15148,
+      "sha256": "20d15890db7cef2e2c351ee237af2989fba9621befd7ba1ee441f46d31bfda03"
+    },
+    {
+      "name": "native-package-validation-policy.json",
+      "bytes": 3820,
+      "sha256": "c2a412518d61668a341651cc372bac52f95ee8224bf0ed890088816874a7c40e"
+    },
+    {
+      "name": "native-package-validation-probes.json",
+      "bytes": 12376,
+      "sha256": "ef303a1eb392c7020fddd903ecf768264c2915c30c9992edfae5589162b83067"
+    },
+    {
+      "name": "native-performance.json",
+      "bytes": 7722,
+      "sha256": "15155435fd3d85d0e03d1ee521596c47190081fbb034098184b3789b3dc880e9"
+    },
+    {
+      "name": "native-release-acceptance.json",
+      "bytes": 18269,
+      "sha256": "9a0c1a4098f31271cabeec194e62fc51c2d3bc0c0bc20d7c89530810118bb8b0"
+    },
+    {
+      "name": "native-staged-integrity-1.0.4.json",
+      "bytes": 11623,
+      "sha256": "bfd93dbb366c09f5534963e3e2d619d75a3d477aa252985e838d2cc79a5befe2"
+    },
+    {
+      "name": "native-terminal-waiver.json",
+      "bytes": 1376,
+      "sha256": "c9fed559e5d6253e37410d85c9c5d4cc7f94aba248f3b69bce6568c9974f8993"
+    },
+    {
+      "name": "performance-1000.json",
+      "bytes": 5730,
+      "sha256": "d60301746dfe95961f09f706d4aadd5dc9a890a460c20dc8702116485e6e705d"
+    },
+    {
+      "name": "performance-10000.json",
+      "bytes": 5748,
+      "sha256": "f73fab35fdf9729134bca4aaf6e27f6e8a153864b11974f22327a3682ef96d54"
+    },
+    {
+      "name": "performance-100000.json",
+      "bytes": 5772,
+      "sha256": "dcd4def0217833c48dce90762fc315b914e036fb9500be916795fd23465c8756"
+    },
+    {
+      "name": "performance-network.json",
+      "bytes": 4554,
+      "sha256": "9bdf99105d0e89175a62805f5ffaf37c17f1de7a8673cff85824f392656d4ae9"
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 2754,
+      "sha256": "de1ee9517e35c7a2c46db6dd2d5f75a74501eb9f30b5157e0e0f4a421d69cb3e"
+    },
+    {
+      "name": "source-bundle-reuse-verification.json",
+      "bytes": 2878,
+      "sha256": "5e4111c583883e811ad23fb11a54b03670ab6f8f1546ff451071e1a1f51582ac"
+    }
+  ],
+  "public_downloads": {
+    "status": "pass",
+    "anonymous_https": true,
+    "assets_downloaded": 5,
+    "assets": [
+      {
+        "name": "SHA256SUMS",
+        "bytes": 2754,
+        "sha256": "de1ee9517e35c7a2c46db6dd2d5f75a74501eb9f30b5157e0e0f4a421d69cb3e",
+        "anonymous_http_status": 200,
+        "byte_identity": "pass"
+      },
+      {
+        "name": "git-next-update.json",
+        "bytes": 22831,
+        "sha256": "9f8efb4104728334e37dd19415e6f9e5a39dd6eb4f6930bbe2946c34fc719e3d",
+        "anonymous_http_status": 200,
+        "byte_identity": "pass"
+      },
+      {
+        "name": "native-release-acceptance.json",
+        "bytes": 18269,
+        "sha256": "9a0c1a4098f31271cabeec194e62fc51c2d3bc0c0bc20d7c89530810118bb8b0",
+        "anonymous_http_status": 200,
+        "byte_identity": "pass"
+      },
+      {
+        "name": "native-staged-integrity-1.0.4.json",
+        "bytes": 11623,
+        "sha256": "bfd93dbb366c09f5534963e3e2d619d75a3d477aa252985e838d2cc79a5befe2",
+        "anonymous_http_status": 200,
+        "byte_identity": "pass"
+      },
+      {
+        "name": "git-next-1.0.4-windows-x64-user.msi",
+        "bytes": 146285208,
+        "sha256": "efa2fa35f3429e9540a75e4a2cf4a49c63206af225dc9e1d00d1a1f8ae77f025",
+        "anonymous_http_status": 206,
+        "byte_identity": "pass",
+        "full_file_verified": true,
+        "http_range_count": 18
+      }
+    ],
+    "method": "Four metadata assets via HTTP 200; complete MSI assembled from eighteen verified HTTP 206 byte ranges; every full-file SHA256 and size matched the local publication manifest"
+  },
+  "correctness": {
+    "status": "pass-with-user-waiver",
+    "passed": 14,
+    "waived": 4,
+    "waived_cases": [
+      "msi-machine",
+      "msi-user",
+      "terminal-native-desktop",
+      "terminal-rust-contracts"
+    ],
+    "elapsed_seconds": 243.565,
+    "sha256": "71a9c01fe6020662e5be7bd5d4bbdbd37bb7e834fc7e29f1938719d025b40286",
+    "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json"
+  },
+  "performance": {
+    "status": "pass",
+    "passed": 5,
+    "elapsed_seconds": 640.668,
+    "local_pairs_per_command": 10,
+    "network_pairs_per_operation": 10,
+    "sha256": "15155435fd3d85d0e03d1ee521596c47190081fbb034098184b3789b3dc880e9",
+    "url": "https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json"
+  },
+  "product_python_entry_count": 0,
+  "product_count": 5,
+  "frozen_input_readback": "pass",
+  "final_download_package_count": 7,
+  "configured_msi_signing_identity": false,
+  "msi_signature_states": [
+    {
+      "asset": "git-next-1.0.4-windows-arm64-user.msi",
+      "status": "NotSigned",
+      "signer_present": false,
+      "cryptographic_signature_verified": false
+    },
+    {
+      "asset": "git-next-1.0.4-windows-arm64.msi",
+      "status": "NotSigned",
+      "signer_present": false,
+      "cryptographic_signature_verified": false
+    },
+    {
+      "asset": "git-next-1.0.4-windows-x64-user.msi",
+      "status": "NotSigned",
+      "signer_present": false,
+      "cryptographic_signature_verified": false
+    },
+    {
+      "asset": "git-next-1.0.4-windows-x64.msi",
+      "status": "NotSigned",
+      "signer_present": false,
+      "cryptographic_signature_verified": false
+    }
+  ],
+  "configuration_experiment": {
+    "path": "docs/benchmarks/native-game-resources-20261025.json",
+    "sha256": "d7b27c597a3d3d27c3a286fecbdfeecd0c248b96ac1e3e733e0302496b0b1a1d",
+    "profiled_native_version": "1.0.3",
+    "profiled_binary_is_final_candidate": false,
+    "unchanged": true
+  },
+  "current_functional_matrix": {
+    "default_count": 31,
+    "actual_default_behavior_checks": 24,
+    "multi_project_passed_cases": 33,
+    "tracked_paths": 805,
+    "git_calls": 489,
+    "large_lfs_passed_cases": 5,
+    "rust_preview_full_passed_cases": 100,
+    "rust_complete_git_parity": false
+  },
+  "host_msi_lifecycle_executed": false,
+  "installation_runtime_accepted": false,
+  "workstation_version_1_0_4_installed": false,
+  "terminal_executed": false,
+  "historical_release_evidence_version": "1.0.3",
+  "historical_checkpoint_pending_flags_preserved": true,
+  "product_code_changed_by_this_step": false,
+  "product_tests_executed_by_this_step": false,
+  "html_render_required_after_apply": true,
+  "verified_at_utc": "2026-10-25T14:14:45Z"
+}
