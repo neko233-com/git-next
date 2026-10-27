@@ -314,6 +314,11 @@ function Assert-GnMsi([string]$Path, $Entry) {
     }
 }
 
+function Set-GnCurrentVersion($State,$Installed) {
+    $State.version = $Installed.version
+    $State.result = 'current'
+}
+
 function Test-GnBusy([string]$InstallRoot) {
     $prefix = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\') + '\'
     $workerPath = Join-Path $InstallRoot 'updater\msi-worker.exe'
@@ -429,4 +434,4 @@ function Assert-GnInstalledFiles([string]$InstallRoot, $Package) {
     }
 }
 
-Export-ModuleMember -Function Test-GnMissingTaskError,Get-GnMessage,Assert-GnOwnedPath,Write-GnJson,ConvertTo-GnVersion,Test-GnNewer,New-GnHttpClient,Get-GnOfficialPlan,Get-GnDownloadOrder,Save-GnVerifiedPackage,Assert-GnMsi,Assert-GnInstalledFiles,Test-GnBusy,Set-GnUpdateTask,Get-GnInstallScope,Test-GnAdministrator,Get-GnMachineDataRoot,Assert-GnProtectedObject,Initialize-GnMachineDirectory,Assert-GnMachineInstall,Get-GnScopeContext,Assert-GnScopedFile,Open-GnNewFile,Open-GnExclusiveLock,New-GnOutputParent,Set-GnMachinePublicObject,Initialize-GnRuntimeConfiguration,Start-GnRuntimeConfigTransaction,Restore-GnRuntimeConfigTransaction,Complete-GnRuntimeConfigTransaction,Get-GnRuntimeConfigHash,Assert-GnRuntimeConfigPath
+Export-ModuleMember -Function Set-GnCurrentVersion,Test-GnMissingTaskError,Get-GnMessage,Assert-GnOwnedPath,Write-GnJson,ConvertTo-GnVersion,Test-GnNewer,New-GnHttpClient,Get-GnOfficialPlan,Get-GnDownloadOrder,Save-GnVerifiedPackage,Assert-GnMsi,Assert-GnInstalledFiles,Test-GnBusy,Set-GnUpdateTask,Get-GnInstallScope,Test-GnAdministrator,Get-GnMachineDataRoot,Assert-GnProtectedObject,Initialize-GnMachineDirectory,Assert-GnMachineInstall,Get-GnScopeContext,Assert-GnScopedFile,Open-GnNewFile,Open-GnExclusiveLock,New-GnOutputParent,Set-GnMachinePublicObject,Initialize-GnRuntimeConfiguration,Start-GnRuntimeConfigTransaction,Restore-GnRuntimeConfigTransaction,Complete-GnRuntimeConfigTransaction,Get-GnRuntimeConfigHash,Assert-GnRuntimeConfigPath

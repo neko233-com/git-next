@@ -56,6 +56,9 @@ try {
     $env:GIT_NEXT_LANGUAGE = 'english'
     $env:GIT_NEXT_CONFIG_HOME = Join-Path $temporary 'config'
     Check 'stable version ordering' (Test-GnNewer '1.2.0' '1.1.9')
+    $stateFixture = @{version='1.0.3';result='deferred-busy'}
+    Set-GnCurrentVersion $stateFixture ([pscustomobject]@{version='1.0.4'})
+    Check 'current status reflects a separately upgraded installed version' ($stateFixture.version -ceq '1.0.4' -and $stateFixture.result -ceq 'current')
     & (Get-Module Update.Core) {
         param($FixtureRoot)
         $busyRoot=Join-Path $FixtureRoot 'literal-process-names'

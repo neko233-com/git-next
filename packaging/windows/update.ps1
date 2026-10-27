@@ -178,8 +178,8 @@ try {
     Assert-GnInstalledFiles $installRoot $installed
     $client = New-GnHttpClient
     $plan = Get-GnOfficialPlan $client $installed
-    if ($Mode -eq 'Check') { Write-GnPublicCheck $plan; $state.result = if ($plan.Newer) { 'available' } else { 'current' }; Write-GnJson $statePath $state; return }
-    if (-not $plan.Newer) { $state.result = 'current'; Write-GnJson $statePath $state; if ($Mode -ne 'Scheduled') { Write-GnPublicState $state }; return }
+    if ($Mode -eq 'Check') { Write-GnPublicCheck $plan; if ($plan.Newer) { $state.result = 'available' } else { Set-GnCurrentVersion $state $installed }; Write-GnJson $statePath $state; return }
+    if (-not $plan.Newer) { Set-GnCurrentVersion $state $installed; Write-GnJson $statePath $state; if ($Mode -ne 'Scheduled') { Write-GnPublicState $state }; return }
     if (Test-GnBusy $installRoot) { $state.result = 'deferred-busy'; Write-GnJson $statePath $state; if ($Json) { $state | ConvertTo-Json }; return }
     $download = Assert-GnOwnedPath $stateRoot (Join-Path $stateRoot ([Guid]::NewGuid().ToString('N') + '.msi'))
     $transport = Save-GnVerifiedPackage $client $plan $download
