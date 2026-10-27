@@ -316,6 +316,13 @@ function Assert-GnMsi([string]$Path, $Entry) {
 
 function Test-GnBusy([string]$InstallRoot) {
     $prefix = [IO.Path]::GetFullPath($InstallRoot).TrimEnd('\') + '\'
+    $workerPath = Join-Path $InstallRoot 'updater\msi-worker.exe'
+    $workerId = 0
+    try {
+        $self = Get-CimInstance -ClassName Win32_Process -Filter ("ProcessId = {0}" -f $PID) -ErrorAction Stop
+        $parent = Get-CimInstance -ClassName Win32_Process -Filter ("ProcessId = {0}" -f $self.ParentProcessId) -ErrorAction Stop
+        if ($parent -and $parent.ExecutablePath -and $parent.ExecutablePath -ieq $workerPath) { $workerId = [int]$parent.ProcessId }
+    } catch { }
     $names = @('git','git-next','git-terminal','git-lfs','git-next-lfs-filter')
     $packagePath = Assert-GnOwnedPath $InstallRoot (Join-Path $InstallRoot 'package.json')
     if ([IO.File]::Exists($packagePath)) {
@@ -326,8 +333,16 @@ function Test-GnBusy([string]$InstallRoot) {
     }
     $patterns = @($names | Sort-Object -Unique | ForEach-Object { [WildcardPattern]::Escape($_) })
     foreach ($process in @(Get-Process -Name $patterns -ErrorAction SilentlyContinue)) {
-        try { $path = $process.MainModule.FileName }
-        catch { return $true }
+        if ($workerId -and $process.Id -eq $workerId) { continue }
+        $path = $null
+        try { $path = $process.MainModule.FileName } catch { }
+        if (-not $path) {
+            try {
+                $detail = Get-CimInstance -ClassName Win32_Process -Filter ("ProcessId = {0}" -f $process.Id) -ErrorAction Stop
+                if (-not $detail) { continue }
+                $path = $detail.ExecutablePath
+            } catch { return $true }
+        }
         if (-not $path -or $path.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) { return $true }
     }
     return $false

@@ -75,6 +75,8 @@ The native MSI now defaults to `--scope machine`; `--scope user` retains the ori
 
 The source CLI exposes `git update check|apply|status|enable|disable [--json]`. `apply` queues the registered worker and reports `queued`, not an installed version. The worker lets the requesting CLI exit before its ordinary busy check. Both scopes accept task requests; machine users can check/read status/request an update, while changing machine update policy requires an administrator. The legacy `git update-git-for-windows` entrypoint supports yes/quiet/GUI prompts and the existing 0/1/2 current/declined/started exit convention, but downloads git-next. The producer updater is excluded. Windows updater contracts and Linux runtime/race checks passed locally. The v0.3.0 Mac scope was package/Mach-O/shell static validation; 1.0.3 additionally has the actual Mac CLI/runtime evidence described above, without inferring a full host update-service lifecycle.
 
+The busy check resolves processes whose module path is unavailable through Windows process metadata, and continues to defer when a live process cannot be identified. It ignores only the current script's verified parent updater worker; other processes in the installation still block an upgrade.
+
 ## Compatibility, storage and rollback report
 
 ### Same-directory takeover recovery · R8 local gates passed

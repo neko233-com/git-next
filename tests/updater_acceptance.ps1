@@ -63,20 +63,39 @@ try {
         Write-GnJson (Join-Path $busyRoot 'package.json') @{files=@{'usr/bin/[.exe'='fixture';'bin/git.exe'='fixture';'bin/q?.exe'='fixture'}}
         $script:processFixtureRoot=$busyRoot
         $script:processFixtureOwn=$false
+        $script:processFixtureKind='normal'
+        function Get-CimInstance {
+            param($ClassName,$Filter,$ErrorAction)
+            if ($Filter -eq "ProcessId = $PID") { return [pscustomobject]@{ParentProcessId=1234} }
+            if ($Filter -eq 'ProcessId = 1234') { return [pscustomobject]@{ProcessId=1234;ExecutablePath=(Join-Path $script:processFixtureRoot 'updater/msi-worker.exe')} }
+            if ($script:processFixtureKind -eq 'unresolved') { return [pscustomobject]@{ExecutablePath=$null} }
+            return [pscustomobject]@{ExecutablePath='C:\unrelated\git.exe'}
+        }
         function Get-Process {
             param([string[]]$Name,$ErrorAction)
             foreach($pattern in $Name) { [void][WildcardPattern]::new($pattern) }
             if (-not ($Name -contains '`[') -or -not ($Name -contains 'q`?')) { throw 'Executable names were not escaped literally.' }
             $path=if($script:processFixtureOwn){Join-Path $script:processFixtureRoot 'bin/git.exe'}else{'C:\unrelated\git.exe'}
-            [pscustomobject]@{MainModule=[pscustomobject]@{FileName=$path}}
+            if ($script:processFixtureKind -eq 'worker') { return [pscustomobject]@{Id=1234;MainModule=[pscustomobject]@{FileName=(Join-Path $script:processFixtureRoot 'updater/msi-worker.exe')}} }
+            if ($script:processFixtureKind -eq 'other-worker') { return [pscustomobject]@{Id=4321;MainModule=[pscustomobject]@{FileName=(Join-Path $script:processFixtureRoot 'updater/msi-worker.exe')}} }
+            if ($script:processFixtureKind -in @('fallback','unresolved')) { $path=$null }
+            [pscustomobject]@{Id=4321;MainModule=[pscustomobject]@{FileName=$path}}
         }
         try {
             if(Test-GnBusy $busyRoot){throw 'Unrelated process blocked the update.'}
             $script:processFixtureOwn=$true
             if(-not(Test-GnBusy $busyRoot)){throw 'Owned running process was not detected.'}
-        } finally { Remove-Item Function:Get-Process;Remove-Variable processFixtureRoot,processFixtureOwn -Scope Script }
+            $script:processFixtureKind='fallback'
+            if(Test-GnBusy $busyRoot){throw 'A resolved unrelated process blocked the update.'}
+            $script:processFixtureKind='unresolved'
+            if(-not(Test-GnBusy $busyRoot)){throw 'An unresolved running process was not treated as busy.'}
+            $script:processFixtureKind='worker'
+            if(Test-GnBusy $busyRoot){throw 'The current updater worker blocked itself.'}
+            $script:processFixtureKind='other-worker'
+            if(-not(Test-GnBusy $busyRoot)){throw 'A different owned updater worker was not detected.'}
+        } finally { Remove-Item Function:Get-Process,Function:Get-CimInstance;Remove-Variable processFixtureRoot,processFixtureOwn,processFixtureKind -Scope Script }
     } $temporary
-    Check 'literal wildcard executable names and owned busy-process detection' $true
+    Check 'literal names, process path fallback, updater parent and owned busy detection' $true
     Check 'stable replaces same preview' (Test-GnNewer '1.2.0' '1.2.0-dev')
     Check 'equal version is unchanged' (-not (Test-GnNewer '1.2.0' '1.2.0'))
     Check 'downgrade refused by ordering' (-not (Test-GnNewer '1.1.9' '1.2.0'))
