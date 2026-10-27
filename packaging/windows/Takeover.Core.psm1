@@ -287,7 +287,10 @@ function Get-GnSameDirectoryStale($Package,[string]$PackageSha256,$Files) {
     foreach ($property in $Package.files.PSObject.Properties) { $owned[$property.Name.Replace('\','/')] = $property.Value }
     $stale = [Collections.Generic.List[object]]::new()
     foreach ($file in @($Files)) {
-        if (-not $owned.ContainsKey($file.relative.Replace('\','/'))) { $stale.Add($file) }
+        $relative = $file.relative.Replace('\','/')
+        # Active runtime configuration is mutable and is not part of the MSI inventory.
+        if ($relative -match '^runtime/(?:etc|usr/etc|mingw64/etc|clangarm64/etc)/') { continue }
+        if (-not $owned.ContainsKey($relative)) { $stale.Add($file) }
     }
     return $stale.ToArray()
 }
@@ -316,6 +319,7 @@ function Remove-GnSameDirectoryStale($Plan) {
     $stale = Get-GnMigrationFileIndex $Plan.stale
     foreach ($file in @(Get-GnTree $Plan.original_root)) {
         $relative = $file.relative.Replace('\','/')
+        if ($relative -match '^runtime/(?:etc|usr/etc|mingw64/etc|clangarm64/etc)/') { continue }
         if ($relative -ieq 'package.json' -or -not $stale.ContainsKey($relative) -or -not $stale[$relative] -or $stale[$relative].sha256 -cne $file.sha256) { continue }
         $target = Assert-GnOwnedPath $Plan.original_root (Join-Path $Plan.original_root $file.relative)
         if ((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash.ToLowerInvariant() -cne $stale[$relative].sha256) { continue }

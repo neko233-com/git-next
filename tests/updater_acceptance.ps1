@@ -208,6 +208,16 @@ try {
             Restore-GnRuntimeConfigTransaction $install $package $transaction
             Complete-GnRuntimeConfigTransaction $install $package $transaction
             if ([IO.File]::Exists($active)) { throw 'Runtime rollback retained a newly created default.' }
+            Initialize-GnRuntimeConfiguration $install $package
+            Complete-GnRuntimeConfigTransaction $install $package $transaction
+            [IO.File]::Delete($active)
+            Initialize-GnRuntimeConfiguration $install $package
+            if ((Get-GnRuntimeConfigHash $active) -cne $payloadHash) { throw 'An upgrade did not restore the missing active default.' }
+            Complete-GnRuntimeConfigTransaction $install $package $transaction
+            [IO.File]::WriteAllText($active,'user configuration')
+            Initialize-GnRuntimeConfiguration $install $package
+            if ([IO.File]::ReadAllText($active) -cne 'user configuration') { throw 'An upgrade overwrote user configuration.' }
+            Complete-GnRuntimeConfigTransaction $install $package $transaction
         } finally {
             Set-Item -Path Function:script:Get-GnScopeContext -Value $scopeFunction
             Remove-Variable -Name runtimeFixtureContext -Scope Script

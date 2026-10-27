@@ -21,6 +21,8 @@ try {
     $backup = Join-Path $fixture 'payload-snapshot'
     [void][IO.Directory]::CreateDirectory((Join-Path $same 'bin'))
     [void][IO.Directory]::CreateDirectory((Join-Path $same 'runtime'))
+    [void][IO.Directory]::CreateDirectory((Join-Path $same 'runtime/etc'))
+    [IO.File]::WriteAllText((Join-Path $same 'runtime/etc/fstab'),"none /tmp usertemp binary,posix=0 0 0`n")
     $image = [byte[]]::new(256)
     $image[0]=77; $image[1]=90; $image[60]=64; $image[64]=80; $image[65]=69; $image[156]=3
     [IO.File]::WriteAllBytes((Join-Path $same 'bin/git.exe'),$image)
@@ -47,10 +49,11 @@ try {
     [IO.File]::WriteAllText((Join-Path $same 'new-unowned.dat'),'new outside takeover')
     $duplicate=@($stale | Where-Object relative -ceq 'legacy-duplicate.dat')[0]
     $self=@($files | Where-Object relative -ceq 'package.json')[0]
-    $plan.stale=@($stale)+@($duplicate,$self)
+    $active=@($files | Where-Object relative -ceq 'runtime/etc/fstab')[0]
+    $plan.stale=@($stale)+@($duplicate,$self,$active)
     & $module {param($plan) Remove-GnSameDirectoryStale $plan} $plan
     if ([IO.File]::Exists((Join-Path $same 'legacy-remove.dat'))) { throw 'An unchanged unique stale file was not removed.' }
-    foreach ($name in @('package.json','bin/git.exe','legacy-changed.dat','legacy-duplicate.dat','new-unowned.dat')) {
+    foreach ($name in @('package.json','bin/git.exe','runtime/etc/fstab','legacy-changed.dat','legacy-duplicate.dat','new-unowned.dat')) {
         if (-not [IO.File]::Exists((Join-Path $same $name))) { throw 'Guarded stale removal deleted preserved data.' }
     }
     $cases++
