@@ -126,11 +126,15 @@ func writePackagePolicyFixture(t *testing.T, policy, probe record, path string) 
 }
 
 func TestPackageValidationPolicyBindsOnlyUserAuthorizedExactPackagesAndCompleteProbes(t *testing.T) {
-	for _, mode := range []string{"valid", "no authorization", "not user", "no reason", "wrong matrix", "wrong source", "extra case", "missing case", "duplicate case", "wrong package bytes", "changed package", "changed source", "wrong probe bytes", "missing probe", "probe failed", "partial probe", "static not executed", "static wrong bytes", "migration partial", "migration installed", "resource failed", "resource partial", "resource wrong render", "duplicate resource", "readback failed", "fake installation pass", "unknown field", "private path"} {
+	for _, mode := range []string{"valid", "valid explicit authorization", "incomplete explicit authorization", "no authorization", "not user", "no reason", "wrong matrix", "wrong source", "extra case", "missing case", "duplicate case", "wrong package bytes", "changed package", "changed source", "wrong probe bytes", "missing probe", "probe failed", "partial probe", "static not executed", "static wrong bytes", "migration partial", "migration installed", "resource failed", "resource partial", "resource wrong render", "duplicate resource", "readback failed", "fake installation pass", "unknown field", "private path"} {
 		t.Run(mode, func(t *testing.T) {
 			a, matrix, identity, policy, probe, path := packagePolicyFixture(t)
 			rows, _ := caseResults(probe)
 			switch mode {
+			case "valid explicit authorization":
+				policy["authorization"] = "接受 Docker、交叉编译和安装包验证，明确豁免 MSI 用户级与机器级生命周期测试"
+			case "incomplete explicit authorization":
+				policy["authorization"] = "接受 Docker、交叉编译和安装包验证，明确豁免 MSI 用户级生命周期测试"
 			case "no authorization":
 				delete(policy, "authorization")
 			case "not user":
@@ -200,7 +204,7 @@ func TestPackageValidationPolicyBindsOnlyUserAuthorizedExactPackagesAndCompleteP
 				}
 			}
 			got, e := readNativePackagePolicy(a, path, matrix, identity)
-			if (e == nil) != (mode == "valid") {
+			if (e == nil) != (mode == "valid" || mode == "valid explicit authorization") {
 				t.Fatalf("mode=%s error=%v", mode, e)
 			}
 			if got != nil {

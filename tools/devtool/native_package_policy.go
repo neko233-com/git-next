@@ -300,7 +300,9 @@ func readNativePackagePolicy(a *app, path string, matrix record, identity string
 		}
 	}
 	authorization := strings.ToLower(strings.Join(strings.Fields(stringValue(v, "authorization")), ""))
-	if number(v, "schema_version") != 1 || v["kind"] != "package-validation-policy" || v["authorized_by"] != "user" || !strings.Contains(authorization, "docker验证打包就可") || !strings.Contains(authorization, "不需要本机完全验证真实环境") || strings.TrimSpace(stringValue(v, "reason")) == "" || v["installation_runtime_accepted"] != false || v["matrix_sha256"] != identity || !regexp.MustCompile(`^[a-f0-9]{64}$`).MatchString(identity) || v["source_tree_sha256"] != matrix["source_tree_sha256"] {
+	legacyAuthorization := strings.Contains(authorization, "docker验证打包就可") && strings.Contains(authorization, "不需要本机完全验证真实环境")
+	explicitAuthorization := authorization == "接受docker、交叉编译和安装包验证，明确豁免msi用户级与机器级生命周期测试"
+	if number(v, "schema_version") != 1 || v["kind"] != "package-validation-policy" || v["authorized_by"] != "user" || !(legacyAuthorization || explicitAuthorization) || strings.TrimSpace(stringValue(v, "reason")) == "" || v["installation_runtime_accepted"] != false || v["matrix_sha256"] != identity || !regexp.MustCompile(`^[a-f0-9]{64}$`).MatchString(identity) || v["source_tree_sha256"] != matrix["source_tree_sha256"] {
 		return nil, fmt.Errorf("explicit user package-validation authorization bound to this exact matrix required")
 	}
 	seen := map[string]bool{}

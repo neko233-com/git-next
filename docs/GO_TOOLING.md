@@ -123,6 +123,7 @@ the four MSI packages and their receipts/manifests by name, size and SHA-256.
 run isolated migration-contract fixtures and all six common resource-behavior
 probes. The policy pins that successful report and its relevant source identities.
 Changed inputs, incomplete probes and any additional waived case are rejected.
+The policy also accepts the explicit user selection “接受 Docker、交叉编译和安装包验证，明确豁免 MSI 用户级与机器级生命周期测试”; it records that exact selection rather than substituting an older authorization. This does not waive workstation installation or its requested verification.
 
 All original correctness rows remain present. The two MSI transaction rows are
 `waived`, with `installation_runtime_accepted: false`; package checks do not become
