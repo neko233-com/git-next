@@ -119,7 +119,8 @@ void WINAPI worker_entry(void)
             status = GetLastError();
             if (status != ERROR_DLL_INIT_FAILED || attempt) break;
         } else {
-            DWORD wait = WaitForSingleObject(process.hProcess, 300000);
+            /* Never kill an updater while Windows Installer owns a transaction. */
+            DWORD wait = WaitForSingleObject(process.hProcess, equal(mode, L"Scheduled") ? INFINITE : 300000);
             if (wait == WAIT_OBJECT_0) {
                 if (!GetExitCodeProcess(process.hProcess, &status)) status = GetLastError();
             } else {

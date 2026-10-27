@@ -77,6 +77,8 @@ The source CLI exposes `git update check|apply|status|enable|disable [--json]`. 
 
 The busy check resolves processes whose module path is unavailable through Windows process metadata, and continues to defer when a live process cannot be identified. It ignores only the current script's verified parent updater worker; other processes in the installation still block an upgrade.
 
+Scheduled updates are not terminated by a fixed worker or Task Scheduler deadline while an MSI transaction is running. HTTP requests retain their own timeouts, and the updater lock prevents concurrent update attempts.
+
 ## Compatibility, storage and rollback report
 
 ### Same-directory takeover recovery · R8 local gates passed

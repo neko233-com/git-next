@@ -387,7 +387,8 @@ function Set-GnUpdateTask([string]$InstallRoot, [string]$StateRoot, [string]$Pla
     $definition.Settings.DisallowStartIfOnBatteries = $false
     $definition.Settings.StopIfGoingOnBatteries = $false
     $definition.Settings.MultipleInstances = 2
-    $definition.Settings.ExecutionTimeLimit = 'PT20M'
+    # An MSI transaction must not be killed by the scheduled-task deadline.
+    $definition.Settings.ExecutionTimeLimit = 'PT0S'
     $daily = $definition.Triggers.Create(2)
     $daily.StartBoundary = [DateTime]::Now.AddMinutes(5).ToString('yyyy-MM-ddTHH:mm:ss')
     $daily.DaysInterval = 1
