@@ -18,7 +18,7 @@ import (
 )
 
 func init() {
-	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix? terminal-waiver package-validation-policy", prepareNativeRelease)
+	register("prepare-native-release", "Stage one five-platform release after immutable correctness/performance gates", "native-packages correctness performance destination wix git source-commit windows-runtime-acl-fix windows-tls-rename-fix? terminal-waiver package-validation-policy keep-staging?", prepareNativeRelease)
 }
 func resultCases(gate record, expected []string) error {
 	want := map[string]bool{}
@@ -419,12 +419,19 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 	}
 	platforms := record{}
 	finalPackages := record{}
+	var distributionsInfo os.FileInfo
 	for _, platform := range sortedKeys(platformsInput) {
 		item := rec(platformsInput[platform])
 		if strings.HasPrefix(platform, "windows-") {
 			target := filepath.Join(out, "distributions", platform)
 			if e = copyRuntimeTree(stringValue(item, "directory"), target); e != nil {
 				return e
+			}
+			if distributionsInfo == nil {
+				distributionsInfo, e = ownedDirectory(filepath.Join(out, "distributions"))
+				if e != nil {
+					return e
+				}
 			}
 			manifestPath := filepath.Join(target, "git-next-distribution.json")
 			manifest, e := load(manifestPath)
@@ -692,6 +699,11 @@ func prepareNativeRelease(a *app, o options) (releaseErr error) {
 	}
 	if e = packagePolicy.unchanged(); e != nil {
 		return e
+	}
+	if distributionsInfo != nil && !o.yes("keep-staging") {
+		if e = removeOwnedChild(out, filepath.Join(out, "distributions"), distributionsInfo); e != nil {
+			return fmt.Errorf("release completed but temporary distribution cleanup failed: %w", e)
+		}
 	}
 	return a.json(record{"status": "release-staged-not-published", "source_commit": o.get("source-commit"), "platforms": len(platforms), "assets": len(assets)})
 }

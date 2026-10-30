@@ -43,6 +43,14 @@ unavailable metrics; process-budget failures and timeouts are failed samples.
 `runProcess` returns an identifiable context error on deadline rather than
 misclassifying a killed process as an ordinary command exit.
 
+Resource benchmarks remove their owned fixture directory after a successful run
+and keep the JSON report. Failed runs retain fixtures for diagnosis; pass
+`--keep-fixtures` to retain successful fixtures deliberately. The native release
+preparation command removes its copied `distributions` staging tree after all
+packages and acceptance readbacks succeed, while preserving release assets and
+reports; `--keep-staging` retains it for inspection. Failed preparations retain
+their staging data. Each cleanup verifies ownership and its resolved parent.
+
 ## Acceptance layers
 
 For the already published v1.0.3 delivery, the user's 2026-10-25 instruction accepts

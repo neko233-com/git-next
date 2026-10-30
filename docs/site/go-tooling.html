@@ -33,6 +33,13 @@ Reports distinguish Windows job committed-memory peaks, Linux samples and
 unavailable metrics; process-budget failures and timeouts are failed samples.
 <code>runProcess</code> returns an identifiable context error on deadline rather than
 misclassifying a killed process as an ordinary command exit.</p>
+<p>Resource benchmarks remove their owned fixture directory after a successful run
+and keep the JSON report. Failed runs retain fixtures for diagnosis; pass
+<code>--keep-fixtures</code> to retain successful fixtures deliberately. The native release
+preparation command removes its copied <code>distributions</code> staging tree after all
+packages and acceptance readbacks succeed, while preserving release assets and
+reports; <code>--keep-staging</code> retains it for inspection. Failed preparations retain
+their staging data. Each cleanup verifies ownership and its resolved parent.</p>
 <h2>Acceptance layers</h2>
 <p>For the already published v1.0.3 delivery, the user's 2026-10-25 instruction accepts
 Docker validation, cross-compilation and package/layout/checksum evidence without

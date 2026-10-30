@@ -691,6 +691,10 @@ func benchmarkGameResources(a *app, o options) (returned error) {
 	if e = os.Mkdir(work, 0700); e != nil {
 		return e
 	}
+	owned, e := ownedDirectory(work)
+	if e != nil {
+		return e
+	}
 	started := time.Now()
 	report := record{"schema_version": 1, "status": "running", "scope": "Same native Git bytes; isolated two Unity/two Unreal generated repositories per configuration; sequential and four-way concurrent raw Git object/status resource comparison", "os": runtime.GOOS, "arch": runtime.GOARCH, "projects_per_profile": projects, "text_files_per_repository": files, "binary_asset_mib_per_revision": assetMiB, "asset_files_per_repository": assetFiles, "asset_revisions": 2, "logical_asset_history_bytes_per_repository": int64(assetFiles) * int64(assetMiB) << 21, "samples": samples, "phase_timeout_seconds": seconds, "fixtures_retained": true, "fixture_directory_basename": filepath.Base(work), "personal_repositories_accessed": false, "personal_configuration_accessed": false, "terminal_executed": false, "lfs_transfer_executed": false, "common_safety_overrides": []string{"isolated hooks/templates", "gc.auto=0", "maintenance.auto=false", "core.longpaths=true", "commit.gpgsign=false", "tag.gpgsign=false"}, "memory_boundary": "Windows kernel whole-job peak commit is not RSS; Linux sampled sum of owned-session RSS counts shared pages per process and may miss short-lived peaks; macOS RSS unavailable with root-group-only cleanup; no cross-platform total-RSS or universal speedup claim", "cache_boundary": "Equivalent independent seed copies; normal per-profile index/object caches retained between samples; OS cache is not flushed and paired repacks may produce different equivalent pack bytes"}
 	phases := []gameResourcePhase{}
@@ -712,9 +716,7 @@ func benchmarkGameResources(a *app, o options) (returned error) {
 			}
 		}
 		report["seconds"], report["phases"] = time.Since(started).Seconds(), phases
-		if e := writeNewJSON(output, report); e != nil {
-			returned = errors.Join(returned, e)
-		}
+		returned = finishBenchmarkReport(output, work, owned, report, returned, o.yes("keep-fixtures"))
 	}()
 	inputs := map[string]string{"binary": binary}
 	identities := record{}
@@ -888,7 +890,7 @@ func benchmarkGameResources(a *app, o options) (returned error) {
 }
 
 func init() {
-	register("benchmark-game-resources", "Compare isolated four-project Git resource phases with full process-tree accounting", "output baseline-config candidate-config projects files asset-mib asset-files samples phase-timeout process-limit job-memory-mib", benchmarkGameResources)
+	register("benchmark-game-resources", "Compare isolated four-project Git resource phases with full process-tree accounting", "output baseline-config candidate-config projects files asset-mib asset-files samples phase-timeout process-limit job-memory-mib keep-fixtures?", benchmarkGameResources)
 }
 
 // Sort metric records without implying that unavailable measurements are zero.

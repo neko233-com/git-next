@@ -3,7 +3,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -91,6 +90,10 @@ func benchmarkGameLFSResources(a *app, o options) (returned error) {
 	if e = os.Mkdir(work, 0700); e != nil {
 		return e
 	}
+	owned, e := ownedDirectory(work)
+	if e != nil {
+		return e
+	}
 	start := time.Now()
 	report := record{"schema_version": 1, "status": "running", "scope": "Whole-controller plus fixture plus Git/LFS resource comparison of complete two-project streamed acceptance, including corrupt-download and rejected-upload detection/recovery", "projects": 2, "assets_per_project": assets, "asset_mib": assetMiB, "samples_per_profile": samples, "phase_timeout_seconds": seconds, "fixtures_retained_on_failure": true, "fixture_directory_basename": filepath.Base(work), "terminal_executed": false, "personal_configuration_accessed": false, "memory_scope": "Windows whole-job peak commit, not RSS; Linux sampled owned-process-group sum RSS; macOS unavailable; no total-RSS or universal-speedup promise"}
 	phases := []gameResourcePhase{}
@@ -108,7 +111,7 @@ func benchmarkGameLFSResources(a *app, o options) (returned error) {
 			report["status"], report["error"] = "fail", returned.Error()
 		}
 		report["seconds"], report["phases"] = time.Since(start).Seconds(), phases
-		returned = errors.Join(returned, writeNewJSON(output, report))
+		returned = finishBenchmarkReport(output, work, owned, report, returned, o.yes("keep-fixtures"))
 	}()
 	argv := toolCommand("native-game-lfs-stream-acceptance")
 	controller := argv[0]
@@ -207,5 +210,5 @@ func benchmarkGameLFSResources(a *app, o options) (returned error) {
 }
 
 func init() {
-	register("benchmark-game-lfs-resources", "Measure full streamed LFS acceptance process trees in AB/BA order", "output baseline-config candidate-config samples assets asset-mib phase-timeout job-memory-mib", benchmarkGameLFSResources)
+	register("benchmark-game-lfs-resources", "Measure full streamed LFS acceptance process trees in AB/BA order", "output baseline-config candidate-config samples assets asset-mib phase-timeout job-memory-mib keep-fixtures?", benchmarkGameLFSResources)
 }
