@@ -9,6 +9,10 @@ env:
 
 vars:
   CLI_BIN: '{{if eq OS "windows"}}target/release/git.exe{{else}}target/release/git{{end}}'
+  # Current-platform release asset; cross-platform packaging is available by
+  # passing an explicit platform to `package-release` (windows-x64, linux-x64,
+  # linux-arm64, macos-arm64).
+  RELEASE_PLATFORM: '{{if eq OS "windows"}}windows-x64{{else if eq OS "linux"}}{{if eq ARCH "arm64"}}linux-arm64{{else}}linux-x64{{end}}{{else if eq OS "darwin"}}macos-arm64{{else}}windows-x64{{end}}'
 
 tasks:
   default:
@@ -85,6 +89,13 @@ tasks:
     cmds:
       - go -C tools/devtool run . build-go-client
 
+  package:release:
+    desc: Package a CGO-free distributable archive for the current platform (no upload, no tag)
+    cmds:
+      - task: no-cgo
+      - task: build
+      - go -C tools/devtool run . package-release {{.RELEASE_PLATFORM}}
+
   accept:l0:
     desc: CLI acceptance, L0 merge/tag gate
     deps: [build]
@@ -127,16 +138,25 @@ tasks:
       - task: docs:react:test
       - task: docs:react:build
 
+  docs:stage:assets:
+    desc: Stage local CGO-free release assets for the website download center
+    cmds:
+      - test -f target/release-assets/SHA256SUMS
+      - mkdir -p github-docs/dist/downloads
+      - cp target/release-assets/* github-docs/dist/downloads/
+
   docs:publish:react:
-    desc: Publish the built React docs to gh-pages
+    desc: Publish the built React docs and local preview assets to gh-pages
     cmds:
       - task: docs:react:build
+      - task: docs:stage:assets
       - go -C tools/devtool run . publish-docs --dist github-docs/dist
 
   docs:publish:react:dry:
     desc: Preview the React docs publication without changing refs
     cmds:
       - task: docs:react:build
+      - task: docs:stage:assets
       - go -C tools/devtool run . publish-docs --dist github-docs/dist --dry-run
 
   verify:
@@ -160,3 +180,4 @@ tasks:
       - task: accept:full
       - go -C tools/devtool run . check-runtime-defaults
       - go -C tools/devtool run . migration-audit --require-complete
+      - echo "Release packaging is manual - run task package:release (no GitHub upload, no tag)."

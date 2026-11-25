@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { findSection, sections } from "./content";
 import { Article } from "./components/Article";
+import { DownloadPage } from "./components/DownloadPage";
 import { Icon } from "./components/Icon";
 import { Sidebar } from "./components/Sidebar";
 import { Toc } from "./components/Toc";
@@ -11,7 +12,7 @@ const THEME_KEY = "git-next-docs-theme";
 
 function readHash(): string {
   const raw = window.location.hash.replace(/^#\/?/, "").split("/")[0];
-  return sections.some((section) => section.id === raw) ? raw : "home";
+  return sections.some((section) => section.id === raw) ? raw : "download";
 }
 
 function readTheme(): Theme {
@@ -38,7 +39,7 @@ export default function App() {
 
   useEffect(() => {
     if (!window.location.hash) {
-      window.history.replaceState(null, "", "#/home");
+      window.history.replaceState(null, "", "#/download");
     }
     const handleHashChange = () => {
       setCurrentId(readHash());
@@ -79,7 +80,7 @@ export default function App() {
         >
           <Icon name="menu" size={20} />
         </button>
-        <strong>git-next 使用文档</strong>
+        <strong>git-next 官网</strong>
         <button
           type="button"
           className="theme-toggle-mobile"
@@ -112,13 +113,26 @@ export default function App() {
       <div className="page">
         <div className="content-layout">
           <main id="main" className="main" tabIndex={-1}>
-            <Article key={section.id} section={section} onNavigate={navigate} />
+            {section.id === "download" ? (
+              <DownloadPage key={section.id} section={section} onNavigate={navigate} />
+            ) : (
+              <Article key={section.id} section={section} onNavigate={navigate} />
+            )}
           </main>
           <Toc section={section} />
         </div>
         <footer className="page-footer">
-          <span>git-next 文档站 · GitHub Pages</span>
-          <span>遇到问题请看“常见问题”与“版本与边界”</span>
+          <span>
+            git-next 是开源项目，许可证见仓库 LICENSE；本站由 GitHub Pages 提供，安装包来自 GitHub
+            Release。
+          </span>
+          <a
+            href="https://github.com/neko233-com/git-next"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub 仓库
+          </a>
         </footer>
       </div>
     </div>

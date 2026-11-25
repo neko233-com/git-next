@@ -67,7 +67,8 @@
 - `docs/WHY-GIT-NEXT.md` 记录实测的加速工作和 Git 命令集之外的检查。数字必须来自 `docs/benchmarks/` 下的基准报告，带报告日期，并且把局限讲得和收益一样直白。
 - `docs/LANGUAGE.md` 描述语言文档与设备语言解析。`docs/DOCUMENTATION_SITE.md` 描述站点如何渲染与发布。`docs/DEFAULTS.md` 记录每一项运行时默认值及其背后的实测。
 - 性能或行为声明必须写明作用域：机器、仓库规模、日期。没有作用域的数字不是证据，没有实测的默认值不是决策。
-- GitHub 文档站是 `github-docs/` 下的 React 19 + vite-plus 应用，面向不懂技术的美术与运营。`task docs:react:verify` 必须通过 check、test 与 build；产物写 `github-docs/dist/`，`base` 必须是 `/git-next/`。面向非技术用户的教程不得列出当前 Go 实现不支持的命令。
+- GitHub 文档站是 `github-docs/` 下的 React 19 + vite-plus 应用，默认落地页是 `#/download` 官网下载中心，面向不懂技术的美术与运营。`task docs:react:verify` 必须通过 check、test 与 build；产物写 `github-docs/dist/`，`base` 必须是 `/git-next/`。面向非技术用户的教程不得列出当前 Go 实现不支持的命令。
+- `task package:release` 用 `CGO_ENABLED=0` 生成本地归档与 SHA256SUMS；`task docs:publish:react` 会把它暂存到 `/git-next/downloads/` 作为明确标注的预览包。不得把它冒充 GitHub Release 正式资产，也不得因此绕过 full 验收与 tag 契约。
 - 旧 Markdown 手册仍由 `task docs` / `go -C tools/devtool run . render-docs` 重新生成到 `docs/site/`；HTML 受版本控制，页面过期是缺陷。
 - 用 `task docs:publish:react`（或 `go -C tools/devtool run . publish-docs --dist github-docs/dist`）发布 React 文档到 `gh-pages`。不带 `--dist` 时仍可发布旧手册。发布通过临时索引构建分支，不碰工作区；推送是快进。
 

@@ -15,6 +15,11 @@ pnpm build     # writes dist/ with base /git-next/
 one gate. <code>task docs:react:build</code> only builds. The app uses hash-based navigation,
 so deep links work on GitHub Pages without server rewrite rules. Its build output
 contains <code>index.html</code>, hashed assets and <code>.nojekyll</code>.</p>
+<p>The default landing page is the download center at <code>#/download</code>. It links to the
+existing GitHub Release assets and, when <code>task package:release</code> has been run, also
+publishes the locally built CGO-free Windows x64 preview archive under
+<code>/git-next/downloads/</code>. The preview package is explicitly labelled as not a new
+GitHub Release.</p>
 <p>Content lives in <code>github-docs/src/content.ts</code>. It is written in Simplified Chinese
 for non-technical readers, especially artists and operations staff: plain-language
 explanations, copyable commands, step-by-step checklists and frequently asked

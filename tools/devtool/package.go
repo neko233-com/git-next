@@ -24,6 +24,18 @@ func init() {
 	register("package-go", "Package the Go client/LFS/terminal without interpreter runtimes", "platform git-bin terminal output", packageGo)
 	register("fast-verify", "Inspect Go artifact identity and Windows import closure", "git-bin terminal", fastVerify)
 }
+
+// defaultTerminalDir resolves the sibling Git-Terminal checkout. The checkout
+// may live directly next to git-next or inside a shared workspace directory,
+// so try both layouts. An explicit --terminal always wins over both.
+func defaultTerminalDir(root string) string {
+	primary := filepath.Join(root, "..", "git-terminal")
+	if exists(filepath.Join(primary, "target", "go")) || exists(filepath.Join(primary, "go", "go.mod")) {
+		return primary
+	}
+	return filepath.Join(root, "..", "gitsss", "git-terminal")
+}
+
 func rejectRelative(name string) error {
 	parts := strings.Split(strings.ToLower(strings.ReplaceAll(name, "\\", "/")), "/")
 	base := parts[len(parts)-1]
@@ -91,7 +103,7 @@ func packageGo(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	terminal, e := absolute(o.value("terminal", filepath.Join(a.root, "../git-terminal")))
+	terminal, e := absolute(o.value("terminal", defaultTerminalDir(a.root)))
 	if e != nil {
 		return e
 	}
@@ -386,7 +398,7 @@ func fastVerify(a *app, o options) error {
 	}
 	started := time.Now()
 	bin := o.value("git-bin", a.path("target/release"))
-	terminalDir := o.value("terminal", filepath.Join(a.root, "../git-terminal/target/go"))
+	terminalDir := o.value("terminal", filepath.Join(defaultTerminalDir(a.root), "target", "go"))
 	terminalModule := filepath.Join(terminalDir, "..", "..", "go", "go.mod")
 	if !exists(terminalModule) {
 		return fmt.Errorf("Go terminal module is missing: %s", terminalModule)

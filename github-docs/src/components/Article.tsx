@@ -9,9 +9,11 @@ type ArticleProps = {
 };
 
 export function Article({ section, onNavigate }: ArticleProps) {
-  const index = sections.findIndex((item) => item.id === section.id);
-  const previous = sections[index - 1];
-  const next = sections[index + 1];
+  // 下载中心是官网落地页，不参与文档的上下篇顺序。
+  const docSections = sections.filter((item) => item.id !== "download");
+  const index = docSections.findIndex((item) => item.id === section.id);
+  const previous = docSections[index - 1];
+  const next = docSections[index + 1];
 
   return (
     <article className="article">

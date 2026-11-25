@@ -132,6 +132,23 @@ export const unsupportedCommands: UnsupportedRow[] = [
 
 export const sections: Section[] = [
   {
+    id: "download",
+    group: "官网",
+    nav: "下载中心",
+    title: "熟悉的 Git，为游戏项目重新打造",
+    kicker: "官网 · 下载中心",
+    summary:
+      "git-next 是原生 Go 客户端与 git-terminal 的组合，CGO_ENABLED=0，不依赖 C 工具链；从安装到日常提交都按美术、运营也能上手的方式设计。",
+    keywords: ["下载", "安装包", "MSI", "tar.gz", "Windows", "macOS", "Linux", "官网"],
+    blocks: [
+      { kind: "heading", anchor: "platforms", text: "下载安装包" },
+      { kind: "heading", anchor: "go-preview", text: "Go-only 预览包" },
+      { kind: "heading", anchor: "before-install", text: "安装前先看" },
+      { kind: "heading", anchor: "facts", text: "项目现状" },
+      { kind: "heading", anchor: "roles", text: "按角色开始" },
+    ],
+  },
+  {
     id: "home",
     group: "开始",
     nav: "首页",
@@ -727,6 +744,7 @@ export const sections: Section[] = [
 ];
 
 export const navGroups: { name: string; ids: string[] }[] = [
+  { name: "官网", ids: ["download"] },
   { name: "开始", ids: ["home", "quickstart"] },
   { name: "按角色", ids: ["artists", "ops"] },
   { name: "随手查", ids: ["cheatsheet", "faq", "language-help"] },

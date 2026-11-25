@@ -21,6 +21,12 @@ one gate. `task docs:react:build` only builds. The app uses hash-based navigatio
 so deep links work on GitHub Pages without server rewrite rules. Its build output
 contains `index.html`, hashed assets and `.nojekyll`.
 
+The default landing page is the download center at `#/download`. It links to the
+existing GitHub Release assets and, when `task package:release` has been run, also
+publishes the locally built CGO-free Windows x64 preview archive under
+`/git-next/downloads/`. The preview package is explicitly labelled as not a new
+GitHub Release.
+
 Content lives in `github-docs/src/content.ts`. It is written in Simplified Chinese
 for non-technical readers, especially artists and operations staff: plain-language
 explanations, copyable commands, step-by-step checklists and frequently asked

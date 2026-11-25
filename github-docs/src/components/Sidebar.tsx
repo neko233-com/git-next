@@ -38,7 +38,7 @@ export function Sidebar({
         </span>
         <span className="brand-text">
           <strong>git-next</strong>
-          <small>使用文档</small>
+          <small>官网 · 下载 · 文档</small>
         </span>
       </div>
 
