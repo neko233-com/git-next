@@ -6,8 +6,29 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
+
+// buildTripwire compiles the Go fake Git used by the Windows acceptance
+// fixtures. The fixture records every invocation so tests can prove that the
+// product never fell back to a sibling Git.
+func buildTripwire(a *app, output string) {
+	goTool, e := exec.LookPath("go")
+	if e != nil {
+		suffix := ""
+		if runtimeOSWindows() {
+			suffix = ".exe"
+		}
+		goTool = filepath.Join(runtime.GOROOT(), "bin", "go"+suffix)
+		if !exists(goTool) {
+			acceptMust(fmt.Errorf("Go toolchain unavailable for acceptance tripwire"))
+		}
+	}
+	acceptMust(os.MkdirAll(filepath.Dir(output), 0755))
+	_, e = commandAt(a.path("tools/devtool"), nil, goTool, "build", "-o", output, "./fixtures/tripwire")
+	acceptMust(e)
+}
 
 func discoveryEnvironment(home string) []string {
 	env := []string{}
@@ -42,13 +63,7 @@ func nativeDiscovery(a *app, o options) error {
 		system := filepath.Join(install, "etc/gitconfig")
 		acceptWrite(system, []byte("[probe]\nsource = filesystem\n[credential]\nhelper = fixture-only\n[include]\npath = relative.inc\n"))
 		acceptWrite(filepath.Join(filepath.Dir(system), "relative.inc"), []byte("[probe]\nincluded = yes\n"))
-		rustc, e := exec.LookPath("rustc")
-		if e != nil {
-			home, e := os.UserHomeDir()
-			acceptMust(e)
-			rustc = filepath.Join(home, ".cargo/bin/rustc.exe")
-		}
-		acceptRun(a.root, nil, nil, true, rustc, "--edition=2024", "--crate-name", "config_tripwire", "-O", a.path("tests/fixtures/config_tripwire.rs"), "-o", filepath.Join(command, "git.exe"))
+		buildTripwire(a, filepath.Join(command, "git.exe"))
 		marker := filepath.Join(root, "git-was-executed")
 		env := fixtureEnv(discoveryEnvironment(home), map[string]string{"PATH": command, "GIT_NEXT_CONFIG_TRIPWIRE": marker, "GIT_NEXT_FIXTURE_CONFIG": system, "GIT_NEXT_FIXTURE_CORE": core, "ProgramFiles": filepath.Join(root, "programs"), "ProgramW6432": filepath.Join(root, "programs"), "ProgramFiles(x86)": filepath.Join(root, "programs-x86"), "LOCALAPPDATA": filepath.Join(root, "local"), "PROGRAMDATA": filepath.Join(root, "programdata")})
 		run := func(where string, extra map[string]string, ok bool, args ...string) []byte {

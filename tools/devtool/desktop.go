@@ -1,7 +1,8 @@
 // Copyright 2026 git-next contributors. MIT license.
 package main
 
-// terminalRendererOK accepts the packaged Rust renderer and the Go/MyGo replacement.
+// terminalRendererOK accepts the Go/MyGo renderer, with the legacy label kept
+// only so historical receipts remain readable. New receipts always use mygo.
 func terminalRendererOK(value any) bool {
 	renderer, ok := value.(string)
 	return ok && (renderer == "gpui-fast" || renderer == "mygo")
@@ -25,6 +26,6 @@ var desktopActivityCases = []string{
 }
 
 func init() {
-	register("terminal-desktop-acceptance", "Exercise the owned Windows GPUI window with isolated profiles and clipboard restoration", "binary git output only-case paste-key", terminalDesktopAcceptance)
+	register("terminal-desktop-acceptance", "Exercise the owned Windows terminal window with isolated profiles and clipboard restoration", "binary git output only-case paste-key", terminalDesktopAcceptance)
 	register("windows-desktop-acceptance", "Compatibility alias for the owned terminal desktop acceptance", "binary git output only-case paste-key", terminalDesktopAcceptance)
 }

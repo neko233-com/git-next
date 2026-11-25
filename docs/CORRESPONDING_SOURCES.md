@@ -1,6 +1,6 @@
 # Runtime licenses and corresponding sources
 
-The complete native product uses its source-built GPL-2.0-only Git engine. Its matching source release contains `native-core/overlay/`, the ordered `native-core/patches/series.json`, compiler/assembly scripts and pinned dependency locks. The original upstream source archive is included in the source bundles. The separate Rust preview keeps its own license and implementation status.
+The complete native product uses its source-built GPL-2.0-only Git engine. Its matching source release contains `native-core/overlay/`, the ordered `native-core/patches/series.json`, compiler/assembly scripts and pinned dependency locks. The original upstream source archive is included in the source bundles. The historical Rust preview kept its own license and implementation status; those records are retained as v1.0.x release evidence only.
 
 `packaging/corresponding-sources.lock.json` pins 459 original source archives and producer recipes by HTTPS URL, byte count and SHA-256. The four companion source bundles contain MSYS2 source packages, exact Debian source packages, exact installed Homebrew formula sources, and the core/producer build recipes. Producer source packages retain their upstream tarballs and patches. Packaging leaves those archives opaque: it never extracts or runs a `.github/workflows/` file.
 

@@ -10,14 +10,14 @@ import (
 	"time"
 )
 
-var correctnessCases = wordSet("windows-core-contracts windows-common-cli-contracts windows-owned-integrations windows-dpapi-migration windows-update-contracts windows-read-thread-contracts windows-bootstrap-contracts windows-game-lfs-contracts terminal-rust-contracts terminal-native-desktop linux-x64 linux-arm64 macos-arm64 docker-login-migration posix-updater-race-contracts msi-user msi-machine frozen-input-readback")
+var correctnessCases = wordSet("windows-core-contracts windows-common-cli-contracts windows-owned-integrations windows-dpapi-migration windows-update-contracts windows-read-thread-contracts windows-bootstrap-contracts windows-game-lfs-contracts terminal-go-contracts terminal-native-desktop linux-x64 linux-arm64 macos-arm64 docker-login-migration posix-updater-race-contracts msi-user msi-machine frozen-input-readback")
 var referenceCases = wordSet("windows-core-contracts windows-common-cli-contracts windows-dpapi-migration")
 var guiBinaries = wordSet("bin/git-terminal.exe bin/git-terminal-shell.exe")
 
 const terminalMetadata = "LICENSES/git-terminal/git-terminal-package.json"
 
 var repairReportOnly = wordSet("tools/run_native_repair_cases.py tools/complete_native_repair_batch.py tests/native_repair_evidence_test.py tools/freeze_native_batch.py tools/devtool/evidence_reports.go tools/devtool/evidence_reports_test.go")
-var repairUISources = wordSet("../git-terminal/Cargo.toml ../git-terminal/build.rs ../git-terminal/src/assets.rs ../git-terminal/src/main.rs ../git-terminal/src/presentation.rs ../git-terminal/tests/windows_desktop_acceptance.py ../git-terminal/tests/clipboard_snapshot.py ../git-terminal/assets/git-terminal.svg ../git-terminal/assets/git-terminal.png ../git-terminal/assets/git-terminal.ico")
+var repairUISources = wordSet("../git-terminal/go/go.mod ../git-terminal/go/go.sum ../git-terminal/go/desktop.go ../git-terminal/go/session.go ../git-terminal/go/settings.go ../git-terminal/go/i18n.go ../git-terminal/go/setup.go ../git-terminal/go/resources/NOTICE.md ../git-terminal/go/resources/windows-amd64/ghostty-vt.dll ../git-terminal/assets/git-terminal.svg ../git-terminal/assets/git-terminal.png ../git-terminal/assets/git-terminal.ico")
 
 func changedKeys(previous, current record) []string {
 	all := map[string]bool{}
@@ -101,7 +101,7 @@ func validateRebinding(previous, current, report record) error {
 	expected := correctnessCases
 	// Historical complete batches predate the common-CLI lane; keep their exact set.
 	if len(results) == 17 {
-		expected = wordSet("windows-core-contracts windows-owned-integrations windows-dpapi-migration windows-update-contracts windows-read-thread-contracts windows-bootstrap-contracts windows-game-lfs-contracts terminal-rust-contracts terminal-native-desktop linux-x64 linux-arm64 macos-arm64 docker-login-migration posix-updater-race-contracts msi-user msi-machine frozen-input-readback")
+		expected = wordSet("windows-core-contracts windows-owned-integrations windows-dpapi-migration windows-update-contracts windows-read-thread-contracts windows-bootstrap-contracts windows-game-lfs-contracts terminal-go-contracts terminal-native-desktop linux-x64 linux-arm64 macos-arm64 docker-login-migration posix-updater-race-contracts msi-user msi-machine frozen-input-readback")
 	}
 	if stringValue(report, "phase") != "correctness" || len(results) != len(expected) {
 		return fmt.Errorf("complete original correctness batch required")
@@ -128,7 +128,7 @@ func validateRebinding(previous, current, report record) error {
 }
 func init() {
 	register("complete-native-batch", "Finalize a proven external desktop interruption without weakening frozen evidence", "batch previous-matrix native-packages desktop-batch desktop-matrix reference output", completeNativeBatch)
-	register("complete-native-repair-batch", "Bind unaffected exact acceptance lanes to a verified terminal-only repair", "batch previous-matrix native-packages repair desktop terminal-rust terminal-builds reference output", completeNativeRepair)
+	register("complete-native-repair-batch", "Bind unaffected exact acceptance lanes to a verified terminal-only repair", "batch previous-matrix native-packages repair desktop terminal-go terminal-builds reference output", completeNativeRepair)
 	register("run-native-repair-cases", "Rerun all four reference-dependent Windows and desktop cases", "native-packages reference output", runNativeRepairCases)
 }
 func loadOptionRecords(o options, names ...string) ([]record, error) {
@@ -248,7 +248,7 @@ func cloneJSONRecord(r record) (record, error) {
 	return copy, e
 }
 func completeNativeRepair(a *app, o options) error {
-	if e := o.require("batch", "previous-matrix", "native-packages", "repair", "desktop", "terminal-rust", "terminal-builds", "reference", "output"); e != nil {
+	if e := o.require("batch", "previous-matrix", "native-packages", "repair", "desktop", "terminal-go", "terminal-builds", "reference", "output"); e != nil {
 		return e
 	}
 	values, e := loadOptionRecords(o, "batch", "previous-matrix", "native-packages", "repair")
@@ -386,25 +386,25 @@ func completeNativeRepair(a *app, o options) error {
 			return e
 		}
 	}
-	proofs, e := loadOptionRecords(o, "desktop", "terminal-rust")
+	proofs, e := loadOptionRecords(o, "desktop", "terminal-go")
 	if e != nil {
 		return e
 	}
-	desktop, rust := proofs[0], proofs[1]
+	desktop, terminal := proofs[0], proofs[1]
 	win := stringValue(object(object(current, "platforms"), "windows-x64"), "directory")
 	binary := filepath.Join(win, "bin/git.exe")
 	if e = validateDesktopProof(a, desktop, win); e != nil {
 		return e
 	}
-	rustCases, e := caseResults(rust)
+	terminalCases, e := caseResults(terminal)
 	if e != nil {
 		return e
 	}
-	if stringValue(rust, "status") != "pass" || len(rustCases) != 4 {
-		return fmt.Errorf("terminal Rust and shell proof required")
+	if stringValue(terminal, "status") != "pass" || len(terminalCases) != 4 {
+		return fmt.Errorf("terminal Go formatting, vet, unit and build proof required")
 	}
-	for _, name := range []string{"format", "clippy", "unit", "shell-integration"} {
-		if stringValue(rustCases[name], "status") != "pass" {
+	for _, name := range []string{"format", "vet", "unit", "build"} {
+		if stringValue(terminalCases[name], "status") != "pass" {
 			return fmt.Errorf("terminal source case failed: %s", name)
 		}
 	}
@@ -435,7 +435,7 @@ func completeNativeRepair(a *app, o options) error {
 	result["status"] = "pass"
 	result["reference_sha256"] = repair["reference_sha256"]
 	result["original_reference_sha256"] = original["reference_sha256"]
-	for field, option := range map[string]string{"matrix_sha256": "native-packages", "original_batch_sha256": "batch", "original_matrix_sha256": "previous-matrix", "repair_receipt_sha256": "repair", "desktop_receipt_sha256": "desktop", "terminal_rust_receipt_sha256": "terminal-rust"} {
+	for field, option := range map[string]string{"matrix_sha256": "native-packages", "original_batch_sha256": "batch", "original_matrix_sha256": "previous-matrix", "repair_receipt_sha256": "repair", "desktop_receipt_sha256": "desktop", "terminal_go_receipt_sha256": "terminal-go"} {
 		result[field], e = digest(o.get(option))
 		if e != nil {
 			return e
@@ -460,7 +460,7 @@ func completeNativeRepair(a *app, o options) error {
 				r[key] = rerun[name][key]
 			}
 			r["actual_repair_run"] = true
-		} else if name == "terminal-native-desktop" || name == "terminal-rust-contracts" {
+		} else if name == "terminal-native-desktop" || name == "terminal-go-contracts" {
 			r["status"] = "pass"
 			r["exit_code"] = 0
 			if name == "terminal-native-desktop" {
@@ -468,7 +468,7 @@ func completeNativeRepair(a *app, o options) error {
 				r["actual_current_gui_run"] = true
 			} else {
 				seconds := float64(0)
-				for _, item := range rustCases {
+				for _, item := range terminalCases {
 					v, _ := item["seconds"].(float64)
 					seconds += v
 				}
@@ -531,15 +531,8 @@ func validateDesktopProof(a *app, desktop record, win string) error {
 		for name := range expectedHarnesses {
 			checks[a.path(name)] = harnesses[name]
 		}
-	} else if stringValue(desktop, "harness_language") == "" {
-		// Historical receipts retain their original validation contract.
-		if len(cases) != 15 {
-			return fmt.Errorf("complete historical 15-case desktop proof required")
-		}
-		checks[a.path("../git-terminal/tests/windows_desktop_acceptance.py")] = desktop["harness_sha256"]
-		checks[a.path("../git-terminal/tests/clipboard_snapshot.py")] = desktop["clipboard_harness_sha256"]
 	} else {
-		return fmt.Errorf("unknown desktop harness language")
+		return fmt.Errorf("unknown desktop harness language; only the Go terminal proof is accepted")
 	}
 	for name, row := range cases {
 		if stringValue(row, "status") != "pass" {

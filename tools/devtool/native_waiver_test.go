@@ -12,7 +12,7 @@ func nativeWaiverFixture(t *testing.T) (*app, record, string, record, string) {
 	t.Helper()
 	a := &app{root: t.TempDir(), out: io.Discard, err: io.Discard}
 	matrix := record{"schema_version": 1, "product": "git-next", "version": "1.0.3", "source_tree_sha256": strings.Repeat("c", 64), "platforms": record{}, "files": record{}}
-	waiver := record{"schema_version": 1, "kind": "terminal-test-waiver", "authorized_by": "user", "authorization": "不用再测试git-terminal了，其他没问题全部push和发布，维护.gitignore", "reason": "用户明确授权：不用再测试git-terminal了；保留其他全部门禁。", "cases": []any{"terminal-rust-contracts", "terminal-native-desktop"}, "terminal_binaries": record{}}
+	waiver := record{"schema_version": 1, "kind": "terminal-test-waiver", "authorized_by": "user", "authorization": "不用再测试git-terminal了，其他没问题全部push和发布，维护.gitignore", "reason": "用户明确授权：不用再测试git-terminal了；保留其他全部门禁。", "cases": []any{"terminal-go-contracts", "terminal-native-desktop"}, "terminal_binaries": record{}}
 	for _, platform := range []string{"windows-x64", "windows-arm64"} {
 		root := a.path("packages", platform)
 		commit := strings.Repeat("a", 40)
@@ -156,9 +156,9 @@ func TestNativeTerminalWaiverNeverHidesAnotherFailedOrWaivedGate(t *testing.T) {
 			case "terminal fake pass":
 				results["terminal-native-desktop"]["status"] = "pass"
 			case "terminal fake exit":
-				results["terminal-rust-contracts"]["exit_code"] = 0
+				results["terminal-go-contracts"]["exit_code"] = 0
 			case "terminal wrong waiver":
-				results["terminal-rust-contracts"]["waiver_sha256"] = "other"
+				results["terminal-go-contracts"]["waiver_sha256"] = "other"
 			case "missing case":
 				gate["results"] = array(gate, "results")[1:]
 			case "duplicate case":
@@ -184,7 +184,7 @@ func TestNativeTerminalWaiverNeverHidesAnotherFailedOrWaivedGate(t *testing.T) {
 
 func TestNativeTerminalWaiverBatchStatusesRemainHonest(t *testing.T) {
 	_, _, _, _, w := waivedGateFixture(t)
-	rows := []record{record{"case": "msi-user", "status": "pass"}, w.result("terminal-native-desktop"), w.result("terminal-rust-contracts")}
+	rows := []record{record{"case": "msi-user", "status": "pass"}, w.result("terminal-native-desktop"), w.result("terminal-go-contracts")}
 	if nativeBatchStatus(rows, w, false) != "pass-with-user-waiver" || nativeBatchStatus(rows, nil, false) != "fail" || nativeBatchStatus(rows, w, true) != "fail" {
 		t.Fatal("terminal waiver was treated as ordinary pass or performance authorization")
 	}

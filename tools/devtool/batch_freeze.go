@@ -86,12 +86,12 @@ func freezeNativeBatch(a *app, o options) error {
 			return fmt.Errorf("wrong Windows package identity")
 		}
 		built := stringValue(object(manifest, "git_terminal"), "source_commit")
-		testModule, e := read(filepath.Join(peer, "src/main.rs"))
+		module, e := read(filepath.Join(peer, "go", "go.mod"))
 		if e != nil {
 			return e
 		}
-		if !strings.Contains(strings.ReplaceAll(testModule, "\r\n", "\n"), "#[cfg(all(test, windows))]\nmod shell_acceptance;") {
-			return fmt.Errorf("excluded terminal fixture must remain test-only")
+		if !strings.Contains(string(module), "module github.com/neko233-com/git-terminal") {
+			return fmt.Errorf("excluded terminal Go module must remain authoritative")
 		}
 		if built == "" {
 			return fmt.Errorf("missing terminal source commit")
@@ -99,7 +99,7 @@ func freezeNativeBatch(a *app, o options) error {
 		if _, e = gitMetadata(a, "-C", peer, "merge-base", "--is-ancestor", built, terminalCommit); e != nil {
 			return e
 		}
-		paths := []string{"Cargo.toml", "Cargo.lock", "src", "assets", "build.rs", "shell-integration", "vendor/gpui-terminal", ":(exclude)src/shell_acceptance.rs"}
+		paths := []string{"go", "assets", "Taskfile.yml"}
 		args := append([]string{"-C", peer, "diff", "--quiet", built, terminalCommit, "--"}, paths...)
 		if _, e = gitMetadata(a, args...); e != nil {
 			return fmt.Errorf("peer runtime source changed: %w", e)
@@ -274,8 +274,8 @@ func freezeNativeBatch(a *app, o options) error {
 		return e
 	}
 	harnesses := record{}
-	extensions := map[string]bool{".ps1": true, ".psm1": true, ".cs": true, ".go": true, ".mod": true, ".sum": true, ".json": true, ".wxs": true, ".sh": true, ".Dockerfile": true, ".patch": true, ".c": true, ".h": true, ".rs": true, ".toml": true, ".lock": true}
-	for _, folder := range []string{"tools", "tests", "packaging", "native-core", "accept-runner"} {
+	extensions := map[string]bool{".ps1": true, ".psm1": true, ".cs": true, ".go": true, ".mod": true, ".sum": true, ".json": true, ".wxs": true, ".sh": true, ".yml": true, ".Dockerfile": true, ".patch": true, ".c": true, ".h": true}
+	for _, folder := range []string{"tools", "tests", "packaging", "native-core", "cmd", "internal"} {
 		e = filepath.WalkDir(a.path(folder), func(p string, d os.DirEntry, e error) error {
 			if e != nil {
 				return e
@@ -300,6 +300,13 @@ func freezeNativeBatch(a *app, o options) error {
 			return e
 		}
 	}
+	for _, name := range []string{"go.mod", "go.sum", "Taskfile.yml"} {
+		h, e := digest(a.path(name))
+		if e != nil {
+			return e
+		}
+		harnesses[name] = h
+	}
 	e = filepath.WalkDir(peer, func(p string, d os.DirEntry, e error) error {
 		if e != nil {
 			return e
@@ -308,13 +315,17 @@ func freezeNativeBatch(a *app, o options) error {
 		parts := strings.Split(filepath.ToSlash(rel), "/")
 		if d.IsDir() {
 			for _, s := range parts {
-				if s == ".git" || s == ".evidence" || s == "target" {
+				if strings.HasPrefix(s, ".") || s == "target" || s == "--json" {
 					return filepath.SkipDir
 				}
 			}
 			return nil
 		}
-		if filepath.Ext(p) == ".rs" || parts[0] == "assets" || parts[0] == "shell-integration" || parts[0] == "tests" && filepath.Ext(p) == ".go" || filepath.ToSlash(rel) == "Cargo.toml" || filepath.ToSlash(rel) == "Cargo.lock" || filepath.ToSlash(rel) == "vendor/gpui-terminal/Cargo.toml" {
+		inGoModule := parts[0] == "go"
+		inAssets := parts[0] == "assets"
+		inTestSource := parts[0] == "tests" && filepath.Ext(p) == ".go"
+		inTaskfile := filepath.ToSlash(rel) == "Taskfile.yml"
+		if inGoModule || inAssets || inTestSource || inTaskfile {
 			h, e := digest(p)
 			if e != nil {
 				return e

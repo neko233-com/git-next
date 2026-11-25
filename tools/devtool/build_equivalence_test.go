@@ -145,7 +145,7 @@ func TestNativeBuildContainerHasNoInterpreterDependency(t *testing.T) {
 
 func TestNativeMatrixReadsExplicitTerminalWorktree(t *testing.T) {
 	root, clean := t.TempDir(), t.TempDir()
-	p := filepath.Join(clean, "src/main.rs")
+	p := filepath.Join(clean, "go/go.mod")
 	if e := write(p, []byte("committed terminal source\n"), 0644); e != nil {
 		t.Fatal(e)
 	}
@@ -153,7 +153,7 @@ func TestNativeMatrixReadsExplicitTerminalWorktree(t *testing.T) {
 	if e != nil {
 		t.Fatal(e)
 	}
-	m := record{"terminal_source": clean, "harnesses": record{"../git-terminal/src/main.rs": hash}}
+	m := record{"terminal_source": clean, "harnesses": record{"../git-terminal/go/go.mod": hash}}
 	if _, e = matrixHarnessPath(&app{root: root}, m, "../git-terminal/../../outside"); e == nil {
 		t.Fatal("terminal harness escaped explicit worktree")
 	}

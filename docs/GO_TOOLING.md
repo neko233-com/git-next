@@ -1,11 +1,11 @@
-# Go client, Rust acceptance runner and Go tooling
+# Go client and Go tooling
 
-Go 1.27 owns the independent client (`cmd/git-next` plus `internal/**`), build,
-package, docs, release orchestration, benchmarks, fixture services, desktop
-automation and the Perforce helper. The Rust acceptance runner is language-neutral
-and tests the Go binary through its public CLI. Native C, PowerShell and shell
-remain where their platform APIs require them. Neither the product nor these
-tools need a Python interpreter, venv or pip.
+Go 1.27.3 owns the independent client (`cmd/git-next` plus `internal/**`), the
+CLI acceptance runner, build, package, docs, release orchestration, benchmarks,
+fixture services, desktop automation and the Perforce helper. The Go `cli-accept`
+command tests the built binary through its public CLI. Native C, PowerShell and
+shell remain where their platform APIs require them, as a separate component. No
+Rust, Cargo, Python interpreter, venv or pip is needed for owned tooling.
 
 ## Entry points
 
@@ -63,15 +63,17 @@ changed, and no new host/terminal run is required to close this delivery.
 [Scope record](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
 
 ```sh
-go -C tools/devtool run . build-go-client   # uses -mod=mod: root vendor/ belongs to Rust
-cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
+go -C tools/devtool run . build-go-client   # uses -mod=mod: the historical Rust vendor/ was deleted
+go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 ```
 
-The same commands run on Windows and macOS. L0 covers 39 commands and is mandatory
-before merge/tag; full covers 100 local scenarios and is mandatory on release
-branches. `--tier network` is explicit, with skips recorded. The client runs with
-an empty PATH; reference Git constructs fixtures. See
-[the exact Rust coverage and gaps](GIT_NEXT_ACCEPTANCE.md).
+The same commands run on Windows and macOS. L0 covers 39 commands (39/39 passing)
+and is mandatory before merge/tag; full covers 100 local scenarios and currently
+passes 57/100, with most failures in SHA-256 object-format cases. Full is mandatory
+on release branches and is not yet green. `--tier network` is explicit, with skips
+recorded. The client runs with an empty PATH; reference Git constructs fixtures.
+See [the exact Go coverage and gaps](GIT_NEXT_ACCEPTANCE.md).
 
 Native full-package CLI, GCM, HTTP/SSH/LFS, desktop and installer lifecycle checks
 use their Go/platform gates. They still require frozen package and harness
@@ -101,8 +103,9 @@ each has the exact `source_commit` and a `files` map containing the SHA-256 of
 actual binary bytes must agree.
 
 With that exact authorization, correctness keeps all 18 rows: 16 passed cases and
-two `waived` cases, with overall `pass-with-user-waiver`. The terminal Rust,
-desktop and startup tests are not executed. Earlier failed reports remain intact.
+two `waived` cases, with overall `pass-with-user-waiver`. The historical terminal
+Rust and desktop tests are not executed; the current terminal source is Go + MyGo.
+Earlier failed reports remain intact as historical v1.0.x evidence.
 Performance requires this same exact correctness report and waiver; all five
 performance rows must pass. MSI, native CLI, actual Mac/Linux, package and hash
 gates are unchanged. Release proofs and package acceptance metadata retain the
@@ -176,7 +179,8 @@ The initial remaining inventory was 114 files. Upstream added the freestanding
 bridge verifier during this work, bringing that batch to 115. Earlier migrations
 are recorded separately and are not added to this batch's verified count.
 Thirty retired CLI suites are preserved at Git commit
-`3609553`; removing them does not claim every old assertion moved into Rust.
+`3609553`; removing them does not claim every old assertion moved into the Go
+acceptance gate.
 
 The [public retirement inventory and evidence](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json)
 records all 115 old-file hashes, replacement modules, same-input comparisons and

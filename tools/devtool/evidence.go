@@ -123,7 +123,7 @@ func validateReuseAt(a *app, report, previous, current record, reference string,
 		}
 	}
 	allowed := map[string]bool{}
-	for _, name := range []string{"tools/native_product_batch.py", "tools/freeze_native_batch.py", "tools/native_msi_evidence.py", "tests/native_msi_evidence_test.py", "../git-terminal/tests/windows_desktop_acceptance.py", "../git-terminal/src/shell_acceptance.rs", "tools/devtool/batch_native.go", "tools/devtool/batch_freeze.go", "tools/devtool/evidence_test.go", "tools/devtool/desktop.go", "tools/devtool/desktop_windows.go", "tools/devtool/clipboard_windows.go"} {
+	for _, name := range []string{"tools/native_product_batch.py", "tools/freeze_native_batch.py", "tools/native_msi_evidence.py", "tests/native_msi_evidence_test.py", "../git-terminal/go/session_test.go", "../git-terminal/go/norust_test.go", "tools/devtool/batch_native.go", "tools/devtool/batch_freeze.go", "tools/devtool/evidence_test.go", "tools/devtool/desktop.go", "tools/devtool/desktop_windows.go", "tools/devtool/clipboard_windows.go"} {
 		allowed[name] = true
 	}
 	before, after := object(previous, "harnesses"), object(current, "harnesses")
@@ -143,7 +143,7 @@ func validateReuseAt(a *app, report, previous, current record, reference string,
 			permitted = true
 		}
 		if desktop {
-			permitted = !(strings.HasPrefix(name, "../git-terminal/") && name != "../git-terminal/src/shell_acceptance.rs") && name != "tools/terminal_runtime_fixture.py" && name != "tools/devtool/evidence.go"
+			permitted = !(strings.HasPrefix(name, "../git-terminal/") && name != "../git-terminal/go/norust_test.go") && name != "tools/terminal_runtime_fixture.py" && name != "tools/devtool/evidence.go"
 			if strings.HasPrefix(name, "tools/devtool/") {
 				base := filepath.Base(name)
 				if strings.HasPrefix(base, "desktop") || strings.HasPrefix(base, "clipboard") || strings.HasPrefix(base, "process") || base == "main.go" || base == "files.go" || base == "go.mod" || base == "go.sum" {

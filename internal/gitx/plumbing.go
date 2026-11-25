@@ -746,7 +746,7 @@ func (c *Context) cmdVersion(p *cli.Parsed) error {
   "product": "git-next",
   "version": %q,
   "implementation": "go",
-  "acceptance_contract": "rust",
+  "acceptance_contract": "go",
   "engine": "go-git/v5 v5.19.1",
   "behavior_spec": "https://git-scm.com/docs",
   "native_git_linked": false,

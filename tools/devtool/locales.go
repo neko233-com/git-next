@@ -17,7 +17,6 @@ import (
 
 func init() {
 	register("check-locales", "Validate locale structure, keys, placeholders and whitespace", "coverage? fix?", checkLocales)
-	register("extract-locale", "Extract the legacy Rust Chinese catalog as locale JSON", "source output", extractLocale)
 }
 
 type jsonOrder struct {
@@ -106,12 +105,12 @@ func placeholders(s string) []string {
 	sort.Strings(out)
 	return out
 }
-func rustLiteral(s string) string {
+func sourceLiteral(s string) string {
 	return strings.TrimSuffix(strings.TrimPrefix(strconv.Quote(s), `"`), `"`)
 }
 func localeCorpus(a *app) (string, error) {
 	var all strings.Builder
-	for _, sourceDir := range []string{"src", "internal", "cmd"} {
+	for _, sourceDir := range []string{"cmd", "internal"} {
 		if !exists(a.path(sourceDir)) {
 			continue
 		}
@@ -120,7 +119,7 @@ func localeCorpus(a *app) (string, error) {
 			return "", e
 		}
 		for _, p := range paths {
-			if strings.HasSuffix(p, ".rs") || strings.HasSuffix(p, ".go") {
+			if strings.HasSuffix(p, ".go") {
 				data, e := read(p)
 				if e != nil {
 					return "", e
@@ -146,26 +145,22 @@ func localeCorpus(a *app) (string, error) {
 	return all.String(), nil
 }
 func commandNames(a *app) (map[string]bool, error) {
-	text, e := read(a.path("src/cli.rs"))
+	specs, e := read(a.path("internal/cli/specs.go"))
 	if e != nil {
 		return nil, e
 	}
-	_, body, ok := strings.Cut(text, "enum Commands")
+	_, body, ok := strings.Cut(specs, "var Specs = map[string]Spec{")
 	if !ok {
-		return nil, fmt.Errorf("Commands enum missing")
+		return nil, fmt.Errorf("Go command specification map is missing")
 	}
 	body, _, _ = strings.Cut(body, "\n}")
 	names := map[string]bool{"git": true}
-	pattern := regexp.MustCompile(`(?m)^    ([A-Z][A-Za-z0-9]*)\s*(\{|,|\()`)
+	pattern := regexp.MustCompile(`(?m)^\s*"([a-z][a-z0-9-]*)"\s*:`)
 	for _, m := range pattern.FindAllStringSubmatch(body, -1) {
-		var name strings.Builder
-		for i, c := range m[1] {
-			if i > 0 && c >= 'A' && c <= 'Z' {
-				name.WriteByte('-')
-			}
-			name.WriteRune(c)
-		}
-		names[strings.ToLower(name.String())] = true
+		names[m[1]] = true
+	}
+	if len(names) < 40 {
+		return nil, fmt.Errorf("Go command specifications are incomplete: %d commands including git", len(names))
 	}
 	return names, nil
 }
@@ -226,7 +221,7 @@ func validateLocale(name string, data []byte, corpus string, commands map[string
 				}
 				continue
 			}
-			if !strings.Contains(corpus, `"`+rustLiteral(key)+`"`) && !strings.Contains(corpus, key) {
+			if !strings.Contains(corpus, `"`+sourceLiteral(key)+`"`) && !strings.Contains(corpus, key) {
 				issue("message %q does not appear in the source", key)
 			}
 			if strings.Join(placeholders(key), "\x00") != strings.Join(placeholders(translation), "\x00") {
@@ -303,169 +298,4 @@ func checkLocales(a *app, o options) error {
 	}
 	fmt.Fprintf(a.out, "%d locale documents checked: structure, stale keys, placeholders, whitespace, order\n", len(paths))
 	return nil
-}
-func extractLocale(a *app, o options) error {
-	source, e := read(o.value("source", a.path("src/language/catalog.rs")))
-	if e != nil {
-		return e
-	}
-	body := func(name string) (string, error) {
-		start := strings.Index(source, "fn "+name)
-		if start < 0 {
-			return "", fmt.Errorf("function %s not found in catalog", name)
-		}
-		offset := strings.Index(source[start:], "{")
-		if offset < 0 {
-			return "", fmt.Errorf("function %s lacks body", name)
-		}
-		start += offset
-		depth := 0
-		for i := start; i < len(source); i++ {
-			if source[i] == '"' {
-				_, after, err := catalogLiteral(source, i)
-				if err != nil {
-					return "", err
-				}
-				i = after - 1
-				continue
-			}
-			if source[i] == '{' {
-				depth++
-			}
-			if source[i] == '}' {
-				depth--
-				if depth == 0 {
-					return source[start+1 : i], nil
-				}
-			}
-		}
-		return "", fmt.Errorf("unbalanced function %s", name)
-	}
-	parse := func(name string) (map[string]string, error) {
-		text, e := body(name)
-		if e != nil {
-			return nil, e
-		}
-		return catalogArms(text)
-	}
-	messages, e := parse("chinese")
-	if e != nil {
-		return e
-	}
-	abouts, e := parse("command_about")
-	if e != nil {
-		return e
-	}
-	for command, english := range abouts {
-		if translated := messages[english]; translated != "" {
-			abouts[command] = translated
-		}
-	}
-	path := o.value("output", a.path("locales/zh-Hans.json"))
-	if e = writeJSON(path, record{"code": "zh-Hans", "name": "简体中文", "english_name": "Simplified Chinese", "messages": messages, "commands": abouts}); e != nil {
-		return e
-	}
-	return a.json(record{"output": path, "messages": len(messages), "commands": len(abouts)})
-}
-
-func catalogLiteral(text string, start int) (string, int, error) {
-	if start >= len(text) || text[start] != '"' {
-		return "", start, fmt.Errorf("catalog literal expected")
-	}
-	var b strings.Builder
-	for i := start + 1; i < len(text); i++ {
-		if text[i] == '"' {
-			return b.String(), i + 1, nil
-		}
-		if text[i] != '\\' {
-			b.WriteByte(text[i])
-			continue
-		}
-		i++
-		if i >= len(text) {
-			return "", i, fmt.Errorf("unterminated catalog escape")
-		}
-		switch text[i] {
-		case 'n':
-			b.WriteByte('\n')
-		case 'r':
-			b.WriteByte('\r')
-		case 't':
-			b.WriteByte('\t')
-		case '0':
-			b.WriteByte(0)
-		case '\\', '"':
-			b.WriteByte(text[i])
-		case 'x':
-			if i+2 >= len(text) {
-				return "", i, fmt.Errorf("short catalog hex escape")
-			}
-			n, e := strconv.ParseUint(text[i+1:i+3], 16, 8)
-			if e != nil {
-				return "", i, e
-			}
-			b.WriteByte(byte(n))
-			i += 2
-		case 'u':
-			if i+1 >= len(text) || text[i+1] != '{' {
-				return "", i, fmt.Errorf("Rust unicode escape requires braces")
-			}
-			end := strings.IndexByte(text[i+2:], '}')
-			if end < 0 {
-				return "", i, fmt.Errorf("unterminated Unicode escape")
-			}
-			n, e := strconv.ParseUint(strings.ReplaceAll(text[i+2:i+2+end], "_", ""), 16, 32)
-			if e != nil || !utf8.ValidRune(rune(n)) {
-				return "", i, fmt.Errorf("invalid catalog Unicode escape")
-			}
-			b.WriteRune(rune(n))
-			i += end + 2
-		case '\n':
-			for i+1 < len(text) && strings.ContainsRune(" \t\r\n", rune(text[i+1])) {
-				i++
-			}
-		default:
-			return "", i, fmt.Errorf("unsupported Rust string escape")
-		}
-	}
-	return "", len(text), fmt.Errorf("unterminated catalog literal")
-}
-func catalogArms(text string) (map[string]string, error) {
-	values := map[string]string{}
-	skipSpace := func(i int) int {
-		for i < len(text) && strings.ContainsRune(" \t\r\n", rune(text[i])) {
-			i++
-		}
-		return i
-	}
-	for i := 0; i < len(text); {
-		if text[i] != '"' {
-			i++
-			continue
-		}
-		key, after, e := catalogLiteral(text, i)
-		if e != nil {
-			return nil, e
-		}
-		cursor := skipSpace(after)
-		if !strings.HasPrefix(text[cursor:], "=>") {
-			i = after
-			continue
-		}
-		cursor = skipSpace(cursor + 2)
-		if cursor < len(text) && text[cursor] == '{' {
-			cursor = skipSpace(cursor + 1)
-		}
-		if cursor >= len(text) || text[cursor] != '"' {
-			i = after
-			continue
-		}
-		value, end, e := catalogLiteral(text, cursor)
-		if e != nil {
-			return nil, e
-		}
-		values[key] = value
-		i = end
-	}
-	return values, nil
 }

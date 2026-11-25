@@ -41,7 +41,7 @@ func migrationAudit(a *app, o options) error {
 		return e
 	}
 	complete := len(remaining) == 0 && len(entrypoints) == 0
-	report := record{"schema_version": 1, "scope": "owned tools/tests/packaging and root executable scripts; current direct Go/process, platform-script and Docker entrypoints; historical receipts and opaque source archives are not executable tooling", "remaining_python_files": len(remaining), "remaining": remaining, "python_execution_entrypoints": entrypoints, "python_execution_entrypoint_count": len(entrypoints), "complete": complete, "rust_cli_gate": "accept-runner/git-next-accept", "go_tool": "tools/devtool"}
+	report := record{"schema_version": 1, "scope": "owned tools/tests/packaging and root executable scripts; current direct Go/process, platform-script and Docker entrypoints; historical receipts and opaque source archives are not executable tooling", "remaining_python_files": len(remaining), "remaining": remaining, "python_execution_entrypoints": entrypoints, "python_execution_entrypoint_count": len(entrypoints), "complete": complete, "go_cli_gate": "tools/devtool/cli-accept", "historical_cli_gate": "accept-runner/git-next-accept (retired)", "go_tool": "tools/devtool"}
 	if o.get("package") != "" || o.get("archive") != "" {
 		product, e := inspectNoPythonProduct(o.get("package"), o.get("archive"))
 		if e != nil {

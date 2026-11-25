@@ -24,24 +24,26 @@ separate terminal waiver.
 
 ## Go CLI gate and Python retirement
 
-The client, owned build/package/docs/release controllers and fixture services use
-[Go 1.27](GO_TOOLING.md); the Go implementation note records the current command
-coverage. Native C/MSI/migration functionality is retained with its replacement
-evidence, and the Rust tree is a reference/rollback path until the Go binary
-passes the same tiers. No new Python source or Python wrapper is allowed.
+The client, CLI acceptance runner, owned build/package/docs/release controllers
+and fixture services use [Go 1.27](GO_TOOLING.md); the Go implementation note
+records the current command coverage. Native C/MSI/migration functionality is
+retained as a separate component with its own evidence; Rust sources, Cargo files
+and the Rust runner have been removed. No new Python source or Python wrapper is
+allowed.
 `migration-audit --require-complete` reports remaining owned Python rather than
 accepting renamed or non-gating files as completion.
 
-Use [git-next-accept](GIT_NEXT_ACCEPTANCE.md) as the only CLI conformance gate:
-L0 before merge/tag, full on release branches, network only when selected. The
-runner is language-neutral and receives the Go binary path; both macOS and Windows
+Use [`go -C tools/devtool run . cli-accept`](GIT_NEXT_ACCEPTANCE.md) as the only
+CLI conformance gate: L0 before merge/tag, full on release branches, network only
+when selected. The Go runner receives the built client path; both macOS and Windows
 use the same command and JSON tier contract. Python CLI suites are retained only
-in Git history at `3609553`; `tests/legacy_cli/` tracks the retirement README only.
-They must not be restored as merge/release gates. The Python aggregate wrapper is
-removed. Add new CLI scenarios to the Rust runner, not as language-specific Go
-cases. Native package/GUI/MSI/credential migration and performance workflows below
-remain separate, with their own coverage and frozen receipts. Old native or Rust
-acceptance cannot establish parity for the Go client.
+in Git history at `3609553`, and the Rust runner is retained only as historical
+release evidence; `tests/legacy_cli/` tracks the retirement README only. They must
+not be restored as merge/release gates. The Python aggregate wrapper and Rust
+runner are removed. Add new CLI scenarios to the Go `tools/devtool` runner, not as
+language-specific cases. Native package/GUI/MSI/credential migration and
+performance workflows below remain separate, with their own coverage and frozen
+receipts. Old native or Rust acceptance cannot establish parity for the Go client.
 
 Artifact diagnostics and source-contract helpers use Go `fast-verify` and
 `verify-repo-contract`. Use packaging, locale/default maintenance and documentation tools only for
@@ -58,7 +60,7 @@ read-safety profile and the absence of default per-repository daemons.
 
 `--reuse-desktop-batch` and `--reuse-desktop-matrix` reuse a previously passed desktop case only with passed original frozen-input readback, matching reference and exact behavioral desktop test bytes. Desktop reuse across installer/document changes checks every GUI/core/Bash/runtime byte; the only runtime configuration exception is the byte-exact transition to the five tested Windows read-safety settings. Unrelated config changes are rejected. Only explicitly unrelated orchestration/test-only source changes are permitted. Original receipt hashes and elapsed time remain in the report. This avoids repeating foreground input after an accepted unchanged build while the user is using the desktop; it cannot accept a changed terminal or changed desktop test. `go -C tools/devtool run . complete-native-batch` can finalize an externally interrupted foreground case with dependency-matched prior desktop evidence only when every other case and original readback passed, all product inputs are identical, and only the listed reporting tools/tests changed. It verifies the exact focus-error stack, rechecks every frozen input, preserves original timing/failure hashes and does not rerun product cases.
 
-Captured Windows fixture Git commands use `CREATE_NO_WINDOW`; interactive product sessions still use ConPTY. The peer's `src/shell_acceptance.rs` is excluded from release-source comparison only while `src/main.rs` keeps its exact `#[cfg(all(test, windows))]` module gate and all release-compiled sources match. Its fixture changes may reuse passed MSI scope evidence when every installer byte and installer validation source remains unchanged; other Rust source changes invalidate reuse.
+Captured Windows fixture Git commands use `CREATE_NO_WINDOW`; interactive product sessions still use ConPTY. Historical Rust peer source files (`src/shell_acceptance.rs`, `src/main.rs`) and their release-source/MSI reuse rules are retained as release evidence only; the current peer terminal source is Go + MyGo. Fixture changes may reuse passed MSI scope evidence when every installer byte and installer validation source remains unchanged; other source changes invalidate reuse.
 
 The authoritative repository rules remain [AGENTS.md](../AGENTS.md). This document describes the consolidated work sequence requested for this delivery; it does not grant permission to change unrelated work or bypass incomplete compatibility.
 
@@ -66,7 +68,7 @@ The [fixed delivery ledger](DELIVERY_STATUS.md) defines ten whole deliverables a
 
 Every batch update must state which deliverable closed (or that none closed), completed/10, implementation completed/7, the remaining IDs and the next finite exit criterion. Do not substitute test counts or compiled files for product progress. Do not expand scope or add experiments to improve the apparent percentage. Collect regression failures before repairing them, then verify affected checks and final artifacts together.
 
-1. Complete the requested user-visible command/API, LF, language, installation/update and supported-platform implementation. Keep the original Git and the accepted preview recoverable during this work. The historical `src/bin/git-terminal.rs` launcher owned by another chat must not be edited. The user-requested peer `../git-terminal` submodule is the desktop application now migrating from Rust + GPUI Fast to Go + MyGo; build and pin the currently packaged binary as an independent dependency, then verify the combined MSI.
+1. Complete the requested user-visible command/API, LF, language, installation/update and supported-platform implementation. Keep the original Git and the accepted preview recoverable during this work. The historical `src/bin/git-terminal.rs` launcher owned by another chat must not be edited. The user-requested peer `../git-terminal` submodule is the desktop application now implemented in Go + MyGo (the historical Rust + GPUI Fast binary is retained as release evidence); build and pin the currently packaged binary as an independent dependency, then verify the combined MSI.
 2. Generate final optimized binaries and package inputs locally. Pin source, dependency, native executable, installer and harness hashes. An MSI build receipt is not runtime acceptance. Candidate core/dependency builds remain outside installed commands until integrated and verified.
 3. Use one consolidated batch to collect formatting/lint/unit, disposable reference conformance, Docker generated-account migration, LF, language/machine-byte and install/upgrade/rollback/uninstall results. Run independent repository, profile and container fixtures concurrently, with eight workers by default. The two MSI scopes share one serial worker lane because Windows Installer has a system-wide transaction lock. Aggregate failures before repairing them.
 4. After correctness passes, measure the final bytes in one sequential paired performance matrix. Do not overlap builds, test workers, Docker emulation or unrelated measurements with timing. Record median/p95, workload/cache scope and actual platform; do not claim universal acceleration from a subset or native ARM performance from QEMU.
@@ -93,7 +95,7 @@ The latest user instruction limits Mac acceptance to final package and shell che
 
 ## Frozen candidate and batch inputs
 
-Native product version metadata comes from `packaging/product.json`; do not edit the independent terminal/Rust preview to bump the C engine. Freeze integrated source before launching compilers. Linux compiler inputs are copied and hashed as an immutable snapshot; later host edits cannot be attributed to that already copied build. Package only source-matched receipts. Collect native correctness, HTTPS/SSH migration with generated accounts, owned LFS/signing, MSI, updater and Mac static-shell checks through the final single batch. No product commands run before D01-D07 close. Mac host work is compilation/material preparation only; `tests/containers/Dockerfile_mac` covers package/image/shell checks without claiming native kernel/Keychain proof.
+Native product version metadata comes from `packaging/product.json`; do not edit the independent terminal or Go client to bump the C engine. Freeze integrated source before launching compilers. Linux compiler inputs are copied and hashed as an immutable snapshot; later host edits cannot be attributed to that already copied build. Package only source-matched receipts. Collect native correctness, HTTPS/SSH migration with generated accounts, owned LFS/signing, MSI, updater and Mac static-shell checks through the final single batch. No product commands run before D01-D07 close. Mac host work is compilation/material preparation only; `tests/containers/Dockerfile_mac` covers package/image/shell checks without claiming native kernel/Keychain proof.
 
 `go -C tools/devtool run . freeze-native-batch` pins all package, MSI, source-bundle and harness inputs. `go -C tools/devtool run . native-product-batch --native-packages MATRIX --reference ORIGINAL --output NEW --workers 8 --wall-clock-target 60` runs the independent lanes together. Its final report records actual elapsed seconds and whether the 60-second target was met. A missed target must remain visible; never omit checks or convert timeout failures into passes. Performance sampling remains an isolated paired batch so concurrent workers do not corrupt latency measurements. Prebuilding fixture images and race-enabled test binaries is compilation preparation, and its time is reported separately from execution.
 
@@ -111,7 +113,7 @@ Freeze executable/package inputs and test harnesses before D08/D09. Delivery pro
 
 Terminal acceptance stages the installer's pinned mutable runtime defaults in an owned copy. The interactive desktop lane runs before other Windows checks; MSI transactions run after the parallel functional lanes to avoid process-initialization failures under host load. An externally registered global Ctrl+Shift+V is detected with Windows error 1409 and the documented Shift+Insert alternative is exercised without changing another application's hotkey.
 
-Test-only peer commits may follow the packaged runtime commit when an ancestor check and an exact diff of Cargo, Rust, shell-integration and terminal component sources prove the executable sources unchanged. `--reuse-msi-batch` together with `--reuse-msi-matrix` may reuse individual passed MSI scopes only if immutable package inputs, platform mappings, reference and validation sources match. Failed scopes always run again. The report retains hashes of the original evidence and its original elapsed time; changed installer validation or product bytes invalidate reuse.
+Test-only peer commits may follow the packaged runtime commit when an ancestor check and an exact diff of the terminal component sources (and, for historical evidence, its former Cargo/Rust sources) prove the executable sources unchanged. `--reuse-msi-batch` together with `--reuse-msi-matrix` may reuse individual passed MSI scopes only if immutable package inputs, platform mappings, reference and validation sources match. Failed scopes always run again. The report retains hashes of the original evidence and its original elapsed time; changed installer validation or product bytes invalidate reuse.
 
 ## Deep common CLI acceptance
 

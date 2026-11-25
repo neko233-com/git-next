@@ -145,12 +145,13 @@ network:</p>
 <h2>What changed in this batch</h2>
 <p>The comparison exposed a defect that mattered more than any optimisation:</p>
 <ul>
-<li><strong>A TLS setting could disable every remote.</strong> <code>http.sslcaInfo</code> pointing at a bundle
-rustls cannot parse - curl's <code>ca-bundle.trust.crt</code> is the common Windows case - made
-<strong>all</strong> HTTP and HTTPS remotes fail, plain <code>http://</code> included, because the HTTP client
-was built with the TLS configuration before the URL scheme was considered. TLS
-settings now apply only to <code>https://</code>, and an unparsable bundle falls back to the
-default trust store instead of aborting the connection.</li>
+<li><strong>A TLS setting could disable every remote (historical Rust preview defect).</strong>
+<code>http.sslcaInfo</code> pointing at a bundle rustls could not parse - curl's
+<code>ca-bundle.trust.crt</code> is the common Windows case - made <strong>all</strong> HTTP and HTTPS
+remotes fail, plain <code>http://</code> included, because the HTTP client was built with the
+TLS configuration before the URL scheme was considered. TLS settings were limited
+to <code>https://</code>, with an unparsable bundle falling back to the default trust store
+instead of aborting the connection.</li>
 <li><strong>The repository was opened twice.</strong> After the fetch, the code reopened the freshly
 cloned repository just to check it out. The fetch already returns an open repository;
 the second open re-read configuration and re-scanned the pack directory for nothing.</li>

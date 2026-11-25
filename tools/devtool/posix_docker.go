@@ -48,7 +48,7 @@ func scaffoldTool(a *app, inputs, target, goTool string) (record, error) {
 	for name, h := range p4Sources {
 		recipes["tools/git-p4/"+name] = h
 	}
-	for _, name := range []string{"Cargo.toml", "compatibility.json"} {
+	for _, name := range []string{"go.mod", "go.sum", "compatibility.json"} {
 		if e = copyFile(a.path(name), filepath.Join(inputs, name)); e != nil {
 			return nil, e
 		}

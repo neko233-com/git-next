@@ -2,15 +2,18 @@
 
 The independent client is implemented in Go 1.27.3 at `cmd/git-next` and
 `internal/**`, with `go-git/v5` providing object storage, refs, index and
-transport. It never executes an installed `git` or `ssh` at runtime. The Rust
-tree and the native C/MSI distribution remain unchanged rollback paths; this
-document describes only the independent client.
+transport. It never executes an installed `git` or `ssh` at runtime. This
+repository is Go-only: Rust sources, Cargo files, the Rust acceptance runner and
+vendored Rust crates have been removed. The native C/MSI distribution is a
+separate, retained component with its own gates; this document describes the
+independent Go client.
 
 ## Build
 
-The repository-root `vendor/` directory belongs to the vendored Rust `gix`
-crates, not to Go. Never run `go mod vendor`; all Go commands must use
-`-mod=mod`:
+The historical Rust `vendor/` directory has been deleted. Go commands still use
+`-mod=mod` explicitly so no implicit vendoring assumption remains; `go mod
+vendor` is not a build step in this repository. Builds are reproducible with
+`CGO_ENABLED=0 GOTOOLCHAIN=go1.27.3` and `-trimpath -ldflags "-s -w"`:
 
 ```sh
 go -C tools/devtool run . build-go-client
@@ -45,18 +48,20 @@ Run against the locally built Go binary on Windows x64:
 | --- | --- |
 | `go test -mod=mod ./...` | pass (`internal/cli`, `internal/gitx`, `internal/i18n`) |
 | `go vet -mod=mod ./...` | pass |
-| `git-next-accept --tier l0` | **39 passed / 0 failed / 0 skipped** |
-| `git-next-accept --tier full` | **55 passed / 45 failed / 0 skipped** |
+| `go -C tools/devtool run . cli-accept --tier l0` | **39 passed / 0 failed / 0 skipped** |
+| `go -C tools/devtool run . cli-accept --tier full` | **57 passed / 43 failed / 0 skipped** |
 | `git-next-accept --tier network` | not run |
 | `verify-repo-contract` | 36 rules checked, 0 failed |
 | `check-locales` | 9 documents checked |
 | `migration-audit --require-complete` | complete, 0 Python entrypoints |
-| `check-runtime-defaults` | blocked: requires the manifest-bound bundled LFS helper; the local dev tree only has the historical Rust helper |
+| `check-runtime-defaults` | blocked locally by the LFS manifest: the manifest-bound bundled LFS helper is not present in the dev tree, so the check cannot validate the real binary here |
 
-The Go binary is **11,302,400 bytes** with `-trimpath -ldflags "-s -w"`. The
-historical Rust CLI built with `cargo build --release --locked` was about
-**22 MiB** in the same checkout, so the Go client binary is roughly half that
-size. This compares the standalone client, not the native C/MSI distribution.
+The Go binary is **11,302,400 bytes** (about **11.3 MB**) with `-trimpath
+-ldflags "-s -w"`. The historical Rust CLI built with `cargo build --release
+--locked` was about **22 MiB** in the same checkout, so the Go client binary is
+roughly half that size. The Rust figure is historical baseline evidence for the
+old client and is not a current build input; this compares the standalone client,
+not the native C/MSI distribution.
 
 ## Known gaps
 
@@ -70,14 +75,15 @@ size. This compares the standalone client, not the native C/MSI distribution.
   unchanged. Do not replace a user's only Git installation based on this
   implementation alone.
 - Packaging, MSI lifecycle and the native C distribution keep their existing
-  gates. The Go terminal renderer (`mygo`) is accepted by the tooling alongside
-  the historical `gpui-fast`; full desktop/MSI lifecycle verification is a
-  separate pass.
-- The Rust sources are retained as a reference and rollback path until the Go
-  client passes the full tier and the consolidated product gates.
+  gates. The terminal renderer is `mygo` (Go + MyGo); the historical `gpui-fast`
+  renderer and its Rust + GPUI Fast binary are retained only as release evidence.
+  Full desktop/MSI lifecycle verification is a separate pass.
+- SSH, SFTP, the host monitor and askpass dialogs are not migrated to the Go
+  terminal; they remain only in the historical Rust + GPUI Fast binary.
 
 ## Rollback
 
-Build the Rust CLI into the same output path and continue using the previous
-package; no repository format, ref, index, LFS or configuration path changes
-are part of this migration.
+Rust is no longer a build path in this repository. Rollback uses the previous
+source revision or an accepted published package; no repository format, ref,
+index, LFS or configuration migration is involved. Restore from the matching
+release asset rather than rebuilding a Rust client.

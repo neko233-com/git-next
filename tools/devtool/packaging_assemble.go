@@ -846,7 +846,10 @@ func assembleNativeWindows(a *app, o options) error {
 			return e
 		}
 		if terminal["product"] != "git-terminal" || terminal["platform"] != platform || !terminalRendererOK(terminal["renderer"]) || !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(stringValue(terminal, "source_commit")) {
-			return fmt.Errorf("matching source-built GPUI Fast terminal required")
+			return fmt.Errorf("matching source-built Go terminal required")
+		}
+		if object(terminal, "files")["ghostty-vt.dll"] == nil {
+			return fmt.Errorf("source-built Go terminal lacks its native VT library")
 		}
 		for name, h := range object(terminal, "files") {
 			p, e := confined(root, name)
@@ -862,13 +865,13 @@ func assembleNativeWindows(a *app, o options) error {
 			}
 			target := "LICENSES/git-terminal/" + name
 			kind := "git-terminal-notice"
-			if name == "git-terminal.exe" || name == "git-terminal-shell.exe" || name == "git-terminal-askpass.exe" || name == "libunwind.dll" || strings.HasPrefix(name, "shell-integration/") {
+			if name == "git-terminal.exe" || name == "ghostty-vt.dll" || strings.HasPrefix(name, "shell-integration/") {
 				target = "bin/" + name
 			}
 			if strings.HasSuffix(name, ".exe") {
 				kind = "source-built-git-terminal"
-			} else if name == "libunwind.dll" {
-				kind = "pinned-git-terminal-runtime"
+			} else if name == "ghostty-vt.dll" {
+				kind = "go-terminal-native-vt"
 			}
 			if e = b.copy(p, target, kind, 0644, 0); e != nil {
 				return e

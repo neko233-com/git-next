@@ -1,8 +1,8 @@
 # Native Git LFS
 
-Archived fixture descriptions below explain historical receipts. Current commands use Rust acceptance and Go tooling; these descriptions do not extend current acceptance coverage.
+Archived fixture descriptions below explain historical receipts. Current commands use the Go `cli-accept` gate and Go tooling; these descriptions do not extend current acceptance coverage.
 
-> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [`go -C tools/devtool run . cli-accept`](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
 
 
 The current native product bundles Git LFS 3.7.1, registers standard filters and supplies standard LFS hooks in new-repository templates. No separate LFS application installation is needed. Existing repositories/custom hooks remain untouched. [Game-project behavior and current scope](GAME_PROJECTS.md) supersede historical Rust preview notes below; final new-byte acceptance remains in the delivery ledger.
@@ -11,7 +11,7 @@ The final native route uses the pinned owned Git LFS 3.7.1 primary helper, with 
 
 ## Local use
 
-Build all binaries with `cargo build --release --locked --bins`. Keep `git-next-lfs-filter` beside `git-next` and the git-named preview. The installer supplies the native standalone LFS command as `git-next-lfs` and puts a `git-lfs` alias only inside the isolated preview directory.
+Build the Go client with `go -C tools/devtool run . build-go-client`. The historical Rust preview additionally built `git-next-lfs-filter` beside `git-next` and the git-named preview; its installer supplied the native standalone LFS command as `git-next-lfs` and put a `git-lfs` alias only inside the isolated preview directory.
 
 ```sh
 git-next lfs install --local

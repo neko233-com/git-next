@@ -23,7 +23,7 @@ var msiUpgrades = map[string]string{"windows-x64": "{981F8880-E13B-4D22-A36E-A1B
 
 func init() {
 	register("native-msi", "Compile source-pinned full native MSI without product execution", "distribution wix output-dir source-commit scope allow-experimental-local?", nativeMSI)
-	register("build-msi", "Compile source-pinned Rust/native MSI without publishing", "distribution binary-dir build-receipt wix platform output-dir source-commit scope allow-experimental-local?", buildMSI)
+	register("build-msi", "Compile source-pinned Go/native MSI without publishing", "distribution binary-dir build-receipt wix platform output-dir source-commit scope allow-experimental-local?", buildMSI)
 }
 func uuid5MSI(name string) string {
 	namespace, _ := hex.DecodeString("57e363d45f824cd9bd55b37566f07458")
@@ -463,12 +463,12 @@ func compileMSI(a *app, o options, manifest record, files map[string]string, pkg
 		}
 	}
 	if legacy {
-		current, e := rustSourceHash(a)
+		current, e := goSourceHash(a)
 		if e != nil {
 			return nil, e
 		}
 		if current != pkg["source_tree_sha256"] {
-			return nil, fmt.Errorf("Rust source changed during MSI compilation")
+			return nil, fmt.Errorf("Go source changed during MSI compilation")
 		}
 	}
 	if e = copyFile(filepath.Join(stage, asset), destination); e != nil {
@@ -541,7 +541,7 @@ func nativeMSI(a *app, o options) error {
 		}
 	}
 	if !o.yes("allow-experimental-local") && (files["bin/git-terminal.exe"] == "" || !terminalRendererOK(object(manifest, "git_terminal")["renderer"])) {
-		return fmt.Errorf("Windows releases require peer Rust GPUI Fast terminal")
+		return fmt.Errorf("Windows releases require the peer Go terminal")
 	}
 	for _, v := range []struct {
 		folder string
@@ -600,37 +600,8 @@ func peMachine(platform string) uint16 {
 	}
 	return 0x8664
 }
-func rustSourceHash(a *app) (string, error) {
-	var paths []string
-	for _, name := range []string{"Cargo.toml", "Cargo.lock", "compatibility.json", "docs/COMPATIBILITY.md"} {
-		paths = append(paths, a.path(filepath.FromSlash(name)))
-	}
-	for _, folder := range []string{"src", "vendor"} {
-		e := filepath.WalkDir(a.path(folder), func(p string, d os.DirEntry, e error) error {
-			if e != nil {
-				return e
-			}
-			if !d.IsDir() && (filepath.Ext(p) == ".rs" || folder == "vendor" && d.Name() == "Cargo.toml") {
-				paths = append(paths, p)
-			}
-			return nil
-		})
-		if e != nil {
-			return "", e
-		}
-	}
-	sort.Strings(paths)
-	h := sha256.New()
-	for _, p := range paths {
-		relative, _ := filepath.Rel(a.root, p)
-		b, e := os.ReadFile(p)
-		if e != nil {
-			return "", e
-		}
-		h.Write([]byte(filepath.ToSlash(relative) + "\x00"))
-		h.Write(b)
-	}
-	return hex.EncodeToString(h.Sum(nil)), nil
+func goSourceHash(a *app) (string, error) {
+	return hashGoSource(a.root)
 }
 func buildMSI(a *app, o options) error {
 	if o.get("distribution") != "" {
@@ -642,7 +613,7 @@ func buildMSI(a *app, o options) error {
 	if e := o.require("binary-dir", "build-receipt", "wix"); e != nil {
 		return e
 	}
-	before, e := rustSourceHash(a)
+	before, e := goSourceHash(a)
 	if e != nil {
 		return e
 	}
@@ -651,9 +622,9 @@ func buildMSI(a *app, o options) error {
 		return e
 	}
 	if receipt["status"] != "pass" || receipt["source_tree_sha256"] != before {
-		return fmt.Errorf("native build receipt differs from current Rust inputs")
+		return fmt.Errorf("native build receipt differs from current Go inputs")
 	}
-	version, e := cargoVersion(a)
+	version, e := productVersion(a)
 	if e != nil {
 		return e
 	}
@@ -692,8 +663,8 @@ func buildMSI(a *app, o options) error {
 		if e = json.Unmarshal(raw, &identity); e != nil {
 			return e
 		}
-		if identity["product"] != "git-next" || identity["version"] != version || identity["external_git_fallback"] != false || identity["external_ssh_fallback"] != false {
-			return fmt.Errorf("unrecognized native Rust client")
+		if identity["product"] != "git-next" || identity["version"] != version || identity["implementation"] != "go" || identity["external_git_fallback"] != false || identity["external_ssh_fallback"] != false {
+			return fmt.Errorf("unrecognized native Go client")
 		}
 	}
 	files := map[string]string{"bin/git-next.exe": filepath.Join(root, "git-next.exe"), "bin/git-terminal.exe": filepath.Join(root, "git-terminal.exe"), "bin/git-next-lfs.exe": filepath.Join(root, "git-lfs.exe"), "bin/git-next-lfs-filter.exe": filepath.Join(root, "git-next-lfs-filter.exe"), "preview/bin/git.exe": filepath.Join(root, "git-next.exe"), "preview/bin/git-lfs.exe": filepath.Join(root, "git-lfs.exe"), "preview/bin/git-next-lfs-filter.exe": filepath.Join(root, "git-next-lfs-filter.exe"), "LICENSE": a.path("LICENSE")}
@@ -743,9 +714,9 @@ func buildMSI(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	after, e := rustSourceHash(a)
+	after, e := goSourceHash(a)
 	if e != nil || after != before {
-		return fmt.Errorf("Rust source changed during MSI compilation")
+		return fmt.Errorf("Go source changed during MSI compilation")
 	}
 	return a.json(result)
 }

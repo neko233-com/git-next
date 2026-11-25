@@ -25,7 +25,7 @@ func init() {
 	register("native-product-batch", "Run consolidated native correctness or paired timing batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver package-validation-policy", nativeProductBatch)
 	register("product-batch", "Compatibility entrypoint for the native product batch", "native-packages reference output workers wall-clock-target performance? performance-runs network-runs correctness-receipt reuse-msi-batch reuse-msi-matrix reuse-desktop-batch reuse-desktop-matrix terminal-waiver package-validation-policy", func(a *app, o options) error {
 		if o.get("native-packages") == "" {
-			return fmt.Errorf("Rust CLI conformance uses accept-runner/git-next-accept --tier full; native packages require --native-packages")
+			return fmt.Errorf("Go CLI conformance uses tools/devtool cli-accept --tier full; native packages require --native-packages")
 		}
 		return nativeProductBatch(a, o)
 	})
@@ -267,7 +267,7 @@ func nativeProductBatch(a *app, o options) error {
 			makeTool("windows-game-lfs-contracts", 900, "native-game-project-acceptance", binary, "--output", filepath.Join(out, "windows-game-lfs.json")),
 		}
 		if waiver == nil {
-			cases = append(cases, makeTool("terminal-rust-contracts", 3600, "terminal-product-acceptance", "--source", terminalSource, "--distribution", runtimeRoot, "--output", filepath.Join(out, "terminal-rust.json")))
+			cases = append(cases, makeTool("terminal-go-contracts", 3600, "terminal-product-acceptance", "--source", terminalSource, "--distribution", runtimeRoot, "--output", filepath.Join(out, "terminal-go.json")))
 		}
 		desktop := makeTool("terminal-native-desktop", 900, "terminal-desktop-acceptance", "--binary", filepath.Join(runtimeRoot, "bin/git-terminal.exe"), "--git", filepath.Join(runtimeRoot, "bin/git.exe"), "--output", filepath.Join(out, "terminal-desktop.json"))
 		for _, target := range []string{"linux-x64", "linux-arm64", "macos-arm64"} {

@@ -25,5 +25,5 @@ go -C tools/git-p4 test ./...
 <p>它在临时仓库和配置中以空 PATH 执行 <code>git p4 branches</code> 与相邻 <code>git-p4 branches</code>，不设置 <code>GIT_P4_GIT</code>，验证两者都找到包内 Git。参考 Git 只创建夹具，个人 Perforce 配置不参与检查。</p>
 <p>独立 P4/P4D 测试在临时 HOME、client 与数据库中使用本地 <code>rsh</code> 模式，覆盖真实 clone、增量、二进制、分支祖先、标签、client remap、LFS、submit、shelve/update-shelve、unshelve、rename/delete、编辑器、RCS 清理、hooks 和失败回滚。独立审查回归还覆盖多分支最近 depot、其他 depot 已打开文件、整批作者预检、非管理员拒绝和旧 footer 兼容。原入口一次性对照中，普通历史导入的原始 commit 对象 SHA 相同。</p>
 <p>Linux 同环境对照已分别调用原 Python 与 Go 的上游 <code>t9800</code>–<code>t9836</code> 共 37 套测试，36 套执行，Python 2 专用的 <code>t9835</code> 跳过。原入口 379 个成功、16 个标记的已知缺陷；Go 382 个成功、13 个相同已知缺陷，没有新增差异失败。子集分支、同一 changelist 多标签和非法 UTF-16 恢复三项已知缺陷消失，原测试框架将它们记为 XPASS 并返回非零；迁移证据保留原日志和逐项分类。Go 的 metadata suite 只替换 Python launcher 前置检查，保留 12 个行为断言。</p>
-<p>差分测试使用的原 Python 与第三方辅助 Python 只属于一次性迁移验证环境，不进入产品或新工具链。现存上游缺陷、平台跳过和 XPASS 与通过项分别记录，完整能力对应见 <a href="../../tools/git-p4/README.md">helper 验证映射</a>。发布还必须通过新产品的原生运行、Rust CLI、平台安装和整合门禁，不能用交叉编译或旧产物替代。</p>
+<p>差分测试使用的原 Python 与第三方辅助 Python 只属于一次性迁移验证环境，不进入产品或新工具链。现存上游缺陷、平台跳过和 XPASS 与通过项分别记录，完整能力对应见 <a href="../../tools/git-p4/README.md">helper 验证映射</a>。发布还必须通过新产品的原生运行、Go CLI（<code>cli-accept</code>）、平台安装和整合门禁，不能用交叉编译或旧产物替代。</p>
 </main></html>

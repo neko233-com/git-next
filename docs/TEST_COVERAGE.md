@@ -37,7 +37,7 @@ SHA-256 的 stash 存储曾因十六进制缓冲区缺少 NUL 结束符空间触
 | 登录迁移 | 隔离 DPAPI fixture；Docker 生成 HTTPS/SSH 私有仓库账号，校验旧数据/认证失败保护；不读取个人密码 |
 | 安装与更新 | Windows x64 两种 MSI 范围实际完成安装/修复/升级/注入失败回滚/拒绝降级/卸载：用户级 27 项、机器级 25 项；复用须绑定相同不可变输入。ARM64 两种 MSI 仅编译、表和静态检查，未作硬件生命周期验收 |
 | Bootstrap | bootstrap_acceptance.ps1 对真实 MSI 的版本读取只允许一个字符串；特殊进程名 `[`、`?` 必须按字面量检测 |
-| 原生终端 | 历史证据保留原 Rust/ConPTY 与桌面范围及失败；本轮用户明确豁免后续 `terminal-rust-contracts`、`terminal-native-desktop` 两个专项 lane，单列 waived，不计作通过 |
+| 原生终端 | 历史证据保留原 Rust/ConPTY 与桌面范围及失败；当时用户明确豁免 `terminal-rust-contracts`、`terminal-native-desktop` 两个历史专项 lane（历史 lane 名），单列 waived，不计作通过；当前终端源码为 Go + MyGo |
 | 平台 | Windows x64 执行运行契约；Linux x64 与模拟 ARM64 各 52 场景及两路 owned Git/P4 入口；真实 macOS ARM64 51 场景及两路入口，另有独立包/Mach-O/shell 检查。Windows ARM64 仅交叉编译/PE/包静态检查，Darwin CPU affinity 约束不支持 |
 | 性能 | 独立批次覆盖 1k/10k/100k 文件和本地 HTTPS；配对次数、实际耗时和每轮输出校验写入报告。不得并发基准造成资源争抢后宣称性能提升 |
 | 实际接管 | 新进程 PATH 默认 git、所有入口身份与哈希、原配置/SSH 文件指纹、安装快捷方式和真实新版窗口 |

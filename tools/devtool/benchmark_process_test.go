@@ -8,7 +8,7 @@ import (
 
 func TestBenchmarkSourceIdentityPreservesPathComponentOrdering(t *testing.T) {
 	root := t.TempDir()
-	names := []string{"Cargo.lock", "Cargo.toml", "compatibility.json", "docs/COMPATIBILITY.md", "src/foo/a.rs", "src/foo.rs"}
+	names := []string{"cmd/a/foo.go", "cmd/foo.go", "compatibility.json", "docs/COMPATIBILITY.md", "go.mod", "go.sum", "packaging/product.json", "tools/devtool/main.go"}
 	var expected []byte
 	for _, name := range names {
 		content := []byte("fixture:" + name)

@@ -1,7 +1,8 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Installer proof</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>Windows installer proof</h1>
 <p>This page separates native MSI lifecycle evidence, workstation recovery and the
-independent Rust preview's verification command. A compiled MSI, an isolated lifecycle
-pass and a completed workstation takeover are different acceptance layers.</p>
+historical Rust preview's verification command (retained as v1.0.x release evidence).
+A compiled MSI, an isolated lifecycle pass and a completed workstation takeover are
+different acceptance layers.</p>
 <h2>Published v1.0.3: R8 local gates and scoped workstation acceptance complete</h2>
 <p>R8 correctness passed 16 lanes with exactly two user-waived terminal lanes in
 1,229.320 seconds. Paired performance passed 5/5 in 649.347 seconds. Both Windows
@@ -55,9 +56,10 @@ The later standard R8 installation and independent scoped workstation readback
 passed as recorded above. This does not rewrite the legacy recovery's
 <code>release_gate=false</code>. See <a href="installation.html">installation</a>.</p>
 <h2>Current native verification entrypoints</h2>
-<p>The native C CLI does <strong>not</strong> implement <code>git install verify</code>; that command belongs
-to the independent Rust preview below. Native source tooling can inspect an actual
-package directory/archive without executing the product:</p>
+<p>The native C CLI and the Go client do <strong>not</strong> implement <code>git install verify</code>; that
+command belonged to the historical Rust preview described below (v1.0.x release
+evidence only). Native source tooling can inspect an actual package
+directory/archive without executing the product:</p>
 <pre><code class="language-powershell">go -C tools/devtool run . migration-product-audit --package &lt;installed-root-or-archive&gt; --json &lt;new-report.json&gt; --require-complete
 </code></pre>
 <p>This checks package identity and Python interpreters/libraries/scripts. It is not an
@@ -155,9 +157,9 @@ have reached a user.</p>
 registration fail the install meant a five-minute file copy was rolled back because a
 scheduled task could not be created. Registration is an integration, not part of the
 file installation: that checkpoint attempted it separately and recorded failures.
-The independent Rust preview's <code>git install verify</code> can report integration problems;
-the native C CLI does not provide that subcommand. Current native MSI results must
-be read from its scoped lifecycle/action receipts.</p>
+The historical Rust preview's <code>git install verify</code> could report integration problems;
+neither the native C CLI nor the Go client provides that subcommand. Current native
+MSI results must be read from its scoped lifecycle/action receipts.</p>
 <p><strong>2. Custom action failures were invisible.</strong> A Windows Installer custom action has no
 console, so <code>msiexec</code> reported <code>Error 1722</code> and nothing else - no reason, no scope, no
 stack. Every action now writes its failure to <code>%ProgramData%\git-next\logs\msi-action-&lt;mode&gt;.log</code>
@@ -178,14 +180,16 @@ not complete because the running shell holds an open handle on the installed
 takeover is active is refused on purpose, because removing the files would strand the
 machine's Git. The refusal surfaced as a bare <code>Error 1722</code>; the reason is now recorded,
 and the supported order is documented: roll the takeover back, then uninstall.</p>
-<p><strong>5. Rust preview TLS configuration.</strong> This fix belongs to the Rust client's gix/rustls
-transport, not the native C engine. An <code>http.sslCAInfo</code> that rustls cannot parse (curl's
-<code>ca-bundle.trust.crt</code> is the common Windows case) made all HTTP and HTTPS remotes fail.
-TLS configuration now applies only to <code>https://</code>, and an unparsable bundle falls back to
-the default trust store. See <a href="../../vendor/gix-transport/PATCHES.md">vendor/gix-transport/PATCHES.md</a>.</p>
+<p><strong>5. Historical Rust preview TLS configuration.</strong> This fix belonged to the old Rust
+client's gix/rustls transport, not the native C engine or the current Go client. An
+<code>http.sslCAInfo</code> that rustls could not parse (curl's <code>ca-bundle.trust.crt</code> is the common
+Windows case) made all HTTP and HTTPS remotes fail. TLS configuration was limited to
+<code>https://</code>, with an unparsable bundle falling back to the default trust store; the
+patch note was <code>vendor/gix-transport/PATCHES.md</code> (removed with the vendored crates).</p>
 <h2>Historical Rust preview verification path</h2>
-<p>The following command and JSON describe the independent Rust preview implementation.
-They must not be used as native C installation instructions or native MSI proof.</p>
+<p>The following command and JSON describe the retired Rust preview implementation as
+v1.0.x release evidence. They must not be used as native C installation instructions,
+native MSI proof, or instructions for the current Go client.</p>
 <pre><code class="language-sh"># independent Rust preview only
 git install verify --json
 </code></pre>
@@ -250,7 +254,7 @@ go -C tools/devtool run . msi-lifecycle \
     --natural-folder --install-dir &quot;$LOCALAPPDATA/Programs/Git&quot; \
     --receipt docs/benchmarks/msi-user-lifecycle-20261022.json --skip-upgrade
 
-# independent Rust preview only; unavailable in native C
+# historical Rust preview only; unavailable in native C or the Go client
 git install verify --root &quot;C:/Program Files/Git&quot; --json
 </code></pre>
 <h2>Historical checklist</h2>
@@ -259,7 +263,7 @@ git install verify --root &quot;C:/Program Files/Git&quot; --json
 <li>[x] major upgrade over an existing product, old registration removed</li>
 <li>[x] entry points verified as the real payload, not a forwarder</li>
 <li>[x] custom action failures produce a named reason</li>
-<li>[x] Rust preview machine-readable verification that needs no PowerShell (not a native CLI feature)</li>
+<li>[x] historical Rust preview machine-readable verification (release evidence; not a native C/Go CLI feature)</li>
 <li>[ ] first install on a clean VM</li>
 <li>[ ] uninstall of a taken-over installation, after a real rollback</li>
 <li>[ ] upgrade from the previous release artifact</li>

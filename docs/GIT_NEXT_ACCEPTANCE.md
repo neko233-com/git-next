@@ -1,24 +1,21 @@
 # CLI acceptance
 
-`git-next-accept` is the sole CLI conformance gate. The runner is implemented in
-Rust but is language-neutral: it receives a client path and never inspects how the
-client was built. Python CLI suites are retired, not an optional parallel gate.
-Build the Go client once from the repository root:
+The Go `cli-accept` command in `tools/devtool` is the sole CLI conformance gate.
+It receives only the built client path and never inspects how the client was
+built. The Rust acceptance runner and Python CLI suites are retired, not optional
+parallel gates. Build the Go client once from the repository root, then run the
+gate:
 
 ```sh
 go -C tools/devtool run . build-go-client
-cd accept-runner
-cargo build --release --locked
-cargo run --release --locked --bin git-next-accept -- ../target/release/git --json ../target/accept-report.json
-cargo run --release --locked --bin git-next-accept -- ../target/release/git --tier full --json ../target/accept-full.json
+go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 ```
 
 These commands are identical on Windows and macOS. The runner resolves `.exe` on
-Windows; an explicit `git.exe` path also works. Requirements are Go 1.27.3 for the
-client, Rust/Cargo and locked dependencies for the runner, a built client with its
-sibling LFS binary, and reference Git on PATH. Python, venv, Paramiko and Python
-cryptography are not CLI gate dependencies. `--offline` may be added once the
-runner's Cargo dependencies are cached.
+Windows; an explicit `git.exe` path also works. Requirements are Go 1.27.3, the
+built client at `target/release/git` and reference Git on PATH for disposable
+fixtures. No Python, Rust or Cargo toolchain is needed for this gate.
 
 ## Tiers and policy
 
@@ -44,6 +41,18 @@ read-only comparisons/fsck; it is never a client fallback or bundled runtime.
 The fixture template directory is empty, so active hooks bundled with an installed
 reference Git cannot silently enter unrelated CLI scenarios. Explicit hook cases
 still create and execute their own hooks.
+
+## Current local results
+
+Against the locally built Go binary on Windows x64, L0 is **39 passed / 0 failed /
+0 skipped** and full is **57 passed / 43 failed / 0 skipped**. Most full-tier
+failures are SHA-256 object-format cases that `go-git/v5` does not implement; the
+client refuses those repositories rather than writing them incorrectly. A smaller
+set differs in status hooks, nested-worktree paths and reset/diff byte output.
+All are recorded as failures, not skips. Full is **not green** and does not
+authorize a complete-replacement release. Historical Rust runner reports that
+recorded 100/100 describe the old client only and are retained as release
+evidence, not current coverage.
 
 ## Migrated local coverage
 
@@ -91,9 +100,11 @@ fixtures, benchmarks, documentation, build and release tooling use Go; there is 
 Python wrapper or archived-suite fallback. Do not add new Python tests. Native
 package, platform lifecycle and desktop acceptance retain their independent gates.
 
-`go -C tools/devtool run . verify-repo-contract` requires the Rust runner/lockfile/tier contract and rejects
-active Python CLI scripts. `migration-audit --require-complete` checks owned Python
-sources and execution entries. A source checkout rollback
-can restore the previous harness; no Git/LFS storage, configuration, protocol or
-installer migration is involved. Existing historical receipts keep their original
-identity and do not become evidence for the new Rust cases.
+`go -C tools/devtool run . verify-repo-contract` checks the Go-only repository
+contract (no Rust entrypoints or Cargo files, Go acceptance runner and Taskfile
+present) and rejects active Python CLI scripts. `migration-audit --require-complete`
+checks owned Python sources and execution entries. A source checkout rollback can
+restore a previous harness; no Git/LFS storage, configuration, protocol or
+installer migration is involved. Existing historical receipts, including Rust
+runner reports, keep their original identity as historical v1.0.x release
+evidence and do not become evidence for the current Go cases.

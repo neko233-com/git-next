@@ -111,12 +111,13 @@ go -C tools/devtool run . benchmark-clone --reps 9 \
 
 The comparison exposed a defect that mattered more than any optimisation:
 
-- **A TLS setting could disable every remote.** `http.sslcaInfo` pointing at a bundle
-  rustls cannot parse - curl's `ca-bundle.trust.crt` is the common Windows case - made
-  **all** HTTP and HTTPS remotes fail, plain `http://` included, because the HTTP client
-  was built with the TLS configuration before the URL scheme was considered. TLS
-  settings now apply only to `https://`, and an unparsable bundle falls back to the
-  default trust store instead of aborting the connection.
+- **A TLS setting could disable every remote (historical Rust preview defect).**
+  `http.sslcaInfo` pointing at a bundle rustls could not parse - curl's
+  `ca-bundle.trust.crt` is the common Windows case - made **all** HTTP and HTTPS
+  remotes fail, plain `http://` included, because the HTTP client was built with the
+  TLS configuration before the URL scheme was considered. TLS settings were limited
+  to `https://`, with an unparsable bundle falling back to the default trust store
+  instead of aborting the connection.
 - **The repository was opened twice.** After the fetch, the code reopened the freshly
   cloned repository just to check it out. The fetch already returns an open repository;
   the second open re-read configuration and re-scanned the pack directory for nothing.

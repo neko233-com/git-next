@@ -90,21 +90,34 @@ func benchmarkStats(values []float64, peaks []int64) record {
 	}
 	return r
 }
-func benchmarkSourceHash(root string) string {
-	paths := []string{filepath.Join(root, "Cargo.toml"), filepath.Join(root, "Cargo.lock"), filepath.Join(root, "compatibility.json"), filepath.Join(root, "docs/COMPATIBILITY.md")}
-	for _, directory := range []string{"src", "vendor"} {
-		acceptMust(filepath.WalkDir(filepath.Join(root, directory), func(p string, d os.DirEntry, e error) error {
-			if os.IsNotExist(e) && p == filepath.Join(root, directory) {
-				return nil
-			}
+func goSourceInputs(root string) ([]string, error) {
+	var paths []string
+	for _, name := range []string{"go.mod", "go.sum", "compatibility.json", "docs/COMPATIBILITY.md", "packaging/product.json"} {
+		p := filepath.Join(root, filepath.FromSlash(name))
+		if exists(p) {
+			paths = append(paths, p)
+		}
+	}
+	for _, directory := range []string{"cmd", "internal", "tools"} {
+		base := filepath.Join(root, directory)
+		if !exists(base) {
+			continue
+		}
+		e := filepath.WalkDir(base, func(p string, d os.DirEntry, e error) error {
 			if e != nil {
 				return e
 			}
-			if !d.IsDir() && (strings.HasSuffix(p, ".rs") || (directory == "vendor" && d.Name() == "Cargo.toml")) {
+			if d.IsDir() {
+				return nil
+			}
+			if strings.HasSuffix(p, ".go") || d.Name() == "go.mod" || d.Name() == "go.sum" {
 				paths = append(paths, p)
 			}
 			return nil
-		}))
+		})
+		if e != nil {
+			return nil, e
+		}
 	}
 	sort.Slice(paths, func(i, j int) bool {
 		left, right := filepath.ToSlash(paths[i]), filepath.ToSlash(paths[j])
@@ -119,17 +132,35 @@ func benchmarkSourceHash(root string) string {
 		}
 		return len(one) < len(two)
 	})
+	return paths, nil
+}
+func hashGoSource(root string) (string, error) {
+	paths, e := goSourceInputs(root)
+	if e != nil {
+		return "", e
+	}
 	h := sha256.New()
 	for _, p := range paths {
 		rel, e := filepath.Rel(root, p)
-		acceptMust(e)
+		if e != nil {
+			return "", e
+		}
 		_, _ = h.Write([]byte(filepath.ToSlash(rel) + "\x00"))
-		_, _ = h.Write(acceptBytes(p))
+		b, e := os.ReadFile(p)
+		if e != nil {
+			return "", e
+		}
+		_, _ = h.Write(b)
 	}
-	return hex.EncodeToString(h.Sum(nil))
+	return hex.EncodeToString(h.Sum(nil)), nil
+}
+func benchmarkSourceHash(root string) string {
+	hash, e := hashGoSource(root)
+	acceptMust(e)
+	return hash
 }
 func init() {
-	register("benchmark-source-identity", "Hash current Rust benchmark input paths with the historical platform ordering", "", func(a *app, o options) error {
+	register("benchmark-source-identity", "Hash current Go benchmark input paths with stable ordering", "", func(a *app, o options) error {
 		return a.json(record{"source_tree_sha256": benchmarkSourceHash(a.root)})
 	})
 }

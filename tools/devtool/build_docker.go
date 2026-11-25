@@ -441,7 +441,7 @@ func buildNativeLinux(a *app, o options) (returned error) {
 			return e
 		}
 	}
-	for _, name := range []string{"Cargo.toml", "compatibility.json"} {
+	for _, name := range []string{"go.mod", "go.sum", "compatibility.json"} {
 		if e = copyFile(a.path(name), filepath.Join(inputs, name)); e != nil {
 			return e
 		}

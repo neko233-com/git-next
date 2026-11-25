@@ -1,10 +1,10 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Go tooling migration</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>Go client, Rust acceptance runner and Go tooling</h1>
-<p>Go 1.27 owns the independent client (<code>cmd/git-next</code> plus <code>internal/**</code>), build,
-package, docs, release orchestration, benchmarks, fixture services, desktop
-automation and the Perforce helper. The Rust acceptance runner is language-neutral
-and tests the Go binary through its public CLI. Native C, PowerShell and shell
-remain where their platform APIs require them. Neither the product nor these
-tools need a Python interpreter, venv or pip.</p>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Go tooling migration</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>Go client and Go tooling</h1>
+<p>Go 1.27.3 owns the independent client (<code>cmd/git-next</code> plus <code>internal/**</code>), the
+CLI acceptance runner, build, package, docs, release orchestration, benchmarks,
+fixture services, desktop automation and the Perforce helper. The Go <code>cli-accept</code>
+command tests the built binary through its public CLI. Native C, PowerShell and
+shell remain where their platform APIs require them, as a separate component. No
+Rust, Cargo, Python interpreter, venv or pip is needed for owned tooling.</p>
 <h2>Entry points</h2>
 <p>Use Go 1.27.3, matching the client module and the terminal's MyGo dependency. From the repository root:</p>
 <pre><code class="language-sh">go -C tools/devtool run . help
@@ -49,14 +49,16 @@ physical ARM or complete host lifecycle prerequisites. The existing accepted
 receipts satisfy that scope; no runtime bytes, staging checks or old reports are
 changed, and no new host/terminal run is required to close this delivery.
 <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json">Scope record</a>.</p>
-<pre><code class="language-sh">go -C tools/devtool run . build-go-client   # uses -mod=mod: root vendor/ belongs to Rust
-cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
+<pre><code class="language-sh">go -C tools/devtool run . build-go-client   # uses -mod=mod: the historical Rust vendor/ was deleted
+go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 </code></pre>
-<p>The same commands run on Windows and macOS. L0 covers 39 commands and is mandatory
-before merge/tag; full covers 100 local scenarios and is mandatory on release
-branches. <code>--tier network</code> is explicit, with skips recorded. The client runs with
-an empty PATH; reference Git constructs fixtures. See
-<a href="git-next-acceptance.html">the exact Rust coverage and gaps</a>.</p>
+<p>The same commands run on Windows and macOS. L0 covers 39 commands (39/39 passing)
+and is mandatory before merge/tag; full covers 100 local scenarios and currently
+passes 57/100, with most failures in SHA-256 object-format cases. Full is mandatory
+on release branches and is not yet green. <code>--tier network</code> is explicit, with skips
+recorded. The client runs with an empty PATH; reference Git constructs fixtures.
+See <a href="git-next-acceptance.html">the exact Go coverage and gaps</a>.</p>
 <p>Native full-package CLI, GCM, HTTP/SSH/LFS, desktop and installer lifecycle checks
 use their Go/platform gates. They still require frozen package and harness
 identities. A source or runtime change reopens the affected gate. Compilation,
@@ -82,8 +84,9 @@ each has the exact <code>source_commit</code> and a <code>files</code> map conta
 <code>bin/git-terminal.exe</code> and <code>bin/git-terminal-shell.exe</code>. Matrix, manifest and
 actual binary bytes must agree.</p>
 <p>With that exact authorization, correctness keeps all 18 rows: 16 passed cases and
-two <code>waived</code> cases, with overall <code>pass-with-user-waiver</code>. The terminal Rust,
-desktop and startup tests are not executed. Earlier failed reports remain intact.
+two <code>waived</code> cases, with overall <code>pass-with-user-waiver</code>. The historical terminal
+Rust and desktop tests are not executed; the current terminal source is Go + MyGo.
+Earlier failed reports remain intact as historical v1.0.x evidence.
 Performance requires this same exact correctness report and waiver; all five
 performance rows must pass. MSI, native CLI, actual Mac/Linux, package and hash
 gates are unchanged. Release proofs and package acceptance metadata retain the
@@ -147,7 +150,8 @@ This is the existing archive contract, not a weaker parser or a Git/storage migr
 bridge verifier during this work, bringing that batch to 115. Earlier migrations
 are recorded separately and are not added to this batch's verified count.
 Thirty retired CLI suites are preserved at Git commit
-<code>3609553</code>; removing them does not claim every old assertion moved into Rust.</p>
+<code>3609553</code>; removing them does not claim every old assertion moved into the Go
+acceptance gate.</p>
 <p>The <a href="https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-python-retirement-20261023.json">public retirement inventory and evidence</a>
 records all 115 old-file hashes, replacement modules, same-input comparisons and
 the exact acceptance boundaries. The

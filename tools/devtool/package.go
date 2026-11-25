@@ -10,7 +10,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -19,11 +18,11 @@ import (
 var allowedImports = map[string]bool{}
 
 func init() {
-	for _, name := range strings.Fields("kernel32.dll ntdll.dll advapi32.dll crypt32.dll oleaut32.dll ws2_32.dll userenv.dll user32.dll dwmapi.dll ole32.dll shell32.dll combase.dll gdi32.dll uiautomationcore.dll comctl32.dll dwrite.dll winmm.dll dxgi.dll d3d11.dll imm32.dll dcomp.dll icuuc.dll credui.dll bcryptprimitives.dll vcruntime140.dll vcruntime140_1.dll") {
+	for _, name := range strings.Fields("kernel32.dll ntdll.dll advapi32.dll crypt32.dll oleaut32.dll ws2_32.dll userenv.dll user32.dll dwmapi.dll ole32.dll shell32.dll combase.dll gdi32.dll uiautomationcore.dll comctl32.dll dwrite.dll winmm.dll dxgi.dll d3d11.dll imm32.dll dcomp.dll icuuc.dll credui.dll bcryptprimitives.dll vcruntime140.dll vcruntime140_1.dll ghostty-vt.dll") {
 		allowedImports[name] = true
 	}
-	register("package-rust", "Package the Rust client/LFS/terminal without interpreter runtimes", "platform git-bin terminal output", packageRust)
-	register("fast-verify", "Inspect Rust artifact identity and Windows import closure", "git-bin terminal", fastVerify)
+	register("package-go", "Package the Go client/LFS/terminal without interpreter runtimes", "platform git-bin terminal output", packageGo)
+	register("fast-verify", "Inspect Go artifact identity and Windows import closure", "git-bin terminal", fastVerify)
 }
 func rejectRelative(name string) error {
 	parts := strings.Split(strings.ToLower(strings.ReplaceAll(name, "\\", "/")), "/")
@@ -77,25 +76,14 @@ func systemImports(path string) (bool, error) {
 	}
 	return crt, nil
 }
-func cargoVersion(a *app) (string, error) {
-	text, e := read(a.path("Cargo.toml"))
-	if e != nil {
-		return "", e
-	}
-	m := regexp.MustCompile(`(?m)^version\s*=\s*"([^"]+)"`).FindStringSubmatch(text)
-	if len(m) != 2 {
-		return "", fmt.Errorf("Cargo package version missing")
-	}
-	return m[1], nil
-}
-func packageRust(a *app, o options) error {
+func packageGo(a *app, o options) error {
 	if e := o.require("platform"); e != nil {
 		return e
 	}
 	if o.get("platform") != "windows-x64" {
-		return fmt.Errorf("Rust package supports windows-x64 only, as before")
+		return fmt.Errorf("Go package supports windows-x64 only")
 	}
-	version, e := cargoVersion(a)
+	version, e := productVersion(a)
 	if e != nil {
 		return e
 	}
@@ -107,14 +95,14 @@ func packageRust(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	output, e := absolute(o.value("output", a.path("dist/rust", "git-next-"+version+"-windows-x64.zip")))
+	output, e := absolute(o.value("output", a.path("dist/go", "git-next-"+version+"-windows-x64.zip")))
 	if e != nil {
 		return e
 	}
 	if e = os.MkdirAll(filepath.Dir(output), 0755); e != nil {
 		return e
 	}
-	stage, e := os.MkdirTemp(filepath.Dir(output), ".rust-package-")
+	stage, e := os.MkdirTemp(filepath.Dir(output), ".go-package-")
 	if e != nil {
 		return e
 	}
@@ -174,7 +162,7 @@ func packageRust(a *app, o options) error {
 		aliases["git-next.exe"] = "git.exe"
 	}
 	for _, name := range []string{"git-terminal.exe", "git-terminal-shell.exe", "git-terminal-askpass.exe"} {
-		path := filepath.Join(terminal, "target/release", name)
+		path := filepath.Join(terminal, "target/go", name)
 		needs, e := systemImports(path)
 		if e != nil {
 			return e
@@ -183,6 +171,21 @@ func packageRust(a *app, o options) error {
 		if e = stageFile(path, "bin/"+name); e != nil {
 			return e
 		}
+	}
+	// The Go terminal ships its own VT parser as a named companion DLL; unlike
+	// foreign runtime DLLs it is an owned, pinned input of this package.
+	terminalDLL := filepath.Join(terminal, "target/go", "ghostty-vt.dll")
+	dest, e := confined(stage, "bin/ghostty-vt.dll")
+	if e != nil {
+		return e
+	}
+	if e = copyFile(terminalDLL, dest); e != nil {
+		return e
+	}
+	if hash, e := digest(dest); e != nil {
+		return e
+	} else {
+		memberHashes["bin/ghostty-vt.dll"] = hash
 	}
 	entries, e := os.ReadDir(filepath.Join(terminal, "shell-integration"))
 	if e != nil {
@@ -195,12 +198,12 @@ func packageRust(a *app, o options) error {
 			}
 		}
 	}
-	for _, pair := range [][2]string{{a.path("LICENSE"), "LICENSE"}, {a.path("compatibility.json"), "compatibility.json"}, {filepath.Join(terminal, "LICENSE"), "LICENSE.git-terminal"}, {a.path("packaging/rust/install.ps1"), "install.ps1"}} {
+	for _, pair := range [][2]string{{a.path("LICENSE"), "LICENSE"}, {a.path("compatibility.json"), "compatibility.json"}, {filepath.Join(terminal, "LICENSE"), "LICENSE.git-terminal"}, {a.path("install.ps1"), "install.ps1"}} {
 		if e = stageFile(pair[0], pair[1]); e != nil {
 			return e
 		}
 	}
-	readme := "# git-next Rust package\n\nRust Git client, LFS entrypoints and Git-Terminal. No MinGW, Bash, Perl, Python or Git for Windows files.\n\nExtract and run install.ps1 to install under %LOCALAPPDATA%\\Programs\\git-next. Registered official Git stays in place. Git-Terminal uses PowerShell/CMD without an owned Bash runtime.\n"
+	readme := "# git-next Go package\n\nGo Git client, LFS entrypoints and Git-Terminal. No MinGW, Bash, Perl, Python or Git for Windows files.\n\nExtract and run install.ps1 to install under %LOCALAPPDATA%\\Programs\\git-next. Registered official Git stays in place. Git-Terminal uses PowerShell/CMD without an owned Bash runtime.\n"
 	if e = write(filepath.Join(stage, "README.md"), []byte(readme), 0644); e != nil {
 		return e
 	}
@@ -209,7 +212,7 @@ func packageRust(a *app, o options) error {
 	if crt {
 		crtMode = "vcruntime140"
 	}
-	manifest := record{"schema_version": 1, "product": "git-next", "distribution": "rust", "version": version, "platform": o.get("platform"), "official_git": false, "bundled": record{"mingw": false, "bash": false, "perl": false, "python": false}, "microsoft_crt": crtMode, "aliases": aliases, "files": memberHashes}
+	manifest := record{"schema_version": 1, "product": "git-next", "distribution": "go", "version": version, "platform": o.get("platform"), "official_git": false, "bundled": record{"mingw": false, "bash": false, "perl": false, "python": false}, "microsoft_crt": crtMode, "aliases": aliases, "files": memberHashes}
 	if e = writeJSON(filepath.Join(stage, "package.json"), manifest); e != nil {
 		return e
 	}
@@ -224,7 +227,7 @@ func packageRust(a *app, o options) error {
 		if e == nil && stringValue(stamp, "input_digest") == fingerprint {
 			hash, e := digest(output)
 			if e == nil && hash == stringValue(stamp, "archive_sha256") {
-				if e = verifyRustArchive(output); e != nil {
+				if e = verifyGoArchive(output); e != nil {
 					return e
 				}
 				info, e := os.Stat(output)
@@ -240,7 +243,7 @@ func packageRust(a *app, o options) error {
 		return e
 	}
 	sort.Strings(paths)
-	temp, e := os.CreateTemp(filepath.Dir(output), ".rust-archive-*.zip")
+	temp, e := os.CreateTemp(filepath.Dir(output), ".go-archive-*.zip")
 	if e != nil {
 		return e
 	}
@@ -284,7 +287,7 @@ func packageRust(a *app, o options) error {
 	if e = temp.Close(); e != nil {
 		return e
 	}
-	if e = verifyRustArchive(tempName); e != nil {
+	if e = verifyGoArchive(tempName); e != nil {
 		return e
 	}
 	if e = os.Rename(tempName, output); e != nil {
@@ -306,7 +309,7 @@ func packageRust(a *app, o options) error {
 	}
 	return a.json(record{"archive": output, "bytes": info.Size(), "sha256": hash, "files": len(paths), "microsoft_crt": crtMode, "official_git": false, "cached": false, "seconds": time.Since(started).Seconds()})
 }
-func verifyRustArchive(path string) error {
+func verifyGoArchive(path string) error {
 	z, e := zip.OpenReader(path)
 	if e != nil {
 		return e
@@ -332,8 +335,10 @@ func verifyRustArchive(path string) error {
 		if expanded > 512<<20 || len(actual) > 20000 {
 			return fmt.Errorf("package archive exceeds capacity")
 		}
-		if e = rejectRelative(file.Name); e != nil {
-			return e
+		if file.Name != "bin/ghostty-vt.dll" {
+			if e = rejectRelative(file.Name); e != nil {
+				return e
+			}
 		}
 		if file.Name == "bin/git.exe" {
 			found = true
@@ -358,8 +363,8 @@ func verifyRustArchive(path string) error {
 	if !found {
 		return fmt.Errorf("archive has no bin/git.exe")
 	}
-	if stringValue(manifest, "product") != "git-next" || stringValue(manifest, "distribution") != "rust" {
-		return fmt.Errorf("missing Rust package manifest")
+	if stringValue(manifest, "product") != "git-next" || stringValue(manifest, "distribution") != "go" {
+		return fmt.Errorf("missing Go package manifest")
 	}
 	expected := object(manifest, "files")
 	if len(expected)+1 != len(actual) {
@@ -373,25 +378,52 @@ func verifyRustArchive(path string) error {
 	return nil
 }
 func fastVerify(a *app, o options) error {
-	for _, p := range []string{a.path("Cargo.toml"), filepath.Join(a.root, "../git-terminal/Cargo.toml")} {
-		text, e := read(p)
-		if e != nil {
-			return e
-		}
-		if e = validateProfiles(text); e != nil {
-			return fmt.Errorf("%s: %w", p, e)
-		}
+	if !exists(a.path("go.mod")) || !exists(a.path("cmd/git-next/main.go")) {
+		return fmt.Errorf("Go client module or entrypoint is missing")
 	}
 	if rejectRelative("runtime/usr/bin/bash.exe") == nil {
 		return fmt.Errorf("package guard accepted Bash")
 	}
 	started := time.Now()
 	bin := o.value("git-bin", a.path("target/release"))
-	terminal := o.value("terminal", filepath.Join(a.root, "../git-terminal/target/release/git-terminal.exe"))
-	for _, path := range []string{filepath.Join(bin, "git.exe"), filepath.Join(bin, "git-lfs.exe"), terminal} {
+	terminalDir := o.value("terminal", filepath.Join(a.root, "../git-terminal/target/go"))
+	terminalModule := filepath.Join(terminalDir, "..", "..", "go", "go.mod")
+	if !exists(terminalModule) {
+		return fmt.Errorf("Go terminal module is missing: %s", terminalModule)
+	}
+	terminal := filepath.Join(terminalDir, "git-terminal.exe")
+	companion := filepath.Join(terminalDir, "ghostty-vt.dll")
+	artifacts := []string{
+		filepath.Join(bin, "git.exe"),
+		filepath.Join(bin, "git-lfs.exe"),
+		filepath.Join(bin, "git-next-lfs-filter.exe"),
+		terminal,
+		companion,
+	}
+	for _, path := range artifacts {
+		if !exists(path) {
+			return fmt.Errorf("Go artifact is missing: %s", path)
+		}
 		if _, e := systemImports(path); e != nil {
 			return e
 		}
+	}
+	data, e := os.ReadFile(terminal)
+	if e != nil {
+		return e
+	}
+	_, imports, e := peDependencies(data)
+	if e != nil {
+		return e
+	}
+	linked := false
+	for _, name := range imports {
+		if strings.EqualFold(name, "ghostty-vt.dll") {
+			linked = true
+		}
+	}
+	if !linked {
+		return fmt.Errorf("Go terminal does not import its VT companion")
 	}
 	smoke := func(program string, args ...string) ([]byte, error) {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -414,8 +446,8 @@ func fastVerify(a *app, o options) error {
 	if e = decodeJSON(out, &identity); e != nil {
 		return e
 	}
-	if stringValue(identity, "product") != "git-next" || identity["external_git_fallback"] != false {
-		return fmt.Errorf("binary does not identify the standalone Rust client")
+	if stringValue(identity, "product") != "git-next" || stringValue(identity, "implementation") != "go" || identity["external_git_fallback"] != false || identity["external_ssh_fallback"] != false {
+		return fmt.Errorf("binary does not identify the standalone Go client")
 	}
 	if _, e = smoke(terminal, "--version"); e != nil {
 		return e

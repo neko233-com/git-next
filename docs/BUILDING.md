@@ -1,25 +1,36 @@
 # Local build and acceptance
 
+Go 1.27.3 is the only implementation language for the client, the acceptance
+runner and all repository tooling. `Taskfile.yml` is the single local entry
+point: `task verify` is the mandatory gate and `task test-race` is an explicit
+production gate. There is no cargo, clippy or rustfmt step. Because the
+historical `vendor/` was removed, Go commands use `-mod=mod` explicitly.
+
 ```sh
-cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report.json
+go -C tools/devtool run . build-go-client
+go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 ```
 
-Build the client once with `cargo build --release --locked`. The command above is
-identical on Windows/macOS; Windows resolves `git` to `git.exe`. L0 is required
-before merge/tag; release branches require full. Network acceptance is selected
-explicitly with `--tier network`. See [Rust CLI acceptance](GIT_NEXT_ACCEPTANCE.md)
-for coverage, dependencies, skips and remaining gaps. No Python is used by this gate.
+The build runs with `CGO_ENABLED=0 GOTOOLCHAIN=go1.27.3` and writes
+`target/release/git` (`git.exe` on Windows). The commands above are identical on
+Windows/macOS. L0 is required before merge/tag; release branches require full.
+The sole CLI gate is the Go `cli-accept` runner in `tools/devtool`; it accepts
+only the built client path. See [CLI acceptance](GIT_NEXT_ACCEPTANCE.md) for
+coverage, the isolated harness, skips and remaining gaps. The native C/MSI
+distribution has its own separate gates. No Python, Rust or Cargo toolchain is
+needed for owned tooling.
 
-The Python entrypoints are retired. Historical CLI sources remain in Git history
-at commit `3609553`; they are not an executable gate. Build, package, documentation,
-benchmark, fixture and release tools use the independent Go module in
-`tools/devtool`. See [Go tooling](GO_TOOLING.md) for commands and migration evidence.
+The Python entrypoints and the Rust client are retired. Historical CLI sources
+remain in Git history at commit `3609553`; they are not an executable gate.
+Build, package, documentation, benchmark, fixture and release tools use the
+independent Go module in `tools/devtool`. See [Go tooling](GO_TOOLING.md).
 
 ## Separate native package build tooling
 
-Rust 1.96+; stable rustfmt/clippy. No GitHub Actions or remote CI release gate.
+Go 1.27.3 for all owned tooling; native C/MSI inputs are prepared and compiled by `tools/devtool` Go commands, with no Rust toolchain involved. No GitHub Actions or remote CI release gate.
 
-The final primary core uses the [native source integration](NATIVE_CORE.md). Prepare pinned upstream sources, apply `go -C tools/devtool run . integrate-native-core`, then compile with `go -C tools/devtool run . build-native-core`. The Windows adapter requires the complete dependency prefix and `--iconv` imports from `go -C tools/devtool run . prepare-windows-iconv`. It builds production targets only and records source/artifact hashes; it never runs a product command or CTest. All five native cores and their runtime implementation are compiled/staged. Rust CLI conformance follows the gate above; native package acceptance remains independent. Final packages include the [corresponding-source manifest](CORRESPONDING_SOURCES.md); acceptance uses the frozen complete-package matrix.
+The final primary core uses the [native source integration](NATIVE_CORE.md). Prepare pinned upstream sources, apply `go -C tools/devtool run . integrate-native-core`, then compile with `go -C tools/devtool run . build-native-core`. The Windows adapter requires the complete dependency prefix and `--iconv` imports from `go -C tools/devtool run . prepare-windows-iconv`. It builds production targets only and records source/artifact hashes; it never runs a product command or CTest. All five native cores and their runtime implementation are compiled/staged. Go client CLI conformance follows the gate above; native package acceptance remains independent. Final packages include the [corresponding-source manifest](CORRESPONDING_SOURCES.md); acceptance uses the frozen complete-package matrix.
 
 For this delivery, follow the [fixed implementation and progress ledger](DELIVERY_STATUS.md). Do not execute the individual acceptance/performance commands below during D01–D07; they document available harnesses for the later consolidated batch. Necessary compiler/static syntax checks remain allowed. Native product batches retain their own fixed implementation ledger and frozen-package gates.
 
@@ -40,20 +51,18 @@ The separate native product validation uses `go -C tools/devtool run . native-pr
 For actual Windows MSI lifecycle checks, provide the final packages through `freeze-native-batch --msi-directory` and retained older fixture packages through `--base-msi-directory`. The harness refuses pre-existing MSI/task/state identities. Retiring a workstation installation requires separate explicit operator authorization and a protected rollback backup. MSI tests run after the concurrent disposable repository fixtures; timing starts after all correctness and installation activity finishes.
 
 ```sh
-cargo fmt --check
-cargo clippy --locked --all-targets -- -D warnings
-cargo test --offline --locked --lib
-cargo fmt --manifest-path accept-runner/Cargo.toml --check
-cargo clippy --locked --manifest-path accept-runner/Cargo.toml --all-targets -- -D warnings
-cargo test --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept
+gofmt -l cmd internal tools/devtool            # expected: no output
+go vet -mod=mod ./...
+go test -mod=mod -shuffle=on -count=1 ./...
 ```
 
-Release is opt-level 3 with 16 codegen units, incremental, and LTO off. Dev and test profiles use opt-level 0, line tables only, and incremental compilation. Thin LTO and `codegen-units = 1` are not used.
+Release builds use `-mod=mod -trimpath -ldflags "-s -w"` with `CGO_ENABLED=0`;
+there are no Cargo profiles, codegen-unit settings or LTO toggles.
 
-Everyday CLI regression reuses the existing client:
+Everyday CLI regression reuses the built client:
 
 ```sh
-cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier l0
+go -C tools/devtool run . cli-accept --tier l0
 ```
 
 Reference Git creates disposable fixtures and supplies independent comparisons/fsck.
@@ -63,41 +72,41 @@ checks belong to the separate native product workflow, not this CLI gate.
 
 ## Targets
 
-Windows x64: native MSVC. Windows ARM64: aarch64-pc-windows-gnullvm with Zig's LLVM linker (not an MSVC artifact). Linux x64: x86_64-unknown-linux-musl. Linux ARM64: aarch64-unknown-linux-gnu with glibc 2.28 baseline. macOS: aarch64-apple-darwin with Apple SDK, on a build machine only; no installation or PATH change is required.
+Go cross-compiles the client with `GOOS`/`GOARCH` and CGO disabled; the toolchain
+is pinned to Go 1.27.3. Windows x64 uses `GOOS=windows GOARCH=amd64`, Windows
+ARM64 `GOOS=windows GOARCH=arm64`, Linux x64 `GOOS=linux GOARCH=amd64`, Linux
+ARM64 `GOOS=linux GOARCH=arm64`, and macOS ARM64 `GOOS=darwin GOARCH=arm64`.
 
-Examples for installed rust targets and cargo-zigbuild:
+Cross-compilation proves packaging feasibility, not runtime behavior. Linux/Windows
+ARM64 need native runtime acceptance before claiming operational support. macOS
+ARM64 acceptance is recorded separately after native build and isolated tests. Do
+not publish complete-replacement releases while `compatibility.json` remains false.
 
-```sh
-cargo zigbuild --release --locked --target x86_64-unknown-linux-musl --jobs 1
-cargo zigbuild --release --locked --target aarch64-unknown-linux-gnu.2.28 --jobs 1
-cargo zigbuild --release --locked --target aarch64-pc-windows-gnullvm --jobs 1
-```
-
-Cross-compilation proves packaging feasibility, not runtime behavior. Linux/Windows ARM64 need native runtime acceptance before claiming operational support. macOS ARM64 acceptance is recorded separately after native build and isolated tests. Do not publish complete-replacement releases while compatibility.json remains false.
-
-An eight-job Windows ARM64 local build observed Zig's `file_open Unexpected` while checking a MinGW header/cache input. The header remained readable and unchanged; a single-job retry built and verified all five binaries. The command above records that conservative local build setting. This does not establish the initial failure's root cause or Windows ARM64 runtime acceptance.
-
-A later eight-job Linux x64 musl link observed the same diagnostic on `cimag.c`, which remained readable and unchanged. That failed attempt establishes no new cross-platform acceptance. The musl command also selects one Cargo job for the next local validation; subsequent successful target/runtime results must be recorded separately. Neither failure proves its root cause.
-
-The status-v2 checkpoint also observed a two-job musl Zig cache read failure on `arm.zig`. The input remained readable and unchanged; the single-job retry built all five binaries and retained the exact runtime-tested client. Both Linux targets in that checkpoint use one build job and pass 15 local suites. No SDK/cache deletion or security-setting change was needed; the initial diagnostic's cause is not established.
+Historical Rust cross-compilation used Zig's LLVM linker and recorded one-job
+workarounds for transient cache-read diagnostics on MinGW headers, `cimag.c` and
+`arm.zig`. These notes describe the old Rust toolchain only; they establish
+neither Go build behavior nor Windows/Linux ARM64 runtime acceptance.
 
 ## Historical conformance and separate product checks
 
-The former Python CLI/container runners are retired. Use a target-platform build
-of `git-next-accept`; cross-compilation or emulation is not native OS acceptance.
-[Historical acceptance](ACCEPTANCE.md) retains original receipts, while the
-[current Rust coverage](GIT_NEXT_ACCEPTANCE.md) states the migrated scope and gaps.
-Retiring Python does not transfer every historical assertion into the Rust gate.
+The former Python CLI/container runners and the Rust acceptance runner are
+retired. Use the Go `cli-accept` gate against a target-platform build;
+cross-compilation or emulation is not native OS acceptance.
+[Historical acceptance](ACCEPTANCE.md) retains original receipts as historical
+v1.0.x release evidence, while the [current Go coverage](GIT_NEXT_ACCEPTANCE.md)
+states the migrated scope and gaps. Retiring Python/Rust does not transfer every
+historical assertion into the Go gate.
 
 Native package/container/MSI, generated-account migration, GUI and provider
 workflows retain their own frozen-input checks. They cannot be satisfied by an
 L0/full report. HTTPS/SSH/LFS transfer is not implied by the loopback git-daemon
 network tier. Do not treat a skipped or unavailable transport as passing.
 
-`go -C tools/devtool run . package-rust --platform windows-x64` is an artifact packaging
-command, not a CLI conformance gate. It reuses release binaries and rejects MinGW,
-Bash, Perl, Python and Git for Windows payloads. Documentation generation and
-packaging still use Python; ordinary CLI acceptance needs no Python environment.
+`go -C tools/devtool run . package-go --platform windows-x64` is an artifact
+packaging command, not a CLI conformance gate. Documentation generation and
+packaging use `tools/devtool`; CLI acceptance needs no Python or Rust environment.
+The historical `package-rust` command has been removed with the Rust client.
+
 ## Complete Windows native payload
 
 `go -C tools/devtool run . build-native-core` requires both the pinned `--iconv` and `--psl` import prefixes. The latter restores libpsl cookie public-suffix checks in the native Schannel curl dependency. `go -C tools/devtool run . assemble-native-windows` requires that same `--psl` prefix plus the official Microsoft VC redistributable directory. It verifies current source/build/runtime hashes, excludes the upstream Git engine and optional OpenSSL provider DLL, and writes a new distribution manifest without running any product input. The independent provider pin/header generator and component installer preserve the producer's config/module directory structure. Full-payload MSI compilation uses `go -C tools/devtool run . build-msi --distribution <root>`; this route performs no product version probe. Its unaccepted local candidates remain blocked from takeover and release.
@@ -137,9 +146,11 @@ interpreter and standard library, then verifies the Go helper's source, licenses
 architecture and every output hash. Its external `p4` client requirement is unchanged.
 
 `freeze-native-batch --terminal-source <clean-worktree>` binds the selected,
-committed peer terminal source to the matrix and subsequent Rust terminal gate.
-Use this when the shared development checkout has unrelated changes; the clean
-source requirement still applies. `verify-native-prefix-layout --distribution
+committed peer terminal source to the matrix and the terminal gate. The current
+terminal source is Go + MyGo (renderer=mygo); evidence from the historical
+Rust + GPUI Fast binary is retained only as release evidence. Use this when the
+shared development checkout has unrelated changes; the clean source requirement
+still applies. `verify-native-prefix-layout --distribution
 <directory> --output <new-report.json>` exercises public and internal Git aliases
 under package names that also occur in the runtime directory layout.
 

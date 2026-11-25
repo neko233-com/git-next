@@ -1,20 +1,17 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · CLI acceptance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>CLI acceptance</h1>
-<p><code>git-next-accept</code> is the sole CLI conformance gate. The runner is implemented in
-Rust but is language-neutral: it receives a client path and never inspects how the
-client was built. Python CLI suites are retired, not an optional parallel gate.
-Build the Go client once from the repository root:</p>
+<p>The Go <code>cli-accept</code> command in <code>tools/devtool</code> is the sole CLI conformance gate.
+It receives only the built client path and never inspects how the client was
+built. The Rust acceptance runner and Python CLI suites are retired, not optional
+parallel gates. Build the Go client once from the repository root, then run the
+gate:</p>
 <pre><code class="language-sh">go -C tools/devtool run . build-go-client
-cd accept-runner
-cargo build --release --locked
-cargo run --release --locked --bin git-next-accept -- ../target/release/git --json ../target/accept-report.json
-cargo run --release --locked --bin git-next-accept -- ../target/release/git --tier full --json ../target/accept-full.json
+go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 </code></pre>
 <p>These commands are identical on Windows and macOS. The runner resolves <code>.exe</code> on
-Windows; an explicit <code>git.exe</code> path also works. Requirements are Go 1.27.3 for the
-client, Rust/Cargo and locked dependencies for the runner, a built client with its
-sibling LFS binary, and reference Git on PATH. Python, venv, Paramiko and Python
-cryptography are not CLI gate dependencies. <code>--offline</code> may be added once the
-runner's Cargo dependencies are cached.</p>
+Windows; an explicit <code>git.exe</code> path also works. Requirements are Go 1.27.3, the
+built client at <code>target/release/git</code> and reference Git on PATH for disposable
+fixtures. No Python, Rust or Cargo toolchain is needed for this gate.</p>
 <h2>Tiers and policy</h2>
 <table>
 <thead>
@@ -61,6 +58,16 @@ read-only comparisons/fsck; it is never a client fallback or bundled runtime.
 The fixture template directory is empty, so active hooks bundled with an installed
 reference Git cannot silently enter unrelated CLI scenarios. Explicit hook cases
 still create and execute their own hooks.</p>
+<h2>Current local results</h2>
+<p>Against the locally built Go binary on Windows x64, L0 is <strong>39 passed / 0 failed /
+0 skipped</strong> and full is <strong>57 passed / 43 failed / 0 skipped</strong>. Most full-tier
+failures are SHA-256 object-format cases that <code>go-git/v5</code> does not implement; the
+client refuses those repositories rather than writing them incorrectly. A smaller
+set differs in status hooks, nested-worktree paths and reset/diff byte output.
+All are recorded as failures, not skips. Full is <strong>not green</strong> and does not
+authorize a complete-replacement release. Historical Rust runner reports that
+recorded 100/100 describe the old client only and are retained as release
+evidence, not current coverage.</p>
 <h2>Migrated local coverage</h2>
 <ul>
 <li>Existing local cases: stash round trip, hooks, fast-forward merge, clone/fetch/pull,
@@ -101,10 +108,12 @@ from the current tree. The aggregate Python runner is removed. Native HTTP/LFS/S
 fixtures, benchmarks, documentation, build and release tooling use Go; there is no
 Python wrapper or archived-suite fallback. Do not add new Python tests. Native
 package, platform lifecycle and desktop acceptance retain their independent gates.</p>
-<p><code>go -C tools/devtool run . verify-repo-contract</code> requires the Rust runner/lockfile/tier contract and rejects
-active Python CLI scripts. <code>migration-audit --require-complete</code> checks owned Python
-sources and execution entries. A source checkout rollback
-can restore the previous harness; no Git/LFS storage, configuration, protocol or
-installer migration is involved. Existing historical receipts keep their original
-identity and do not become evidence for the new Rust cases.</p>
+<p><code>go -C tools/devtool run . verify-repo-contract</code> checks the Go-only repository
+contract (no Rust entrypoints or Cargo files, Go acceptance runner and Taskfile
+present) and rejects active Python CLI scripts. <code>migration-audit --require-complete</code>
+checks owned Python sources and execution entries. A source checkout rollback can
+restore a previous harness; no Git/LFS storage, configuration, protocol or
+installer migration is involved. Existing historical receipts, including Rust
+runner reports, keep their original identity as historical v1.0.x release
+evidence and do not become evidence for the current Go cases.</p>
 </main></html>

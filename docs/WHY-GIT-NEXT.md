@@ -3,9 +3,11 @@
 The native product uses a source-built native C Git engine,
 with git-next's identity, LF policy, language support and installation/update behavior.
 They include an owned runtime and preserve existing Git repository, configuration
-and helper contracts. The independent Rust client is a separate preview; its
+and helper contracts. The independent Go client is a separate component; its
 implementation choices and compatibility limits do not describe the native installer.
-This page separates the current architecture from historical measurements.
+The former Rust preview has been removed and its reports remain only as historical
+v1.0.x release evidence. This page separates the current architecture from
+historical measurements.
 
 Read [the Git guide](GIT-GUIDE.md) first if you want to use it. This page is about the
 engineering.
@@ -16,9 +18,10 @@ The native core reads Git objects, refs and indexes using its Git implementation
 It does not dispatch ordinary commands to a separately installed system Git. Its
 runtime includes owned OpenSSH, shell and helper components; hooks, filters,
 subcommands, transport and user-configured tools can start child processes.
-There is no general one-process or shell-free guarantee. Embedded `russh` belongs
-to the independent Rust preview, while the native product uses its owned SSH runtime.
-Neither product may silently fall back to installed Git or OpenSSH.
+There is no general one-process or shell-free guarantee. Embedded `russh` belonged
+to the historical Rust preview, while the native product uses its owned SSH runtime
+and the Go client does not run installed `ssh`. Neither product may silently fall
+back to installed Git or OpenSSH.
 
 Go owns build, packaging, documentation, fixtures, benchmarks and release tooling,
 and the product's `git-p4` helper. Necessary PowerShell and POSIX shell scripts
@@ -146,14 +149,16 @@ healthy, is this installation trustworthy, and can a tool depend on the answer".
 **Separate product and preview contracts.** The native distribution retains Git's
 command and repository semantics, with the product extensions and platform scope
 described in [compatibility](COMPATIBILITY.md) and [delivery status](DELIVERY_STATUS.md).
-The independent Rust preview has a smaller declared command subset and its own
-`git compatibility`/`git doctor` contract. Preview refusals, such as its documented
-`pull --ff-only` boundary, must not be presented as native product limitations.
+The independent Go client has a smaller declared command subset and its own
+`git compatibility`/`git doctor` contract (`complete_git_parity` is false). Client
+refusals, such as the documented `pull --ff-only` boundary, must not be presented as
+native product limitations. The historical Rust preview's subset is retained only as
+v1.0.x release evidence.
 
 **Machine interfaces separate from translation.** Git's `--porcelain`,
 `--porcelain=v2`, `-z`, `--numstat` and `--name-status` output and the product's
 declared JSON schemas remain machine interfaces. Human English/Chinese translation
-is separate; the independent Rust preview's accepted output subset is documented
+is separate; the independent Go client's accepted output subset is documented
 under its own compatibility scope.
 
 **A line-ending policy you can inspect.** `git eol` reports the policy in force and
@@ -163,7 +168,7 @@ rewritten silently.
 
 **Identity for launchers.** `git version --json` identifies the executing product
 and its declared compatibility information. Check the actual artifact's report;
-Rust preview implementation fields must not be assumed to describe a native binary.
+Client implementation fields must not be assumed to describe a native binary.
 
 **An installation that can be verified and undone.** Windows MSI packages install
 the owned CLI/runtime with scoped registration and guarded compatibility bridges.
@@ -178,10 +183,10 @@ the same managed installation: the shell it starts puts the git-next `bin` first
 happens to be on the machine.
 
 **Declared language implementations.** The native product provides owned
-English/Chinese catalogs and language selection. The independent Rust preview
-embeds locale documents; `tools/devtool/locales.go` checks those documents for
-stale keys, placeholders, trailing newlines, duplicates and ordering. That Rust
-locale workflow is separate from the native catalog implementation.
+English/Chinese catalogs and language selection. The independent Go client
+embeds locale documents with `go:embed`; `tools/devtool/locales.go` checks those
+documents for stale keys, placeholders, trailing newlines, duplicates and ordering.
+That Go locale workflow is separate from the native catalog implementation.
 
 **Evidence with a declared scope.** Performance and compatibility claims require
 dated reports and an artifact binding. Historical fixture reports keep their original
@@ -193,13 +198,14 @@ Missed targets and failed checks remain recorded in the reports and
 
 - It does not claim universal speed or memory superiority. Native release eligibility
   depends on its actual package, platform, lifecycle and performance evidence.
-- The independent Rust preview keeps `complete_git_parity: false`; its 39-command
-  L0 and 100-scenario full suite are scoped conformance, not complete Git parity or
-  authorization to replace an installed native Git product.
+- The independent Go client keeps `complete_git_parity: false`; its 39-command L0
+  (39/39) and 100-scenario full suite (57/100) are scoped conformance, not complete
+  Git parity or authorization to replace an installed native Git product. The
+  historical Rust preview's 100/100 report is v1.0.x release evidence only.
 - It does not fall back to the installed Git when something is unimplemented. That
   would make the compatibility claim untestable.
 - It does not provide a Git GUI. The terminal is a terminal.
 
 The native product's measured scope and open items are in
-[delivery status](DELIVERY_STATUS.md); the independent Rust preview's command subset
-and historical receipts are in [compatibility](COMPATIBILITY.md).
+[delivery status](DELIVERY_STATUS.md); the independent Go client's command subset
+and the historical Rust preview receipts are in [compatibility](COMPATIBILITY.md).

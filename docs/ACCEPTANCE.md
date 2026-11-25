@@ -18,7 +18,7 @@ snapshots below retain their own binaries, scope, failures and limitations.
 
 The [integrated 18-case acceptance](benchmarks/native-integrated-correctness-20261021.json) passes with exact artifact/source dependency checks. [32 common CLI scenarios](benchmarks/native-common-cli-20261021.json) cover 16 groups in SHA-1 and SHA-256 against complete official Git 2.54, including worktree/branch/checkout/revert, stash -u, conflict recovery and rejected-push protection; elapsed 31.482 seconds. Every scenario independently compares index/history and runs both object readers' fsck.
 
-The [actual final-package desktop run](benchmarks/native-integrated-terminal-desktop-20261021.json) passes all 15 cases in 25.287 seconds: embedded icon, integrated native title/tab bar and caption hit areas, compact layout, tabs, highlighting, PTY, clipboard restoration and exit. [Current Rust and real shell contracts](benchmarks/native-integrated-terminal-rust-20261021.json) also pass.
+The [actual final-package desktop run](benchmarks/native-integrated-terminal-desktop-20261021.json) passes all 15 cases in 25.287 seconds: embedded icon, integrated native title/tab bar and caption hit areas, compact layout, tabs, highlighting, PTY, clipboard restoration and exit. [Historical Rust and real shell contracts](benchmarks/native-integrated-terminal-rust-20261021.json) also pass (v1.0.x release evidence).
 
 Core, runtime and POSIX package bytes retain their preceding actual passed evidence. Both complete MSI lifecycles are retained only after identical installer/worker/configuration checks and a narrow executable/manual delta check. This means unchanged lifecycle contracts are reused; it does not claim every transaction was rerun on the GUI-only MSI rebuild. Actual final machine installation/takeover remains D10. The report preserves the interrupted desktop/OLE fixture failures, missing reference-backend failure and actual corrective reruns.
 
@@ -160,7 +160,7 @@ The matching [40-round local benchmark](benchmarks/windows-x64-0.3.0-dev-status.
 
 ## Previous accepted binary: 0.2.0, Windows x64
 
-Client SHA-256: `91a6b570ca9cb4d6eb028cf4cbcf30a41d2b2359c9ce6752dab321c49cbe947e`. Formatting, clippy with warnings denied, Rust tests, local/HTTPS acceptance, native worktree acceptance, embedded SSH acceptance, native terminal acceptance and isolated Windows install/uninstall acceptance passed locally. Version forms identify git-next; doctor reports replacement blockers. Reference Git independently verified objects and refs with `fsck`.
+Client SHA-256: `91a6b570ca9cb4d6eb028cf4cbcf30a41d2b2359c9ce6752dab321c49cbe947e` (historical Rust client, v1.0.x release evidence). At that checkpoint, formatting, clippy with warnings denied, Rust tests, local/HTTPS acceptance, native worktree acceptance, embedded SSH acceptance, native terminal acceptance and isolated Windows install/uninstall acceptance passed locally. Version forms identify git-next; doctor reports replacement blockers. Reference Git independently verified objects and refs with `fsck`.
 
 Worktree coverage includes clean branch switch/create/detach, fast-forward pull/merge, tracked-file deletion/addition, CRLF attributes, unchanged file timestamps, unrelated untracked files, dirty/staged/untracked collisions, HEAD/branch/index locks, file-application rollback, custom-hook refusal, interrupted-journal refusal and divergent-merge refusal. HOME/USERPROFILE are isolated; the client PATH contains no Git/OpenSSH.
 

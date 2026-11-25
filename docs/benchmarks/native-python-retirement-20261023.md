@@ -30,13 +30,13 @@ The JSON retains all 115 retirement mappings, R6/R7 checkpoints and original fai
 
 旧回执另报告先前已迁移 6 个主要入口；尚缺完整逐文件清单，因此暂不把它们称为额外 6 个已核验 Python 文件，也不宣称 121 个文件均有逐文件 SHA。Git 历史另外可证实 `check_locales.py`、`publish_docs.py`、`render_docs.py`、`verify_repo_contract.py` 四个 docs/check 工具，JSON 单列其 SHA 与 Go 映射；仍不把旧 reported_count 6 当作完整逐文件清单。
 
-本批包含 30 个历史 CLI suite 的清理，原断言保留于 Git 历史 `3609553`。Rust 是现行 CLI 主门禁；这不表示全部历史断言逐条等量迁入 Rust。当前源码审计记录自有 Python 文件 0、直接 Python 执行入口 0；五平台各自回执绑定的产物严格扫描均为 Python 0，Mac 同一归档也通过；后续重新打包须更新对应审计。
+本批包含 30 个历史 CLI suite 的清理，原断言保留于 Git 历史 `3609553`。在该历史检查点，Rust 是当时的 CLI 主门禁；这不表示全部历史断言逐条等量迁入 Rust。Rust 现已全部删除，当前唯一 CLI 门禁是 Go `cli-accept`，这不表示全部历史断言逐条等量迁入 Go。当前源码审计记录自有 Python 文件 0、直接 Python 执行入口 0；五平台各自回执绑定的产物严格扫描均为 Python 0，Mac 同一归档也通过；后续重新打包须更新对应审计。
 
 ## 架构与能力
 
-Rust `accept-runner` 负责客户端 CLI 行为；Go `tools/devtool` 负责构建、打包、文档、发布、fixture、benchmark 和平台编排；Go `tools/git-p4` 负责产品中的 Perforce helper。必要的 C、PowerShell 和 POSIX 平台代码保留。第三方对应源码归档可保留上游 Python 原文，作为不可变许可证材料，不安装或执行为产品工具。
+历史 Rust `accept-runner` 负责当时的客户端 CLI 行为（现已删除，仅保留发布证据）；当前 Go `tools/devtool` 负责验收、构建、打包、文档、发布、fixture、benchmark 和平台编排；Go `tools/git-p4` 负责产品中的 Perforce helper。必要的 C、PowerShell 和 POSIX 平台代码保留。第三方对应源码归档可保留上游 Python 原文，作为不可变许可证材料，不安装或执行为产品工具。
 
-旧文件到新模块的完整映射位于 JSON 的 `retirement.inventory`。MSI 身份、配置/registry/layout、升级/修复/卸载语义、失败关闭的回执验证、源代码与许可证材料均作为兼容边界保留。30 个 legacy CLI suite 在清单中明确标为归档后的范围化 Rust 门禁，避免误写为逐断言等价。
+旧文件到新模块的完整映射位于 JSON 的 `retirement.inventory`。MSI 身份、配置/registry/layout、升级/修复/卸载语义、失败关闭的回执验证、源代码与许可证材料均作为兼容边界保留。30 个 legacy CLI suite 在清单中明确标为归档后的范围化历史 Rust 门禁（现已由 Go `cli-accept` 取代），避免误写为逐断言等价。
 
 ## 输入与等价验证
 
@@ -55,14 +55,16 @@ Rust `accept-runner` 负责客户端 CLI 行为；Go `tools/devtool` 负责构�
 
 每组原始回执的相对位置及 SHA-256 位于 JSON。旧 MSI evidence 测试有 18 项成功及 1 个过时的默认数量断言；Go 测试从权威 defaults fragment 渲染期望，未将旧测试写成全绿。旧 repair evidence 的 9 项通过。wide-tree 测试只作诊断：Go 捕获 2 次短暂非空 status、旧入口为 0；这里不宣称稳定性或性能验收成立。
 
-## Rust CLI 门禁
+## 历史 Rust CLI 门禁（v1.0.x 发布证据）
+
+以下为该历史检查点中已删除 Rust 客户端与其 Rust runner 的归档结果，仅作旧发布证据；当前唯一 CLI 门禁为 Go `cli-accept`。
 
 | 平台 | full | 失败 | 跳过 | 边界 |
 | --- | ---: | ---: | ---: | --- |
 | Windows x64 | 100 | 0 | 0 | 最终 binding 记录客户端与 runner 前后 SHA 一致，实际报告/log/当前二进制 SHA 已回读匹配 |
 | macOS ARM64 实机 | 100 | 0 | 0 | source inputs、完整报告及两份 binary SHA 均已记录 |
 
-该结果属于 Rust 客户端及 Rust runner，与 native C 整包发布独立。L0 为 39 个命令，full 是 100 个范围化场景；`complete_git_parity` 保持 false。
+该结果属于当时的 Rust 客户端及 Rust runner，与 native C 整包发布独立。L0 为 39 个命令，full 是 100 个范围化场景；`complete_git_parity` 保持 false。当前 Go 客户端为 L0 39/39、full 57/100。
 
 ## Go git-p4 差分
 
@@ -87,11 +89,11 @@ Perforce `p4` 客户端仍是可选集成的外部依赖，与原产品相同。
 
 | 平台 | 已完成的范围 | Python 扫描 |
 | --- | --- | --- |
-| Windows x64 | R7 适用 native lane 通过，MSI user 27 / machine 25 项真实检查精确复用；Rust full 100/100；两 terminal lane 按用户授权豁免，R4 失败保留 | 10,690 文件，0 Python |
+| Windows x64 | R7 适用 native lane 通过，MSI user 27 / machine 25 项真实检查精确复用；历史 Rust full 100/100（发布证据，非当前实现）；两 terminal lane 按用户授权豁免，R4 失败保留 | 10,690 文件，0 Python |
 | Windows ARM64 | 构建与 PE/静态包检查；未宣称真实 ARM64 运行或安装验收 | 9,005 文件，0 Python |
 | Linux x64 | Docker 中四个 native lane 共 52/52，另 P4 两入口通过 | 4,275 文件，0 Python |
 | Linux ARM64 | Docker 中四个 native lane 共 52/52，另 P4 两入口通过 | 4,282 文件，0 Python |
-| macOS ARM64 实机 | 最新 r5 native 51/51，另 P4 两入口通过；Rust full 100/100 | 目录及同一归档各 9,282 文件，0 Python |
+| macOS ARM64 实机 | 最新 r5 native 51/51，另 P4 两入口通过；历史 Rust full 100/100（发布证据，非当前实现） | 目录及同一归档各 9,282 文件，0 Python |
 
 Mac 最新实机回执的仓库相对位置为 target/go-native-release-1.0.3/macos/runtime-refresh-receipts-r5/native-runtime.json，准确 SHA-256 见 JSON 的 current_runtime_evidence。它绑定同一归档 SHA-256 `ff65a4bbe9d7c38dedcb0c6235649c15044ed5445c4f866f38c477348000bad2`，127031662 字节；22 项 harness 哈希在运行前后相等。此前 Darwin executable-path 编译探测修复及原 r4 回执均保留。C source tree 身份保持 ec6983578eb17d399d7f734e57af9651f194e4202ffc12e598c1b2589a7baaad；Darwin CPU affinity 约束仍明确不支持，没有计作通过。
 

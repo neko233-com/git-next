@@ -93,7 +93,7 @@ func findRoot(start string) (string, error) {
 		return "", err
 	}
 	for {
-		if exists(filepath.Join(p, "Cargo.toml")) && exists(filepath.Join(p, "compatibility.json")) {
+		if exists(filepath.Join(p, "go.mod")) && exists(filepath.Join(p, "compatibility.json")) {
 			return p, nil
 		}
 		parent := filepath.Dir(p)

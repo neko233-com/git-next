@@ -1,8 +1,8 @@
 # Native diff, show and history
 
-Archived fixture descriptions below explain historical receipts. Current commands use Rust acceptance and Go tooling; these descriptions do not extend current acceptance coverage.
+Archived fixture descriptions below explain historical receipts. Current commands use the Go `cli-accept` gate and Go tooling; these descriptions do not extend current acceptance coverage.
 
-> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [git-next-accept](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
+> Python CLI suites referenced below are retired historical sources; they refuse direct execution. The current merge/release CLI gate is [`go -C tools/devtool run . cli-accept`](GIT_NEXT_ACCEPTANCE.md). Historical counts keep their original scope and identity.
 
 
 The primary product uses the complete source-built native Git compatibility core for diff, show, history and status. It does not dispatch these commands to installed official Git. Current acceptance is recorded in [delivery status](DELIVERY_STATUS.md). The Gitoxide implementation details below describe the separate historical Rust preview, not limitations of the primary native product.
@@ -52,7 +52,7 @@ Three-dot merge-base comparisons, conflicted/sparse indexes, combined diffs, ful
 [archived status_directory_acceptance fixture](https://github.com/neko233-com/git-next/blob/3609553/tests/legacy_cli/status_directory_acceptance.py) additionally compares same-name file/directory replacements, staged deletion plus an untracked file or directory, empty directories and nested repositories in both object formats. Status row identity retains tracked deletions independently of same-name untracked results. Ordinary and `-uall` output follow their distinct tested Git behavior. Full IDE acceptance remains separate.
 
 ```sh
-cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
+go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
 go -C tools/devtool run . benchmark target/release/git-next --read-commands --runs 40 --files 1000
 ```
 

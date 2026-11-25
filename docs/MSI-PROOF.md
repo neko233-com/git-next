@@ -1,8 +1,9 @@
 # Windows installer proof
 
 This page separates native MSI lifecycle evidence, workstation recovery and the
-independent Rust preview's verification command. A compiled MSI, an isolated lifecycle
-pass and a completed workstation takeover are different acceptance layers.
+historical Rust preview's verification command (retained as v1.0.x release evidence).
+A compiled MSI, an isolated lifecycle pass and a completed workstation takeover are
+different acceptance layers.
 
 ## Published v1.0.3: R8 local gates and scoped workstation acceptance complete
 
@@ -66,9 +67,10 @@ passed as recorded above. This does not rewrite the legacy recovery's
 
 ## Current native verification entrypoints
 
-The native C CLI does **not** implement `git install verify`; that command belongs
-to the independent Rust preview below. Native source tooling can inspect an actual
-package directory/archive without executing the product:
+The native C CLI and the Go client do **not** implement `git install verify`; that
+command belonged to the historical Rust preview described below (v1.0.x release
+evidence only). Native source tooling can inspect an actual package
+directory/archive without executing the product:
 
 ```powershell
 go -C tools/devtool run . migration-product-audit --package <installed-root-or-archive> --json <new-report.json> --require-complete
@@ -137,9 +139,9 @@ have reached a user.
 registration fail the install meant a five-minute file copy was rolled back because a
 scheduled task could not be created. Registration is an integration, not part of the
 file installation: that checkpoint attempted it separately and recorded failures.
-The independent Rust preview's `git install verify` can report integration problems;
-the native C CLI does not provide that subcommand. Current native MSI results must
-be read from its scoped lifecycle/action receipts.
+The historical Rust preview's `git install verify` could report integration problems;
+neither the native C CLI nor the Go client provides that subcommand. Current native
+MSI results must be read from its scoped lifecycle/action receipts.
 
 **2. Custom action failures were invisible.** A Windows Installer custom action has no
 console, so `msiexec` reported `Error 1722` and nothing else - no reason, no scope, no
@@ -164,16 +166,18 @@ takeover is active is refused on purpose, because removing the files would stran
 machine's Git. The refusal surfaced as a bare `Error 1722`; the reason is now recorded,
 and the supported order is documented: roll the takeover back, then uninstall.
 
-**5. Rust preview TLS configuration.** This fix belongs to the Rust client's gix/rustls
-transport, not the native C engine. An `http.sslCAInfo` that rustls cannot parse (curl's
-`ca-bundle.trust.crt` is the common Windows case) made all HTTP and HTTPS remotes fail.
-TLS configuration now applies only to `https://`, and an unparsable bundle falls back to
-the default trust store. See [vendor/gix-transport/PATCHES.md](../vendor/gix-transport/PATCHES.md).
+**5. Historical Rust preview TLS configuration.** This fix belonged to the old Rust
+client's gix/rustls transport, not the native C engine or the current Go client. An
+`http.sslCAInfo` that rustls could not parse (curl's `ca-bundle.trust.crt` is the common
+Windows case) made all HTTP and HTTPS remotes fail. TLS configuration was limited to
+`https://`, with an unparsable bundle falling back to the default trust store; the
+patch note was `vendor/gix-transport/PATCHES.md` (removed with the vendored crates).
 
 ## Historical Rust preview verification path
 
-The following command and JSON describe the independent Rust preview implementation.
-They must not be used as native C installation instructions or native MSI proof.
+The following command and JSON describe the retired Rust preview implementation as
+v1.0.x release evidence. They must not be used as native C installation instructions,
+native MSI proof, or instructions for the current Go client.
 
 ```sh
 # independent Rust preview only
@@ -245,7 +249,7 @@ go -C tools/devtool run . msi-lifecycle \
     --natural-folder --install-dir "$LOCALAPPDATA/Programs/Git" \
     --receipt docs/benchmarks/msi-user-lifecycle-20261022.json --skip-upgrade
 
-# independent Rust preview only; unavailable in native C
+# historical Rust preview only; unavailable in native C or the Go client
 git install verify --root "C:/Program Files/Git" --json
 ```
 
@@ -255,7 +259,7 @@ git install verify --root "C:/Program Files/Git" --json
 - [x] major upgrade over an existing product, old registration removed
 - [x] entry points verified as the real payload, not a forwarder
 - [x] custom action failures produce a named reason
-- [x] Rust preview machine-readable verification that needs no PowerShell (not a native CLI feature)
+- [x] historical Rust preview machine-readable verification (release evidence; not a native C/Go CLI feature)
 - [ ] first install on a clean VM
 - [ ] uninstall of a taken-over installation, after a real rollback
 - [ ] upgrade from the previous release artifact

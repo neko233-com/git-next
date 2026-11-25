@@ -4,7 +4,7 @@
 
 The published five-platform distribution has completed fresh builds and package checks, **14 passed / 4 user-waived correctness lanes in 243.565 seconds**, and a separate **five-lane paired-performance pass in 640.668 seconds**, ten pairs per operation. Frozen matrix: 8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f. Final staging, checksum verification and one consolidated stable/latest publication have completed. This does not claim 1.0.4 installation runtime acceptance.
 
-There are 31 defaults with 24 actual behavior checks; Go tests/vet/race and Rust preview full 100 pass. The final Windows multi-project matrix is 33/33 with 805 tracked paths and 489 Git calls; large-LFS is 5/5. The earlier 60,037-path matrix and memory experiment used the pinned 1.0.3 core with candidate configuration and retain that historical profiling scope. They are not extra final-byte paths or real Editor acceptance.
+There are 31 defaults with 24 actual behavior checks; Go tests/vet/race pass, and the independent Go client passes `cli-accept` L0 39/39 and full 57/100 (SHA-256 gaps). The final Windows multi-project matrix is 33/33 with 805 tracked paths and 489 Git calls; large-LFS is 5/5. The earlier 60,037-path matrix and memory experiment used the pinned 1.0.3 core with candidate configuration and retain that historical profiling scope. They are not extra final-byte paths or real Editor acceptance.
 
 Real Mac runs 51 native scenarios and two owned P4 dispatches; each Linux Docker target runs 52 and two P4 dispatches. Windows ARM64 has cross-compilation, PE/import and package evidence. Full host lifecycle/physical ARM acceptance is not claimed. Only terminal-native-desktop, terminal-rust-contracts, msi-user and msi-machine are waived. The live MSI waiver requires actual four-MSI static payload/table checks, isolated migration and resource probes; it is not installation runtime acceptance. All four published MSIs are unsigned (`NotSigned`).
 
@@ -40,9 +40,10 @@ Check. Real Apple Silicon macOS 15.5 has 51 native scenarios and two owned P4
 dispatch checks. Windows ARM64 retains cross-compilation, PE/import and package
 evidence. Its physical runtime and full Mac GUI/launchd/upgrade lifecycles remain
 unverified and outside the approved gate. Existing ARM packages are retained.
-Four MSIs remain `NotSigned`, with no signer configured. Rust remains an independent
-preview with `complete_git_parity=false`; native acceptance does not promote it.
-[Delivery status](DELIVERY_STATUS.md).
+Four MSIs remain `NotSigned`, with no signer configured. The Go client has
+`complete_git_parity=false`; native acceptance does not promote it. The Rust
+preview has been removed and its reports remain only as historical v1.0.x
+release evidence. [Delivery status](DELIVERY_STATUS.md).
 
 ## Historical packaging and Rust preview readiness notes
 
@@ -64,9 +65,10 @@ directory: `%ProgramFiles%\Git` and `%LOCALAPPDATA%\Programs\Git`. 1.0.0
 replaced `git` and `git-remote-http` only; the other three scheme helpers were
 still the 0.3.0 binaries, and that release had no Windows installer.
 `packaging/native-compatibility.json` records parity and release eligibility as
-true. The Rust preview's root `compatibility.json` still reports
-`complete_git_parity: false`; the five blockers below belong to that preview
-contract, not to the native package.
+true. The Go client's root `compatibility.json` reports `complete_git_parity:
+false`; the five blockers below describe that independent client, not the native
+package. The historical Rust preview reported the same flag in its own release
+evidence.
 
 The Windows git program at that checkpoint is the accepted 0.3.0 engine with the
 product identity rewritten to 1.0.2. This packaging host did not run MSVC 14.44.
@@ -173,8 +175,9 @@ platform, with the same report format as Windows.
 that cannot finish cannot gate a release cheaply. *Done means:* either the target is
 restated as a per-command budget, or the matrix is split so each part fits.
 
-**The HTTP clone path had a fatal configuration interaction.** A `http.sslcainfo`
-pointing at a bundle that rustls cannot parse (curl's `ca-bundle.trust.crt` is the
+**The HTTP clone path had a fatal configuration interaction (historical Rust
+preview).** A `http.sslcainfo` pointing at a bundle that rustls could not parse
+(curl's `ca-bundle.trust.crt` is the
 common case on Windows) made *every* HTTP and HTTPS remote fail, including plain
 `http://`. This is fixed in this batch: TLS settings are only applied to TLS URLs, and
 an unparsable bundle no longer aborts the connection. It is listed here because a

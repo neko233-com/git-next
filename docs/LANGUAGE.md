@@ -110,7 +110,7 @@ Rollback to the previous executable leaves this additive configuration file in p
 
 Human help, native init/clone/fetch/switch/merge/reset/LF/LFS notices, long status groups/hints/operation summaries, doctor headings and known native diagnostic messages use the catalog. Uncatalogued underlying-library diagnostic detail remains in its original language so the actual cause is retained. Product identity, command identifiers, user-supplied text, filenames, branch names, commit messages and rebase todo commands are not translated. Porcelain v1/v2, NUL output, object/config/ref data, patches, LFS protocol and existing JSON contracts remain byte-stable. The catalog is separate from protocol generation; no search-and-replace of final stdout is used.
 
-The native core compiles a catalog generated from the pinned upstream `po/zh_CN.po` and the product extension messages; no online language pack is required. The interface language of the native core and the language of the Rust interface are selected independently, because the native core has its own message set.
+The native core compiles a catalog generated from the pinned upstream `po/zh_CN.po` and the product extension messages; no online language pack is required. The interface language of the native core and the language of the Go client are selected independently, because the native core has its own message set.
 
 ## Batch acceptance
 

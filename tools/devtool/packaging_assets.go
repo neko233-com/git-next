@@ -20,7 +20,7 @@ import (
 func init() {
 	register("prepare-corresponding-sources", "Fetch pinned opaque sources and package source groups", "lock cache output workers", prepareCorrespondingSources)
 	register("prepare-git-shared-assets", "Stage pinned portable Git help and GUI data", "windows-runtime-assets cache destination", prepareSharedAssets)
-	register("prepare-git-terminal", "Build committed peer terminal and collect dependency notices", "source destination platform cargo git llvm-mingw", prepareGitTerminal)
+	register("prepare-git-terminal", "Build committed peer Go terminal and collect native VT notices", "source destination platform git", prepareGitTerminal)
 }
 func encoded(v any) []byte { b, _ := json.MarshalIndent(v, "", "  "); return append(b, '\n') }
 func sortedKeys(m record) []string {
@@ -339,15 +339,19 @@ func commandAt(cwd string, environment []string, program string, args ...string)
 	return r.stdout, nil
 }
 func prepareGitTerminal(a *app, o options) error {
-	if e := o.require("source", "destination", "platform", "cargo", "git"); e != nil {
+	if e := o.require("source", "destination", "platform", "git"); e != nil {
 		return e
 	}
 	platform := o.get("platform")
-	target := map[string]string{"windows-x64": "x86_64-pc-windows-msvc", "windows-arm64": "aarch64-pc-windows-gnullvm"}[platform]
-	if target == "" {
+	arch := map[string]string{"windows-x64": "amd64", "windows-arm64": "arm64"}[platform]
+	if arch == "" {
 		return fmt.Errorf("unsupported terminal platform")
 	}
 	source, e := absolute(o.get("source"))
+	if e != nil {
+		return e
+	}
+	module, e := terminalModule(source)
 	if e != nil {
 		return e
 	}
@@ -358,7 +362,7 @@ func prepareGitTerminal(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	cargo, e := absolute(o.get("cargo"))
+	goTool, e := terminalTool("go")
 	if e != nil {
 		return e
 	}
@@ -373,167 +377,77 @@ func prepareGitTerminal(a *app, o options) error {
 	if len(strings.TrimSpace(string(dirty))) != 0 {
 		return fmt.Errorf("commit complete terminal before packaging")
 	}
-	manifest, e := read(filepath.Join(source, "Cargo.toml"))
+	manifest, e := read(filepath.Join(module, "go.mod"))
 	if e != nil {
 		return e
 	}
-	field := func(name string) string {
-		m := regexp.MustCompile(`(?m)^` + name + `\s*=\s*"([^"]+)"`).FindStringSubmatch(manifest)
-		if len(m) > 1 {
-			return m[1]
-		}
-		return ""
+	modulePath := regexp.MustCompile(`(?m)^module\s+(\S+)`).FindStringSubmatch(string(manifest))
+	if len(modulePath) < 2 || modulePath[1] != "github.com/neko233-com/git-terminal" {
+		return fmt.Errorf("independent Git-Terminal Go module required")
 	}
-	if field("name") != "git-terminal" {
-		return fmt.Errorf("independent Git-Terminal project required")
+	setup, e := read(filepath.Join(module, "setup.go"))
+	if e != nil {
+		return e
+	}
+	version := regexp.MustCompile(`(?m)^const productVersion\s*=\s*"([^"]+)"`).FindStringSubmatch(string(setup))
+	if len(version) < 2 || version[1] == "" {
+		return fmt.Errorf("terminal product version missing")
 	}
 	env := append([]string{}, os.Environ()...)
-	env = append(env, "PATH="+filepath.Dir(cargo)+string(os.PathListSeparator)+os.Getenv("PATH"))
-	var runtimePin record
-	var sdk string
-	if platform == "windows-arm64" {
-		if e = o.require("llvm-mingw"); e != nil {
-			return e
-		}
-		sdk, e = absolute(o.get("llvm-mingw"))
-		if e != nil {
-			return e
-		}
-		catalog, e := load(a.path("packaging/git-terminal-runtime.lock.json"))
-		if e != nil {
-			return e
-		}
-		runtimePin = object(object(catalog, "platforms"), platform)
-		receipt, e := load(filepath.Join(sdk, "receipt.json"))
-		if e != nil {
-			return e
-		}
-		if object(receipt, "source")["sha256"] != object(catalog, "source_archive")["sha256"] {
-			return fmt.Errorf("compiler SDK pin mismatch")
-		}
-		for _, name := range []string{stringValue(runtimePin, "path"), stringValue(runtimePin, "license_path"), "bin/aarch64-w64-mingw32-clang.exe", "bin/llvm-ar.exe"} {
-			h, e := digest(filepath.Join(sdk, filepath.FromSlash(name)))
-			if e != nil || h != object(receipt, "files")[name] {
-				return fmt.Errorf("SDK bytes changed: %s", name)
-			}
-		}
-		for _, pair := range [][2]string{{"path", "sha256"}, {"license_path", "license_sha256"}} {
-			h, e := digest(filepath.Join(sdk, filepath.FromSlash(stringValue(runtimePin, pair[0]))))
-			if e != nil || h != runtimePin[pair[1]] {
-				return fmt.Errorf("pinned unwind runtime changed")
-			}
-		}
-		compiler := filepath.Join(sdk, "bin/aarch64-w64-mingw32-clang.exe")
-		env = append(env, "PATH="+filepath.Join(sdk, "bin")+string(os.PathListSeparator)+filepath.Dir(cargo)+string(os.PathListSeparator)+os.Getenv("PATH"), "CARGO_TARGET_AARCH64_PC_WINDOWS_GNULLVM_LINKER="+compiler, "CC_aarch64_pc_windows_gnullvm="+compiler, "AR_aarch64_pc_windows_gnullvm="+filepath.Join(sdk, "bin/llvm-ar.exe"))
-	}
-	if _, e = commandAt(source, env, cargo, "build", "--locked", "--release", "--target", target, "--target-dir", filepath.Join(source, "target")); e != nil {
-		return e
-	}
-	raw, e := commandAt(source, env, cargo, "metadata", "--locked", "--format-version", "1", "--filter-platform", target)
-	if e != nil {
-		return e
-	}
-	var metadata record
-	if e = json.Unmarshal(raw, &metadata); e != nil {
-		return e
-	}
-	nodes := map[string]record{}
-	for _, v := range array(object(metadata, "resolve"), "nodes") {
-		item := rec(v)
-		nodes[stringValue(item, "id")] = item
-	}
-	var pending []string
-	if root := stringValue(object(metadata, "resolve"), "root"); root != "" {
-		pending = append(pending, root)
-	} else {
-		for _, v := range array(metadata, "workspace_default_members") {
-			pending = append(pending, v.(string))
-		}
-	}
-	reached := map[string]bool{}
-	for len(pending) > 0 {
-		id := pending[len(pending)-1]
-		pending = pending[:len(pending)-1]
-		if reached[id] {
-			continue
-		}
-		reached[id] = true
-		for _, v := range array(nodes[id], "dependencies") {
-			pending = append(pending, v.(string))
-		}
-	}
+	env = append(env, "GOOS=windows", "GOARCH="+arch, "CGO_ENABLED=0")
 	out, e := newDestination(o.get("destination"))
 	if e != nil {
 		return e
 	}
-	for _, name := range []string{"git-terminal.exe", "git-terminal-shell.exe", "git-terminal-askpass.exe"} {
-		if e = copyFile(filepath.Join(source, "target", target, "release", name), filepath.Join(out, name)); e != nil {
-			return e
-		}
+	if _, e = commandAt(module, env, goTool, "build", "-trimpath", "-ldflags", "-s -w", "-o", filepath.Join(out, "git-terminal.exe"), "./cmd/git-terminal"); e != nil {
+		return e
 	}
-	if runtimePin != nil {
-		if e = copyFile(filepath.Join(sdk, filepath.FromSlash(stringValue(runtimePin, "path"))), filepath.Join(out, "libunwind.dll")); e != nil {
-			return e
-		}
-		if e = copyFile(filepath.Join(sdk, filepath.FromSlash(stringValue(runtimePin, "license_path"))), filepath.Join(out, "licenses/llvm-unwind/LICENSE.TXT")); e != nil {
-			return e
-		}
+	vtDirectory := map[string]string{"windows-x64": "windows-amd64", "windows-arm64": "windows-arm64"}[platform]
+	vt := filepath.Join(module, "resources", vtDirectory, "ghostty-vt.dll")
+	if !exists(vt) {
+		return fmt.Errorf("peer terminal lacks a native VT library for %s", platform)
 	}
-	entries, e := os.ReadDir(filepath.Join(source, "shell-integration"))
+	if e = copyFile(vt, filepath.Join(out, "ghostty-vt.dll")); e != nil {
+		return e
+	}
+	notice := filepath.Join(module, "resources", "NOTICE.md")
+	if !exists(notice) {
+		return fmt.Errorf("peer terminal native VT notice missing")
+	}
+	if e = copyFile(notice, filepath.Join(out, "NOTICE.ghostty-vt.md")); e != nil {
+		return e
+	}
+	shell, e := os.ReadDir(filepath.Join(module, "shell-integration"))
 	if e != nil {
 		return e
 	}
-	for _, v := range entries {
-		if !v.IsDir() {
-			if e = copyFile(filepath.Join(source, "shell-integration", v.Name()), filepath.Join(out, "shell-integration", v.Name())); e != nil {
+	for _, item := range shell {
+		if !item.IsDir() {
+			if e = copyFile(filepath.Join(module, "shell-integration", item.Name()), filepath.Join(out, "shell-integration", item.Name())); e != nil {
 				return e
 			}
 		}
 	}
-	var dependencies []any
-	for _, v := range array(metadata, "packages") {
-		item := rec(v)
-		if !reached[stringValue(item, "id")] {
-			continue
-		}
-		root := filepath.Dir(stringValue(item, "manifest_path"))
-		entries, e := os.ReadDir(root)
-		if e != nil {
+	licenseDir := filepath.Join(out, "licenses", "git-terminal")
+	if e = os.MkdirAll(licenseDir, 0755); e != nil {
+		return e
+	}
+	for _, name := range []string{"go.mod", "go.sum"} {
+		if e = copyFile(filepath.Join(module, name), filepath.Join(licenseDir, name)); e != nil {
 			return e
 		}
-		notices := map[string]bool{}
-		for _, v := range entries {
-			upper := strings.ToUpper(v.Name())
-			if !v.IsDir() && (strings.HasPrefix(upper, "LICENSE") || strings.HasPrefix(upper, "COPYING") || strings.HasPrefix(upper, "NOTICE") || strings.HasPrefix(upper, "AUTHORS")) {
-				notices[filepath.Join(root, v.Name())] = true
-			}
-		}
-		if name := stringValue(item, "license_file"); name != "" {
-			if !filepath.IsAbs(name) {
-				name = filepath.Join(root, name)
-			}
-			notices[name] = true
-		}
-		var names []string
-		for p := range notices {
-			st, e := os.Lstat(p)
-			actual, ae := filepath.EvalSymlinks(p)
-			if e != nil || ae != nil || st.Mode()&os.ModeSymlink != 0 || !inside(root, actual) {
-				return fmt.Errorf("unsafe dependency notice")
-			}
-			relative := "licenses/" + stringValue(item, "name") + "-" + stringValue(item, "version") + "/" + filepath.Base(p)
-			if _, e = confined(out, relative); e != nil {
-				return e
-			}
-			if e = copyFile(p, filepath.Join(out, filepath.FromSlash(relative))); e != nil {
-				return e
-			}
-			names = append(names, relative)
-		}
-		sort.Strings(names)
-		dependencies = append(dependencies, record{"name": item["name"], "version": item["version"], "license": item["license"], "notices": names})
 	}
-	for _, name := range []string{"README.md", "AGENTS.md", "LICENSE", "docs/site/index.html", "vendor/gpui-terminal/MODIFICATIONS.md", "vendor/gpui-fast-windows/MODIFICATIONS.md", "vendor/portable-pty/MODIFICATIONS.md"} {
+	if e = copyFile(notice, filepath.Join(licenseDir, "NOTICE.ghostty-vt.md")); e != nil {
+		return e
+	}
+	dependencies := []any{}
+	for _, match := range regexp.MustCompile(`(?m)^\s+(\S+)\s+(v[^\s]+)`).FindAllStringSubmatch(string(manifest), -1) {
+		dependencies = append(dependencies, record{"name": match[1], "version": match[2], "license": "see bundled notices", "notices": []string{"licenses/git-terminal/NOTICE.ghostty-vt.md", "licenses/git-terminal/go.mod", "licenses/git-terminal/go.sum"}})
+	}
+	if len(dependencies) == 0 {
+		return fmt.Errorf("terminal Go module has no pinned dependencies")
+	}
+	for _, name := range []string{"README.md", "AGENTS.md", "LICENSE", "docs/site/index.html"} {
 		if e = copyFile(filepath.Join(source, filepath.FromSlash(name)), filepath.Join(out, "manuals", filepath.FromSlash(name))); e != nil {
 			return e
 		}
@@ -545,7 +459,7 @@ func prepareGitTerminal(a *app, o options) error {
 	if e != nil {
 		return e
 	}
-	receipt := record{"schema_version": 1, "product": "git-terminal", "version": field("version"), "platform": platform, "renderer": "gpui-fast", "renderer_version": "0.1.10", "source_repository": field("repository"), "source_commit": strings.TrimSpace(string(commit)), "source_built": true, "profile": "release", "tests_executed": false, "rust_target": target, "additional_runtime": runtimePin, "files": inventory}
+	receipt := record{"schema_version": 1, "product": "git-terminal", "version": version[1], "platform": platform, "renderer": "mygo", "renderer_version": version[1], "source_repository": modulePath[1], "source_commit": strings.TrimSpace(string(commit)), "source_built": true, "profile": "release", "tests_executed": false, "go_module": "../git-terminal/go", "go_target": "windows/" + arch, "files": inventory}
 	if e = writeNewJSON(filepath.Join(out, "git-terminal-package.json"), receipt); e != nil {
 		return e
 	}

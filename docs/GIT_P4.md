@@ -48,4 +48,4 @@ go -C tools/devtool run . native-p4-dispatch-acceptance PACKAGE/bin/git --refere
 
 Linux 同环境对照已分别调用原 Python 与 Go 的上游 `t9800`–`t9836` 共 37 套测试，36 套执行，Python 2 专用的 `t9835` 跳过。原入口 379 个成功、16 个标记的已知缺陷；Go 382 个成功、13 个相同已知缺陷，没有新增差异失败。子集分支、同一 changelist 多标签和非法 UTF-16 恢复三项已知缺陷消失，原测试框架将它们记为 XPASS 并返回非零；迁移证据保留原日志和逐项分类。Go 的 metadata suite 只替换 Python launcher 前置检查，保留 12 个行为断言。
 
-差分测试使用的原 Python 与第三方辅助 Python 只属于一次性迁移验证环境，不进入产品或新工具链。现存上游缺陷、平台跳过和 XPASS 与通过项分别记录，完整能力对应见 [helper 验证映射](../tools/git-p4/README.md)。发布还必须通过新产品的原生运行、Rust CLI、平台安装和整合门禁，不能用交叉编译或旧产物替代。
+差分测试使用的原 Python 与第三方辅助 Python 只属于一次性迁移验证环境，不进入产品或新工具链。现存上游缺陷、平台跳过和 XPASS 与通过项分别记录，完整能力对应见 [helper 验证映射](../tools/git-p4/README.md)。发布还必须通过新产品的原生运行、Go CLI（`cli-accept`）、平台安装和整合门禁，不能用交叉编译或旧产物替代。

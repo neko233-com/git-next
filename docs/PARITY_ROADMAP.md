@@ -1,14 +1,13 @@
 # Go parity roadmap
 
-Goal: replace installed Git for all documented user-facing behavior. The independent client implementation is being rewritten in Go 1.27 (`cmd/git-next` plus `internal/**`, using `go-git` under the hood); the Rust tree remains a reference and rollback path until the Go binary passes the same acceptance tiers. Behavior follows [Git's documentation](https://git-scm.com/docs). On-disk repositories stay Git-compatible. `complete_git_parity` in `compatibility.json` becomes `true` only when every row below is **accepted** (implemented + covered by local acceptance).
+Goal: replace installed Git for all documented user-facing behavior. The independent client is implemented in Go 1.27 (`cmd/git-next` plus `internal/**`, using `go-git` under the hood); this repository is Go-only, with Rust sources, Cargo files and the Rust acceptance runner removed. Behavior follows [Git's documentation](https://git-scm.com/docs). On-disk repositories stay Git-compatible. `complete_git_parity` in `compatibility.json` becomes `true` only when every row below is **accepted** (implemented + covered by local acceptance).
 
 Fast loop while closing gaps:
 
 ```sh
-go -C tools/devtool run . fast-verify
-cargo test --offline --locked --lib
-cargo test --offline --locked --test tag_acceptance   # when present
-go -C tools/devtool run . package-rust --platform windows-x64
+go -C tools/devtool run . cli-accept --tier l0
+go -C tools/devtool run . cli-accept --tier full
+go -C tools/devtool run . package-go --platform windows-x64
 ```
 
 ## Legend
@@ -18,7 +17,7 @@ go -C tools/devtool run . package-rust --platform windows-x64
 | accepted | Matches Git docs for the scoped flags; acceptance recorded |
 | partial | Usable subset; documented gaps |
 | planned | Not started in the Go client (may have historical Rust coverage) |
-| native-only | Exists only in the separate C/MSI tree; not part of the Rust product |
+| native-only | Exists only in the separate C/MSI tree; not part of the Go client |
 
 ## Porcelain commands
 
@@ -76,7 +75,7 @@ go -C tools/devtool run . package-rust --platform windows-x64
 1. Every **porcelain** row that Git documents for normal workflows is **accepted** or explicitly marked out-of-scope in `compatibility.json`.
 2. `complete_git_parity: true` and `replacement_blockers: []`.
 3. `go -C tools/devtool run . product-batch` (or successor) passes on optimized release binaries.
-4. Rust zip/MSI path contains no MinGW, Bash, Perl, Python, or Git for Windows files.
+4. The Go package path contains no MinGW, Bash, Perl, Python, Rust or Git for Windows files (historical Rust zip/MSI evidence is retained only as release evidence).
 5. Human sign-off on takeover (`install.ps1` / migration) after the above.
 
 Until then, do not replace a user's only Git installation on production machines.

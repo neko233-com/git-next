@@ -4,7 +4,7 @@
 
 五平台新包已完成构建及包检查。冻结正确性 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对，矩阵 SHA-256 为 8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f。最终 stage、校验和与一次整合 stable/latest 发布均已完成；不表示已执行 1.0.4 宿主安装验收。
 
-已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过、Rust preview full 100/100。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
+已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过；独立 Go 客户端 CLI 验收为 L0 39/39、full 57/100（主要缺口 SHA-256）。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
 
 仅 terminal-native-desktop、terminal-rust-contracts、msi-user、msi-machine 四 lane 豁免；两项 live MSI 生命周期由实际四 MSI 载荷/表、隔离迁移和资源探针约束，不记为安装运行通过。四个 MSI 未签名。已发布资产：[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)、[MSI 包策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)，全部 API 资产摘要与五个匿名实际下载均已核验。以下 1.0.3 的完整 MSI、工作站与发布记录保留原产物身份，不能外推到 1.0.4。
 
@@ -26,18 +26,18 @@ R8 已完成最终本地门禁：正确性 **16 通过、2 项指定终端豁免
 
 **[v1.0.3](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 已正式发布、在该历史检查点为官方 latest**，release ID 为 `422290807`，发布时间 `2026-10-23T20:44:12Z`（上海时间 2026-10-24 04:44:12）。发布源码为 `05dac2a938784ce03a2de219349c4d381a637ab5`；git-next、git-terminal 和父仓库的发布检查点均已推送并回读，不把后续文档提交当作发布二进制的新源码。最终五平台 stage、四个 MSI 表检查及五产品 Python 0 扫描通过；**28 个**远端资产哈希与本地发布全部一致，**27 个**资产列入 SHA256SUMS，SHA256SUMS 和验收证明均完成匿名公开下载核验。四个 MSI 的实际签名状态为 **`NotSigned`**，没有配置发布签名者，不声明密码学签名验证。[发布与工作站完成记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-20261024.json) SHA-256 为 `305e8da3aff34338ef47d0722d4b911cbb269aa87b46075f96d8efea3b4f484b`。
 
-本轮完成 Python 工具链退役。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper；Rust 客户端作为独立 preview，由 Rust runner 验收。必要 PowerShell/POSIX shell 平台脚本保留。1.0.2 继续作为历史打包检查点记录。
+本轮完成 Python 工具链退役。发布产品继续采用从固定源码构建的 native C Git 引擎；Go 承担构建、打包、文档、夹具、benchmark、维护和发布，并提供 Go `git-p4` helper。历史 Rust 客户端当时作为独立 preview 由 Rust runner 验收，现已删除，其报告仅作 v1.0.x 发布证据；当前独立客户端由 Go `cli-accept` 验收。必要 PowerShell/POSIX shell 平台脚本保留。1.0.2 继续作为历史打包检查点记录。
 
-**生产入口回读（上海时间 2026-10-24）。** 已安装的 Windows x64 机器级客户端实际执行 `git update status --json` 与 `git update check --json`：更新启用，当前/线上版本均为 1.0.3，`newer=false`，元数据校验为 `official-api-digest`。匿名下载官方 latest 的安装脚本、更新清单与发布哈希一致；下载脚本的 `-Plan` 正确选择 x64/machine，`changes_applied=false`。这证明当前生产发布、发现与已安装客户端的连接，不代替尚缺的 Windows ARM64 真机或 Mac 完整宿主更新生命周期证据；Rust 仍为 preview，两项终端验收仍按用户要求豁免。[生产入口记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json)。
+**生产入口回读（上海时间 2026-10-24）。** 已安装的 Windows x64 机器级客户端实际执行 `git update status --json` 与 `git update check --json`：更新启用，当前/线上版本均为 1.0.3，`newer=false`，元数据校验为 `official-api-digest`。匿名下载官方 latest 的安装脚本、更新清单与发布哈希一致；下载脚本的 `-Plan` 正确选择 x64/machine，`changes_applied=false`。这证明当前生产发布、发现与已安装客户端的连接，不代替尚缺的 Windows ARM64 真机或 Mac 完整宿主更新生命周期证据；该历史检查点中 Rust 仍为 preview（现已删除），两项终端验收仍按用户要求豁免。[生产入口记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-channel-20261024.json)。
 
 **后台更新实测与历史宿主环境缺口。** 已向现有 SYSTEM 任务实际发送一次 `Check`，任务返回 **0**、状态为 **current / 1.0.3**，任务定义与验收时一致，没有请求 Apply、安装或终端测试。最初 target-only 回读脚本因 UTC 二次转换误报超时；已复现并修正该回读错误，绑定原任务时间和状态，不重跑 worker，不把失败记录抹去。[后台任务记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-production-worker-20261024.json)。真实 Mac 本次已连接，确认为非 root、ARM64、macOS 15.5，但该用户 **GUI launchd 域不可用**，因此在上传、安装和产品执行前停止，未改变远端文件、服务或个人配置。[Mac 前置检查](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-macos-host-preflight-20261024.json) 为 `blocked`、`release_gate=false`。Windows ARM64 真机和 Mac 完整宿主生命周期仍属于历史未验证范围；按 2026-10-25 用户确认，它们不再是本次发布门禁，也不标记为已通过。
 
-115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前 `tests/legacy_cli/` 受版本控制的内容仅为退役说明 README，无 Python 脚本，本地忽略的生成缓存可保留。Rust 的 100 场景也不代表全部历史断言逐条等量迁移。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
+115 个本批 Python 文件已有逐文件 SHA、能力映射和退休理由，自有 Python 文件与直接执行入口均为 0。30 个历史 CLI suite 保留在 Git 历史 `3609553`；当前 `tests/legacy_cli/` 受版本控制的内容仅为退役说明 README，无 Python 脚本，本地忽略的生成缓存可保留。历史 Rust 的 100 场景也不代表全部历史断言逐条等量迁移；当前 Go 客户端 full 为 57/100。第三方对应源码包内的上游原文仅作许可材料，不作为产品工具安装或执行。[工具链](GO_TOOLING.md)。
 
 | 当前证据 | 已完成范围及边界 |
 | --- | --- |
 | Go `git-p4` A/B | 相同 Linux 隔离环境调用上游 t9800–t9836 共 37 套，36 套执行、395 项断言；原 Python 379 成功/16 已知缺陷，Go 382 成功/13 已知缺陷，新增差异失败 0。三项改善产生的 XPASS 及原始退出码保留；t9835 因缺少 Python 2 跳过，Go t9836 只适配解释器 launcher 前置检查，12 项行为断言保留。Windows 26 个顶层真实 P4/协议测试通过。 |
-| Rust 客户端 | Windows x64 与真实 macOS ARM64 的 full 各 100/100，失败/跳过均为 0；L0 为 39 个命令。Mac 构建及 Clippy 通过。`complete_git_parity=false`，与 native C 产品分别验收。 |
+| Go 客户端（当前） | `go -C tools/devtool run . cli-accept` L0 39/39、full 57/100，主要缺口为 SHA-256 仓库；`complete_git_parity=false`，与 native C 产品分别验收。历史 Rust preview 在 Windows x64 与真实 macOS ARM64 的 full 各 100/100、L0 39 命令、Mac 构建及 Clippy 通过，仅作 v1.0.x 发布证据。 |
 | Linux native | x64、ARM64 Docker 各 52 场景和两路 owned Git/P4 入口通过；产品 Python 扫描为 0。ARM64 为 Windows x64 上 Docker Desktop 执行 ARM64 进程，不宣称真实 ARM64 硬件验收。 |
 | macOS native | 真实 Apple Silicon macOS 15.5 上 51 场景及两路 owned Git/P4 入口通过；同一归档通过独立 Mach-O/shell 静态检查及目录/归档 Python 0 扫描。Darwin CPU affinity 约束明确不支持；不声明完整宿主安装、launchd 与自动升级生命周期。 |
 | Windows ARM64 | native core/bridge/helper 交叉编译、PE/导入和包静态检查；尚无真实 ARM64 运行或安装验收。 |
@@ -88,7 +88,7 @@ Windows ARM64 为交叉编译/PE 检查；macOS ARM64 为本机编译及 Dockerf
 
 2026-10-21 当前进度：实现项 7/7，完整交付项 7/10。新终端已通过 14 项真实桌面检查，耗时 23.184 秒；标签页、目录/分支、命令高亮和中文文本均有截图与记录。组合验收发现用户 MSI 内 PowerShell 初始化失败，现已实现独立无控制台启动器并通过针对性检查，等待重建后的 MSI 生命周期验收。此前未发布的 MSI 已卸载，本机仍由官方 Git 提供命令；正式发布和本机接管尚未完成。
 
-主路线固定为**从已固定的上游源码构建并维护 git-next 原生兼容核心**，整合本产品的身份、LF、语言和安装更新行为。停止逐个重写 Rust Git 子集来追赶完整 Git，也停止新的目录扫描性能分支。Rust 既有代码只在明确需要的独立配套边界使用；GPL 核心和其他组件的许可、运行时边界、源码交付仍须在 D02/D07 解决。不得调用本机已安装的 Git/OpenSSH 充当运行时兜底。
+主路线固定为**从已固定的上游源码构建并维护 git-next 原生兼容核心**，整合本产品的身份、LF、语言和安装更新行为。停止逐个重写 Rust Git 子集来追赶完整 Git，也停止新的目录扫描性能分支；该历史决策下 Rust 代码已全部删除，Go 1.27.3 成为唯一实现语言。GPL 核心和其他组件的许可、运行时边界、源码交付仍须在 D02/D07 解决。不得调用本机已安装的 Git/OpenSSH 充当运行时兜底。
 
 1. 完成 D01–D04 的核心、运行时、LF 和语言整合。
 2. 完成 D05–D07 的 MSI、自动更新、五平台完整包及最终统一回归输入。期间允许必要的编译、静态语法检查和文档生成，不运行功能回归、安装试验或性能测试。
@@ -156,7 +156,7 @@ D08/D09 尚未开始；新核心未执行、安装、接管或发布。本机仍
 
 当前 **9/10（90%）**，实现 **5/7**；剩余 D02、D07、D08、D09、D10。D02 还差其余目标运行时闭包/装配；D07 还差五平台最终包、对应源码/许可证和完整批次输入。Windows ARM64 构建工具正在补齐，Mac 构建连接已可用。按最新用户要求，Mac 宿主不运行产品测试；`tests/containers/Dockerfile_mac` 负责最终包、Mach-O 与 shell 语法隔离检查，不冒充 macOS 内核/Keychain 验收。该容器尚未构建或执行。
 
-本机默认 Git 尚未接管，也没有发布。旧开发构建缓存通过 Cargo 的限定 dev profile 清理命令释放 23.6 GiB；本批临时 Docker 容器/卷已清理，其他项目镜像/数据卷保留。
+本机默认 Git 尚未接管，也没有发布。当时的历史开发构建缓存清理释放 23.6 GiB（旧 Rust/Cargo 构建缓存，现已全部删除）；本批临时 Docker 容器/卷已清理，其他项目镜像/数据卷保留。
 
 
 ## 五平台运行时实现收口 · 2026-10-20
@@ -212,7 +212,7 @@ MSI 已按新配方重建（134,516,157 字节，10,601 载荷文件，ProductCo
 本节记录在 v0.3.0 之后的接口语言与文档发布变更，不改写上面各批次的历史结论。
 
 接口语言由硬编码的英/中二选一改为数据驱动。`locales/` 下每个 JSON 文件即一种语言，
-`build.rs` 自行发现并内嵌全部文件，因此新增语言只需增加一个文件，不需要改动 Rust 代码、
+Go 侧用 `go:embed` 内嵌全部语言文档，因此新增语言只需增加一个文件，不需要改动 Go 代码、
 注册表、别名表或帮助文本。英文为源语言：代码中的消息模板是英文，语言文件只列出它覆盖的条目，
 未翻译的消息回退英文而不是消失，部分翻译可以正常降级。
 
@@ -253,7 +253,7 @@ Git-Terminal 同步采用同一套语言文件与自动检测，`git-terminal la
 
 本节记录网络传输缺陷的修复、clone 实测方法与结论，以及生产就绪的差距清单。
 
-**传输缺陷（已修）**：`http.sslcaInfo` 指向 rustls 无法解析的证书捆绑（Windows 上常见的
+**传输缺陷（历史 Rust preview，已修）**：`http.sslcaInfo` 指向 rustls 无法解析的证书捆绑（Windows 上常见的
 curl `ca-bundle.trust.crt`）时，之前会让**所有** HTTP 与 HTTPS 远端直接失败，连纯 `http://`
 也被牵连——因为 HTTP 客户端在判断 URL scheme 之前就构建了 TLS 配置。现在 TLS 设置只作用于
 `https://`，捆绑解析不出证书时回退默认信任库而不是中止连接。本机修复前 `http://127.0.0.1`

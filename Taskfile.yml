@@ -1,0 +1,129 @@
+version: '3'
+
+# Go 1.27 is the only implementation language in this repository. Native C/MSI
+# inputs are built by tools/devtool, not by cargo or rustc.
+
+env:
+  GOTOOLCHAIN: go1.27.3
+  CGO_ENABLED: '0'
+
+vars:
+  CLI_BIN: '{{if eq OS "windows"}}target/release/git.exe{{else}}target/release/git{{end}}'
+
+tasks:
+  default:
+    cmds:
+      - task: verify
+
+  fmt:
+    desc: Format all Go modules
+    cmds:
+      - gofmt -w cmd internal tools/devtool
+
+  fmt:check:
+    desc: Fail when any Go file is unformatted
+    cmds:
+      - test -z "$(gofmt -l cmd internal tools/devtool)"
+
+  vet:
+    desc: Vet the client and every independent Go module
+    cmds:
+      - go vet -mod=mod ./...
+      - go -C tools/devtool vet ./...
+      - go -C tools/git-p4 vet ./...
+
+  test:
+    desc: Run all Go tests with shuffled order and no cache
+    cmds:
+      - go test -mod=mod -shuffle=on -count=1 ./...
+      - go -C tools/devtool test -shuffle=on -count=1 ./...
+      - go -C tools/git-p4 test -shuffle=on -count=1 ./...
+
+  test:race:
+    desc: Run the race detector; requires a C compiler and cgo
+    preconditions:
+      - sh: command -v gcc || command -v cc || command -v clang
+        msg: "race detector requires gcc, cc or clang on PATH"
+    env:
+      CGO_ENABLED: '1'
+    cmds:
+      - go test -mod=mod -race ./...
+      - go -C tools/devtool test -race ./...
+
+  deps:verify:
+    desc: Verify locked module dependencies
+    cmds:
+      - go mod verify
+      - go -C tools/devtool mod verify
+      - go -C tools/git-p4 mod verify
+
+  test:cover:
+    desc: Produce a coverage profile for the client module
+    env:
+      GOFLAGS: -mod=mod
+    cmds:
+      - mkdir -p target/coverage
+      - go test -mod=mod -covermode=atomic -coverprofile=target/coverage/client.out ./...
+      - go tool cover -func=target/coverage/client.out | tail -1
+
+  locales:
+    desc: Validate locale documents against Go source messages
+    cmds:
+      - go -C tools/devtool run . check-locales --coverage
+
+  contract:
+    desc: Check the repository contract encoded in AGENTS.md
+    cmds:
+      - go -C tools/devtool run . verify-repo-contract
+
+  no-rust:
+    desc: Refuse Rust sources, Cargo files and rust toolchain calls
+    cmds:
+      - 'test -z "$(find . -name "*.rs" | grep -v target)"'
+      - 'test -z "$(find . -name Cargo.toml)"'
+      - 'test -z "$(find . -name Cargo.lock)"'
+      - 'test -z "$(find . -name rust-toolchain.toml)"'
+      - 'test -z "$(grep -R -n -E "(^|[^a-zA-Z])(cargo|rustc)([^a-zA-Z]|$)" tools/devtool --include="*.go" | grep -v "_test.go:")"'
+
+  build:
+    desc: Build the Go client into target/release
+    cmds:
+      - go -C tools/devtool run . build-go-client
+
+  accept:l0:
+    desc: CLI acceptance, L0 merge/tag gate
+    deps: [build]
+    cmds:
+      - go -C tools/devtool run . cli-accept --tier l0 --json target/cli-accept-l0.json
+
+  accept:full:
+    desc: CLI acceptance, full release gate
+    deps: [build]
+    cmds:
+      - go -C tools/devtool run . cli-accept --tier full --json target/cli-accept-full.json
+
+  docs:
+    desc: Regenerate tracked HTML manuals
+    cmds:
+      - go -C tools/devtool run . render-docs
+
+  verify:
+    desc: Mandatory local gate for commits
+    cmds:
+      - task: fmt:check
+      - task: vet
+      - task: test
+      - task: deps:verify
+      - task: locales
+      - task: no-rust
+      - task: contract
+      - task: accept:l0
+
+  release:check:
+    desc: Release gates; does not publish or create a tag
+    cmds:
+      - task: verify
+      - task: test:race
+      - task: accept:full
+      - go -C tools/devtool run . check-runtime-defaults
+      - go -C tools/devtool run . migration-audit --require-complete

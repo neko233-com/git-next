@@ -2,9 +2,11 @@
 <p>The native product uses a source-built native C Git engine,
 with git-next's identity, LF policy, language support and installation/update behavior.
 They include an owned runtime and preserve existing Git repository, configuration
-and helper contracts. The independent Rust client is a separate preview; its
+and helper contracts. The independent Go client is a separate component; its
 implementation choices and compatibility limits do not describe the native installer.
-This page separates the current architecture from historical measurements.</p>
+The former Rust preview has been removed and its reports remain only as historical
+v1.0.x release evidence. This page separates the current architecture from
+historical measurements.</p>
 <p>Read <a href="git-guide.html">the Git guide</a> first if you want to use it. This page is about the
 engineering.</p>
 <h2>Native runtime and process boundaries</h2>
@@ -12,9 +14,10 @@ engineering.</p>
 It does not dispatch ordinary commands to a separately installed system Git. Its
 runtime includes owned OpenSSH, shell and helper components; hooks, filters,
 subcommands, transport and user-configured tools can start child processes.
-There is no general one-process or shell-free guarantee. Embedded <code>russh</code> belongs
-to the independent Rust preview, while the native product uses its owned SSH runtime.
-Neither product may silently fall back to installed Git or OpenSSH.</p>
+There is no general one-process or shell-free guarantee. Embedded <code>russh</code> belonged
+to the historical Rust preview, while the native product uses its owned SSH runtime
+and the Go client does not run installed <code>ssh</code>. Neither product may silently fall
+back to installed Git or OpenSSH.</p>
 <p>Go owns build, packaging, documentation, fixtures, benchmarks and release tooling,
 and the product's <code>git-p4</code> helper. Necessary PowerShell and POSIX shell scripts
 remain. The 115-file Python retirement removes the owned Python toolchain and
@@ -215,13 +218,15 @@ healthy, is this installation trustworthy, and can a tool depend on the answer&q
 <p><strong>Separate product and preview contracts.</strong> The native distribution retains Git's
 command and repository semantics, with the product extensions and platform scope
 described in <a href="compatibility.html">compatibility</a> and <a href="delivery-status.html">delivery status</a>.
-The independent Rust preview has a smaller declared command subset and its own
-<code>git compatibility</code>/<code>git doctor</code> contract. Preview refusals, such as its documented
-<code>pull --ff-only</code> boundary, must not be presented as native product limitations.</p>
+The independent Go client has a smaller declared command subset and its own
+<code>git compatibility</code>/<code>git doctor</code> contract (<code>complete_git_parity</code> is false). Client
+refusals, such as the documented <code>pull --ff-only</code> boundary, must not be presented as
+native product limitations. The historical Rust preview's subset is retained only as
+v1.0.x release evidence.</p>
 <p><strong>Machine interfaces separate from translation.</strong> Git's <code>--porcelain</code>,
 <code>--porcelain=v2</code>, <code>-z</code>, <code>--numstat</code> and <code>--name-status</code> output and the product's
 declared JSON schemas remain machine interfaces. Human English/Chinese translation
-is separate; the independent Rust preview's accepted output subset is documented
+is separate; the independent Go client's accepted output subset is documented
 under its own compatibility scope.</p>
 <p><strong>A line-ending policy you can inspect.</strong> <code>git eol</code> reports the policy in force and
 <code>git eol --json</code> reports it to a tool. An explicit <code>git add --renormalize</code> stages
@@ -229,7 +234,7 @@ normalization for review and a normal commit. Existing tracked bytes are never
 rewritten silently.</p>
 <p><strong>Identity for launchers.</strong> <code>git version --json</code> identifies the executing product
 and its declared compatibility information. Check the actual artifact's report;
-Rust preview implementation fields must not be assumed to describe a native binary.</p>
+Client implementation fields must not be assumed to describe a native binary.</p>
 <p><strong>An installation that can be verified and undone.</strong> Windows MSI packages install
 the owned CLI/runtime with scoped registration and guarded compatibility bridges.
 Takeover and recovery preserve configuration and verify owned content; lifecycle
@@ -241,10 +246,10 @@ the same managed installation: the shell it starts puts the git-next <code>bin</
 <code>PATH</code>, so the <code>git</code> inside the terminal is the one you installed, not whichever one
 happens to be on the machine.</p>
 <p><strong>Declared language implementations.</strong> The native product provides owned
-English/Chinese catalogs and language selection. The independent Rust preview
-embeds locale documents; <code>tools/devtool/locales.go</code> checks those documents for
-stale keys, placeholders, trailing newlines, duplicates and ordering. That Rust
-locale workflow is separate from the native catalog implementation.</p>
+English/Chinese catalogs and language selection. The independent Go client
+embeds locale documents with <code>go:embed</code>; <code>tools/devtool/locales.go</code> checks those
+documents for stale keys, placeholders, trailing newlines, duplicates and ordering.
+That Go locale workflow is separate from the native catalog implementation.</p>
 <p><strong>Evidence with a declared scope.</strong> Performance and compatibility claims require
 dated reports and an artifact binding. Historical fixture reports keep their original
 inputs and limitations; they cannot establish the current candidate's acceptance.
@@ -254,14 +259,15 @@ Missed targets and failed checks remain recorded in the reports and
 <ul>
 <li>It does not claim universal speed or memory superiority. Native release eligibility
 depends on its actual package, platform, lifecycle and performance evidence.</li>
-<li>The independent Rust preview keeps <code>complete_git_parity: false</code>; its 39-command
-L0 and 100-scenario full suite are scoped conformance, not complete Git parity or
-authorization to replace an installed native Git product.</li>
+<li>The independent Go client keeps <code>complete_git_parity: false</code>; its 39-command L0
+(39/39) and 100-scenario full suite (57/100) are scoped conformance, not complete
+Git parity or authorization to replace an installed native Git product. The
+historical Rust preview's 100/100 report is v1.0.x release evidence only.</li>
 <li>It does not fall back to the installed Git when something is unimplemented. That
 would make the compatibility claim untestable.</li>
 <li>It does not provide a Git GUI. The terminal is a terminal.</li>
 </ul>
 <p>The native product's measured scope and open items are in
-<a href="delivery-status.html">delivery status</a>; the independent Rust preview's command subset
-and historical receipts are in <a href="compatibility.html">compatibility</a>.</p>
+<a href="delivery-status.html">delivery status</a>; the independent Go client's command subset
+and the historical Rust preview receipts are in <a href="compatibility.html">compatibility</a>.</p>
 </main></html>

@@ -111,7 +111,7 @@ func TestRepairEvidenceBoundaries(t *testing.T) {
 			}
 		})
 	}
-	for _, key := range []string{"tests/msi_acceptance.ps1", "../git-terminal/src/session.rs"} {
+	for _, key := range []string{"tests/msi_acceptance.ps1", "../git-terminal/go/session_test.go"} {
 		if _, e = validateRepairHarnesses(record{key: "old"}, record{key: "new"}); e == nil {
 			t.Fatalf("accepted functional validation change: %s", key)
 		}

@@ -4,13 +4,13 @@
 
 最终产物正确性为 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对样本。豁免仅限终端两项及用户级/机器级 live MSI 生命周期，正式发布已核验；1.0.4 安装运行验收仍为 false。[交付进度](docs/DELIVERY_STATUS.md)。
 
-当前已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过，Rust preview full 100/100；Windows 多项目 33/33（805 个受跟踪路径、489 次 Git 调用）、大资源 LFS 5/5；真实 Mac native 51 场景和两路 P4，Linux 两个 Docker 目标各 52 场景和两路 P4。Windows ARM64 为交叉编译 PE/包静态检查，不声明 ARM 真机或完整宿主生命周期。四个 MSI 均未签名。已发布[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)和[MSI 包验证策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)资产；全部远端摘要及五个匿名实际下载均已核验。
+当前已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过；Windows 多项目 33/33（805 个受跟踪路径、489 次 Git 调用）、大资源 LFS 5/5；真实 Mac native 51 场景和两路 P4，Linux 两个 Docker 目标各 52 场景和两路 P4。独立的 Go 客户端当前 CLI 验收为 L0 39/39、full 57/100（主要缺口为 SHA-256，见[Go 实现说明](docs/GO_IMPLEMENTATION.md)）。Windows ARM64 为交叉编译 PE/包静态检查，不声明 ARM 真机或完整宿主生命周期。四个 MSI 均未签名。已发布[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)和[MSI 包验证策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)资产；全部远端摘要及五个匿名实际下载均已核验。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
-构建、打包、文档、夹具、性能测量和发布工具统一采用 Go，产品中的 `git-p4` helper 也已迁到 Go。本批逐文件核验退役 115 个 Python 文件，自有工具链和产品 helper 无需 Python 解释器；必要的 PowerShell 与 POSIX shell 脚本保留。30 个历史 CLI 套件保留在 Git 历史 `3609553`，当前树不含可运行的 Python CLI wrapper。[工具链说明](docs/GO_TOOLING.md)。
+Go 1.27.3 是独立客户端、验收器、构建、打包、文档、夹具、性能测量和发布工具（含产品 `git-p4` helper）的唯一实现语言。`Taskfile.yml` 是本地唯一入口：`task verify` 聚合格式、vet、随机顺序测试、语言与契约检查、构建与 L0 验收，`task test-race` 是独立生产门禁。当前树不含 Rust 源码、Cargo 文件或 vendored Rust crate；native C/MSI 运行时作为独立组件保留。必要的 PowerShell 与 POSIX shell 脚本继续保留。[工具链说明](docs/GO_TOOLING.md)。
 
-独立 Rust 客户端继续作为 preview，使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md) 验收。Windows x64 与真实 macOS ARM64 的 full 各通过 100 个范围化场景，L0 覆盖 39 个命令。Rust 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Rust 场景不宣称逐条等量覆盖全部历史断言。[兼容性说明](docs/COMPATIBILITY.md)。
+**Go-only 客户端：**独立客户端（`cmd/git-next`、根 `go.mod`）及其 [CLI 验收器](docs/GIT_NEXT_ACCEPTANCE.md)全部用 Go 实现；Rust 源码、Cargo 文件、Rust 验收器与 vendored Rust crate 已删除。CLI 验收是唯一门禁：L0 39/39、full 57/100，二进制约 11.3 MB（历史 Rust CLI 基线约 22 MiB）。Go 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Go 场景不宣称逐条等量覆盖全部历史断言；历史 Rust 验收报告仅作为旧发布产物的证据保留，不代表当前实现。[兼容性说明](docs/COMPATIBILITY.md)。
 
 发布源码：`06b073593a5765ff4db204f7e454584990868881`；构建代码检查点：`3be06fa5bac1912ec7e77459830de4ebff055355`；native 源树：`845e391da2d52fb9cfb580606507e1e9d791fffd591987a2b64abd9ab06d9155`。全部 **29** 个远端资产的名称、字节数和 SHA-256 一致，**28** 个资产列入 SHA256SUMS。已匿名 HTTPS 实际下载并核对五个资产，包括 Windows x64 用户级 MSI。四个 MSI 实际状态均为 **`NotSigned`**，摘要一致不代表发布者签名验证。[发布完成记录](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-publication-1.0.4.json)。宿主 MSI 生命周期和 1.0.4 工作站安装仍未执行，两项终端门禁保持豁免。
 
@@ -40,7 +40,7 @@ R8 随后通过受保护的恢复控制和正常 MSI 卸载恢复全部 9,625 �
 
 参见[安装与卸载](docs/INSTALLATION.md)和[接管说明](docs/TAKEOVER.md)，仅使用与正式 accepted release 匹配的资产。bootstrap 会在 MSI 写入前保存原 Git 快照；本地门禁检查点不等于 1.0.4 已在本机安装。
 
-**历史 v1.0.3 发布及真实 MSI/工作站证据：**从历史 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 获取安装包与校验和。发布时间为 `2026-10-23T20:44:12Z`，发布源码为 `05dac2a938784ce03a2de219349c4d381a637ab5`。28 个远端资产的哈希全部与本地发布一致，27 个资产列入 SHA256SUMS，SHA256SUMS 与验收证明均已实际公开下载核验。四个 MSI 实际为未签名（`NotSigned`），不声明密码学签名验证。Windows MSI 内含完整自有运行时，无需安装 Rust 编译器。
+**历史 v1.0.3 发布及真实 MSI/工作站证据：**从历史 [v1.0.3 发布页](https://github.com/neko233-com/git-next/releases/tag/v1.0.3) 获取安装包与校验和。发布时间为 `2026-10-23T20:44:12Z`，发布源码为 `05dac2a938784ce03a2de219349c4d381a637ab5`。28 个远端资产的哈希全部与本地发布一致，27 个资产列入 SHA256SUMS，SHA256SUMS 与验收证明均已实际公开下载核验。四个 MSI 实际为未签名（`NotSigned`），不声明密码学签名验证。Windows MSI 内含完整自有运行时，无需额外编译器。
 
 ## 命令与默认行为
 
@@ -65,7 +65,7 @@ Unity／UE 支持独立多仓库，也支持在同一仓库内分别放置项目
 
 ## 验证与源码
 
-Rust CLI 统一使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)，提供 L0/full/network 分层和 JSON 报告；Windows/macOS 同一套 Rust 命令，无需 Python，发布分支要求 full。native C 产品行为及平台生命周期由 Go 工具和必要平台脚本另行验收。参考 Git 仅用于隔离夹具，产品检查拒绝回退到本机已安装的 Git。历史 Python CLI 断言保留在 Git 历史中。
+Go CLI 的唯一门禁是 `go -C tools/devtool run . cli-accept --tier l0|full`，L0 是合并/tag 门禁，发布分支必须通过 full。验收器输出 JSON 报告，使用隔离 harness（空 PATH/GIT_EXEC_PATH、隔离 HOME/USERPROFILE/XDG/SSH 配置、子进程超时与 Windows 64 进程作业上限），参考 Git 仅用于隔离夹具，产品检查拒绝回退到本机已安装的 Git。详见 [CLI 验收](docs/GIT_NEXT_ACCEPTANCE.md)。native C 产品行为及平台生命周期由各自的 Go/平台门禁另行验收，不由 Go CLI 报告推定。历史 Python/Rust CLI 断言保留在 Git 历史中。
 
 独立正确性验证并行执行，Windows Installer 事务串行执行，报告保留真实耗时和失败结果。性能采用独立成对批量测量，根据实际 median、p95 和主进程内存给出结论，不承诺所有场景都更快。[构建](docs/BUILDING.md) · [性能](docs/PERFORMANCE.md) · [兼容性](docs/COMPATIBILITY.md)。
 
@@ -73,18 +73,16 @@ Rust CLI 统一使用 [git-next-accept](docs/GIT_NEXT_ACCEPTANCE.md)，提供 L0
 
 原生核心遵循 GPL-2.0-only，并提供依赖许可证及对应源码包。[源码与许可](docs/CORRESPONDING_SOURCES.md)。本仓库不使用 GitHub Actions。
 
-## 独立 Rust preview 包
+## 独立 Go 客户端产物
 
-此包交付独立 Rust 客户端；native C 安装包由 Go 工具另行构建、打包和验收。本批 115 文件退役保留了适用的构建、打包、迁移和维护能力，必要平台脚本继续保留。[工具链与迁移证据](docs/GO_TOOLING.md)。
-
-`go -C tools/devtool run . package-rust --platform windows-x64` 打出一个 zip，里面只有 Rust 写的 `git`、LFS 入口和 Git-Terminal。包里没有 MinGW、Bash、Perl、Python，也没有 Git for Windows 的任何文件。解压后运行其中的 `install.ps1`，程序会装到 `%LOCALAPPDATA%\Programs\git-next`，不会改已注册的官方 Git 目录。说明见[安装](docs/INSTALLATION.md)。
+独立 Go 客户端由 `task build`（`go -C tools/devtool run . build-go-client`）构建到 `target/release/git`，产物用 `-mod=mod -trimpath -ldflags "-s -w"` 且 `CGO_ENABLED=0` 生成。native C/MSI 安装包由独立的 Go 工具和平台脚本另行构建、打包和验收。历史 Rust preview 的独立 zip 与 `package-rust` 命令已从当前树删除。[工具链与迁移证据](docs/GO_TOOLING.md) · [构建说明](docs/BUILDING.md)。
 
 ## Windows 一键安装
 
 取得已正式发布的 v1.0.4 同版本 accepted `install.ps1`，先用 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Plan` 查看选择；只有请求安装该正式版本时才去掉 `-Plan`。bootstrap 默认选择已注册 Git for Windows，32 位 PowerShell 先自动转发到原生 64 位再请求 UAC，并在失败时保留受保护的 MSI 前快照路径及 SHA。安装无需 Go、Python 或 WiX。**当前 1.0.4 检查点没有执行 live MSI 生命周期，也没有在本工作站安装 1.0.4。**上文真实 MSI/工作站成功记录属于 1.0.3。参见[安装说明](docs/INSTALLATION.md)。
 
-Windows MSI 同时安装独立 Rust + GPUI Fast [Git-Terminal](docs/TERMINAL.md)，支持标签页、Unicode/IME、复制粘贴、历史滚动及自有 Bash、PowerShell/CMD 配置。它替代 Git Bash 桌面入口，不添加 Git GUI 菜单。[内置 LFS 与游戏项目模板](docs/GAME_PROJECTS.md)覆盖 Unity/Tuanjie、Unreal，无需另外安装 LFS。
+[Git-Terminal](docs/TERMINAL.md) 当前由 Go + MyGo 实现（renderer=mygo），支持标签页、Unicode/IME、复制粘贴、历史滚动及自有 Bash、PowerShell/CMD 配置；SSH、SFTP、主机监控、askpass 对话框尚未迁移，仅存在于历史 Rust + GPUI Fast 发布二进制中。它替代 Git Bash 桌面入口，不添加 Git GUI 菜单。[内置 LFS 与游戏项目模板](docs/GAME_PROJECTS.md)覆盖 Unity/Tuanjie、Unreal，无需另外安装 LFS。
 
 ## 源码与许可
 
-原生 C 核心遵循 GPL-2.0-only；自有扩展、打包工具和 Rust 终端各自遵循声明的许可证。原生发布包提供固定依赖、许可证材料及对应源码。独立 Rust preview 保留自己的实现与范围化验收报告；正式产品安装请使用上方原生安装说明。本仓库不使用 GitHub Actions。
+原生 C 核心遵循 GPL-2.0-only；自有扩展与打包工具遵循声明的许可证。原生发布包提供固定依赖、许可证材料及对应源码。历史 Rust preview 的验收报告仅作为旧发布产物的证据保留。正式产品安装请使用上方原生安装说明。本仓库不使用 GitHub Actions。

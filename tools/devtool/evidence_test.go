@@ -21,7 +21,7 @@ func cloneRecord(t *testing.T, r record) record {
 	return v
 }
 func TestEvidenceReuse(t *testing.T) {
-	previous := record{"source_tree_sha256": "source", "files": record{"package.msi": "bytes"}, "platforms": record{"windows-x64": record{"msi": "package.msi"}}, "harnesses": record{"tests/msi_acceptance.ps1": "original", "../git-terminal/tests/windows_desktop_acceptance.py": "old"}}
+	previous := record{"source_tree_sha256": "source", "files": record{"package.msi": "bytes"}, "platforms": record{"windows-x64": record{"msi": "package.msi"}}, "harnesses": record{"tests/msi_acceptance.ps1": "original", "../git-terminal/go/session_test.go": "old"}}
 	report := record{"phase": "correctness", "source_tree_sha256": "source", "reference_sha256": "reference", "results": []any{record{"case": "msi-user", "status": "pass", "exit_code": 0, "seconds": 10}, record{"case": "msi-machine", "status": "pass", "exit_code": 0, "seconds": 10}, record{"case": "terminal-native-desktop", "status": "pass", "exit_code": 0, "seconds": 23}, record{"case": "frozen-input-readback", "status": "pass"}}}
 	tests := []struct {
 		name          string
@@ -31,12 +31,12 @@ func TestEvidenceReuse(t *testing.T) {
 	}{
 		{"unchanged", func(record, record) {}, false, false, 2},
 		{"desktop changes unrelated to MSI", func(c, r record) {
-			object(c, "harnesses")["../git-terminal/tests/windows_desktop_acceptance.py"] = "new"
+			object(c, "harnesses")["../git-terminal/go/session_test.go"] = "new"
 		}, false, false, 2},
-		{"test shell unrelated to MSI", func(c, r record) { object(c, "harnesses")["../git-terminal/src/shell_acceptance.rs"] = "new" }, false, false, 2},
+		{"test shell unrelated to MSI", func(c, r record) { object(c, "harnesses")["../git-terminal/go/norust_test.go"] = "new" }, false, false, 2},
 		{"package bytes", func(c, r record) { object(c, "files")["package.msi"] = "changed" }, false, true, 0},
 		{"installer validation", func(c, r record) { object(c, "harnesses")["tests/msi_acceptance.ps1"] = "changed" }, false, true, 0},
-		{"terminal runtime source", func(c, r record) { object(c, "harnesses")["../git-terminal/src/session.rs"] = "changed" }, false, true, 0},
+		{"terminal runtime source", func(c, r record) { object(c, "harnesses")["../git-terminal/go/desktop.go"] = "changed" }, false, true, 0},
 		{"native sources", func(c, r record) { c["source_tree_sha256"] = "changed" }, false, true, 0},
 		{"wrong reference", func(c, r record) { r["reference_sha256"] = "other" }, false, true, 0},
 		{"wrong phase", func(c, r record) { r["phase"] = "performance" }, false, true, 0},
@@ -45,8 +45,11 @@ func TestEvidenceReuse(t *testing.T) {
 		{"duplicate scope", func(c, r record) { r["results"] = append(array(r, "results"), array(r, "results")[0]) }, false, true, 0},
 		{"unchanged desktop", func(record, record) {}, true, false, 1},
 		{"desktop changed test", func(c, r record) {
-			object(c, "harnesses")["../git-terminal/tests/windows_desktop_acceptance.py"] = "changed"
+			object(c, "harnesses")["../git-terminal/go/session_test.go"] = "changed"
 		}, true, true, 0},
+		{"desktop changed test-only guard", func(c, r record) {
+			object(c, "harnesses")["../git-terminal/go/norust_test.go"] = "changed"
+		}, true, false, 1},
 		{"desktop changed Go harness", func(c, r record) { object(c, "harnesses")["tools/devtool/desktop_windows.go"] = "changed" }, true, true, 0},
 		{"desktop changed process bounds", func(c, r record) { object(c, "harnesses")["tools/devtool/process_windows.go"] = "changed" }, true, true, 0},
 		{"desktop failed readback", func(c, r record) { array(r, "results")[3].(map[string]any)["status"] = "fail" }, true, true, 0},

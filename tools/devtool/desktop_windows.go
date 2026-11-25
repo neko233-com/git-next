@@ -935,7 +935,7 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 				}
 			}
 			if len(colors) <= 20 {
-				return fmt.Errorf("real GPUI image lacks rendered colors")
+				return fmt.Errorf("real terminal image lacks rendered colors")
 			}
 			return window.screenshot(imagePath(""), false)
 		})
@@ -1167,7 +1167,7 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 	if o.get("only-case") != "" {
 		scope = "selected"
 	}
-	report := record{"status": status, "scope": scope, "paste_key": pasteKey, "ctrl_shift_v_registered_elsewhere": hotkeyConflict, "platform": "windows-" + strings.ReplaceAll(runtime.GOARCH, "amd64", "x64"), "renderer": "gpui-fast", "input_delivery": "owned HWND WM_CHAR UTF-16 commits; SendInput keyboard shortcuts", "binary_sha256": binaryHash, "git_sha256": gitHash, "harness_sha256": harness, "clipboard_harness_sha256": clipboardHash, "harness_language": "go", "case_set_version": 1, "harnesses": harnesses, "seconds": roundedSeconds(time.Since(start)), "personal_profile_accessed": false, "terminal_contents_logged": false, "results": results}
+	report := record{"status": status, "scope": scope, "paste_key": pasteKey, "ctrl_shift_v_registered_elsewhere": hotkeyConflict, "platform": "windows-" + strings.ReplaceAll(runtime.GOARCH, "amd64", "x64"), "renderer": "mygo", "input_delivery": "owned HWND WM_CHAR UTF-16 commits; SendInput keyboard shortcuts", "binary_sha256": binaryHash, "git_sha256": gitHash, "harness_sha256": harness, "clipboard_harness_sha256": clipboardHash, "harness_language": "go", "case_set_version": 1, "harnesses": harnesses, "seconds": roundedSeconds(time.Since(start)), "personal_profile_accessed": false, "terminal_contents_logged": false, "results": results}
 	report["harness_set_version"] = 3
 	if len(resizeDiagnostics) > 0 {
 		report["resize_input"] = resizeDiagnostics

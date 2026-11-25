@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -61,15 +60,6 @@ func nativeGCM(a *app, o options) error {
 	defer os.RemoveAll(root)
 	helperHash := acceptHash(helper)
 	r := acceptCapture("gcm-isolated-dpapi-and-native-https-callback", func() {
-		rustc := os.Getenv("GIT_NEXT_FIXTURE_RUSTC")
-		if rustc == "" {
-			rustc, e = exec.LookPath("rustc")
-			if e != nil {
-				home, e := os.UserHomeDir()
-				acceptMust(e)
-				rustc = filepath.Join(home, ".cargo/bin/rustc.exe")
-			}
-		}
 		reference, e := acceptReference(o)
 		acceptMust(e)
 		native := filepath.Join(root, "native")
@@ -81,7 +71,7 @@ func nativeGCM(a *app, o options) error {
 		}
 		trap := filepath.Join(root, "old-git-tripwire")
 		acceptMust(os.MkdirAll(trap, 0755))
-		acceptRun(a.root, nil, nil, true, rustc, "--edition=2024", "--crate-name", "gcm_tripwire", "-O", a.path("tests/fixtures/config_tripwire.rs"), "-o", filepath.Join(trap, "git.exe"))
+		buildTripwire(a, filepath.Join(trap, "git.exe"))
 		home, marker, store := filepath.Join(root, "home"), filepath.Join(root, "git-was-executed"), filepath.Join(root, "dpapi-store")
 		config := filepath.Join(home, ".gitconfig")
 		acceptWrite(config, []byte("[test]\nsource = native-fixture\n"))

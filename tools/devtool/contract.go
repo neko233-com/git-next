@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 )
@@ -15,29 +16,68 @@ import (
 func init() {
 	register("verify-repo-contract", "Check repository defaults, safety, docs, acceptance and commit rules", "full? json", verifyRepoContract)
 }
-func tomlSetting(text, section, key string) string {
-	active := false
-	for _, line := range strings.Split(text, "\n") {
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "[") {
-			active = line == "["+section+"]"
+
+// bannedToolchainCall is assembled from parts so this guard never contains the
+// tokens it rejects.
+var bannedToolchainCall = regexp.MustCompile(`(^|[^a-zA-Z])([c]argo|[r]ustc)([^a-zA-Z]|$)`)
+
+func rustImplementationArtifacts(a *app) []string {
+	var found []string
+	_ = filepath.WalkDir(a.root, func(p string, d os.DirEntry, e error) error {
+		if e != nil {
+			return nil
+		}
+		if d.IsDir() {
+			switch d.Name() {
+			case ".git", "target", "node_modules":
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		name := d.Name()
+		if filepath.Ext(name) != ".rs" && name != "Cargo.toml" && name != "Cargo.lock" && name != "rust-toolchain.toml" {
+			return nil
+		}
+		rel, e := filepath.Rel(a.root, p)
+		if e == nil {
+			found = append(found, filepath.ToSlash(rel))
+		}
+		return nil
+	})
+	sort.Strings(found)
+	return found
+}
+
+func toolchainInvocations(a *app) []string {
+	var found []string
+	paths, e := files(a.path("tools/devtool"))
+	if e != nil {
+		return found
+	}
+	for _, p := range paths {
+		if !strings.HasSuffix(p, ".go") || strings.HasSuffix(p, "_test.go") {
 			continue
 		}
-		if active {
-			left, right, ok := strings.Cut(line, "=")
-			if ok && strings.TrimSpace(left) == key {
-				return strings.TrimSpace(strings.SplitN(right, "#", 2)[0])
+		data, e := read(p)
+		if e != nil {
+			continue
+		}
+		for _, line := range strings.Split(data, "\n") {
+			if !bannedToolchainCall.MatchString(line) {
+				continue
 			}
+			rel, e := filepath.Rel(a.root, p)
+			if e != nil {
+				continue
+			}
+			found = append(found, filepath.ToSlash(rel)+": "+strings.TrimSpace(line))
+			break
 		}
 	}
-	return ""
+	sort.Strings(found)
+	return found
 }
-func validateProfiles(text string) error {
-	if tomlSetting(text, "profile.release", "opt-level") != "3" || tomlSetting(text, "profile.release", "lto") != "false" || tomlSetting(text, "profile.release", "codegen-units") != "16" || tomlSetting(text, "profile.dev", "incremental") != "true" || tomlSetting(text, "profile.dev", "opt-level") != "0" {
-		return fmt.Errorf("profiles must retain release opt-level 3, no LTO, 16 codegen units and incremental dev opt-level 0")
-	}
-	return nil
-}
+
 func verifyRepoContract(a *app, o options) error {
 	var checks []check
 	add := func(name string, ok bool, detail string) { checks = append(checks, check{name, ok, detail}) }
@@ -136,9 +176,6 @@ func verifyRepoContract(a *app, o options) error {
 	localeApp := &app{a.root, io.Discard, &diagnostics}
 	localeError := checkLocales(localeApp, options{})
 	add("locale-documents-valid", localeError == nil, strings.TrimSpace(diagnostics.String()))
-	cargo := text("Cargo.toml")
-	add("release-without-lto", tomlSetting(cargo, "profile.release", "opt-level") == "3" && tomlSetting(cargo, "profile.release", "lto") == "false" && tomlSetting(cargo, "profile.release", "codegen-units") == "16", "release profile")
-	add("dev-profile-incremental", tomlSetting(cargo, "profile.dev", "incremental") == "true", "incremental dev profile")
 	goMod := text("go.mod")
 	add("go-client-module", strings.Contains(goMod, "module github.com/neko233-com/git-next") && strings.Contains(goMod, "go 1.27."), "Go 1.27 client module at repository root")
 	add("go-client-entrypoint", exists(a.path("cmd/git-next/main.go")) && strings.Contains(text("cmd/git-next/main.go"), "package main"), "Go client entrypoint")
@@ -159,8 +196,16 @@ func verifyRepoContract(a *app, o options) error {
 	add("go-client-locale-documents", strings.Contains(goSources, "go:embed locales/*.json") || strings.Contains(goSources, "go:embed"), "locales are embedded data documents")
 	_, fastPresent := commands["fast-verify"]
 	add("fast-verify-present", fastPresent, "Go artifact diagnostic")
-	main := text("accept-runner/src/main.rs")
-	add("git-next-rust-accept-runner", main != "", "Rust acceptance gate")
+	_, acceptPresent := commands["cli-accept"]
+	acceptSource := text("tools/devtool/cli_accept.go")
+	add("go-accept-gate-present", acceptPresent && acceptSource != "", "Go cli-accept acceptance gate")
+	_, packageGoPresent := commands["package-go"]
+	add("package-go-command-present", packageGoPresent, "Go packaging command")
+	add("taskfile-present", exists(a.path("Taskfile.yml")), "Taskfile.yml is the single daily entrypoint")
+	artifacts := rustImplementationArtifacts(a)
+	add("no-rust-implementation", len(artifacts) == 0, strings.Join(artifacts, ", "))
+	invocations := toolchainInvocations(a)
+	add("no-toolchain-invocations", len(invocations) == 0, strings.Join(invocations, "; "))
 	active := []string{}
 	paths, e := filepath.Glob(a.path("tests/*.py"))
 	if e != nil {
@@ -177,8 +222,7 @@ func verifyRepoContract(a *app, o options) error {
 		active = append(active, name)
 	}
 	add("git-next-no-python-cli-gate", !exists(a.path("tests/run_git_next_feature_suite.py")) && len(active) == 0, strings.Join(active, ", "))
-	add("git-next-accept-tiers", strings.Contains(main, "TierArg"), "l0/full/network")
-	add("git-next-accept-lockfile", exists(a.path("accept-runner/Cargo.lock")), "locked acceptance dependencies")
+	add("git-next-accept-tiers", strings.Contains(acceptSource, `"l0"`) && strings.Contains(acceptSource, `"full"`) && strings.Contains(acceptSource, `"network"`), "l0/full/network")
 	archived, e := filepath.Glob(a.path("tests/legacy_cli/*.py"))
 	if e != nil {
 		return e
