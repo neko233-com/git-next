@@ -1,3 +1,0 @@
-# git-next: change line endings without changing indentation, encoding or whitespace rules.
-[*]
-end_of_line = lf
