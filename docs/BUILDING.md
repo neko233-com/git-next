@@ -2,8 +2,9 @@
 
 Go 1.27.3 is the only implementation language for the client, the acceptance
 runner and all repository tooling. `Taskfile.yml` is the single local entry
-point: `task verify` is the mandatory gate and `task test-race` is an explicit
-production gate. There is no cargo, clippy or rustfmt step. Because the
+point: `task verify` is the mandatory gate. It keeps `CGO_ENABLED=0` and runs
+`no-cgo`; the race detector is not a gate because it requires cgo. There is no
+cargo, clippy or rustfmt step. Because the
 historical `vendor/` was removed, Go commands use `-mod=mod` explicitly.
 
 ```sh

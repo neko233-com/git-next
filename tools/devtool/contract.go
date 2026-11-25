@@ -202,6 +202,22 @@ func verifyRepoContract(a *app, o options) error {
 	_, packageGoPresent := commands["package-go"]
 	add("package-go-command-present", packageGoPresent, "Go packaging command")
 	add("taskfile-present", exists(a.path("Taskfile.yml")), "Taskfile.yml is the single daily entrypoint")
+	cgoSources := text("cmd/git-next/main.go")
+	for _, dir := range []string{"internal", "tools"} {
+		paths, walkError := files(a.path(dir))
+		if walkError == nil {
+			for _, p := range paths {
+				if strings.HasSuffix(p, ".go") && !strings.HasSuffix(p, "contract.go") {
+					if rel, relError := filepath.Rel(a.root, p); relError == nil {
+						cgoSources += text(filepath.ToSlash(rel))
+					}
+				}
+			}
+		}
+	}
+	add("no-cgo-source", !strings.Contains(cgoSources, `import "C"`) && !strings.Contains(cgoSources, "#cgo"), "no cgo source or directives")
+	taskfile := text("Taskfile.yml")
+	add("cgo-disabled-tasks", strings.Contains(taskfile, "CGO_ENABLED: '0'") && !strings.Contains(taskfile, "CGO_ENABLED: '1'") && !strings.Contains(taskfile, "test:race"), "Taskfile keeps CGO_ENABLED=0 and no race/cgo path")
 	artifacts := rustImplementationArtifacts(a)
 	add("no-rust-implementation", len(artifacts) == 0, strings.Join(artifacts, ", "))
 	invocations := toolchainInvocations(a)

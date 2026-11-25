@@ -39,17 +39,6 @@ tasks:
       - go -C tools/devtool test -shuffle=on -count=1 ./...
       - go -C tools/git-p4 test -shuffle=on -count=1 ./...
 
-  test:race:
-    desc: Run the race detector; requires a C compiler and cgo
-    preconditions:
-      - sh: command -v gcc || command -v cc || command -v clang
-        msg: "race detector requires gcc, cc or clang on PATH"
-    env:
-      CGO_ENABLED: '1'
-    cmds:
-      - go test -mod=mod -race ./...
-      - go -C tools/devtool test -race ./...
-
   deps:verify:
     desc: Verify locked module dependencies
     cmds:
@@ -85,6 +74,12 @@ tasks:
       - 'test -z "$(find . -name rust-toolchain.toml)"'
       - 'test -z "$(grep -R -n -E "(^|[^a-zA-Z])(cargo|rustc)([^a-zA-Z]|$)" tools/devtool --include="*.go" | grep -v "_test.go:")"'
 
+  no-cgo:
+    desc: Refuse cgo source and require CGO_ENABLED=0
+    cmds:
+      - test "$(go env CGO_ENABLED)" = "0"
+      - 'test -z "$(grep -R -n -E "^[[:space:]]*import[[:space:]]+\"C\"|#cgo" cmd internal tools --include="*.go")"'
+
   build:
     desc: Build the Go client into target/release
     cmds:
@@ -107,6 +102,43 @@ tasks:
     cmds:
       - go -C tools/devtool run . render-docs
 
+  docs:react:check:
+    desc: Format/lint/type-check the React 19 docs app with vite-plus
+    dir: github-docs
+    cmds:
+      - pnpm exec vp check
+
+  docs:react:test:
+    desc: Run React docs content tests
+    dir: github-docs
+    cmds:
+      - pnpm exec vp test --run
+
+  docs:react:build:
+    desc: Build the React docs app for GitHub Pages
+    dir: github-docs
+    cmds:
+      - pnpm build
+
+  docs:react:verify:
+    desc: Mandatory gate for the GitHub docs app
+    cmds:
+      - task: docs:react:check
+      - task: docs:react:test
+      - task: docs:react:build
+
+  docs:publish:react:
+    desc: Publish the built React docs to gh-pages
+    cmds:
+      - task: docs:react:build
+      - go -C tools/devtool run . publish-docs --dist github-docs/dist
+
+  docs:publish:react:dry:
+    desc: Preview the React docs publication without changing refs
+    cmds:
+      - task: docs:react:build
+      - go -C tools/devtool run . publish-docs --dist github-docs/dist --dry-run
+
   verify:
     desc: Mandatory local gate for commits
     cmds:
@@ -116,6 +148,7 @@ tasks:
       - task: deps:verify
       - task: locales
       - task: no-rust
+      - task: no-cgo
       - task: contract
       - task: accept:l0
 
@@ -123,7 +156,7 @@ tasks:
     desc: Release gates; does not publish or create a tag
     cmds:
       - task: verify
-      - task: test:race
+      - task: docs:react:verify
       - task: accept:full
       - go -C tools/devtool run . check-runtime-defaults
       - go -C tools/devtool run . migration-audit --require-complete

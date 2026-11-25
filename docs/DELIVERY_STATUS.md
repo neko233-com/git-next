@@ -4,7 +4,7 @@
 
 五平台新包已完成构建及包检查。冻结正确性 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对，矩阵 SHA-256 为 8d8e1cd946e9e0a8963a7e3164aed5eba95cd15a98446712d220eebce949ee8f。最终 stage、校验和与一次整合 stable/latest 发布均已完成；不表示已执行 1.0.4 宿主安装验收。
 
-已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过；独立 Go 客户端 CLI 验收为 L0 39/39、full 57/100（主要缺口 SHA-256）。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
+已验证 **31 项默认值、24 项真实行为检查**，Go test/vet 在 `CGO_ENABLED=0` 下通过；独立 Go 客户端 CLI 验收为 L0 39/39、full 57/100（主要缺口 SHA-256）。最终 Windows 多项目 **33/33，805 个受跟踪路径、489 次 Git 调用**，大资源 LFS **5/5**；真实 Mac native **51** 场景及两路 P4，Linux 两 Docker 目标各 **52** 场景及两路 P4。Windows ARM64 为交叉编译 PE/静态包检查，不声明 ARM 真机或完整宿主生命周期。资源配置对照的历史 60,037 路径矩阵及 1.0.3 二进制测量保持其原作用域，不冒充最终包新增路径数或 Editor 验收。
 
 仅 terminal-native-desktop、terminal-rust-contracts、msi-user、msi-machine 四 lane 豁免；两项 live MSI 生命周期由实际四 MSI 载荷/表、隔离迁移和资源探针约束，不记为安装运行通过。四个 MSI 未签名。已发布资产：[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)、[MSI 包策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)，全部 API 资产摘要与五个匿名实际下载均已核验。以下 1.0.3 的完整 MSI、工作站与发布记录保留原产物身份，不能外推到 1.0.4。
 

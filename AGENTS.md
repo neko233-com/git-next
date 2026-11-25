@@ -40,7 +40,7 @@
 - 客户端入口在 `cmd/git-next`，公共代码在 `internal/**`，根 `go.mod` 锁定依赖。因为历史 `vendor/` 已删除，Go 命令统一使用 `-mod=mod`；`go mod vendor` 不是本仓库的构建步骤。
 - 构建必须可复现：`CGO_ENABLED=0 GOTOOLCHAIN=go1.27.3 go build -mod=mod -trimpath -ldflags "-s -w" -o target/release/git ./cmd/git-next`，产物写 `target/release/git`（Windows 加 `.exe`），CLI 验收器只接收该路径。
 - CLI 行为验收器本身用 Go 实现（`tools/devtool` 的 `cli-accept` 命令），只接收产物路径；L0 是合并/tag 门禁，full 是发布分支门禁。失败用例必须进入 JSON，不得静默跳过。
-- `Taskfile.yml` 是所有日常开发的唯一入口：`task verify` 必须聚合格式、vet、测试、语言、契约、构建与 L0；`task test-race` 是显式生产门禁，缺少 C 编译器时必须明确失败，不得标记为通过。
+- `Taskfile.yml` 是所有日常开发的唯一入口：`task verify` 必须聚合格式、vet、CGO=0 校验、测试、语言、契约、构建与 L0。产品与工具链不含 cgo：禁止 `import "C"`、`#cgo` 与 `CGO_ENABLED=1` 构建；race detector 依赖 cgo，因此不属于本仓库门禁。
 - 接口语言仍是 `locales/<code>.json`，Go 侧用 `go:embed` 内嵌；语言校验器从 Go 源码提取消息与命令名，不再依赖任何 Rust 文件。
 - 迁移状态以 `docs/GO_IMPLEMENTATION.md` 和 `docs/PARITY_ROADMAP.md` 为准：通过 L0/full 的命令逐项标记，未通过项保持 partial/planned；`complete_git_parity` 在全部行 accepted 前保持 false。
 
@@ -67,13 +67,14 @@
 - `docs/WHY-GIT-NEXT.md` 记录实测的加速工作和 Git 命令集之外的检查。数字必须来自 `docs/benchmarks/` 下的基准报告，带报告日期，并且把局限讲得和收益一样直白。
 - `docs/LANGUAGE.md` 描述语言文档与设备语言解析。`docs/DOCUMENTATION_SITE.md` 描述站点如何渲染与发布。`docs/DEFAULTS.md` 记录每一项运行时默认值及其背后的实测。
 - 性能或行为声明必须写明作用域：机器、仓库规模、日期。没有作用域的数字不是证据，没有实测的默认值不是决策。
-- 在同一次提交里用 `task docs` 或 `go -C tools/devtool run . render-docs` 重新生成 `docs/site/`；HTML 是受版本控制的，页面过期是缺陷。
-- 用 `go -C tools/devtool run . publish-docs` 发布。它通过临时索引构建 `gh-pages` 分支，不碰工作区；推送是快进。
+- GitHub 文档站是 `github-docs/` 下的 React 19 + vite-plus 应用，面向不懂技术的美术与运营。`task docs:react:verify` 必须通过 check、test 与 build；产物写 `github-docs/dist/`，`base` 必须是 `/git-next/`。面向非技术用户的教程不得列出当前 Go 实现不支持的命令。
+- 旧 Markdown 手册仍由 `task docs` / `go -C tools/devtool run . render-docs` 重新生成到 `docs/site/`；HTML 受版本控制，页面过期是缺陷。
+- 用 `task docs:publish:react`（或 `go -C tools/devtool run . publish-docs --dist github-docs/dist`）发布 React 文档到 `gh-pages`。不带 `--dist` 时仍可发布旧手册。发布通过临时索引构建分支，不碰工作区；推送是快进。
 
 ## 强制验证
 
 - 产品主体、验收器、构建、打包、文档、发布编排与夹具全部用 Go 1.27；不再新增 Python 文件或 Python wrapper。保留 native C/MSI/迁移能力与平台脚本不得删除能力来宣称完成。范围与证据边界见 `docs/GO_TOOLING.md`；`migration-audit --require-complete` 必须如实报告剩余 Python。
-- `task verify` 是最低本地门禁：gofmt 无差异、`go vet ./...`、`go test -shuffle=on -count=1 ./...`、`check-locales`、`verify-repo-contract`、`build-go-client` 与 `cli-accept --tier l0` 全部通过。
+- `task verify` 是最低本地门禁：`CGO_ENABLED=0`、gofmt 无差异、`go vet ./...`、`go test -shuffle=on -count=1 ./...`、`check-locales`、`verify-repo-contract`、`no-cgo`、`build-go-client` 与 `cli-accept --tier l0` 全部通过。
 
 CLI 合并/tag 门禁：
 
@@ -81,7 +82,7 @@ CLI 合并/tag 门禁：
 - 历史 Python CLI 套件保留在 Git commit `3609553`，当前树不得恢复。HTTP/LFS/SSH 夹具已迁 Go；不得增加 Python CLI 用例。`go -C tools/devtool run . product-batch` 仅兼容 `--native-packages` 的独立产品批次。
 - `--tier network` 是显式可选层；跳过项必须进入 JSON，不能作为已通过用例。HTTPS/SSH/LFS transfer、native/MSI/GUI 和完整 Git parity 只按各自真实证据验收，不由 Go L0/full 推定。
 - Harness 隔离 HOME/USERPROFILE/XDG/SSH 配置；客户端使用空 PATH/GIT_EXEC_PATH，每次子进程有超时，Windows 作业对象限制 64 个进程，退出时回收子进程和临时目录。不得把参考 Git 作为运行时回退。
-- 若本机缺少 C 编译器，`task test-race` 必须报错并保持失败状态；不得把 race 从生产门禁中静默移除。
+- 生产构建统一 `CGO_ENABLED=0`，所有 Go 源码必须无 `import "C"` 与 `#cgo` 指令；`no-cgo` 守卫失败即阻断提交。跨编译与发布产物必须在此模式下重建并校验。
 
 以下工具按打包、默认值、语言或文档变更使用，不代替 CLI 门禁；Windows 产物诊断使用 Go 的 `fast-verify`。
 
@@ -98,11 +99,11 @@ Go 的 `verify-repo-contract` 检查的是本文件写下的规则，而不是�
 
 ## 发布策略
 
-- 禁止使用 GitHub Actions 打包或消耗 Actions 构建额度。格式化、vet、测试、race、打包与校验和全部在本机运行。
+- 禁止使用 GitHub Actions 打包或消耗 Actions 构建额度。格式化、vet、CGO=0 测试、打包与校验和全部在本机运行。
 - 不得把 GitHub CI 状态当作发布闸门。
 - 使用 Conventional Commits 和 `Assisted-by:` 尾注。禁止 force push、amend、squash 和自动 sign-off——sign-off 必须由人完成。
 - 禁止发布逐特性的增量版本。完成完整需求范围并逐条验证后，再创建一个整合的标签与包版本。
-- 用户明确选择 Docker、交叉编译和安装包验证、免除完整宿主安装生命周期时，可用独立 `--package-validation-policy` 记录该授权。此策略只允许 `msi-user`、`msi-machine` 标记为 `waived`，不得标记为运行通过；必须绑定精确 matrix、五平台归档、四个 MSI、清单及实际静态包/隔离迁移/六项资源行为探针。其它正确性、Mac CLI、Docker、race、校验和与性能门禁不变。终端豁免仍是另一份仅限两项终端检查的授权。
+- 用户明确选择 Docker、交叉编译和安装包验证、免除完整宿主安装生命周期时，可用独立 `--package-validation-policy` 记录该授权。此策略只允许 `msi-user`、`msi-machine` 标记为 `waived`，不得标记为运行通过；必须绑定精确 matrix、五平台归档、四个 MSI、清单及实际静态包/隔离迁移/六项资源行为探针。其它正确性、Mac CLI、Docker、CGO=0、校验和与性能门禁不变。终端豁免仍是另一份仅限两项终端检查的授权。
 - 无安装包验证策略时保留全部原门禁；未知豁免项、缺少明确用户授权、探针失败、输入或授权文件变更一律拒绝发布。发布证明和校验和资产必须保留策略、探针与未执行安装生命周期的事实，不得把打包检查冒充真实安装。范围、兼容性与回滚见 `docs/GO_TOOLING.md`。
 
 如果产品行为需要改变这些约束，先更新本文件、`tools/devtool/contract.go` 和 README，再改实现。

@@ -9,6 +9,7 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 	htmlparse "golang.org/x/net/html"
 	"io"
+	"io/fs"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -58,7 +59,7 @@ var manuals = []manual{
 
 func init() {
 	register("render-docs", "Render manuals and verify every local HTML link", "", renderDocs)
-	register("publish-docs", "Publish manuals through a temporary Git index", "dry-run?", publishDocs)
+	register("publish-docs", "Publish manuals or a built site through a temporary Git index", "dry-run? dist", publishDocs)
 }
 func renderLink(root, source, value string, outputs map[string]string) (string, error) {
 	u, e := url.Parse(value)
@@ -197,11 +198,38 @@ func renderDocs(a *app, _ options) error {
 	return nil
 }
 func publishDocs(a *app, o options) error {
-	if e := renderDocs(a, options{}); e != nil {
-		return e
+	dist := o.get("dist")
+	source := a.path("docs/site")
+	pages := len(manuals)
+	if dist == "" {
+		if e := renderDocs(a, options{}); e != nil {
+			return e
+		}
+	} else {
+		absoluteDist, e := absolute(dist)
+		if e != nil {
+			return e
+		}
+		source = absoluteDist
+		if !exists(filepath.Join(source, "index.html")) {
+			return fmt.Errorf("dist %s has no index.html", source)
+		}
+		pages = 0
+		e = filepath.WalkDir(source, func(_ string, d fs.DirEntry, walkError error) error {
+			if walkError != nil {
+				return walkError
+			}
+			if !d.IsDir() {
+				pages++
+			}
+			return nil
+		})
+		if e != nil {
+			return e
+		}
 	}
 	if o.yes("dry-run") {
-		return a.json(record{"status": "preview", "pages": len(manuals), "branch": "gh-pages", "refs_changed": false, "pushed": false})
+		return a.json(record{"status": "preview", "pages": pages, "dist": dist, "branch": "gh-pages", "refs_changed": false, "pushed": false})
 	}
 	temp, e := os.MkdirTemp("", "git-next-docs-")
 	if e != nil {
@@ -212,15 +240,29 @@ func publishDocs(a *app, o options) error {
 	if e = os.Mkdir(stage, 0755); e != nil {
 		return e
 	}
-	entries, e := os.ReadDir(a.path("docs/site"))
+	e = filepath.WalkDir(source, func(p string, d fs.DirEntry, walkError error) error {
+		if walkError != nil {
+			return walkError
+		}
+		if d.IsDir() {
+			return nil
+		}
+		rel, relError := filepath.Rel(source, p)
+		if relError != nil {
+			return relError
+		}
+		dest := filepath.Join(stage, filepath.FromSlash(filepath.ToSlash(rel)))
+		if e := os.MkdirAll(filepath.Dir(dest), 0755); e != nil {
+			return e
+		}
+		return copyFile(p, dest)
+	})
 	if e != nil {
 		return e
 	}
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			if e = copyFile(a.path("docs/site", entry.Name()), filepath.Join(stage, entry.Name())); e != nil {
-				return e
-			}
+	if dist != "" && exists(filepath.Join(stage, "index.html")) {
+		if e = copyFile(filepath.Join(stage, "index.html"), filepath.Join(stage, "404.html")); e != nil {
+			return e
 		}
 	}
 	if e = write(filepath.Join(stage, ".nojekyll"), nil, 0644); e != nil {
@@ -278,5 +320,5 @@ func publishDocs(a *app, o options) error {
 	if _, e = git("push", "origin", "refs/heads/gh-pages:refs/heads/gh-pages"); e != nil {
 		return e
 	}
-	return a.json(record{"status": "published", "commit": commit, "branch": "gh-pages"})
+	return a.json(record{"status": "published", "commit": commit, "branch": "gh-pages", "dist": dist})
 }

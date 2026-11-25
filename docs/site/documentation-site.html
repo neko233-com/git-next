@@ -1,6 +1,30 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Documentation site</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>Documentation site</h1>
-<p>The manual of git-next is published as a GitHub Pages site, so it can be read without cloning the repository. The site is rendered from the Markdown manuals in <code>docs/</code> and from the README, which means there is only one source for each page: a change to a manual is the change to the published page.</p>
-<h2>Pages</h2>
+<p>GitHub Pages serves the git-next documentation from the <code>gh-pages</code> branch root at
+<a href="https://neko233-com.github.io/git-next/">https://neko233-com.github.io/git-next/</a>. The primary site is a React 19 +
+vite-plus (Vite+/Rolldown) application in <code>github-docs/</code>. The older Markdown-derived
+HTML manuals remain in <code>docs/site/</code> as a source and migration reference.</p>
+<h2>React 19 documentation app</h2>
+<pre><code class="language-sh">cd github-docs
+pnpm install
+pnpm dev       # local development
+pnpm exec vp check
+pnpm exec vp test --run
+pnpm build     # writes dist/ with base /git-next/
+</code></pre>
+<p>From the repository root, <code>task docs:react:verify</code> runs check, tests and build in
+one gate. <code>task docs:react:build</code> only builds. The app uses hash-based navigation,
+so deep links work on GitHub Pages without server rewrite rules. Its build output
+contains <code>index.html</code>, hashed assets and <code>.nojekyll</code>.</p>
+<p>Content lives in <code>github-docs/src/content.ts</code>. It is written in Simplified Chinese
+for non-technical readers, especially artists and operations staff: plain-language
+explanations, copyable commands, step-by-step checklists and frequently asked
+questions. It deliberately omits commands the current Go client does not accept,
+such as <code>git commit -a</code> and <code>rev-parse --abbrev-ref</code>.</p>
+<h2>Legacy Markdown manuals</h2>
+<p>The older manuals in <code>docs/</code> are still rendered to <code>docs/site/</code> by
+<code>task docs</code> (or <code>go -C tools/devtool run . render-docs</code>). The renderer verifies
+that every local link resolves. These pages are retained for the detailed
+engineering contract, release evidence and compatibility history.</p>
 <table>
 <thead>
 <tr>
@@ -26,68 +50,12 @@
 <td><code>docs/BUILDING.md</code></td>
 </tr>
 <tr>
-<td>Performance</td>
-<td><code>docs/PERFORMANCE.md</code></td>
+<td>CLI acceptance</td>
+<td><code>docs/GIT_NEXT_ACCEPTANCE.md</code></td>
 </tr>
 <tr>
-<td>Acceptance</td>
-<td><code>docs/ACCEPTANCE.md</code></td>
-</tr>
-<tr>
-<td>Test coverage</td>
-<td><code>docs/TEST_COVERAGE.md</code></td>
-</tr>
-<tr>
-<td>Complete takeover</td>
-<td><code>docs/TAKEOVER.md</code></td>
-</tr>
-<tr>
-<td>Native LFS</td>
-<td><code>docs/LFS.md</code></td>
-</tr>
-<tr>
-<td>Git-Terminal</td>
-<td><code>docs/TERMINAL.md</code></td>
-</tr>
-<tr>
-<td>Game projects</td>
-<td><code>docs/GAME_PROJECTS.md</code></td>
-</tr>
-<tr>
-<td>Read commands</td>
-<td><code>docs/READ_COMMANDS.md</code></td>
-</tr>
-<tr>
-<td>Restore and reset</td>
-<td><code>docs/RESTORATION.md</code></td>
-</tr>
-<tr>
-<td>LF policy</td>
-<td><code>docs/LINE_ENDINGS.md</code></td>
-</tr>
-<tr>
-<td>Native discovery</td>
-<td><code>docs/NATIVE_DISCOVERY.md</code></td>
-</tr>
-<tr>
-<td>Credential support</td>
-<td><code>docs/CREDENTIALS.md</code></td>
-</tr>
-<tr>
-<td>Native merge</td>
-<td><code>docs/MERGE.md</code></td>
-</tr>
-<tr>
-<td>MSI and updates</td>
-<td><code>docs/UPDATES.md</code></td>
-</tr>
-<tr>
-<td>Interface languages</td>
-<td><code>docs/LANGUAGE.md</code></td>
-</tr>
-<tr>
-<td>Native core integration</td>
-<td><code>docs/NATIVE_CORE.md</code></td>
+<td>Go implementation</td>
+<td><code>docs/GO_IMPLEMENTATION.md</code></td>
 </tr>
 <tr>
 <td>Engineering workflow</td>
@@ -97,27 +65,17 @@
 <td>Delivery progress</td>
 <td><code>docs/DELIVERY_STATUS.md</code></td>
 </tr>
-<tr>
-<td>Runtime sources and licenses</td>
-<td><code>docs/CORRESPONDING_SOURCES.md</code></td>
-</tr>
 </tbody>
 </table>
-<h2>Rendering</h2>
-<pre><code class="language-sh">go -C tools/devtool run . render-docs
-</code></pre>
-<p>The renderer writes every page into <code>docs/site/</code> and then verifies that every local link of every page resolves. A broken link fails the run, so a page that is published always points at pages that exist.</p>
 <h2>Publishing</h2>
-<pre><code class="language-sh">go -C tools/devtool run . publish-docs            # render and publish
-go -C tools/devtool run . publish-docs --dry-run  # render and report; do not create commits, update refs or push
+<pre><code class="language-sh">task docs:publish:react              # build React app and publish to gh-pages
+task docs:publish:react:dry          # build and report; do not change refs
+go -C tools/devtool run . publish-docs --dry-run       # legacy manuals preview
 </code></pre>
-<p>The site is published from the <code>gh-pages</code> branch, which Pages serves from the branch root. This repository builds, tests and packages everything locally, so the publication is done by the same script that a workflow would run, on the machine that owns the release.</p>
-<p>The script renders the pages, builds a commit that contains only the rendered site, and pushes it. The commit is assembled in a temporary index with git's plumbing commands, so the repository's index, work tree and current branch are never touched: a publication can run at any time, including with uncommitted work in the tree.</p>
-<p>The branch carries the rendered pages only. A leftover file from an earlier publication would be served forever, so the branch is rebuilt from scratch on every run. An empty <code>.nojekyll</code> marker is published with the pages, because they are already rendered and Jekyll would otherwise rewrite them.</p>
-<p>The push is a fast-forward. The publication commit always descends from the published tip, and a divergence is reported instead of being overwritten.</p>
-<h2>Published site</h2>
-<p><a href="https://neko233-com.github.io/git-next/">https://neko233-com.github.io/git-next/</a></p>
-<p>Pages is configured to build from the <code>gh-pages</code> branch root. A publication becomes visible once the Pages build of the new commit finishes, which usually takes a few seconds; the build status is reported by <code>gh api repos/neko233-com/git-next/pages --jq .status</code>.</p>
-<h2>Languages</h2>
-<p>The published manual is written in English, and the Chinese manual is the translated <code>README.zh-CN.md</code> in the repository. The interface language of the program itself is chosen by the device, and every language is a locale document; see <a href="language.html">interface languages</a>.</p>
+<p><code>publish-docs --dist github-docs/dist</code> stages the built React site; without
+<code>--dist</code> it renders and stages the legacy manuals. Publication builds a commit in
+a temporary Git index, so the working tree and current branch are untouched. The
+branch is rebuilt from scratch on every run, includes <code>.nojekyll</code>, and the push is
+a fast-forward. A divergence is reported instead of being overwritten.</p>
+<p>All publication steps run locally; no GitHub Actions are used.</p>
 </main></html>

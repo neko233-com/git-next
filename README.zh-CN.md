@@ -4,11 +4,11 @@
 
 最终产物正确性为 **14 通过、4 项用户豁免，243.565 秒**；独立配对性能 **5/5 通过，640.668 秒**，每操作 10 对样本。豁免仅限终端两项及用户级/机器级 live MSI 生命周期，正式发布已核验；1.0.4 安装运行验收仍为 false。[交付进度](docs/DELIVERY_STATUS.md)。
 
-当前已验证 **31 项默认值、24 项真实行为检查**，Go test/vet/race 通过；Windows 多项目 33/33（805 个受跟踪路径、489 次 Git 调用）、大资源 LFS 5/5；真实 Mac native 51 场景和两路 P4，Linux 两个 Docker 目标各 52 场景和两路 P4。独立的 Go 客户端当前 CLI 验收为 L0 39/39、full 57/100（主要缺口为 SHA-256，见[Go 实现说明](docs/GO_IMPLEMENTATION.md)）。Windows ARM64 为交叉编译 PE/包静态检查，不声明 ARM 真机或完整宿主生命周期。四个 MSI 均未签名。已发布[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)和[MSI 包验证策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)资产；全部远端摘要及五个匿名实际下载均已核验。
+当前已验证 **31 项默认值、24 项真实行为检查**，Go test/vet 在 `CGO_ENABLED=0` 下通过；Windows 多项目 33/33（805 个受跟踪路径、489 次 Git 调用）、大资源 LFS 5/5；真实 Mac native 51 场景和两路 P4，Linux 两个 Docker 目标各 52 场景和两路 P4。独立的 Go 客户端当前 CLI 验收为 L0 39/39、full 57/100（主要缺口为 SHA-256，见[Go 实现说明](docs/GO_IMPLEMENTATION.md)）。Windows ARM64 为交叉编译 PE/包静态检查，不声明 ARM 真机或完整宿主生命周期。四个 MSI 均未签名。已发布[正确性](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-correctness.json)、[性能](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-performance.json)、[终端豁免](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-terminal-waiver.json)和[MSI 包验证策略](https://github.com/neko233-com/git-next/releases/download/v1.0.4/native-package-validation-policy.json)资产；全部远端摘要及五个匿名实际下载均已核验。
 
 [English](README.md) · [Git 指南](docs/GIT-GUIDE.md) · [HTML 手册](docs/site/index.html) · [为什么选 git-next](docs/WHY-GIT-NEXT.md) · [交付进度](docs/DELIVERY_STATUS.md) · [文档站](https://neko233-com.github.io/git-next/)
 
-Go 1.27.3 是独立客户端、验收器、构建、打包、文档、夹具、性能测量和发布工具（含产品 `git-p4` helper）的唯一实现语言。`Taskfile.yml` 是本地唯一入口：`task verify` 聚合格式、vet、随机顺序测试、语言与契约检查、构建与 L0 验收，`task test-race` 是独立生产门禁。当前树不含 Rust 源码、Cargo 文件或 vendored Rust crate；native C/MSI 运行时作为独立组件保留。必要的 PowerShell 与 POSIX shell 脚本继续保留。[工具链说明](docs/GO_TOOLING.md)。
+Go 1.27.3 是独立客户端、验收器、构建、打包、文档、夹具、性能测量和发布工具（含产品 `git-p4` helper）的唯一实现语言。`Taskfile.yml` 是本地唯一入口：`task verify` 聚合格式、vet、CGO=0/no-cgo 守卫、随机顺序测试、语言与契约检查、构建与 L0 验收。当前树不含 Rust 源码、Cargo 文件或 vendored Rust crate；native C/MSI 运行时作为独立组件保留。必要的 PowerShell 与 POSIX shell 脚本继续保留。[工具链说明](docs/GO_TOOLING.md)。
 
 **Go-only 客户端：**独立客户端（`cmd/git-next`、根 `go.mod`）及其 [CLI 验收器](docs/GIT_NEXT_ACCEPTANCE.md)全部用 Go 实现；Rust 源码、Cargo 文件、Rust 验收器与 vendored Rust crate 已删除。CLI 验收是唯一门禁：L0 39/39、full 57/100，二进制约 11.3 MB（历史 Rust CLI 基线约 22 MiB）。Go 客户端与 native C 发布产品分别验收；原生包、运行时和安装器使用各自门禁。`complete_git_parity` 仍为 false，Go 场景不宣称逐条等量覆盖全部历史断言；历史 Rust 验收报告仅作为旧发布产物的证据保留，不代表当前实现。[兼容性说明](docs/COMPATIBILITY.md)。
 
@@ -69,7 +69,7 @@ Go CLI 的唯一门禁是 `go -C tools/devtool run . cli-accept --tier l0|full`�
 
 独立正确性验证并行执行，Windows Installer 事务串行执行，报告保留真实耗时和失败结果。性能采用独立成对批量测量，根据实际 median、p95 和主进程内存给出结论，不承诺所有场景都更快。[构建](docs/BUILDING.md) · [性能](docs/PERFORMANCE.md) · [兼容性](docs/COMPATIBILITY.md)。
 
-按用户明确选择的[安装包验证发布范围](docs/GO_TOOLING.md#explicit-package-validation-release-scope)，可用真实静态包、隔离迁移与资源行为探针代替两项本机 MSI 事务前置要求。两项生命周期仍标 `waived`，不冒充实际安装通过；发布资产保留授权、探针和精确包哈希。其它 native CLI、传输、Docker、race 与性能门禁继续执行。
+按用户明确选择的[安装包验证发布范围](docs/GO_TOOLING.md#explicit-package-validation-release-scope)，可用真实静态包、隔离迁移与资源行为探针代替两项本机 MSI 事务前置要求。两项生命周期仍标 `waived`，不冒充实际安装通过；发布资产保留授权、探针和精确包哈希。其它 native CLI、传输、Docker、CGO=0 与性能门禁继续执行。
 
 原生核心遵循 GPL-2.0-only，并提供依赖许可证及对应源码包。[源码与许可](docs/CORRESPONDING_SOURCES.md)。本仓库不使用 GitHub Actions。
 
