@@ -26,7 +26,7 @@ var manuals = []manual{
 	{"docs/BUILDING.md", "building.html", "Builds"},
 	{"docs/PERFORMANCE.md", "performance.html", "Performance"},
 	{"docs/ACCEPTANCE.md", "acceptance.html", "Acceptance"},
-	{"docs/GIT_NEXT_ACCEPTANCE.md", "git-next-acceptance.html", "Rust CLI acceptance"},
+	{"docs/GIT_NEXT_ACCEPTANCE.md", "git-next-acceptance.html", "CLI acceptance"},
 	{"docs/TEST_COVERAGE.md", "test-coverage.html", "Test coverage"},
 	{"docs/TAKEOVER.md", "takeover.html", "Complete takeover"},
 	{"docs/LFS.md", "lfs.html", "Native LFS"},
@@ -53,6 +53,7 @@ var manuals = []manual{
 	{"docs/WHY-GIT-NEXT.md", "why-git-next.html", "Why git-next"},
 	{"docs/DEFAULTS.md", "defaults.html", "Runtime defaults"},
 	{"docs/GO_TOOLING.md", "go-tooling.html", "Go tooling migration"},
+	{"docs/GO_IMPLEMENTATION.md", "go-implementation.html", "Go client implementation"},
 }
 
 func init() {

@@ -1,0 +1,100 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Go client implementation</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>Go client implementation</h1>
+<p>The independent client is implemented in Go 1.27.3 at <code>cmd/git-next</code> and
+<code>internal/**</code>, with <code>go-git/v5</code> providing object storage, refs, index and
+transport. It never executes an installed <code>git</code> or <code>ssh</code> at runtime. The Rust
+tree and the native C/MSI distribution remain unchanged rollback paths; this
+document describes only the independent client.</p>
+<h2>Build</h2>
+<p>The repository-root <code>vendor/</code> directory belongs to the vendored Rust <code>gix</code>
+crates, not to Go. Never run <code>go mod vendor</code>; all Go commands must use
+<code>-mod=mod</code>:</p>
+<pre><code class="language-sh">go -C tools/devtool run . build-go-client
+# equivalent:
+go build -mod=mod -trimpath -ldflags &quot;-s -w&quot; -o target/release/git.exe ./cmd/git-next
+go test -mod=mod ./...
+go vet -mod=mod ./...
+</code></pre>
+<p>The output is <code>target/release/git</code> (<code>git.exe</code> on Windows). The build command
+pins <code>GOTOOLCHAIN=go1.27.3</code> and <code>CGO_ENABLED=0</code>.</p>
+<h2>Command coverage</h2>
+<p>The CLI accepts the 39 top-level commands used by the acceptance runner:
+<code>language, diff, show, restore, reset, eol, lfs, push, add, commit, switch, checkout, merge, stash, cherry-pick, revert, rebase, submodule, worktree, init, clone, fetch, pull, status, log, rev-parse, cat-file, hash-object, ls-files, show-ref, branch, tag, remote, config, ls-remote, compatibility, version, install, doctor</code>. Unknown flags and unsupported semantics fail explicitly.</p>
+<p>Interface languages remain data documents in <code>locales/*.json</code>, embedded with
+<code>go:embed</code>. English is the source and a missing message falls back per message.
+The explicit selection and device detection use the same locale matching chain,
+including region-to-script resolution such as <code>zh-TW</code> to <code>zh-Hant</code>.</p>
+<h2>Measured verification</h2>
+<p>Run against the locally built Go binary on Windows x64:</p>
+<table>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>go test -mod=mod ./...</code></td>
+<td>pass (<code>internal/cli</code>, <code>internal/gitx</code>, <code>internal/i18n</code>)</td>
+</tr>
+<tr>
+<td><code>go vet -mod=mod ./...</code></td>
+<td>pass</td>
+</tr>
+<tr>
+<td><code>git-next-accept --tier l0</code></td>
+<td><strong>39 passed / 0 failed / 0 skipped</strong></td>
+</tr>
+<tr>
+<td><code>git-next-accept --tier full</code></td>
+<td><strong>55 passed / 45 failed / 0 skipped</strong></td>
+</tr>
+<tr>
+<td><code>git-next-accept --tier network</code></td>
+<td>not run</td>
+</tr>
+<tr>
+<td><code>verify-repo-contract</code></td>
+<td>36 rules checked, 0 failed</td>
+</tr>
+<tr>
+<td><code>check-locales</code></td>
+<td>9 documents checked</td>
+</tr>
+<tr>
+<td><code>migration-audit --require-complete</code></td>
+<td>complete, 0 Python entrypoints</td>
+</tr>
+<tr>
+<td><code>check-runtime-defaults</code></td>
+<td>blocked: requires the manifest-bound bundled LFS helper; the local dev tree only has the historical Rust helper</td>
+</tr>
+</tbody>
+</table>
+<p>The Go binary is <strong>11,302,400 bytes</strong> with <code>-trimpath -ldflags &quot;-s -w&quot;</code>. The
+historical Rust CLI built with <code>cargo build --release --locked</code> was about
+<strong>22 MiB</strong> in the same checkout, so the Go client binary is roughly half that
+size. This compares the standalone client, not the native C/MSI distribution.</p>
+<h2>Known gaps</h2>
+<ul>
+<li>The full tier is not green. Most failures come from SHA-256 object-format
+repositories (<code>core.repositoryformatversion ... objectformat</code>); <code>go-git/v5</code>
+does not implement that format, so the client refuses those repositories
+instead of writing them incorrectly.</li>
+<li>A smaller set of full-tier cases still differs in status hooks, nested worktree
+paths and reset/diff byte output. They remain documented failures, not skips.</li>
+<li><code>complete_git_parity</code> remains <code>false</code> and the five replacement blockers are
+unchanged. Do not replace a user's only Git installation based on this
+implementation alone.</li>
+<li>Packaging, MSI lifecycle and the native C distribution keep their existing
+gates. The Go terminal renderer (<code>mygo</code>) is accepted by the tooling alongside
+the historical <code>gpui-fast</code>; full desktop/MSI lifecycle verification is a
+separate pass.</li>
+<li>The Rust sources are retained as a reference and rollback path until the Go
+client passes the full tier and the consolidated product gates.</li>
+</ul>
+<h2>Rollback</h2>
+<p>Build the Rust CLI into the same output path and continue using the previous
+package; no repository format, ref, index, LFS or configuration path changes
+are part of this migration.</p>
+</main></html>

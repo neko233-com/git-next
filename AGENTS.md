@@ -31,8 +31,15 @@
 - 未知命令和不支持的语义必须清晰失败，不得静默忽略选项或修改仓库。
 - 保持 `.git` 兼容、ref/index 原子更新、主机密钥校验和已有凭据。改动在临时仓库里验证。
 - 不得把凭据或私有部署标识写进源码、夹具、基准或报告。
-- 安装命令是 `git`。替换用户 Windows Git 是授权的，但在 `compatibility.json` 的 `complete_git_parity` 为真且 `docs/PARITY_ROADMAP.md` 中各项已验收之前必须保持阻断。Rust 实现对照 Git 官方文档，不链接原生 Git。保留预览、保留回滚元数据，不得接入生产 Git 服务器。
+- 安装命令是 `git`。替换用户 Windows Git 是授权的，但在 `compatibility.json` 的 `complete_git_parity` 为真且 `docs/PARITY_ROADMAP.md` 中各项已验收之前必须保持阻断。Go 1.27 实现对照 Git 官方文档，不链接原生 Git，也不在运行时调用系统 `git`/`ssh`。保留预览、保留回滚元数据，不得接入生产 Git 服务器。
 - 未配置的文本一律 LF。`docs/benchmarks/` 与 `packaging/` 下的锁定文件是字节级证据，不得为了换行规范重写它们。
+
+## 强制 Go 客户端
+
+- 独立客户端的实现语言是 Go 1.27，入口在 `cmd/git-next`，模块在仓库根；使用锁定的依赖版本，`go test -mod=mod ./...` 与 `go vet -mod=mod ./...` 必须通过（根目录 `vendor/` 属于 Rust gix，Go 不能 vendor 模式）。构建用 `-mod=mod -trimpath -ldflags "-s -w"`，产物写到 `target/release/git`（Windows 加 `.exe`），验收器只接收该路径。
+- Go 实现不得执行系统 `git` 或 `ssh` 作为运行时回退。对象、索引、ref、工作树与传输必须由本进程内的 Go 代码完成，未知语义明确失败。
+- 接口语言仍是 `locales/<code>.json`，Go 侧用 `go:embed` 内嵌；语言校验器必须把 Go 源码纳入消息来源扫描。Rust 源码与 native C/MSI 树在 Go 通过同档验收前只作为迁移参考与回滚路径，不得删除能力来宣称完成。
+- 迁移状态以 `docs/GO_IMPLEMENTATION.md` 和 `docs/PARITY_ROADMAP.md` 为准：通过 L0/full 的命令逐项标记，未通过项保持 partial/planned；`complete_git_parity` 在全部行 accepted 前保持 false。
 
 ## 强制接口语言
 
@@ -62,13 +69,13 @@
 
 ## 强制验证
 
-- 自有构建、打包、文档、发布编排和夹具工具统一迁到 Go；CLI 行为验收保留 Rust，不再新增 Python 文件或 Python wrapper。保留现有 native C/MSI/迁移能力，未完成等价验证的旧入口先保留，不得用删除能力的方式宣称迁移完成。范围、回滚和证据边界见 `docs/GO_TOOLING.md`；`migration-audit --require-complete` 必须如实报告剩余 Python。
+- 产品主体、自有构建、打包、文档、发布编排和夹具工具统一用 Go 1.27 实现；CLI 行为验收继续由与语言无关的 Rust 验收器对产物执行，不再新增 Python 文件或 Python wrapper。保留现有 native C/MSI/迁移能力以及 Rust 参考实现，未完成等价验证的旧入口先保留，不得用删除能力的方式宣称迁移完成。范围、回滚和证据边界见 `docs/GO_TOOLING.md`；`migration-audit --require-complete` 必须如实报告剩余 Python。
 
 CLI 合并/tag 门禁：
 
-- Rust 客户端的 CLI 行为只用 `accept-runner/git-next-accept` 验收；合并和打 tag 必须通过 L0，发布分支还必须通过 `--tier full`。macOS/Windows 使用同一命令，`../target/release/git` 在 Windows 自动解析 `.exe`。
+- Go 客户端的 CLI 行为只用 `accept-runner/git-next-accept` 验收；合并和打 tag 必须通过 L0，发布分支还必须通过 `--tier full`。验收器只接收产物路径，不对实现语言作假设；macOS/Windows 使用同一命令，`target/release/git` 在 Windows 自动解析 `.exe`。
 - Python CLI 套件已从当前树删除，30 份历史源码保留在 Git commit `3609553`。HTTP/LFS/SSH 夹具已迁 Go；不得恢复 Python wrapper、增加 Python CLI 用例或把归档套件列为门禁。`go -C tools/devtool run . product-batch` 仅兼容 `--native-packages` 的独立产品批次。
-- `--tier network` 是显式可选层；跳过项必须进入 JSON，不能作为已通过用例。HTTPS/SSH/LFS transfer、native/MSI/GUI 和完整 Git parity 只按各自真实证据验收，不由 Rust L0/full 推定。
+- `--tier network` 是显式可选层；跳过项必须进入 JSON，不能作为已通过用例。HTTPS/SSH/LFS transfer、native/MSI/GUI 和完整 Git parity 只按各自真实证据验收，不由 Go L0/full 推定。
 - Harness 隔离 HOME/USERPROFILE/XDG/SSH 配置；客户端使用空 PATH/GIT_EXEC_PATH，每次子进程有超时，Windows 作业对象限制 64 个进程，退出时回收子进程和临时目录。不得把参考 Git 作为运行时回退。
 
 日常回归不要跑 release LTO，也不要为了看一眼结果重编。测试用增量 dev 配置，打包复用已经编好的 `target/release`。
@@ -89,7 +96,7 @@ go -C tools/devtool run . check-locales               # 语言文档
 go -C tools/devtool run . render-docs                 # 站点 HTML 与 Markdown 同步
 ```
 
-Go 的 `verify-repo-contract` 检查的是本文件写下的规则，而不是某个工具恰好会做的事：默认值只有一处、桥接比较文件身份且有跳数上限、看门狗有上限且能回收守护进程、容器有进程与内存上限、没有 GitHub Actions、提交信息符合约定、受版本控制的文件用 LF、Rust 分层入口和锁文件存在、Python CLI 入口已退役。它是源码契约检查，不代替 Rust 行为门禁。Go 打包、文档生成与独立 native 安装工具不属于 CLI 行为门禁。新增硬约束时必须同时更新本文件和 `tools/devtool/contract.go`——只写在文档里的约束不会被遵守。
+Go 的 `verify-repo-contract` 检查的是本文件写下的规则，而不是某个工具恰好会做的事：默认值只有一处、桥接比较文件身份且有跳数上限、看门狗有上限且能回收守护进程、容器有进程与内存上限、没有 GitHub Actions、提交信息符合约定、受版本控制的文件用 LF、Go 客户端模块与入口存在且不回退到系统 Git、Rust 分层入口和锁文件仍在、Python CLI 入口已退役。它是源码契约检查，不代替 CLI 行为门禁。Go 打包、文档生成与独立 native 安装工具不属于 CLI 行为门禁。新增硬约束时必须同时更新本文件和 `tools/devtool/contract.go`——只写在文档里的约束不会被遵守。
 
 ## 发布策略
 

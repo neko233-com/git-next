@@ -111,21 +111,26 @@ func rustLiteral(s string) string {
 }
 func localeCorpus(a *app) (string, error) {
 	var all strings.Builder
-	paths, e := files(a.path("src"))
-	if e != nil {
-		return "", e
-	}
-	for _, p := range paths {
-		if strings.HasSuffix(p, ".rs") {
-			data, e := read(p)
-			if e != nil {
-				return "", e
+	for _, sourceDir := range []string{"src", "internal", "cmd"} {
+		if !exists(a.path(sourceDir)) {
+			continue
+		}
+		paths, e := files(a.path(sourceDir))
+		if e != nil {
+			return "", e
+		}
+		for _, p := range paths {
+			if strings.HasSuffix(p, ".rs") || strings.HasSuffix(p, ".go") {
+				data, e := read(p)
+				if e != nil {
+					return "", e
+				}
+				all.WriteString(data)
+				all.WriteByte('\n')
 			}
-			all.WriteString(data)
-			all.WriteByte('\n')
 		}
 	}
-	paths, e = filepath.Glob(a.path("packaging/*.json"))
+	paths, e := filepath.Glob(a.path("packaging/*.json"))
 	if e != nil {
 		return "", e
 	}

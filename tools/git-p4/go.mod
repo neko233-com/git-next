@@ -1,6 +1,6 @@
 module github.com/neko233-com/git-next/tools/git-p4
 
-go 1.27.2
+go 1.27.3
 
 require (
 	golang.org/x/sys v0.46.0

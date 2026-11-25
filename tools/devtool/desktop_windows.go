@@ -541,7 +541,7 @@ func terminalDesktopAcceptance(a *app, o options) (returned error) {
 		if e = json.Unmarshal(out, &info); e != nil {
 			return e
 		}
-		if info["product"] != "git-terminal" || info["renderer"] != "gpui-fast" || info["git"] == nil || info["no_profile"] != true {
+		if info["product"] != "git-terminal" || !terminalRendererOK(info["renderer"]) || info["git"] == nil || info["no_profile"] != true {
 			return fmt.Errorf("terminal identity/profiles differ")
 		}
 		for _, language := range []string{"chinese", "english", "auto"} {

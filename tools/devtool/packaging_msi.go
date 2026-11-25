@@ -540,7 +540,7 @@ func nativeMSI(a *app, o options) error {
 			return fmt.Errorf("complete MSI payload missing: %s", name)
 		}
 	}
-	if !o.yes("allow-experimental-local") && (files["bin/git-terminal.exe"] == "" || object(manifest, "git_terminal")["renderer"] != "gpui-fast") {
+	if !o.yes("allow-experimental-local") && (files["bin/git-terminal.exe"] == "" || !terminalRendererOK(object(manifest, "git_terminal")["renderer"])) {
 		return fmt.Errorf("Windows releases require peer Rust GPUI Fast terminal")
 	}
 	for _, v := range []struct {

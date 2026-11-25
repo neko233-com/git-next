@@ -35,7 +35,7 @@ impl From<TierArg> for Tier {
 #[derive(Parser, Debug)]
 #[command(
     name = "git-next-accept",
-    about = "Rust-native git-next CLI acceptance (primary Mac/Windows gate)"
+    about = "Language-neutral git-next CLI acceptance (primary Mac/Windows gate)"
 )]
 struct Args {
     /// Path to git-next client (git.exe).

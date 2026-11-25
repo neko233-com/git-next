@@ -22,22 +22,26 @@ package, migration and resource probes, preserve the two unexecuted MSI rows as
 This optional policy does not change the default release path or broaden the
 separate terminal waiver.
 
-## Rust CLI gate and Python retirement
+## Go CLI gate and Python retirement
 
-Owned build/package/docs/release controllers and fixture services use the
-[Go tool module](GO_TOOLING.md). Rust remains the CLI conformance gate. Native
-C/MSI/migration functionality is retained with its replacement evidence. No new Python source
-or Python wrapper is allowed. `migration-audit --require-complete` reports remaining
-owned Python rather than accepting renamed or non-gating files as completion.
+The client, owned build/package/docs/release controllers and fixture services use
+[Go 1.27](GO_TOOLING.md); the Go implementation note records the current command
+coverage. Native C/MSI/migration functionality is retained with its replacement
+evidence, and the Rust tree is a reference/rollback path until the Go binary
+passes the same tiers. No new Python source or Python wrapper is allowed.
+`migration-audit --require-complete` reports remaining owned Python rather than
+accepting renamed or non-gating files as completion.
 
-Use [git-next-accept](GIT_NEXT_ACCEPTANCE.md) as the only Rust CLI conformance gate:
-L0 before merge/tag, full on release branches, network only when selected. Both
-macOS and Windows use the same Cargo command and JSON tier contract. Python CLI
-suites are retained only in Git history at `3609553`; `tests/legacy_cli/` tracks
-the retirement README only. They must not be restored as merge/release gates. The Python aggregate wrapper is
-removed. Add new CLI scenarios in Rust. Native package/GUI/MSI/credential migration
-and performance workflows below remain separate, with their own coverage and
-frozen receipts. Old native acceptance cannot establish parity for the Rust client.
+Use [git-next-accept](GIT_NEXT_ACCEPTANCE.md) as the only CLI conformance gate:
+L0 before merge/tag, full on release branches, network only when selected. The
+runner is language-neutral and receives the Go binary path; both macOS and Windows
+use the same command and JSON tier contract. Python CLI suites are retained only
+in Git history at `3609553`; `tests/legacy_cli/` tracks the retirement README only.
+They must not be restored as merge/release gates. The Python aggregate wrapper is
+removed. Add new CLI scenarios to the Rust runner, not as language-specific Go
+cases. Native package/GUI/MSI/credential migration and performance workflows below
+remain separate, with their own coverage and frozen receipts. Old native or Rust
+acceptance cannot establish parity for the Go client.
 
 Artifact diagnostics and source-contract helpers use Go `fast-verify` and
 `verify-repo-contract`. Use packaging, locale/default maintenance and documentation tools only for
@@ -62,7 +66,7 @@ The [fixed delivery ledger](DELIVERY_STATUS.md) defines ten whole deliverables a
 
 Every batch update must state which deliverable closed (or that none closed), completed/10, implementation completed/7, the remaining IDs and the next finite exit criterion. Do not substitute test counts or compiled files for product progress. Do not expand scope or add experiments to improve the apparent percentage. Collect regression failures before repairing them, then verify affected checks and final artifacts together.
 
-1. Complete the requested user-visible command/API, LF, language, installation/update and supported-platform implementation. Keep the original Git and the accepted preview recoverable during this work. The historical `src/bin/git-terminal.rs` launcher owned by another chat must not be edited. The user-requested peer `../git-terminal` submodule is the new Rust + GPUI Fast desktop application; build and pin it as an independent dependency, then verify the combined MSI.
+1. Complete the requested user-visible command/API, LF, language, installation/update and supported-platform implementation. Keep the original Git and the accepted preview recoverable during this work. The historical `src/bin/git-terminal.rs` launcher owned by another chat must not be edited. The user-requested peer `../git-terminal` submodule is the desktop application now migrating from Rust + GPUI Fast to Go + MyGo; build and pin the currently packaged binary as an independent dependency, then verify the combined MSI.
 2. Generate final optimized binaries and package inputs locally. Pin source, dependency, native executable, installer and harness hashes. An MSI build receipt is not runtime acceptance. Candidate core/dependency builds remain outside installed commands until integrated and verified.
 3. Use one consolidated batch to collect formatting/lint/unit, disposable reference conformance, Docker generated-account migration, LF, language/machine-byte and install/upgrade/rollback/uninstall results. Run independent repository, profile and container fixtures concurrently, with eight workers by default. The two MSI scopes share one serial worker lane because Windows Installer has a system-wide transaction lock. Aggregate failures before repairing them.
 4. After correctness passes, measure the final bytes in one sequential paired performance matrix. Do not overlap builds, test workers, Docker emulation or unrelated measurements with timing. Record median/p95, workload/cache scope and actual platform; do not claim universal acceleration from a subset or native ARM performance from QEMU.
@@ -97,7 +101,7 @@ MSI snapshots hash every installed file through an eight-worker managed helper, 
 
 The generated-account Docker migration fixture uses `strace --seccomp-bpf -f -e trace=execve` to retain child-execution evidence while avoiding unrelated syscall stops. It retains the same rejection, login, transport, repository and cleanup assertions.
 
-Native compatibility metadata is packaging/native-compatibility.json. The root compatibility.json remains the independent Rust preview declaration; accepting the native core must not mark that preview complete. Compiler integration and complete-package assembly consume the native declaration and check that the compiled source header agrees with it.
+Native compatibility metadata is packaging/native-compatibility.json. The root compatibility.json remains the independent Go client declaration; accepting the native core must not mark that client complete. Compiler integration and complete-package assembly consume the native declaration and check that the compiled source header agrees with it.
 
 Generated native identity-only rebuilds may reuse an owned Linux compiler cache after verifying its producer, source snapshot, archive and unchanged compiler/dependency recipes. The adapter rejects functional source changes and relinks every final executable. Retain the prior functional acceptance and identify the new metadata/packaging checks explicitly; caching compilation does not waive release gates.
 

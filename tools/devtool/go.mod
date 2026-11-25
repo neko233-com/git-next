@@ -1,6 +1,6 @@
 module github.com/neko233-com/git-next/tools/devtool
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/ulikunitz/xz v0.5.15

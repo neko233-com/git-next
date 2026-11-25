@@ -1,13 +1,15 @@
-# Rust acceptance and Go tooling
+# Go client, Rust acceptance runner and Go tooling
 
-Rust owns client behavior and CLI conformance. Go owns build/package/docs/release
-orchestration, benchmarks, fixture services, desktop automation and the Perforce
-helper. Native C, PowerShell and shell remain where their platform APIs require
-them. The product and these tools do not need a Python interpreter, venv or pip.
+Go 1.27 owns the independent client (`cmd/git-next` plus `internal/**`), build,
+package, docs, release orchestration, benchmarks, fixture services, desktop
+automation and the Perforce helper. The Rust acceptance runner is language-neutral
+and tests the Go binary through its public CLI. Native C, PowerShell and shell
+remain where their platform APIs require them. Neither the product nor these
+tools need a Python interpreter, venv or pip.
 
 ## Entry points
 
-Use Go 1.27.2, matching the pinned independent modules. From the repository root:
+Use Go 1.27.3, matching the client module and the terminal's MyGo dependency. From the repository root:
 
 ```sh
 go -C tools/devtool run . help
@@ -61,7 +63,7 @@ changed, and no new host/terminal run is required to close this delivery.
 [Scope record](https://github.com/neko233-com/git-next/blob/main/docs/benchmarks/native-release-scope-20261025.json).
 
 ```sh
-cargo build --release --locked
+go -C tools/devtool run . build-go-client   # uses -mod=mod: root vendor/ belongs to Rust
 cargo run --release --locked --manifest-path accept-runner/Cargo.toml --bin git-next-accept -- target/release/git --tier full --json target/accept-report-full.json
 ```
 

@@ -845,7 +845,7 @@ func assembleNativeWindows(a *app, o options) error {
 		if e != nil {
 			return e
 		}
-		if terminal["product"] != "git-terminal" || terminal["platform"] != platform || terminal["renderer"] != "gpui-fast" || !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(stringValue(terminal, "source_commit")) {
+		if terminal["product"] != "git-terminal" || terminal["platform"] != platform || !terminalRendererOK(terminal["renderer"]) || !regexp.MustCompile(`^[a-f0-9]{40}$`).MatchString(stringValue(terminal, "source_commit")) {
 			return fmt.Errorf("matching source-built GPUI Fast terminal required")
 		}
 		for name, h := range object(terminal, "files") {

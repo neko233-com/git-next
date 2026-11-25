@@ -139,6 +139,24 @@ func verifyRepoContract(a *app, o options) error {
 	cargo := text("Cargo.toml")
 	add("release-without-lto", tomlSetting(cargo, "profile.release", "opt-level") == "3" && tomlSetting(cargo, "profile.release", "lto") == "false" && tomlSetting(cargo, "profile.release", "codegen-units") == "16", "release profile")
 	add("dev-profile-incremental", tomlSetting(cargo, "profile.dev", "incremental") == "true", "incremental dev profile")
+	goMod := text("go.mod")
+	add("go-client-module", strings.Contains(goMod, "module github.com/neko233-com/git-next") && strings.Contains(goMod, "go 1.27."), "Go 1.27 client module at repository root")
+	add("go-client-entrypoint", exists(a.path("cmd/git-next/main.go")) && strings.Contains(text("cmd/git-next/main.go"), "package main"), "Go client entrypoint")
+	goSources := text("cmd/git-next/main.go")
+	for _, dir := range []string{"internal"} {
+		paths, walkError := files(a.path(dir))
+		if walkError == nil {
+			for _, p := range paths {
+				if strings.HasSuffix(p, ".go") {
+					if rel, relError := filepath.Rel(a.root, p); relError == nil {
+						goSources += text(filepath.ToSlash(rel))
+					}
+				}
+			}
+		}
+	}
+	add("go-client-no-runtime-fallback", !strings.Contains(goSources, `exec.Command("git"`) && !strings.Contains(goSources, `exec.Command("ssh"`) && !strings.Contains(goSources, `LookPath("git"`) && !strings.Contains(goSources, `LookPath("ssh"`), "no system Git or SSH fallback")
+	add("go-client-locale-documents", strings.Contains(goSources, "go:embed locales/*.json") || strings.Contains(goSources, "go:embed"), "locales are embedded data documents")
 	_, fastPresent := commands["fast-verify"]
 	add("fast-verify-present", fastPresent, "Go artifact diagnostic")
 	main := text("accept-runner/src/main.rs")

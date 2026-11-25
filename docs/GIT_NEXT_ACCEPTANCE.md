@@ -1,10 +1,12 @@
-# Rust CLI acceptance
+# CLI acceptance
 
-`git-next-accept` is the sole CLI conformance gate. Python CLI suites are retired,
-not an optional parallel gate. Build the client once from the repository root:
+`git-next-accept` is the sole CLI conformance gate. The runner is implemented in
+Rust but is language-neutral: it receives a client path and never inspects how the
+client was built. Python CLI suites are retired, not an optional parallel gate.
+Build the Go client once from the repository root:
 
 ```sh
-cargo build --release --locked
+go -C tools/devtool run . build-go-client
 cd accept-runner
 cargo build --release --locked
 cargo run --release --locked --bin git-next-accept -- ../target/release/git --json ../target/accept-report.json
@@ -12,10 +14,11 @@ cargo run --release --locked --bin git-next-accept -- ../target/release/git --ti
 ```
 
 These commands are identical on Windows and macOS. The runner resolves `.exe` on
-Windows; an explicit `git.exe` path also works. Requirements are Rust/Cargo, the
-locked runner dependencies, a built client with its sibling LFS binary, and
-reference Git on PATH. Python, venv, Paramiko and Python cryptography are not CLI
-gate dependencies. `--offline` may be added once the Cargo dependencies are cached.
+Windows; an explicit `git.exe` path also works. Requirements are Go 1.27.3 for the
+client, Rust/Cargo and locked dependencies for the runner, a built client with its
+sibling LFS binary, and reference Git on PATH. Python, venv, Paramiko and Python
+cryptography are not CLI gate dependencies. `--offline` may be added once the
+runner's Cargo dependencies are cached.
 
 ## Tiers and policy
 
@@ -24,7 +27,7 @@ gate dependencies. `--offline` may be added once the Cargo dependencies are cach
 | L0 | default / `--tier l0` | 39 top-level commands, one real scenario each; required before merge/tag. |
 | Full | `--tier full` / `--full` | L0 plus local deep/broad cases and SHA-1/SHA-256 restore/reset, porcelain v2, merge and commit-object scenarios; required on release branches. |
 | Network | `--tier network` / `--network` | Full plus loopback git-daemon clone/fetch/pull; optional public HTTPS ls-remote. Select explicitly for network acceptance. |
-| Native product/layout | separate platform tools | MSI/PowerShell, GUI, native package/runtime, credentials and migration; separate from the slim Rust CLI. |
+| Native product/layout | separate platform tools | MSI/PowerShell, GUI, native package/runtime, credentials and migration; separate from the independent client. |
 
 Tier selectors are mutually exclusive. JSON records `tier`, `passed`, `failed`,
 `skipped`, `cases` and each case result. Missing required components, failed

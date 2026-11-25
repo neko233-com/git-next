@@ -3,7 +3,7 @@
   "product": "git-next",
   "status": "experimental",
   "default_branch": "main",
-  "implementation": "rust",
+  "implementation": "go",
   "behavior_spec": "https://git-scm.com/docs",
   "native_git_linked": false,
   "external_git_fallback": false,

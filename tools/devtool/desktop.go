@@ -1,6 +1,12 @@
 // Copyright 2026 git-next contributors. MIT license.
 package main
 
+// terminalRendererOK accepts the packaged Rust renderer and the Go/MyGo replacement.
+func terminalRendererOK(value any) bool {
+	renderer, ok := value.(string)
+	return ok && (renderer == "gpui-fast" || renderer == "mygo")
+}
+
 var desktopActivityCases = []string{
 	"identity-profiles-unicode-cwd-language-atomic-settings",
 	"native-window-wm-char-unicode-commit-and-pty",

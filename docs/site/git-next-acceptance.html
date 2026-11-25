@@ -1,17 +1,20 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · Rust CLI acceptance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a></nav><main><h1>Rust CLI acceptance</h1>
-<p><code>git-next-accept</code> is the sole CLI conformance gate. Python CLI suites are retired,
-not an optional parallel gate. Build the client once from the repository root:</p>
-<pre><code class="language-sh">cargo build --release --locked
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>git-next · CLI acceptance</title><style>body{font:16px/1.6 system-ui;max-width:1100px;margin:32px auto;padding:0 24px;color:#1f2328}nav{display:flex;gap:18px;flex-wrap:wrap;border-bottom:1px solid #d1d9e0;padding-bottom:16px}a{color:#0969da}pre{overflow:auto;padding:16px;background:#f6f8fa;border-radius:8px}table{border-collapse:collapse;display:block;overflow:auto}td,th{padding:8px;border:1px solid #d1d9e0}code{font-family:monospace;overflow-wrap:anywhere}h1,h2{line-height:1.3}</style><nav><a href="index.html">Overview</a><a href="git-guide.html">Git guide</a><a href="why-git-next.html">Why git-next</a><a href="production-readiness.html">Production readiness</a><a href="clone-benchmark.html">Clone measurement</a><a href="msi-proof.html">Installer proof</a><a href="compatibility.html">Compatibility</a><a href="installation.html">Install</a><a href="building.html">Build</a><a href="performance.html">Performance</a><a href="acceptance.html">Acceptance</a><a href="takeover.html">Complete takeover</a><a href="lfs.html">Native LFS</a><a href="read-commands.html">Read commands</a><a href="restoration.html">Restore and reset</a><a href="line-endings.html">LF policy</a><a href="native-discovery.html">Native discovery</a><a href="credentials.html">Credential support</a><a href="merge.html">Native merge</a><a href="updates.html">MSI and updates</a><a href="language.html">Interface languages</a><a href="native-core.html">Native core integration</a><a href="agents.html">Engineering workflow</a><a href="delivery-status.html">Delivery progress</a><a href="corresponding-sources.html">Runtime sources and licenses</a><a href="terminal.html">Git-Terminal</a><a href="game-projects.html">Game projects</a><a href="test-coverage.html">Test coverage</a><a href="documentation-site.html">Documentation site</a><a href="defaults.html">Runtime defaults</a><a href="parity-roadmap.html">Parity roadmap</a><a href="git-next-acceptance.html">Rust CLI acceptance</a><a href="go-tooling.html">Go tooling migration</a><a href="git-p4.html">Perforce integration</a><a href="go-implementation.html">Go client implementation</a></nav><main><h1>CLI acceptance</h1>
+<p><code>git-next-accept</code> is the sole CLI conformance gate. The runner is implemented in
+Rust but is language-neutral: it receives a client path and never inspects how the
+client was built. Python CLI suites are retired, not an optional parallel gate.
+Build the Go client once from the repository root:</p>
+<pre><code class="language-sh">go -C tools/devtool run . build-go-client
 cd accept-runner
 cargo build --release --locked
 cargo run --release --locked --bin git-next-accept -- ../target/release/git --json ../target/accept-report.json
 cargo run --release --locked --bin git-next-accept -- ../target/release/git --tier full --json ../target/accept-full.json
 </code></pre>
 <p>These commands are identical on Windows and macOS. The runner resolves <code>.exe</code> on
-Windows; an explicit <code>git.exe</code> path also works. Requirements are Rust/Cargo, the
-locked runner dependencies, a built client with its sibling LFS binary, and
-reference Git on PATH. Python, venv, Paramiko and Python cryptography are not CLI
-gate dependencies. <code>--offline</code> may be added once the Cargo dependencies are cached.</p>
+Windows; an explicit <code>git.exe</code> path also works. Requirements are Go 1.27.3 for the
+client, Rust/Cargo and locked dependencies for the runner, a built client with its
+sibling LFS binary, and reference Git on PATH. Python, venv, Paramiko and Python
+cryptography are not CLI gate dependencies. <code>--offline</code> may be added once the
+runner's Cargo dependencies are cached.</p>
 <h2>Tiers and policy</h2>
 <table>
 <thead>
@@ -40,7 +43,7 @@ gate dependencies. <code>--offline</code> may be added once the Cargo dependenci
 <tr>
 <td>Native product/layout</td>
 <td>separate platform tools</td>
-<td>MSI/PowerShell, GUI, native package/runtime, credentials and migration; separate from the slim Rust CLI.</td>
+<td>MSI/PowerShell, GUI, native package/runtime, credentials and migration; separate from the independent client.</td>
 </tr>
 </tbody>
 </table>
