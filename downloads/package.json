@@ -1,0 +1,18 @@
+{
+  "archive": "git-next-1.0.5-windows-x64.zip",
+  "cgo_enabled": false,
+  "files": {
+    "LICENSE": "ff3fa59b464e53051dbd6c6528aeb35b1796ac606a0bf38df8371c8f540024ba",
+    "LICENSE.git-terminal": "ff3fa59b464e53051dbd6c6528aeb35b1796ac606a0bf38df8371c8f540024ba",
+    "NOTICE": "97a32a3e7afc6821cb6cd93c78f4cb40a24eb8277875f608c72cfaaed74dbd6c",
+    "bin/ghostty-vt.dll": "53e8e2dd979702e8f2c48107af19be5a76efc2e88eb7cf1097218e899665da41",
+    "bin/git-terminal.exe": "217db7347ea4ee2eeb9fdfa451d9f801e8741f4b50ea047b4c3b2ef3ac096d76",
+    "bin/git.exe": "a3c2d505d11afe1e30643bf9367259d18153ce019d0a5d8d5c8db7b6341815f1"
+  },
+  "git_sha256": "a3c2d505d11afe1e30643bf9367259d18153ce019d0a5d8d5c8db7b6341815f1",
+  "platform": "windows-x64",
+  "product": "git-next",
+  "schema_version": 1,
+  "terminal_sha256": "217db7347ea4ee2eeb9fdfa451d9f801e8741f4b50ea047b4c3b2ef3ac096d76",
+  "version": "1.0.5"
+}
